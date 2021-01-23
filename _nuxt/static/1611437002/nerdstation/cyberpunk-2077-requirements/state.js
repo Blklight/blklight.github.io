@@ -1,0 +1,1 @@
+window.__NUXT__=(function(a){return {staticAssetsBase:"\u002F_nuxt\u002Fstatic\u002F1611437002",layout:"default",error:null,state:{isDark:a},serverRendered:a,routePath:"\u002Fnerdstation\u002Fcyberpunk-2077-requirements",config:{content:{dbHash:"e126717e"}}}}(true));
