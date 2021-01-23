@@ -122,3 +122,33 @@
     transform: translateX(-8px) translateY(-8px);
   }
 }
+
+.post-avatar {
+  width: 325px;
+  height: 325px;
+  object-fit: cover;
+  @media screen and (max-width: 768px) {
+    width: 275px;
+    height: 275px;
+  }
+}
+
+pre {
+  border-radius: 0.5rem !important;
+}
+
+.page {
+  .post {
+    code {
+      color: #4c00ff !important;
+      font-weight: bold;
+    }
+  }
+
+  .dark-post {
+    code {
+      color: #e83e8c !important;
+      font-weight: bold;
+    }
+  }
+}

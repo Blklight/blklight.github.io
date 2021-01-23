@@ -238,8 +238,7 @@
                   >
                     <img
                       :data-src="imageSrc"
-                      width="325"
-                      class="rounded img-fluid mx-auto d-block mb-4"
+                      class="post-avatar rounded img-fluid mx-auto d-block mb-4"
                       :alt="article.title"
                     />
                   </div>

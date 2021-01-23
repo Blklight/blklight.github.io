@@ -36,7 +36,6 @@
                 : 'hover-card-uv card-raised'
             "
           >
-            <!-- Card image -->
             <div class="card-picture narrow">
               <div class="">
                 <img

@@ -1,6 +1,6 @@
 <template>
   <div :class="{ 'bg-dark': isDarkMode }">
-    <div v-if="this.article.headerLayout === 'arts'">
+    <div v-if="article.headerLayout === 'arts'">
       <div class="container-fluid py-4">
         <div class="row">
           <div class="col-xl-5 col-lg-5 col-12">
@@ -8,14 +8,9 @@
               <div class="card card-plain card-body mx-3">
                 <img
                   v-lazy="imageSrc"
-                  class="rounded mx-auto mb-4 d-block"
+                  class="post-avatar rounded mx-auto mb-4 d-block"
                   alt="article.title"
-                  style="
-                    width: 350px;
-                    height: 350px;
-
-                    object-fit: cover;
-                  "
+                  :class="!isDarkMode ? 'shadow-image' : ''"
                 />
                 <div class="text-center">
                   <h1 class="blog-title">

@@ -63,3 +63,19 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+.navbar {
+  font-family: "IBM Plex Sans Condensed", "Fira Code", sans-serif;
+  font-size: 1.25rem;
+  padding: 0.25rem 1rem !important;
+  .navbar-nav {
+    .nav-item {
+      padding: 0.25rem 1rem;
+      font-weight: 500;
+      .nav-link {
+        color: #eaeaea;
+      }
+    }
+  }
+}
+</style>

@@ -8,14 +8,9 @@
               <div class="card card-plain card-body mx-3">
                 <img
                   v-lazy="imageSrc"
-                  class="rounded mx-auto mb-4 d-block"
+                  class="post-avatar rounded mx-auto mb-4 d-block"
                   alt="article.title"
-                  style="
-                    width: 350px;
-                    height: 350px;
-
-                    object-fit: cover;
-                  "
+                  :class="!isDarkMode ? 'shadow-image' : ''"
                 />
                 <div class="text-center">
                   <h1 class="blog-title">

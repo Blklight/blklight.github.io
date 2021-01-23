@@ -9,8 +9,8 @@
       <hr class="mt-1 mb-4" :class="isDarkMode ? 'bg-light' : 'bg-dark'" />
       <template v-for="(article, i) in articles">
         <div
-          class="card mb-4"
           :key="i"
+          class="card mb-4"
           :class="
             isDarkMode
               ? 'card-plain hover-card-yellow'
@@ -96,20 +96,16 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 export default {
-  // data() {
-  //   return {
-  //     articles: "",
-  //   };
-  // },
-  async asyncData({ $axios }) {
-    const data = await $axios.$get(
+  data() {
+    return {
+      articles: [],
+    };
+  },
+  async fetch() {
+    const data = await this.$axios.$get(
       "https://api.nytimes.com/svc/topstories/v2/home.json?api-key=oPWIpYcGwSdzOH2cqYKkyvcotJCkGRNn"
     );
-    const articles = data.results;
-
-    return {
-      articles,
-    };
+    this.articles = data.results;
   },
 
   computed: {
