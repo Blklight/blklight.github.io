@@ -16,7 +16,7 @@ author:
   avatar: https://i.imgur.com/diuV6oy.jpg
 ---
 
-## **Estética do poster: Construtivismo Russo**
+### **Estética do poster: Construtivismo Russo**
 
 O conceito era criar um poster de divulgação/promocional de um possível futuro filme da Marvel Studios relacionado ao Vingadores, onde igualmente a muitos cartazes/posters construtivistas tinham como objetivo se comunicar com as massas.
 

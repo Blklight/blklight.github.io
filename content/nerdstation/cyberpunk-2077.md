@@ -8,7 +8,7 @@ category: "LPJ"
 tags: ""
 featured: true
 type: "stories"
-headerLayout: "landscape"
+headerLayout: "parallax"
 fontType: ""
 author:
   name: "Ultimate Mercer"

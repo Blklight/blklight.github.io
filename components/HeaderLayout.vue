@@ -113,9 +113,19 @@
     </div>
 
     <div v-if="headerTemplate === 'landscape'">
-      <div class="header-content d-md-inline-flex hover-header">
-        <div class="header-info">
-          <div class="h-100 d-flex flex-column justify-content-end">
+      <div class="card card-flat m-0 hover-header">
+        <picture>
+          <source media="(max-width: 768px)" :srcset="article.cover" />
+          <source media="(min-width: 769px)" :srcset="article.imageHeader" />
+          <img
+            v-lazy="article.imageHeader"
+            class="img-card-header cyberpunk-effect"
+          />
+        </picture>
+        <div
+          class="card-img-overlay h-100 d-flex flex-column justify-content-end"
+        >
+          <div class="px-md-3">
             <h1 class="blog-title">
               <span class="marker marker-dark marker-title">
                 <em> {{ article.title }} </em>
@@ -151,12 +161,6 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="header-image">
-          <div
-            v-lazy:background-image="article.imageHeader"
-            class="header-image-background header-h-full cyberpunk-effect fade-in"
-          ></div>
         </div>
       </div>
     </div>
@@ -388,9 +392,9 @@
           </div>
         </div>
         <div
-          class="col-xl-6 offset-xl-3 col-lg-8 offset-lg-2 p-lg-0 col-md-10 offset-md-1 p-md-0 col-12"
+          class="col-lg-8 offset-lg-2 p-lg-0 col-md-10 offset-md-1 p-md-0 col-12"
         >
-          <div class="header-simple-info mt-2 mb-0 mx-lg-0">
+          <div class="header-simple-info mb-0 mx-lg-0">
             <h1 class="blog-title exo-font" style="font-style: italic">
               <span
                 class="marker marker-title"
@@ -470,6 +474,15 @@ export default {
       const image = this.article.cover
         ? this.article.cover
         : this.article.imageHeader;
+
+      return image;
+    },
+    imageSrcAlt() {
+      // const image = this.article.cover
+      //   ? this.article.cover
+      //   : this.article.imageHeader;
+
+      const image = `background-image: url('${this.article.imageHeader}'); @media screen and (max-width: 576px) { background-image: url('${this.article.cover}');`;
 
       return image;
     },

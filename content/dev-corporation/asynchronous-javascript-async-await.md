@@ -8,7 +8,7 @@ category: "code"
 tags:
 featured: false
 type: "normal"
-headerLayout: "landscape"
+headerLayout: "image-top"
 fontType: ""
 author:
   name: "Ultimate Mercer"
@@ -40,7 +40,7 @@ Algo que você precisa saber sobre funções `async` é que elas sempre retornam
 
 _The one thing you need to know about async functions is that; they always returns a promise._
 
-No caso onde nós explicitamente returnamos algo que não é uma `promise`, como acima, o valor retornado é automáticamente incluído em uma `promise` resolvida, sendo o valor resolvido sendo uma `_non-promise_`. Para o código acima, `asyncFunc().then(result => console.log(result))`, irá retorna a string Hey!.
+No caso onde nós explicitamente returnamos algo que não é uma `promise`, como acima, o valor retornado é automáticamente incluído em uma `promise` resolvida, sendo o valor resolvido sendo uma _`non-promise`_. Para o código acima, `asyncFunc().then(result => console.log(result))`, irá retorna a string Hey!.
 
 _In the case where we explicitly return something that is not a promise, like above, the return value is automatically wrapped into a resolved promise with the resolved value being the non-promise. For the code above, `asyncFunc().then(result => console.log(result))` will return the string Hey!._
 

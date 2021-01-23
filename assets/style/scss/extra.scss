@@ -152,3 +152,17 @@ pre {
     }
   }
 }
+
+.img-card-header {
+  width: 100%;
+  height: 85vh !important;
+  object-fit: cover;
+}
+
+.header-simple-info {
+  padding: 1rem 0.5rem 0;
+}
+
+.header-simple-image-top {
+  height: 475px !important;
+}
