@@ -102,6 +102,11 @@
         </nuxt-link> -->
       </div>
     </div>
+    <div class="container-fluid">
+      <div class="col-xl-10 col-12 offset-xl-1 offset-0 px-xl-0 px-1 my-3">
+        <Twitch />
+      </div>
+    </div>
     <!-- <div class="container">
       <pre :class="isDarkMode ? 'text-light' : 'text-dark'">{{ test }}</pre>
     </div> -->
@@ -113,9 +118,10 @@ import { mapGetters } from "vuex";
 import Featured from "~/components/Featured";
 import Cards from "~/components/Cards";
 import Stories from "~/components/StoriesCard";
+import Twitch from "~/components/Twitch";
 
 export default {
-  components: { Featured, Cards, Stories },
+  components: { Featured, Cards, Stories, Twitch },
 
   async asyncData({ $content, params, $axios }) {
     const featured = await $content({ deep: true }, params.slug)
