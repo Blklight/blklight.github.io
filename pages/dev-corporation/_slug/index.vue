@@ -91,7 +91,7 @@ export default {
 
   async asyncData({ $content, params }) {
     const article = await $content(
-      "dev-corporation",
+      "articles/dev-corporation",
       { deep: true },
       params.slug
     ).fetch();

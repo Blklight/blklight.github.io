@@ -43,7 +43,7 @@
               <li>
                 <nuxt-link
                   :class="isDarkMode ? 'text-light' : 'text-dark'"
-                  to="/about-team"
+                  to="/about"
                 >
                   Projeto Blklight
                 </nuxt-link>
