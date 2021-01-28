@@ -78,7 +78,7 @@ export default {
   computed: {
     ...mapGetters(["isDarkMode"]),
     slugName() {
-      const link = this.article.dir.replace("/", "").replace("/articles", "");
+      const link = this.article.dir.replace("articles/", "").replace("/", "");
       return link;
     },
   },

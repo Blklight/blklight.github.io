@@ -126,7 +126,7 @@ export default {
   components: { Featured, Cards, Stories },
 
   async asyncData({ $content, params, $axios }) {
-    const featured = await $content({ deep: true }, params.slug)
+    const featured = await $content("articles", { deep: true }, params.slug)
       .only([
         "title",
         "abstract",
@@ -146,7 +146,7 @@ export default {
       .limit(1)
       .fetch();
 
-    const articles = await $content({ deep: true }, params.slug)
+    const articles = await $content("articles", { deep: true }, params.slug)
       .only([
         "title",
         "abstract",
@@ -165,7 +165,7 @@ export default {
       .limit(5)
       .fetch();
 
-    const stories = await $content({ deep: true }, params.slug)
+    const stories = await $content("articles", { deep: true }, params.slug)
       .only([
         "title",
         "abstract",

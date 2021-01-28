@@ -25,16 +25,26 @@
             <em> {{ article.title }} </em>
           </strong>
         </h3>
-        <!-- <p class="d-none d-sm-block mb-1">
+        <p class="d-none d-sm-block mb-1">
           <span class="marker marker-dark">
-            {{ article.abstract }}
+            <span class="">
+              {{ article.slug }}
+            </span>
           </span>
-        </p> -->
+        </p>
+        <p class="d-none d-sm-block mb-1">
+          <span class="marker marker-dark">
+            <span class="">
+              {{ slugName }}
+            </span>
+          </span>
+        </p>
 
         <div class="d-flex justify-content-between my-1">
           <span class="badge badge-dark badge-tag ml-0">
             <em> Por {{ article.author.name }} </em>
           </span>
+
           <nuxt-link
             tag="a"
             :to="{
@@ -74,7 +84,7 @@ export default {
   computed: {
     ...mapGetters(["isDarkMode"]),
     slugName() {
-      const link = this.article.dir.replace("/", "").replace("/articles", "");
+      const link = this.article.dir.replace("articles/", "").replace("/", "");
       return link;
     },
   },
