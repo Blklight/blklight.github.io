@@ -3,6 +3,8 @@ title: "Cyberpunk 2077 - Requisitos de sistema liberados"
 abstract: Learning how to use @nuxt/content to create a blog
 imageHeader: https://i.imgur.com/bDN6AB9.jpg
 cover: https://i.imgur.com/ZTcUbBn.jpg
+createdDate: "2020-12-01 19:50"
+updatedDate: ""
 channel: "nerdstation"
 category: "LPJ"
 tags: ""

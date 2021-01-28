@@ -16,18 +16,18 @@
           />
           <img v-else src="~/static/blklight-base.svg" width="50" alt="" />
 
-          <strong><em>BLKLIGHT</em></strong>
+          <strong class=""><em>BLKLIGHT</em></strong>
         </b-navbar-brand>
 
         <b-navbar-nav class="ml-auto">
           <b-nav-form>
-            <nuxt-link
+            <!-- <nuxt-link
               to="/search"
               class="btn"
               :class="isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'"
             >
               <font-awesome-icon :icon="['fas', 'search']" />
-            </nuxt-link>
+            </nuxt-link> -->
             <button
               class="btn"
               title="Modo noturno"

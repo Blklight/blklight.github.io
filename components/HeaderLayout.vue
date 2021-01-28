@@ -25,7 +25,9 @@
                 class="marker"
                 :class="isDarkMode ? 'marker-light' : 'marker-dark'"
               >
-                {{ dateFormat }}
+                <em>
+                  {{ dateFormat }}
+                </em>
               </span>
             </h5>
             <div class="d-flex">
@@ -113,7 +115,7 @@
     </div>
 
     <div v-if="headerTemplate === 'landscape'">
-      <div class="card card-flat m-0 hover-header">
+      <div class="card card-flat mt-0 mx-0 mb-1 hover-header">
         <picture>
           <source media="(max-width: 768px)" :srcset="article.cover" />
           <source media="(min-width: 769px)" :srcset="article.imageHeader" />
@@ -133,7 +135,7 @@
             </h1>
             <h5 class="blog-meta">
               <span class="marker marker-dark sm-mark">
-                {{ dateFormat }}
+                <em> {{ dateFormat }}</em>
               </span>
             </h5>
             <div class="d-flex">
@@ -170,23 +172,19 @@
         <div
           class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1 p-lg-0 col-md-10 offset-md-1 p-md-0 col-12"
         >
-          <div class="header-simple-info mb-0 mx-lg-0">
-            <h1 class="blog-title">
-              <span
-                class="marker marker-title"
-                :class="isDarkMode ? 'marker-light' : 'marker-dark'"
-              >
-                <em> {{ article.title }}</em>
-              </span>
+          <div class="header-simple-info mb-1 mx-lg-0">
+            <h1
+              class="blog-title"
+              :class="isDarkMode ? 'text-light' : 'text-dark'"
+            >
+              <em> {{ article.title }}</em>
             </h1>
 
-            <h5 class="blog-meta">
-              <span
-                class="marker"
-                :class="isDarkMode ? 'marker-light' : 'marker-dark'"
-              >
-                {{ dateFormat }}
-              </span>
+            <h5
+              class="blog-meta"
+              :class="isDarkMode ? 'text-light' : 'text-dark'"
+            >
+              {{ dateFormat }}
             </h5>
             <div class="d-flex">
               <div class="mt-1">
@@ -392,24 +390,21 @@
           </div>
         </div>
         <div
-          class="col-lg-8 offset-lg-2 p-lg-0 col-md-10 offset-md-1 p-md-0 col-12"
+          class="col-xl-6 offset-xl-3 col-lg-8 offset-lg-2 p-lg-0 col-md-10 offset-md-1 p-md-0 col-12"
         >
-          <div class="header-simple-info mb-0 mx-lg-0">
-            <h1 class="blog-title exo-font" style="font-style: italic">
-              <span
-                class="marker marker-title"
-                :class="isDarkMode ? 'marker-light' : 'marker-dark'"
-              >
+          <div
+            class="header-simple-info px-md-0 mb-0 mx-lg-0"
+            :class="isDarkMode ? 'text-light' : 'text-dark'"
+          >
+            <h1 class="blog-title">
+              <em>
                 {{ article.title }}
-              </span>
+              </em>
             </h1>
-            <h5 class="blog-meta exo-font" style="font-style: italic">
-              <span
-                class="marker px-1"
-                :class="isDarkMode ? 'marker-light' : 'marker-dark'"
-              >
+            <h5 class="blog-meta">
+              <em>
                 {{ dateFormat }}
-              </span>
+              </em>
             </h5>
             <div class="d-flex">
               <div class="mt-1">
@@ -490,7 +485,7 @@ export default {
     dateFormat() {
       const formattedDate = format(
         new Date(this.article.date),
-        "dd 'de' MMMM 'de' yyyy",
+        "dd 'de' MMMM 'de' yyyy', às' H:mm",
         {
           locale: ptBR,
         }

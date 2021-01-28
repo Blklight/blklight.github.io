@@ -3,6 +3,8 @@ title: "Join New Avengers"
 abstract: "Arte produzida para avaliação na disciplina de Tipografia 1, do curso de Design Digital."
 imageHeader: "https://i.imgur.com/jlu6jwf.jpg"
 cover: "https://i.imgur.com/uIY2t68.jpg"
+createdDate: "2020-12-05 16:30"
+updatedDate: ""
 channel: "nerdstation"
 category: "art"
 tags:

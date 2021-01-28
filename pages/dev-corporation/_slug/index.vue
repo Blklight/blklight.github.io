@@ -36,8 +36,11 @@
             </div>
           </div>
           <div class="col-xl-6 col-lg-7 col-12">
-            <div class="page px-2">
-              <div class="post monospace" :class="{ 'dark-post': isDarkMode }">
+            <div class="page px-2 py-3">
+              <div
+                class="post"
+                :class="[{ 'dark-post': isDarkMode }, fontType]"
+              >
                 <nuxt-content :document="article" />
               </div>
             </div>
@@ -61,7 +64,7 @@
           class="col-xl-6 offset-xl-3 col-lg-8 offset-lg-2 p-lg-0 col-md-10 offset-md-1 p-md-0 col-12"
         >
           <div class="page">
-            <div class="post monospace" :class="{ 'dark-post': isDarkMode }">
+            <div class="post" :class="[{ 'dark-post': isDarkMode }, fontType]">
               <nuxt-content :document="article" />
 
               <!-- <pre>{{ article }}</pre> -->
@@ -100,13 +103,17 @@ export default {
     return {};
   },
 
+  head() {
+    return { title: this.article.title, titleTemplate: "%s by Blklight" };
+  },
+
   computed: {
     ...mapGetters(["isDarkMode"]),
 
     headerInfo(article) {
       return {
         title: this.article.title,
-        date: this.article.createdAt,
+        date: this.article.createdDate,
         abstract: this.article.abstract,
         category: this.article.category,
         channel: this.article.channel,
@@ -134,14 +141,23 @@ export default {
 
     dateFormat() {
       const formattedDate = format(
-        new Date(this.article.createdAt),
-        "dd 'de' MMMM 'de' yyyy",
+        new Date(this.article.createdDate),
+        "dd 'de' MMMM 'de' yyyy', às' H:mm",
         {
           locale: ptBR,
         }
       );
 
       return formattedDate;
+    },
+
+    fontType() {
+      const font = this.article.fontType;
+      if (!font) {
+        return "base";
+      } else {
+        return font;
+      }
     },
   },
 };

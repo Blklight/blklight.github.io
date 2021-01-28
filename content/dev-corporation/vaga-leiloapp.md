@@ -3,20 +3,22 @@ title: "Vaga - Front-end Developer - Três Lagoas,MS"
 abstract: ""
 imageHeader: "https://i.imgur.com/fU2gYPJ.jpg"
 cover: "https://i.imgur.com/fU2gYPJ.jpg"
+createdDate: "2021-01-14 14:50"
+updatedDate: ""
 channel: "dev-corporation"
 category: "jobs"
 tags:
 featured: false
 type: "normal"
 headerLayout: "arts"
-fontType: ""
+fontType: "serif"
 author:
   name: "Ultimate Mercer"
   bio: "Ultimate Awakening"
   avatar: https://i.imgur.com/diuV6oy.jpg
 ---
 
-#### Sobre
+### **Sobre**
 
 Somos uma startup dando start ao nosso projeto envolvendo o Agro Negócio, você poderá ajudar a definir padrões e metodologias.
 

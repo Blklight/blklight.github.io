@@ -15,7 +15,7 @@
       >
         <div class="d-flex mb-1">
           <span class="badge badge-dark badge-tag ml-0 mr-1">
-            {{ formatDate(article.createdAt) }}
+            {{ formatDate(article.createdDate) }}
           </span>
           <ChannelBadge :channel="article.channel" :isTag="true" />
         </div>

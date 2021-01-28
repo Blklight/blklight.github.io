@@ -31,7 +31,7 @@
         </div>
         <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-8 offset-2">
           <nuxt-link
-            to="all-posts"
+            to="all-articles"
             class="btn btn-uv btn-flat mx-auto d-block"
             :class="{ 'btn-raised': !isDarkMode }"
           >
@@ -83,6 +83,9 @@
         <nuxt-link to="/playground" class="btn btn-neon-yellow btn-raised">
           Playground
         </nuxt-link>
+        <nuxt-link to="/twitch" class="btn btn-neon-yellow btn-raised">
+          Twitch
+        </nuxt-link>
 
         <!-- <nuxt-link to="/dev-corporation" class="btn btn-neon-yellow btn-raised">
           Dev Corporation
@@ -102,11 +105,11 @@
         </nuxt-link> -->
       </div>
     </div>
-    <div class="container-fluid">
+    <!-- <div class="container-fluid">
       <div class="col-xl-10 col-12 offset-xl-1 offset-0 px-xl-0 px-1 my-3">
-        <Twitch />
+        <TwitchModal />
       </div>
-    </div>
+    </div> -->
     <!-- <div class="container">
       <pre :class="isDarkMode ? 'text-light' : 'text-dark'">{{ test }}</pre>
     </div> -->
@@ -118,10 +121,9 @@ import { mapGetters } from "vuex";
 import Featured from "~/components/Featured";
 import Cards from "~/components/Cards";
 import Stories from "~/components/StoriesCard";
-import Twitch from "~/components/Twitch";
 
 export default {
-  components: { Featured, Cards, Stories, Twitch },
+  components: { Featured, Cards, Stories },
 
   async asyncData({ $content, params, $axios }) {
     const featured = await $content({ deep: true }, params.slug)
@@ -135,11 +137,11 @@ export default {
         "dir",
         "channel",
         "createdAt",
-        "updatedAt",
+        "createdDate",
         "featured",
         "author",
       ])
-      .sortBy("updatedAt", "desc")
+      .sortBy("createdDate", "desc")
       .where({ featured: true, type: "normal" })
       .limit(1)
       .fetch();
@@ -153,13 +155,12 @@ export default {
         "slug",
         "dir",
         "channel",
-        "createdAt",
-        "updatedAt",
+        "createdDate",
         "featured",
         "type",
         "author",
       ])
-      .sortBy("updatedAt", "desc")
+      .sortBy("createdDate", "desc")
       .where({ featured: false, type: "normal" })
       .limit(5)
       .fetch();
@@ -173,13 +174,12 @@ export default {
         "slug",
         "dir",
         "channel",
-        "createdAt",
-        "updatedAt",
+        "createdDate",
         "type",
         "featured",
         "author",
       ])
-      .sortBy("updatedAt", "desc")
+      .sortBy("createdDate", "desc")
       .where({ featured: true, type: "stories" })
       .limit(3)
       .fetch();

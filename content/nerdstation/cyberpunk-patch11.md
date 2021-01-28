@@ -3,29 +3,31 @@ title: "Cyberpunk 2077 - Patch 1.1"
 abstract: "Embarque no mundo de Cyberpunk 2077 — um RPG narrativo e de mundo aberto em um futuro sombrio idealizado pela CD PROJEKT RED, criadores da série de jogos The Witcher."
 imageHeader: "https://i.imgur.com/UKQK6p6.jpg"
 cover: "https://i.imgur.com/JSUnY9v.jpg?1"
+createdDate: "2021-01-22 21:00"
+updatedDate: ""
 channel: "nerdstation"
 category: "LPJ"
 tags: ""
 featured: false
 type: "normal"
 headerLayout: "landscape"
-fontType: ""
+fontType: "sans"
 author:
   name: "Ultimate Mercer"
   bio: "Ultimate Awakening"
   avatar: https://i.imgur.com/diuV6oy.jpg
 ---
 
-Nesta atualização, nos concentramos em diversas melhorias de estabilidade que podem ser conferidas nas notas do patch abaixo. Continuaremos com este trabalho no `patch 1.2` e outras atualizações que serão disponibilizadas posteriormente neste ano. Ao mesmo tempo, continuaremos corrigindo os erros encontrados por vocês e escutando a comunidade para melhorar a experiência de jogo geral.
+Nesta atualização, nos concentramos em diversas melhorias de estabilidade que podem ser conferidas nas notas do patch abaixo. Continuaremos com este trabalho no _`patch 1.2`_ e outras atualizações que serão disponibilizadas posteriormente neste ano. Ao mesmo tempo, continuaremos corrigindo os erros encontrados por vocês e escutando a comunidade para melhorar a experiência de jogo geral.
 
-## _Estabilidade_
+## _**Estabilidade**_
 
 Várias melhorias de estabilidade, incluindo:
 
 - Melhorias de uso de memória em vários sistemas dentro do jogo: personagens, interações, navegação, vídeos bink, folhagem, efeitos de laser, minimapa, dispositivos, IA, trânsito, sistema de dano ambiental, GPU etc.
 - Várias correções de erros (relacionadas, dentre outras, a carregamento de jogos salvos, abertura/fechamento do jogo e ponto sem retorno).
 
-## _Missões_
+## _**Missões**_
 
 - Correção de um erro onde as ligações do Delamain acabavam imediatamente e não podiam ser atendidas em Vou de Táxi.
 - Correção de um erro onde os jogadores não recebiam chamadas do Delamain ao se aproximar dos veículos relevantes em Vou de Táxi.
@@ -41,28 +43,28 @@ Várias melhorias de estabilidade, incluindo:
 - Correção de um erro que impedia jogadores de coletar a recompensa em Serviço: Liberdade da Imprensa. A missão será concluída automaticamente para aqueles que não conseguiram obter a recompensa anteriormente e a recompensa será fornecida automaticamente.
 - Correção de um erro onde Delamain permanecia em silêncio durante Vou de Táxi se o jogador se recusasse a ajudá-lo inicialmente.
 
-## _IU_
+## _**IU**_
 
 - Correção de erro onde uma solicitação para sair da neurodança permanecia ausente.
 - Remoção de um item inválido do saque.
 
-## _Visual_
+## _**Visual**_
 
 - Correção de um erro que fazia com que a trajetória de uma granada aparecesse no modo fotografia.
 - Correção da tonalização rosa das partículas quando vistas de perto.
 - Correção de carros que surgiam incorretamente em Crime Relatado: Boas-vindas a Night City.
 
-## _Conquistas_
+## _**Conquistas**_
 
 - Correção de um problema em que completar um dos assaltos em andamento em Santo Domingo às vezes não contribuiria para a progressão da conquista Selva de Concreto, impedindo sua conclusão.
 
-## _Diversos_
+## _**Diversos**_
 
 - Correção de erros responsáveis pelo tamanho excessivo dos jogos salvos (relacionados ao modificador que indica se o item foi criado) e redução do tamanho excessivo de jogos salvos já existentes (observação: isto não corrigirá jogos salvos de PC corrompidos antes da atualização 1.06).
 - Correção de um erro onde a entrada parava de ser registrada ao abrir o seletor de armas e realizar uma ação.
 - Correção de um erro onde o botão "Continuar" no menu principal podia carregar um arquivo salvo de fim de jogo.
 
-## _Específico para PC_
+## _**Específico para PC**_
 
 - Agora será possível obter conquistas estando no modo off-line do Steam. Observação: o modo off-line precisa ser ativado antes de iniciar o jogo. Esta alteração não funciona retroativamente.
 - Falhas de inicialização do jogo relacionadas ao cache de carregamento em placas de vídeo NVIDIA endereçadas.

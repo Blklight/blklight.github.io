@@ -19,7 +19,7 @@
       >
         <div class="d-flex mb-1">
           <span class="badge badge-dark badge-tag ml-0 mr-1">
-            {{ formatDate(article.createdAt) }}
+            {{ formatDate(article.createdDate) }}
           </span>
           <ChannelBadge :channel="article.channel" :isTag="true" />
         </div>
@@ -31,11 +31,6 @@
           </span>
         </h4>
 
-        <!-- <p class="d-none d-sm-block mb-1">
-          <span class="marker marker-dark">
-            {{ article.description }}
-          </span>
-        </p> -->
         <div class="d-flex justify-content-between my-1">
           <span class="badge badge-dark badge-tag ml-0">
             <em> Por {{ article.author.name }} </em>

@@ -2,6 +2,8 @@
 title: "Cyberpunk 2077 - Tudo sobre o universo do jogo"
 abstract: "Embarque no mundo de Cyberpunk 2077 — um RPG narrativo e de mundo aberto em um futuro sombrio idealizado pela CD PROJEKT RED, criadores da série de jogos The Witcher."
 imageHeader: https://i.imgur.com/X6INuFY.jpg
+createdDate: "2021-12-20 18:45"
+updatedDate: ""
 cover: ""
 channel: "nerdstation"
 category: "LPJ"
@@ -24,4 +26,5 @@ Cyberpunk 2077 é uma história de ação e aventura de mundo aberto ambientada 
 
 #### Episódio 1
 
-<iframe width="100%" height="400" src="https://www.youtube.com/embed/ToWfeUEAeeQ"  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="100%" height="400"
+frameborder="0" src="https://www.youtube.com/embed/ToWfeUEAeeQ"  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

@@ -11,7 +11,7 @@
     <div class="card-img-overlay d-flex flex-column">
       <div class="d-flex mb-2">
         <span class="badge badge-dark badge-tag ml-0 mr-2">
-          {{ formatDate(story.createdAt) }}
+          {{ formatDate(story.createdDate) }}
         </span>
         <ChannelBadge :channel="story.channel" :isTag="true" />
       </div>
@@ -41,7 +41,7 @@
             name: `${slugName}-slug`,
             params: { slug: `${story.slug}` },
           }"
-          class="btn btn-flat"
+          class="btn"
           :class="isDarkMode ? 'btn-neon-yellow' : 'btn-uv'"
         >
           Ler mais...

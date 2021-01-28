@@ -3,6 +3,8 @@ title: "Guia para encontrar Valberry - Genshin Impact"
 abstract: ""
 imageHeader: "https://i.imgur.com/NlwO7jl.jpg"
 cover: ""
+createdDate: "2020-12-10 19:50"
+updatedDate: ""
 channel: "nerdstation"
 category: "LPJ"
 tags:
