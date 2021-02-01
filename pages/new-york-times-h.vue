@@ -19,12 +19,15 @@
         >
           <div class="row">
             <div class="col-md-5 col-12">
-              <img
-                v-lazy="article.multimedia[0]['url']"
-                class="card-img-fit cyberpunk-effect"
-                style="height: 350px !important; width: 100% !important"
-                :title="article.multimedia[0].copyright"
-              />
+              <div class="view">
+                <img
+                  v-lazy="article.multimedia[0]['url']"
+                  class="card-img-fit cyberpunk-effect"
+                  style="height: 350px !important; width: 100% !important"
+                  :title="article.multimedia[0].copyright"
+                />
+                <div class="mask texture-mask-2"></div>
+              </div>
             </div>
             <div class="col-md-7 col-12">
               <div

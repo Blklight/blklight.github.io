@@ -21,17 +21,7 @@
         <strong><em>Playground</em></strong>
       </h1>
     </div>
-    <div class="col-xl-10 col-12 offset-xl-1 offset-0 px-xl-0 px-1">
-      <div
-        class="linear-background"
-        style="width: 100%; height: 600px; z-index: 1"
-      >
-        <div class="text-light px-4 py-3">
-          <p>Obrigado,</p>
-          <p>Time CHAOS</p>
-        </div>
-      </div>
-    </div>
+
     <div class="col-xl-10 col-12 offset-xl-1 offset-0 px-lg-0 px-3 pt-5">
       <div class="row">
         <div

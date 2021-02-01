@@ -3,12 +3,13 @@
     <div v-if="headerTemplate === 'portrait-left'">
       <div class="header-content header-h-full d-md-inline-flex">
         <div
-          class="header-image-half header-h-full header-border-right hover-header"
+          class="header-image-half header-h-full header-border-right hover-header view"
         >
           <div
             v-lazy:background-image="article.imageHeader"
             class="header-image-background header-h-full cyberpunk-effect fade-in-left"
           ></div>
+          <!-- <div class="mask texture-mask-2"></div> -->
         </div>
         <div class="header-info-half header-h-full">
           <div class="h-100 d-flex flex-column justify-content-end">
@@ -104,18 +105,19 @@
           </div>
         </div>
         <div
-          class="header-image-half header-h-full header-border-left hover-header"
+          class="header-image-half header-h-full header-border-left hover-header view"
         >
           <div
             v-lazy:background-image="article.imageHeader"
             class="header-image-background header-h-full cyberpunk-effect fade-in-right"
           ></div>
+          <!-- <div class="mask texture-mask-2"></div> -->
         </div>
       </div>
     </div>
 
     <div v-if="headerTemplate === 'landscape'">
-      <div class="card card-flat mt-0 mx-0 mb-1 hover-header">
+      <div class="card card-flat mt-0 mx-0 mb-1 view hover-header">
         <picture>
           <source media="(max-width: 768px)" :srcset="article.cover" />
           <source media="(min-width: 769px)" :srcset="article.imageHeader" />
@@ -124,6 +126,7 @@
             class="img-card-header cyberpunk-effect"
           />
         </picture>
+        <!-- <div class="mask texture-mask-2"></div> -->
         <div
           class="card-img-overlay h-100 d-flex flex-column justify-content-end"
         >
@@ -218,11 +221,12 @@
             </div>
           </div>
         </div>
-        <div class="hover-header">
+        <div class="hover-header view">
           <div
             v-lazy:background-image="article.imageHeader"
             class="header-simple-image-parallax cyberpunk-effect fade-in"
           ></div>
+          <!-- <div class="mask parallax-mask texture-mask-2"></div> -->
         </div>
       </div>
     </div>

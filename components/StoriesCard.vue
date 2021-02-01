@@ -3,11 +3,15 @@
     class="card mb-4"
     :class="isDarkMode ? 'hover-card-yellow' : 'hover-card-uv card-raised'"
   >
-    <img
-      v-lazy="imageSrc(story)"
-      :alt="story.title"
-      class="card-image-stories card-img-border cyberpunk-effect"
-    />
+    <div class="view">
+      <img
+        v-lazy="imageSrc(story)"
+        :alt="story.title"
+        class="card-image-stories card-img-border cyberpunk-effect"
+      />
+      <div v-if="texture" class="mask texture-mask-2"></div>
+    </div>
+
     <div class="card-img-overlay d-flex flex-column">
       <div class="d-flex mb-2">
         <span class="badge badge-dark badge-tag ml-0 mr-2">
@@ -64,6 +68,10 @@ export default {
     story: {
       type: Object,
       default: null,
+    },
+    texture: {
+      type: Boolean,
+      default: false,
     },
   },
 

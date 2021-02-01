@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="card card-featured-post card-background mb-4"
+      class="card card-featured-post card-background view mb-4"
       :class="[isDarkMode ? 'hover-card-yellow' : 'hover-card-uv card-raised']"
     >
       <img
@@ -10,6 +10,7 @@
         :alt="article.title"
         style="height: 650px !important"
       />
+      <div v-if="texture" class="mask texture-mask-2"></div>
       <div
         class="card-img-overlay h-100 d-flex flex-column justify-content-end px-3"
       >
@@ -25,20 +26,6 @@
             <em> {{ article.title }} </em>
           </strong>
         </h3>
-        <p class="d-none d-sm-block mb-1">
-          <span class="marker marker-dark">
-            <span class="">
-              {{ article.slug }}
-            </span>
-          </span>
-        </p>
-        <p class="d-none d-sm-block mb-1">
-          <span class="marker marker-dark">
-            <span class="">
-              {{ slugName }}
-            </span>
-          </span>
-        </p>
 
         <div class="d-flex justify-content-between my-1">
           <span class="badge badge-dark badge-tag ml-0">
@@ -78,6 +65,11 @@ export default {
     article: {
       type: Object,
       default: null,
+    },
+
+    texture: {
+      type: Boolean,
+      default: false,
     },
   },
 

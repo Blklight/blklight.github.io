@@ -8,28 +8,66 @@
 
         <div v-for="(member, i) in members" :key="i" class="row my-4">
           <div class="col-md-4 col-12">
-            <img
-              v-lazy="member.cover"
-              alt=""
-              class="rounded-circle mx-auto d-block cyberpunk-header"
-              style="width: 300px; height: 300px; object-fit: cover"
-            />
+            <div class="view">
+              <img
+                v-lazy="member.cover"
+                alt=""
+                class="rounded shadow-image mx-auto d-block cyberpunk-header"
+                style="width: 100%; height: 300px; object-fit: cover"
+              />
+              <div class="mask texture-mask-2"></div>
+            </div>
           </div>
           <div
             class="col-md-8 col-12"
             :class="isDarkMode ? 'text-light' : 'text-dark'"
           >
-            <h3>
-              <strong>
-                <em>
-                  {{ member.nickname }}
-                </em>
-              </strong>
-            </h3>
-            <h4>{{ member.name }}</h4>
-            <p>{{ member.description }}</p>
+            <div class="py-2">
+              <h3>
+                <strong>
+                  <em>
+                    {{ member.nickname }}
+                  </em>
+                </strong>
+              </h3>
+              <h4>
+                <em> {{ member.name }}</em>
+              </h4>
+              <p>{{ member.description }}</p>
+            </div>
           </div>
         </div>
+
+        <template v-for="(member, i) in members">
+          <div class="row my-4" :key="i">
+            <div class="col-md-4 col-12">
+              <img
+                v-lazy="member.cover"
+                alt=""
+                class="card-img-fit cyberpunk-header"
+                style="height: 400px !important; width: 100% !important"
+              />
+            </div>
+            <div
+              class="col-md-8 col-12"
+              :class="isDarkMode ? 'text-light' : 'text-dark'"
+            >
+              <div class="py-3">
+                <h3>
+                  <strong>
+                    <em>
+                      {{ member.nickname }}
+                    </em>
+                  </strong>
+                </h3>
+                <h4>
+                  <em> {{ member.name }}</em>
+                </h4>
+                <p>{{ member.description }}</p>
+              </div>
+            </div>
+          </div>
+        </template>
       </div>
     </div>
   </div>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="card card-background mb-4"
+      class="card card-background view mb-4"
       :class="[
         { 'card-featured-post': isFeatured },
         isDarkMode ? 'hover-card-yellow' : 'hover-card-uv card-raised',
@@ -13,7 +13,7 @@
         :class="[{ 'featured-image': isFeatured }]"
         :alt="article.title"
       />
-
+      <div v-if="texture" class="mask texture-mask-2"></div>
       <div
         class="card-img-overlay h-100 d-flex flex-column justify-content-end"
       >
@@ -70,6 +70,11 @@ export default {
       default: null,
     },
     isFeatured: {
+      type: Boolean,
+      default: false,
+    },
+
+    texture: {
       type: Boolean,
       default: false,
     },

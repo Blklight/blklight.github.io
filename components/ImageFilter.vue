@@ -327,6 +327,296 @@
         result="blend"
       />
     </filter>
+
+    <filter
+      id="red-purple"
+      x="-10%"
+      y="-10%"
+      width="120%"
+      height="120%"
+      filterUnits="objectBoundingBox"
+      primitiveUnits="userSpaceOnUse"
+      color-interpolation-filters="sRGB"
+    >
+      <feColorMatrix
+        type="matrix"
+        values=".33 .33 .33 0 0
+            .33 .33 .33 0 0
+            .33 .33 .33 0 0
+            0 0 0 1 0"
+        in="SourceGraphic"
+        result="colormatrix"
+      />
+      <feComponentTransfer in="colormatrix" result="componentTransfer">
+        <feFuncR type="table" tableValues="0.07 0.27 0.92 1 1" />
+        <feFuncG type="table" tableValues="0.07 0 0.12 0.58 1" />
+        <feFuncB type="table" tableValues="0.07 1 0.2 0 0" />
+        <feFuncA type="table" tableValues="0 1" />
+      </feComponentTransfer>
+      <feBlend
+        mode="normal"
+        in="componentTransfer"
+        in2="SourceGraphic"
+        result="blend"
+      />
+    </filter>
+    <filter
+      id="red-purple-2"
+      x="-10%"
+      y="-10%"
+      width="120%"
+      height="120%"
+      filterUnits="objectBoundingBox"
+      primitiveUnits="userSpaceOnUse"
+      color-interpolation-filters="sRGB"
+    >
+      <feColorMatrix
+        type="matrix"
+        values=".33 .33 .33 0 0
+            .33 .33 .33 0 0
+            .33 .33 .33 0 0
+            0 0 0 1 0"
+        in="SourceGraphic"
+        result="colormatrix"
+      />
+      <feComponentTransfer in="colormatrix" result="componentTransfer">
+        <feFuncR type="table" tableValues="0.07 0.18 0.92 1 1" />
+        <feFuncG type="table" tableValues="0.07 0 0.12 0.58 1" />
+        <feFuncB type="table" tableValues="0.07 0.66 0.2 0 0" />
+        <feFuncA type="table" tableValues="0 1" />
+      </feComponentTransfer>
+      <feBlend
+        mode="normal"
+        in="componentTransfer"
+        in2="SourceGraphic"
+        result="blend"
+      />
+    </filter>
+    <filter
+      id="cyberpunk-yellow"
+      x="-10%"
+      y="-10%"
+      width="120%"
+      height="120%"
+      filterUnits="objectBoundingBox"
+      primitiveUnits="userSpaceOnUse"
+      color-interpolation-filters="sRGB"
+    >
+      <feColorMatrix
+        type="matrix"
+        values=".33 .33 .33 0 0
+            .33 .33 .33 0 0
+            .33 .33 .33 0 0
+            0 0 0 1 0"
+        in="SourceGraphic"
+        result="colormatrix"
+      />
+      <feComponentTransfer in="colormatrix" result="componentTransfer">
+        <feFuncR type="table" tableValues="0.1 0.39 0.01 0.97 1 1" />
+        <feFuncG type="table" tableValues="0 0.1 0.66 0.56 0.93 0.93" />
+        <feFuncB type="table" tableValues="1 1 0.96 1 0 0" />
+        <feFuncA type="table" tableValues="0 1" />
+      </feComponentTransfer>
+      <feBlend
+        mode="normal"
+        in="componentTransfer"
+        in2="SourceGraphic"
+        result="blend"
+      />
+    </filter>
+    <filter
+      id="cyberpunk-yellowd"
+      x="-10%"
+      y="-10%"
+      width="120%"
+      height="120%"
+      filterUnits="objectBoundingBox"
+      primitiveUnits="userSpaceOnUse"
+      color-interpolation-filters="sRGB"
+    >
+      <feColorMatrix
+        type="matrix"
+        values=".33 .33 .33 0 0
+            .33 .33 .33 0 0
+            .33 .33 .33 0 0
+            0 0 0 1 0"
+        in="SourceGraphic"
+        result="colormatrix"
+      />
+      <feComponentTransfer in="colormatrix" result="componentTransfer">
+        <feFuncR type="table" tableValues="0.07 0.1 0.39 0.01 0.97 1 1" />
+        <feFuncG type="table" tableValues="0.07 0 0.1 0.66 0.56 0.93 0.93" />
+        <feFuncB type="table" tableValues="0.07 1 1 0.96 1 0 0" />
+        <feFuncA type="table" tableValues="0 1" />
+      </feComponentTransfer>
+      <feBlend
+        mode="normal"
+        in="componentTransfer"
+        in2="SourceGraphic"
+        result="blend"
+      />
+    </filter>
+    <filter
+      id="cyberpunk-nobw"
+      x="-10%"
+      y="-10%"
+      width="120%"
+      height="120%"
+      filterUnits="objectBoundingBox"
+      primitiveUnits="userSpaceOnUse"
+      color-interpolation-filters="sRGB"
+    >
+      <feColorMatrix
+        type="matrix"
+        values=".33 .33 .33 0 0
+            .33 .33 .33 0 0
+            .33 .33 .33 0 0
+            0 0 0 1 0"
+        in="SourceGraphic"
+        result="colormatrix"
+      />
+      <feComponentTransfer in="colormatrix" result="componentTransfer">
+        <feFuncR type="table" tableValues="0.1 0.39 0.01 0.97 1" />
+        <feFuncG type="table" tableValues="0 0.1 0.66 0.56 0.93" />
+        <feFuncB type="table" tableValues="1 1 0.96 1 0" />
+        <feFuncA type="table" tableValues="0 1" />
+      </feComponentTransfer>
+      <feBlend
+        mode="normal"
+        in="componentTransfer"
+        in2="SourceGraphic"
+        result="blend"
+      />
+    </filter>
+    <filter
+      id="cyberpunk-blue-yellow"
+      x="-10%"
+      y="-10%"
+      width="120%"
+      height="120%"
+      filterUnits="objectBoundingBox"
+      primitiveUnits="userSpaceOnUse"
+      color-interpolation-filters="sRGB"
+    >
+      <feColorMatrix
+        type="matrix"
+        values=".33 .33 .33 0 0
+            .33 .33 .33 0 0
+            .33 .33 .33 0 0
+            0 0 0 1 0"
+        in="SourceGraphic"
+        result="colormatrix"
+      />
+      <feComponentTransfer in="colormatrix" result="componentTransfer">
+        <feFuncR type="table" tableValues="0.39 0.01 0.97 1" />
+        <feFuncG type="table" tableValues="0.1 0.66 0.56 0.93" />
+        <feFuncB type="table" tableValues="1 0.96 1 0" />
+        <feFuncA type="table" tableValues="0 1" />
+      </feComponentTransfer>
+      <feBlend
+        mode="normal"
+        in="componentTransfer"
+        in2="SourceGraphic"
+        result="blend"
+      />
+    </filter>
+    <filter
+      id="cyberpunk-pyw"
+      x="-10%"
+      y="-10%"
+      width="120%"
+      height="120%"
+      filterUnits="objectBoundingBox"
+      primitiveUnits="userSpaceOnUse"
+      color-interpolation-filters="sRGB"
+    >
+      <feColorMatrix
+        type="matrix"
+        values=".33 .33 .33 0 0
+            .33 .33 .33 0 0
+            .33 .33 .33 0 0
+            0 0 0 1 0"
+        in="SourceGraphic"
+        result="colormatrix"
+      />
+      <feComponentTransfer in="colormatrix" result="componentTransfer">
+        <feFuncR type="table" tableValues="0.07 0.39 0.01 0.97 1 1" />
+        <feFuncG type="table" tableValues="0.07 0.1 0.66 0.56 0.93 0.93" />
+        <feFuncB type="table" tableValues="0.07 1 0.96 1 0 0" />
+        <feFuncA type="table" tableValues="0 1" />
+      </feComponentTransfer>
+      <feBlend
+        mode="normal"
+        in="componentTransfer"
+        in2="SourceGraphic"
+        result="blend"
+      />
+    </filter>
+
+    <filter
+      id="cyberpunk-v"
+      x="-10%"
+      y="-10%"
+      width="120%"
+      height="120%"
+      filterUnits="objectBoundingBox"
+      primitiveUnits="userSpaceOnUse"
+      color-interpolation-filters="sRGB"
+    >
+      <feColorMatrix
+        type="matrix"
+        values=".33 .33 .33 0 0
+            .33 .33 .33 0 0
+            .33 .33 .33 0 0
+            0 0 0 1 0"
+        in="SourceGraphic"
+        result="colormatrix"
+      />
+      <feComponentTransfer in="colormatrix" result="componentTransfer">
+        <feFuncR type="table" tableValues="0.07 0.39 0.01 0.97 1 1" />
+        <feFuncG type="table" tableValues="0.07 0.1 0.66 0.56 0.93 1" />
+        <feFuncB type="table" tableValues="0.07 1 0.96 1 0 1" />
+        <feFuncA type="table" tableValues="0 1" />
+      </feComponentTransfer>
+      <feBlend
+        mode="normal"
+        in="componentTransfer"
+        in2="SourceGraphic"
+        result="blend"
+      />
+    </filter>
+    <filter
+      id="cyberpunk-v2"
+      x="-10%"
+      y="-10%"
+      width="120%"
+      height="120%"
+      filterUnits="objectBoundingBox"
+      primitiveUnits="userSpaceOnUse"
+      color-interpolation-filters="sRGB"
+    >
+      <feColorMatrix
+        type="matrix"
+        values=".33 .33 .33 0 0
+            .33 .33 .33 0 0
+            .33 .33 .33 0 0
+            0 0 0 1 0"
+        in="SourceGraphic"
+        result="colormatrix"
+      />
+      <feComponentTransfer in="colormatrix" result="componentTransfer">
+        <feFuncR type="table" tableValues="0.1 0.39 0.01 0.97 1 1" />
+        <feFuncG type="table" tableValues="0 0.1 0.66 0.56 0.93 1" />
+        <feFuncB type="table" tableValues="1 1 0.96 1 0 1" />
+        <feFuncA type="table" tableValues="0 1" />
+      </feComponentTransfer>
+      <feBlend
+        mode="normal"
+        in="componentTransfer"
+        in2="SourceGraphic"
+        result="blend"
+      />
+    </filter>
   </svg>
 </template>
 <script>
@@ -339,7 +629,7 @@ export default {};
     &:hover {
       .cyberpunk-effect {
         animation: ease-in-out 0.2s;
-        filter: url("#cyberpunk-ultw");
+        filter: url("#cyberpunk-v");
       }
     }
   }
@@ -350,7 +640,7 @@ export default {};
   &-yellow {
     &:hover {
       .cyberpunk-effect {
-        filter: url("#cyberpunk-ultw");
+        filter: url("#cyberpunk-pyw");
       }
     }
   }
@@ -359,13 +649,13 @@ export default {};
 .hover-header {
   &:hover {
     .cyberpunk-effect {
-      filter: url("#cyberpunk-ultw");
+      filter: url("#cyberpunk-v");
     }
   }
 }
 
 .cyberpunk-header {
-  filter: url("#cyberpunk-ultw");
+  filter: url("#cyberpunk-v");
 }
 
 /* ----------------------------------------------
