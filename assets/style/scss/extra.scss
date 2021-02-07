@@ -1,5 +1,10 @@
+// body {
+//   color: #eaeaea;
+//   background-color: #121212;
+// }
+
 .card {
-  border-radius: 0.5rem !important;
+  border-radius: 0.5rem;
 }
 .hover-card {
   &-uv {
@@ -140,15 +145,51 @@ pre {
 .page {
   .post {
     code {
-      color: #00bfa5 !important;
+      color: darken(#00bfa5, 2.5%);
       font-weight: bold;
     }
-  }
+    ul {
+      margin-top: 0.5rem;
+    }
+    li {
+      margin-bottom: 1rem;
+    }
 
-  .dark-post {
-    code {
-      color: #e83e8c !important;
-      font-weight: bold;
+    blockquote {
+      background-color: lighten(#fff6dd, 2.5%);
+      border-left: 8px solid #480bff !important;
+      border: 1px solid #480bff;
+      margin: 1.25rem 0;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      font-style: italic;
+
+      p {
+        margin-bottom: 1rem;
+      }
+    }
+
+    &.dark-post {
+      code {
+        // color: #e83e8c !important;
+        color: lighten(#fbc02d, 10%);
+        font-weight: bold;
+      }
+
+      a {
+        color: lighten(#ff00ff, 20%) !important;
+      }
+
+      blockquote {
+        background-color: darken(#121212, 2.5%);
+        border-left: 8px solid #ffff00 !important;
+        border: 1px solid #ffff00;
+
+        margin: 1.25rem 0;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        font-style: italic;
+      }
     }
   }
 }

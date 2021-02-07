@@ -59,12 +59,39 @@
     </div>
     <div v-else>
       <HeaderLayout :article="headerInfo" />
-      <div class="container-fluid px-md-0 py-4">
+      <div class="container-fluid px-0 py-4">
         <div
           class="col-xl-6 offset-xl-3 col-lg-8 offset-lg-2 p-lg-0 col-md-10 offset-md-1 p-md-0 col-12"
         >
           <div class="page">
             <div class="post" :class="[{ 'dark-post': isDarkMode }, fontType]">
+              <template v-if="article.type === 'stories'">
+                <p>{{ article.abstract }}</p>
+
+                <nav
+                  class="border py-3 px-3 mb-4 rounded"
+                  :class="isDarkMode ? 'border-light' : 'border-dark'"
+                >
+                  <h4 class="mb-1">
+                    <strong><em>Índice</em></strong>
+                  </h4>
+                  <hr
+                    class="mt-2"
+                    :class="isDarkMode ? 'bg-light' : 'bg-dark'"
+                  />
+
+                  <ol>
+                    <!-- <li v-for="(link, i) in article.toc" :key="i"> -->
+                    <li v-for="link of article.toc" :key="link.id">
+                      <NuxtLink :to="`#${link.id}`">
+                        <strong>
+                          <em>{{ link.text }}</em>
+                        </strong>
+                      </NuxtLink>
+                    </li>
+                  </ol>
+                </nav>
+              </template>
               <nuxt-content :document="article" />
 
               <!-- <pre>{{ article }}</pre> -->

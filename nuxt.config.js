@@ -35,16 +35,7 @@ export default {
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: [
     // https://go.nuxtjs.dev/bootstrap
-    [
-      "bootstrap-vue/nuxt",
-      {
-        bootstrapVue: {
-          bootstrapCSS: false,
-          bootstrapVueCSS: false,
-          componentsPlugin: ["NavbarPlugin"],
-        },
-      },
-    ],
+    "bootstrap-vue/nuxt",
     // https://go.nuxtjs.dev/axios
     "@nuxtjs/axios",
     // https://go.nuxtjs.dev/pwa
@@ -76,9 +67,17 @@ export default {
     markdown: {
       prism: {
         // theme: "prism-themes/themes/prism-xonokai.css",
-        theme: "prism-themes/themes/prism-synthwave84.css",
+        // theme: "prism-themes/themes/prism-synthwave84.css",
+        theme: "prism-themes/themes/prism-dracula.css",
+        // theme: "prism-themes/themes/prism-shades-of-purple.css",
       },
     },
+  },
+
+  bootstrapVue: {
+    bootstrapCSS: false,
+    bootstrapVueCSS: false,
+    componentsPlugin: ["NavbarPlugin"],
   },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)

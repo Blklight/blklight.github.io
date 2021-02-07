@@ -172,10 +172,8 @@
 
     <div v-if="headerTemplate === 'parallax'">
       <div class="header-simple">
-        <div
-          class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1 p-lg-0 col-md-10 offset-md-1 p-md-0 col-12"
-        >
-          <div class="header-simple-info mb-1 mx-lg-0">
+        <div class="col-lg-10 offset-lg-1 col-md-10 offset-md-1 px-md-2 col-12">
+          <div class="header-simple-info mb-1">
             <h1
               class="blog-title"
               :class="isDarkMode ? 'text-light' : 'text-dark'"
@@ -187,7 +185,7 @@
               class="blog-meta"
               :class="isDarkMode ? 'text-light' : 'text-dark'"
             >
-              {{ dateFormat }}
+              <em> {{ dateFormat }}</em>
             </h5>
             <div class="d-flex">
               <div class="mt-1">

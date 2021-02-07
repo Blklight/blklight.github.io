@@ -1,5 +1,9 @@
 <template>
   <section class="container-fluid">
+    <div class="container">
+      <img src="https://i.imgur.com/ehfbNpw.jpg" class="img-fluid" alt="" />
+      <div class="p-5 bg-orange"></div>
+    </div>
     <div class="col-xl-10 col-12 offset-xl-1 offset-0 px-xl-0 px-1">
       <template v-if="isDarkMode">
         <img

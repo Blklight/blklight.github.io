@@ -576,7 +576,7 @@
         <feFuncR type="table" tableValues="0.07 0.39 0.01 0.97 1 1" />
         <feFuncG type="table" tableValues="0.07 0.1 0.66 0.56 0.93 1" />
         <feFuncB type="table" tableValues="0.07 1 0.96 1 0 1" />
-        <feFuncA type="table" tableValues="0 1" />
+        <feFuncA type="table" tableValues="0 0.8" />
       </feComponentTransfer>
       <feBlend
         mode="normal"

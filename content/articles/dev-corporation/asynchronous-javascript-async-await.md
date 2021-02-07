@@ -143,7 +143,8 @@ Para chamar o método, nós faríamos:
 
 ```js
 const exampleClass = new Example();
-  exampleClass.asyncMethod().then(//do whatever you want with the result)
+  exampleClass.asyncMethod()
+	.then(//do whatever you want with the result)
 ```
 
 #### **Await is thenable**
@@ -180,10 +181,10 @@ Em síntese, `async/await` é uma sintaxe limpa para se escrever código Javascr
 
 Tenha em mente enquanto utilizar `async/await`:
 
-- _**Funções assíncronas retornan uma `promise`.**_
-- _**`Await` só pode ser usado dentro de um bloco `async`.**_
-- _**`Await` aguarda até que a função(`promise`) seja resolvida ou rejeitada.**_
-- _**É de fácil aprendizado e utilização. Divirta-se experimentando!**_
+- _Funções assíncronas retornan uma `promise`._
+- _`Await` só pode ser usado dentro de um bloco `async`._
+- _`Await` aguarda até que a função(`promise`) seja resolvida ou rejeitada._
+- _É de fácil aprendizado e utilização. Divirta-se experimentando!_
 
 Gostou deste artigo? [Siga @joykare no Twitter](https://twitter.com/joykare_).
 

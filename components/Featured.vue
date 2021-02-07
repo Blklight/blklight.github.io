@@ -21,14 +21,16 @@
           <ChannelBadge :channel="article.channel" :isTag="true" />
         </div>
 
-        <h3 class="marker marker-dark">
-          <strong>
-            <em> {{ article.title }} </em>
-          </strong>
+        <h3>
+          <span class="marker marker-dark py-1">
+            <strong>
+              <em> {{ article.title }} </em>
+            </strong>
+          </span>
         </h3>
 
         <div class="d-flex justify-content-between my-1">
-          <span class="badge badge-dark badge-tag ml-0">
+          <span class="badge badge-dark badge-tag ml-0 d-none d-sm-block">
             <em> Por {{ article.author.name }} </em>
           </span>
 
@@ -38,7 +40,7 @@
               name: `${slugName}-slug`,
               params: { slug: `${article.slug}` },
             }"
-            class="btn btn-sm"
+            class="btn btn-sm ml-auto"
             :class="isDarkMode ? 'btn-neon-yellow' : 'btn-uv'"
           >
             Ler mais...

@@ -4,7 +4,7 @@
     <div class="container-fluid mb-4">
       <div class="col-xl-10 col-12 offset-xl-1 offset-0 px-xl-0 px-1">
         <div class="row py-3">
-          <div class="col-lg-7 col-md-6 col-12 px-md-4 px-3 mb-3">
+          <div class="col-lg-7 col-md-6 col-12 px-md-3 pad mb-3">
             <div class="sticky-top">
               <h2
                 class="mt-3 mb-3"
@@ -17,7 +17,7 @@
               </template>
             </div>
           </div>
-          <div class="col-lg-5 col-md-6 col-12 px-md-4 px-3">
+          <div class="col-lg-5 col-md-6 col-12 px-md-3 pad">
             <h2
               class="mt-3 mb-3"
               :class="isDarkMode ? 'text-light' : 'text-dark'"
@@ -50,13 +50,13 @@
           <Stories :story="story" />
         </div>
         <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-8 offset-2">
-          <nuxt-link
+          <NuxtLink
             to="/all-stories"
             class="btn btn-uv btn-flat mx-auto d-block"
             :class="{ 'btn-raised': !isDarkMode }"
           >
             Ver mais stories
-          </nuxt-link>
+          </NuxtLink>
         </div>
       </div>
     </div>
@@ -196,3 +196,8 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+.pad {
+  padding: 0 0.75rem;
+}
+</style>

@@ -2,7 +2,7 @@
   <div>
     <span
       v-if="channel === 'dev-corporation'"
-      class="badge badge-primary ml-0"
+      class="badge badge-dark text-primary ml-0"
       :class="isTag ? 'badge-tag' : ''"
     >
       Dev Corporation
@@ -23,7 +23,7 @@
     </span>
     <span
       v-if="channel === 'redlight'"
-      class="badge badge-pink ml-0"
+      class="badge badge-dark text-pink ml-0"
       :class="isTag ? 'badge-tag' : ''"
     >
       Redlight

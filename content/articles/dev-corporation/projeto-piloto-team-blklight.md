@@ -1,13 +1,17 @@
 ---
 title: Projeto Piloto - Team Blklight
-description: ""
-img: https://i.imgur.com/qLXp16t.jpg
-imgAlt: ""
-alt: my first blog post
+abstract: ""
+imageHeader: "https://i.imgur.com/qLXp16t.jpg"
+cover: ""
+createdDate: "2021-02-03 22:30"
+updatedDate: ""
 channel: "dev-corporation"
-category: "LPJ"
-isFeatured: false
-headerLayout: ""
+category: "code"
+tags:
+featured: false
+type: "normal"
+headerLayout: "image-top"
+fontType: "base"
 author:
   name: "Ultimate Mercer"
   bio: "Ultimate Awakening"

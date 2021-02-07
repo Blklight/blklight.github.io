@@ -1,7 +1,7 @@
 <template>
   <footer class="mt-auto">
     <div
-      class="container-fluid mt-4"
+      class="container-fluid"
       :class="isDarkMode ? 'bg-dark text-light' : 'bg-polen text-dark'"
     >
       <div class="col-xl-10 col-12 offset-xl-1 offset-0 px-xl-0 px-2 py-5">

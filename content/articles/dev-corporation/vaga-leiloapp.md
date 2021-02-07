@@ -10,7 +10,7 @@ category: "jobs"
 tags:
 featured: false
 type: "normal"
-headerLayout: "arts"
+headerLayout: "square-profile"
 fontType: "serif"
 author:
   name: "Ultimate Mercer"

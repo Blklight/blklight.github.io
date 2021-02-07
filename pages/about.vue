@@ -2,6 +2,28 @@
   <div :class="{ 'bg-dark': isDarkMode }">
     <div class="container-fluid pt-3 mb-4">
       <div class="col-xl-10 col-12 offset-xl-1 offset-0 px-xl-0 px-1">
+        <Logo />
+        <div :class="isDarkMode ? 'text-light' : 'text-dark'">
+          <p>
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolores,
+            quod, totam, neque porro fugiat recusandae cum voluptatum optio
+            officia possimus ullam dicta magnam cupiditate praesentium!
+            Inventore, et id. Delectus, provident.
+          </p>
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis
+            magnam dolorem, odio atque a rerum porro. Possimus dignissimos
+            impedit odit rem cupiditate amet magni, nobis velit quos at? Earum,
+            adipisci!
+          </p>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. A quae
+            minima rem! A similique mollitia velit facere aliquam, molestiae
+            inventore rem accusamus totam illo, libero odit dolorem culpa
+            recusandae accusantium?
+          </p>
+        </div>
+
         <h2 class="mt-3 mb-2" :class="isDarkMode ? 'text-light' : 'text-dark'">
           <strong><em>Sobre</em></strong>
         </h2>
@@ -78,7 +100,10 @@ import { mapGetters } from "vuex";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
+import Logo from "~/components/Logo";
+
 export default {
+  components: { Logo },
   async asyncData({ $content, params }) {
     const members = await $content(
       "project-blklight/members",

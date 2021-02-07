@@ -23,8 +23,8 @@
           </span>
           <ChannelBadge :channel="article.channel" :isTag="true" />
         </div>
-        <h4 class="marker marker-dark">
-          <span>
+        <h4>
+          <span class="marker marker-dark py-1">
             <strong>
               <em> {{ article.title }} </em>
             </strong>
@@ -32,7 +32,9 @@
         </h4>
 
         <div class="d-flex justify-content-between my-1">
-          <span class="badge badge-dark badge-tag ml-0">
+          <span
+            class="badge badge-dark badge-tag ml-0 d-none d-md-block d-md-none d-lg-block"
+          >
             <em> Por {{ article.author.name }} </em>
           </span>
           <nuxt-link
@@ -41,7 +43,7 @@
               name: `${slugName}-slug`,
               params: { slug: `${article.slug}` },
             }"
-            class="btn btn-sm"
+            class="btn btn-sm ml-auto"
             :class="isDarkMode ? 'btn-neon-yellow' : 'btn-uv'"
           >
             Ler mais...

@@ -11,7 +11,7 @@ tags: ""
 featured: false
 type: "normal"
 headerLayout: "landscape"
-fontType: "sans"
+fontType: "monospace"
 author:
   name: "Ultimate Mercer"
   bio: "Ultimate Awakening"

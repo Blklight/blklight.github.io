@@ -15,7 +15,6 @@
             alt=""
           />
           <img v-else src="~/static/blklight-base.svg" width="50" alt="" />
-
           <strong class=""><em>BLKLIGHT</em></strong>
         </b-navbar-brand>
 
