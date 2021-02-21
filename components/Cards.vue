@@ -4,7 +4,7 @@
       class="card card-background view mb-4"
       :class="[
         { 'card-featured-post': isFeatured },
-        isDarkMode ? 'hover-card-yellow' : 'hover-card-uv card-raised',
+        isDarkMode ? 'hover-card-uv' : 'hover-card-uv card-raised',
       ]"
     >
       <img
@@ -32,19 +32,18 @@
         </h4>
 
         <div class="d-flex justify-content-between my-1">
-          <span
+          <!-- <span
             class="badge badge-dark badge-tag ml-0 d-none d-md-block d-md-none d-lg-block"
           >
-            <em> Por {{ article.author.name }} </em>
-          </span>
+            Por {{ article.author.name }}
+          </span> -->
           <nuxt-link
             tag="a"
             :to="{
               name: `${slugName}-slug`,
               params: { slug: `${article.slug}` },
             }"
-            class="btn btn-sm ml-auto"
-            :class="isDarkMode ? 'btn-neon-yellow' : 'btn-uv'"
+            class="btn btn-uv btn-custom ml-auto"
           >
             Ler mais...
           </nuxt-link>

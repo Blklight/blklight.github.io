@@ -12,13 +12,14 @@ featured: true
 type: "stories"
 headerLayout: "parallax"
 fontType: "monospace"
+isPublished: true
 author:
   name: "Ultimate Mercer"
   bio: "Ultimate Awakening"
   avatar: https://i.imgur.com/diuV6oy.jpg
 ---
 
-## _**WSL - Windows Subsystem for Linux (Subsistema do Windows para Linux)**_
+## **WSL - Windows Subsystem for Linux (Subsistema do Windows para Linux)**
 
 O WSL permite que os desenvolvedores executem um ambiente GNU/Linux, incluindo a maioria das ferramentas de linha de comando, utilitários e aplicativos, diretamente no Windows, sem modificações e sem a sobrecarga de uma máquina virtual tradicional ou instalação dualboot.
 
@@ -42,7 +43,7 @@ Essa nova arquitetura altera como esses binários do Linux interagem com o Windo
 
 As distribuições individuais do Linux podem ser executadas com a arquitetura do WSL 1 ou do WSL 2. Cada distribuição pode passar por upgrade ou downgrade a qualquer momento e você pode executar distribuições do WSL 1 e do WSL 2 lado a lado. O WSL 2 usa uma arquitetura totalmente nova que se beneficia do uso de um kernel Linux real.
 
-## _**Guia de instalação**_
+## **Guia de instalação**
 
 Existem dois tipos de instalação possível, uma instalação simplificada para aqueles que são participantes no Programa Windows Insiders, você pode encontrar informações [aqui](https://docs.microsoft.com/pt-br/windows/wsl/install-win10#simplified-installation-for-windows-insiders). Ou a instalação manual, contendo seis etapas(As etapas de instalação manual para WSL estão listadas abaixo e podem ser usadas para instalar o Linux em qualquer versão do Windows 10.).
 
@@ -167,13 +168,3 @@ wsl --set-default-version 2
 Isso definirá a versão de qualquer nova distribuição instalada no WSL 2.
 
 Para mais informações acesse a página oficial [aqui.](https://docs.microsoft.com/pt-br/windows/wsl/install-win10)
-
-## _**Nuxt**_
-
-Nuxt.js é uma estrutura de aplicativo da web gratuita e de código aberto baseada em Vue.js, Node.js, Webpack e Babel.js. O framework é anunciado como um "meta-framework para aplicações universais"
-
-### Pré-requisitos
-
-- Node - pelo menos a versão 10.13. É recomendado que se tenha última versão LTS instalada.
-- Um editor de texto, é recomendado o uso do VSCode com a extensão Vetur.
-- Um terminal, é recomendado utilizar o terminal integrado do VSCode.

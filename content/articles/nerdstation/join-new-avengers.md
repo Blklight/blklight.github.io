@@ -12,6 +12,7 @@ featured: false
 type: "normal"
 headerLayout: "arts"
 fontType: ""
+isPublished: true
 author:
   name: "Ultimate Mercer"
   bio: "Ultimate Awakening"

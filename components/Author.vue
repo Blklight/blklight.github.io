@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="container-fluid mb-4"
-    :class="isDarkMode ? 'bg-neon-yellow' : 'bg-uv'"
-  >
+  <div class="container-fluid bg-uv mb-4">
     <div class="container">
       <div class="card card-plain py-3">
         <div class="row">
@@ -26,7 +23,7 @@
                 </span>
               </h3>
 
-              <p :class="isDarkMode ? 'text-dark' : 'text-light'">
+              <p class="text-light">
                 {{ author.bio }}
               </p>
             </div>

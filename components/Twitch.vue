@@ -1,22 +1,24 @@
 <template>
-  <div class="twitch-grid-container">
-    <div class="twitch-video">
-      <iframe
-        class="twitch-iframe-video"
-        src="https://player.twitch.tv/?channel=teamblklight&parent=blklight.github.io&muted=true&layout=video-with-chat"
-        frameborder="0"
-        muted="true"
-        allowfullscreen="true"
-      >
-      </iframe>
-    </div>
-    <div class="twitch-chat">
-      <iframe
-        class="twitch-iframe-chat"
-        src="https://www.twitch.tv/embed/teamblklight/chat?parent=blklight.github.io"
-        frameborder="0"
-      >
-      </iframe>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-9 col-md-8 col-12 px-md-0">
+        <iframe
+          class="twitch-iframe-video"
+          src="https://player.twitch.tv/?channel=teamblklight&parent=blklight.github.io&muted=true&layout=video-with-chat"
+          frameborder="0"
+          muted="true"
+          allowfullscreen="true"
+        >
+        </iframe>
+      </div>
+      <div class="col-lg-3 col-md-4 col-12 px-md-0">
+        <iframe
+          class="twitch-iframe-chat"
+          src="https://www.twitch.tv/embed/teamblklight/chat?parent=blklight.github.io"
+          frameborder="0"
+        >
+        </iframe>
+      </div>
     </div>
   </div>
 </template>
@@ -40,14 +42,7 @@
   }
 }
 
-@media screen and (max-width: 1024px) {
-  .twitch-grid-container {
-    width: 100%;
-    max-width: 100%;
-    grid-template-columns: 100%;
-    gap: 0px 0px;
-    grid-template-areas: "twitch-video" "twitch-chat";
-  }
+@media screen and (max-width: 768px) {
   .twitch-iframe {
     &-video {
       width: 100%;

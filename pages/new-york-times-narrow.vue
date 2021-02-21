@@ -69,7 +69,7 @@
                 <a
                   :href="article.short_url"
                   target="_blank"
-                  class="btn btn-sm"
+                  class="btn btn-custom"
                   :class="
                     isDarkMode ? 'btn-outline-neon-yellow' : 'btn-outline-uv'
                   "

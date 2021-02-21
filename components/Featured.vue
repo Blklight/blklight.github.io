@@ -1,8 +1,8 @@
 <template>
   <div>
     <div
-      class="card card-featured-post card-background view mb-4"
-      :class="[isDarkMode ? 'hover-card-yellow' : 'hover-card-uv card-raised']"
+      class="card card-featured-post card-background hover-card-uv view mb-4"
+      :class="{ 'card-raised': !isDarkMode }"
     >
       <img
         v-lazy="imageSrc(article)"
@@ -30,9 +30,9 @@
         </h3>
 
         <div class="d-flex justify-content-between my-1">
-          <span class="badge badge-dark badge-tag ml-0 d-none d-sm-block">
-            <em> Por {{ article.author.name }} </em>
-          </span>
+          <!-- <span class="badge badge-dark badge-tag ml-0 d-none d-sm-block">
+            Por {{ article.author.name }}
+          </span> -->
 
           <nuxt-link
             tag="a"
@@ -40,8 +40,7 @@
               name: `${slugName}-slug`,
               params: { slug: `${article.slug}` },
             }"
-            class="btn btn-sm ml-auto"
-            :class="isDarkMode ? 'btn-neon-yellow' : 'btn-uv'"
+            class="btn btn-uv btn-custom ml-auto"
           >
             Ler mais...
           </nuxt-link>
@@ -56,7 +55,7 @@ import { mapGetters } from "vuex";
 
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import ChannelBadge from "@/components/ChannelBadge";
+import ChannelBadge from "~/components/ChannelBadge";
 
 export default {
   name: "Featured",

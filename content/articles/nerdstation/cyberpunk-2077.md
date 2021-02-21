@@ -10,8 +10,9 @@ category: "LPJ"
 tags: ""
 featured: true
 type: "stories"
-headerLayout: "parallax"
+headerLayout: "parallax-alt"
 fontType: ""
+isPublished: false
 author:
   name: "Ultimate Mercer"
   bio: "Ultimate Awakening"

@@ -11,6 +11,7 @@ tags: ""
 featured: true
 type: "normal"
 headerLayout: "landscape"
+isPublished: true
 author:
   name: "Ultimate Mercer"
   bio: "Ultimate Awakening"

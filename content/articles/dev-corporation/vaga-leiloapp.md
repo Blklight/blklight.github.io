@@ -10,8 +10,9 @@ category: "jobs"
 tags:
 featured: false
 type: "normal"
-headerLayout: "square-profile"
-fontType: "serif"
+headerLayout: "arts"
+fontType: "base"
+isPublished: true
 author:
   name: "Ultimate Mercer"
   bio: "Ultimate Awakening"

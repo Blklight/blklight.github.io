@@ -7,10 +7,10 @@
   </div>
 </template>
 <style>
-@import "~/assets/style/css/ultimate.css";
+/* @import "~/assets/style/css/ultimate.css"; */
 </style>
 <style lang="scss">
-@import "~/assets/style/scss/extra.scss";
+// @import "~/assets/style/scss/extra.scss";
 </style>
 <script>
 import { mapGetters } from "vuex";

@@ -60,7 +60,7 @@
         <div
           class="col-xl-6 offset-xl-3 col-lg-8 offset-lg-2 p-lg-0 col-md-10 offset-md-1 p-md-0 col-12"
         >
-          <div class="page">
+          <div class="page base">
             <div class="post" :class="[{ 'dark-post': isDarkMode }, fontType]">
               <template v-if="article.type === 'stories'">
                 <p class="mb-2">{{ article.abstract }}</p>

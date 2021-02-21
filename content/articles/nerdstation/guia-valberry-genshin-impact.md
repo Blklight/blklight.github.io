@@ -12,6 +12,7 @@ featured: false
 type: "normal"
 headerLayout: "portrait-left"
 fontType: ""
+isPublished: true
 author:
   name: "Tanuke Sensei"
   bio: "#allthissquaresmakeacircle"

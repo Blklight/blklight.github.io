@@ -1,8 +1,8 @@
 <template>
   <div>
     <div v-if="headerTemplate === 'portrait-left'">
-      <div class="header-content header-h-full d-md-inline-flex">
-        <div
+      <section class="header-content header-h-full d-md-inline-flex">
+        <figure
           class="header-image-half header-h-full header-border-right hover-header view"
         >
           <div
@@ -10,8 +10,8 @@
             class="header-image-background header-h-full cyberpunk-effect fade-in-left"
           ></div>
           <!-- <div class="mask texture-mask-2"></div> -->
-        </div>
-        <div class="header-info-half header-h-full">
+        </figure>
+        <article class="header-info-half header-h-full">
           <div class="h-100 d-flex flex-column justify-content-end">
             <h1 class="blog-title">
               <span
@@ -54,13 +54,13 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </article>
+      </section>
     </div>
 
     <div v-if="headerTemplate === 'portrait-right'">
-      <div class="header-content header-h-full d-md-inline-flex">
-        <div class="header-info-half header-h-full">
+      <section class="header-content header-h-full d-md-inline-flex">
+        <article class="header-info-half header-h-full">
           <div class="h-100 d-flex flex-column justify-content-end">
             <h1 class="blog-title">
               <span
@@ -103,8 +103,8 @@
               </div>
             </div>
           </div>
-        </div>
-        <div
+        </article>
+        <figure
           class="header-image-half header-h-full header-border-left hover-header view"
         >
           <div
@@ -112,12 +112,12 @@
             class="header-image-background header-h-full cyberpunk-effect fade-in-right"
           ></div>
           <!-- <div class="mask texture-mask-2"></div> -->
-        </div>
-      </div>
+        </figure>
+      </section>
     </div>
 
     <div v-if="headerTemplate === 'landscape'">
-      <div class="card card-flat mt-0 mx-0 mb-1 view hover-header">
+      <section class="card card-flat mt-0 mx-0 mb-1 view hover-header">
         <picture>
           <source media="(max-width: 768px)" :srcset="article.cover" />
           <source media="(min-width: 769px)" :srcset="article.imageHeader" />
@@ -127,7 +127,7 @@
           />
         </picture>
         <!-- <div class="mask texture-mask-2"></div> -->
-        <div
+        <article
           class="card-img-overlay h-100 d-flex flex-column justify-content-end"
         >
           <div class="px-md-3">
@@ -166,14 +166,14 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </article>
+      </section>
     </div>
 
     <div v-if="headerTemplate === 'parallax'">
-      <div class="header-simple">
+      <section class="header-simple">
         <div class="col-lg-10 offset-lg-1 col-md-10 offset-md-1 px-md-2 col-12">
-          <div class="header-simple-info mb-1">
+          <article class="header-simple-info mb-1">
             <h1
               class="blog-title"
               :class="isDarkMode ? 'text-light' : 'text-dark'"
@@ -217,26 +217,55 @@
                 </span>
               </div>
             </div>
-          </div>
+          </article>
         </div>
-        <div class="hover-header view">
+        <figure class="hover-header view">
           <div
             v-lazy:background-image="article.imageHeader"
             class="header-simple-image-parallax cyberpunk-effect fade-in"
           ></div>
           <!-- <div class="mask parallax-mask texture-mask-2"></div> -->
+        </figure>
+      </section>
+    </div>
+
+    <div v-if="headerTemplate === 'parallax-alternate'">
+      <section class="parallax-header hover-header">
+        <figure
+          v-lazy:background-image="article.imageHeader"
+          class="parallax-header-image cyberpunk-effect fade-in"
+        ></figure>
+        <div class="container-fluid parallax-header-info">
+          <div class="row">
+            <div class="col-lg-8 col-md-10 col-12 offset-lg-2 offset-md-1 px-1">
+              <article>
+                <h1 class="blog-title">
+                  <span class="marker marker-dark marker-title">
+                    <em> {{ article.title }}</em>
+                  </span>
+                </h1>
+                <h5 class="blog-meta">
+                  <span class="marker marker-dark">
+                    <em>
+                      {{ dateFormat }}
+                    </em>
+                  </span>
+                </h5>
+              </article>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
 
     <div v-if="headerTemplate === 'square-profile'">
-      <div class="container-fluid p-0">
+      <section class="container-fluid p-0">
         <div class="container p-0">
           <div class="col-12 pt-lg-3 py-2 px-3">
             <div class="header-profile">
               <div class="row">
                 <div class="col-lg-4 col-md-4 col-xs-12 col-12">
-                  <div
+                  <article
                     v-lazy-container="{ selector: 'img' }"
                     class="head-avatar"
                   >
@@ -245,7 +274,7 @@
                       class="post-avatar rounded img-fluid mx-auto d-block mb-4"
                       :alt="article.title"
                     />
-                  </div>
+                  </article>
                 </div>
                 <div class="col-lg-8 col-md-8 col-xs-12 col-12">
                   <div class="head-text my-3">
@@ -304,7 +333,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
 
     <div v-if="headerTemplate === 'circle-profile'">
@@ -387,6 +416,7 @@
                 :data-src="article.imageHeader"
                 alt=""
                 class="header-simple-image-top cyberpunk-effect"
+                :class="{ 'shadow-image': !isDarkMode }"
               />
             </div>
           </div>

@@ -4,7 +4,7 @@
 // }
 
 .card {
-  border-radius: 0.5rem;
+  border-radius: 0.25rem;
 }
 .hover-card {
   &-uv {
@@ -13,7 +13,8 @@
         cubic-bezier(0.47, 0, 0.745, 0.715) both;
       animation: shadow-pop-br-uv 0.2s cubic-bezier(0.47, 0, 0.745, 0.715) both;
       border-radius: 0 !important;
-      border: 1px solid #4c00ff;
+      border-top: 1px solid #4c00ff;
+      border-left: 1px solid #4c00ff;
     }
   }
   &-yellow {
@@ -23,7 +24,8 @@
       animation: shadow-pop-br-yellow 0.2s cubic-bezier(0.47, 0, 0.745, 0.715)
         both;
       border-radius: 0 !important;
-      border: 1px solid #ffff00;
+      border-top: 1px solid #ffff00;
+      border-left: 1px solid #ffff00;
     }
   }
 }
@@ -32,7 +34,7 @@
   &-uv,
   &-yellow {
     .card-img-border {
-      border-radius: 0.5rem;
+      border-radius: 0.25rem;
     }
   }
 
@@ -103,8 +105,8 @@
     box-shadow: 1px 1px #4c00ff, 2px 2px #4c00ff, 3px 3px #4c00ff,
       4px 4px #4c00ff, 5px 5px #4c00ff, 6px 6px #4c00ff, 7px 7px #4c00ff,
       8px 8px #4c00ff;
-    -webkit-transform: translateX(-8px) translateY(-8px);
-    transform: translateX(-8px) translateY(-8px);
+    -webkit-transform: translateX(8px) translateY(-8px);
+    transform: translateX(8px) translateY(-8px);
   }
 }
 @keyframes shadow-pop-br-uv {
@@ -123,7 +125,7 @@
     box-shadow: 1px 1px #4c00ff, 2px 2px #4c00ff, 3px 3px #4c00ff,
       4px 4px #4c00ff, 5px 5px #4c00ff, 6px 6px #4c00ff, 7px 7px #4c00ff,
       8px 8px #4c00ff;
-    -webkit-transform: translateX(-8px) translateY(-8px);
+    -webkit-transform: translateX(8px) translateY(-8px);
     transform: translateX(-8px) translateY(-8px);
   }
 }
@@ -145,54 +147,76 @@ pre {
 .page {
   .post {
     code {
-      color: darken(#00bfa5, 2.5%);
-      font-weight: bold;
-    }
-    ul {
-      margin-top: 0.5rem;
-    }
-    li {
-      margin-bottom: 1rem;
-    }
-
-    blockquote {
-      background-color: lighten(#fff6dd, 2.5%);
-      border-left: 8px solid #480bff !important;
-      border: 1px solid #480bff;
-      margin: 1.25rem 0;
-      padding: 0.75rem 1rem;
-      border-radius: 0.5rem;
-      font-style: italic;
-
-      p {
-        margin-bottom: 1rem;
-      }
+      font-weight: 400;
     }
 
     &.dark-post {
       code {
-        // color: #e83e8c !important;
-        color: lighten(#fbc02d, 10%);
-        font-weight: bold;
-      }
-
-      a {
-        color: lighten(#ff00ff, 20%) !important;
-      }
-
-      blockquote {
-        background-color: darken(#121212, 2.5%);
-        border-left: 8px solid #ffff00 !important;
-        border: 1px solid #ffff00;
-
-        margin: 1.25rem 0;
-        padding: 0.75rem 1rem;
-        border-radius: 0.5rem;
-        font-style: italic;
+        font-weight: 400;
       }
     }
   }
 }
+
+// .page {
+//   .post {
+//     code {
+//       color: darken(#00bfa5, 2.5%);
+//       font-weight: bold;
+//     }
+//     ul {
+//       margin-top: 0.5rem;
+//     }
+//     li {
+//       margin-bottom: 1rem;
+//     }
+
+//     blockquote {
+//       background-color: lighten(#fff6dd, 2.5%);
+//       border-left: 8px solid #480bff !important;
+//       border: 1px solid #480bff;
+//       margin: 1.25rem 0;
+//       padding: 0.75rem 1rem;
+//       border-radius: 0.5rem;
+//       font-style: italic;
+
+//       p {
+//         margin-bottom: 1rem;
+//       }
+//     }
+
+//     &.dark-post {
+//       code {
+//         // color: #e83e8c !important;
+//         color: lighten(#fbc02d, 10%);
+//         font-weight: bold;
+//       }
+
+//       a {
+//         color: lighten(#ff00ff, 20%) !important;
+
+//         :hover {
+//           color: #ff00ff !important;
+//         }
+//       }
+
+//       blockquote {
+//         background-color: darken(#121212, 2.5%);
+//         border-left: 8px solid #ffff00 !important;
+//         border: 1px solid #ffff00;
+
+//         margin: 1.25rem 0;
+//         padding: 0.75rem 1rem;
+//         border-radius: 0.5rem;
+//         font-style: italic;
+//       }
+//     }
+
+//     &.monospace {
+//       font-family: "IBM Plex Mono", consolas, monospace;
+//     }
+//   }
+// }
 
 .img-card-header {
   width: 100%;
@@ -205,5 +229,60 @@ pre {
 }
 
 .header-simple-image-top {
-  height: 475px !important;
+  height: 450px !important;
+  border-radius: 0.5rem;
+  margin-top: 0.5rem;
 }
+
+.header-content {
+  .header-info-half {
+    padding: 1rem 2rem 2.5rem;
+  }
+}
+
+.parallax-header {
+  width: 100%;
+  height: 85vh;
+  position: relative;
+
+  &-image {
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 85vh;
+    z-index: 0;
+  }
+
+  &-info {
+    z-index: 10;
+    position: absolute;
+    top: 40%;
+    text-align: center;
+  }
+}
+
+.btn-custom {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.member-avatar {
+  width: 325px;
+  height: 325px;
+  object-fit: cover;
+  @media screen and (max-width: 576px) {
+    width: 300px;
+    height: 300px;
+  }
+  @media screen and (max-width: 400px) {
+    width: 275px;
+    height: 275px;
+  }
+}
+
+.about-links {
+  font-size: 20px;
+}
+// FONTS

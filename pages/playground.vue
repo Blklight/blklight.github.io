@@ -1,8 +1,24 @@
 <template>
   <section class="container-fluid">
-    <div class="container">
+    <!-- <div class="container">
       <img src="https://i.imgur.com/ehfbNpw.jpg" class="img-fluid" alt="" />
       <div class="p-5 bg-orange"></div>
+    </div> -->
+
+    <div class="container">
+      <div class="card">
+        <div class="card-img-parallax">
+          <img
+            src="https://i.imgur.com/ehfbNpw.jpg"
+            class="card-img-fit"
+            alt=""
+          />
+        </div>
+
+        <div class="card-img-overlay">
+          <h1 class="text-light">text</h1>
+        </div>
+      </div>
     </div>
     <div class="col-xl-10 col-12 offset-xl-1 offset-0 px-xl-0 px-1">
       <template v-if="isDarkMode">

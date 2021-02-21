@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="card mb-4"
-    :class="isDarkMode ? 'hover-card-yellow' : 'hover-card-uv card-raised'"
-  >
+  <div class="card hover-card-uv mb-4" :class="{ 'card-raised': !isDarkMode }">
     <div class="view">
       <img
         v-lazy="imageSrc(story)"
@@ -34,7 +31,7 @@
       </p>
       <div class="my-1">
         <span class="badge badge-dark badge-tag ml-0">
-          <em> Por {{ story.author.name }} </em>
+          Por {{ story.author.name }}
         </span>
       </div>
 
@@ -45,8 +42,7 @@
             name: `${slugName}-slug`,
             params: { slug: `${story.slug}` },
           }"
-          class="btn"
-          :class="isDarkMode ? 'btn-neon-yellow' : 'btn-uv'"
+          class="btn btn-uv btn-custom"
         >
           Ler mais...
         </nuxt-link>

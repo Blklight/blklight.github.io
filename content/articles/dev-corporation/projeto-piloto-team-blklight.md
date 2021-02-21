@@ -10,8 +10,9 @@ category: "code"
 tags:
 featured: false
 type: "normal"
-headerLayout: "image-top"
+headerLayout: "parallax"
 fontType: "base"
+isPublished: false
 author:
   name: "Ultimate Mercer"
   bio: "Ultimate Awakening"

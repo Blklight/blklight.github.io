@@ -2,14 +2,14 @@
   <div>
     <span
       v-if="channel === 'dev-corporation'"
-      class="badge badge-dark text-primary ml-0"
+      class="badge badge-dark text-primary border border-primary ml-0"
       :class="isTag ? 'badge-tag' : ''"
     >
       Dev Corporation
     </span>
     <span
       v-if="channel === 'nerdstation'"
-      class="badge badge-dark text-danger ml-0"
+      class="badge badge-dark text-danger border border-danger ml-0"
       :class="isTag ? 'badge-tag' : ''"
     >
       Danger Zone

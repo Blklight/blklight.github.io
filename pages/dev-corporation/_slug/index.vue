@@ -1,7 +1,7 @@
 <template>
   <div :class="{ 'bg-dark': isDarkMode }">
     <div v-if="article.headerLayout === 'arts'">
-      <div class="container-fluid py-4">
+      <div class="container-fluid pt-4 pb-5">
         <div class="row">
           <div class="col-xl-5 col-lg-5 col-12">
             <div class="sticky-top">
@@ -12,24 +12,20 @@
                   alt="article.title"
                   :class="!isDarkMode ? 'shadow-image' : ''"
                 />
-                <div class="text-center">
-                  <h1 class="blog-title">
-                    <span
-                      class="marker marker-title"
-                      :class="isDarkMode ? 'marker-light' : 'marker-dark'"
-                    >
-                      <em>
-                        {{ article.title }}
-                      </em>
-                    </span>
+                <div class="">
+                  <h1
+                    class="blog-title mb-3"
+                    :class="isDarkMode ? 'text-light' : 'text-dark'"
+                  >
+                    <em>
+                      {{ article.title }}
+                    </em>
                   </h1>
-                  <h5 class="blog-meta">
-                    <span
-                      class="marker"
-                      :class="isDarkMode ? 'marker-light' : 'marker-dark'"
-                    >
-                      {{ dateFormat }}
-                    </span>
+                  <h5
+                    class="blog-meta"
+                    :class="isDarkMode ? 'text-light' : 'text-dark'"
+                  >
+                    <em> {{ dateFormat }} </em>
                   </h5>
                 </div>
               </div>
@@ -46,7 +42,7 @@
             </div>
           </div>
         </div>
-        <div class="container">
+        <!-- <div class="container">
           <a :href="article.imageHeader" target="_blank">
             <img
               v-lazy="article.imageHeader"
@@ -54,7 +50,7 @@
               alt="article.title"
             />
           </a>
-        </div>
+        </div> -->
       </div>
     </div>
     <div v-else>
@@ -66,10 +62,17 @@
           <div class="page">
             <div class="post" :class="[{ 'dark-post': isDarkMode }, fontType]">
               <template v-if="article.type === 'stories'">
-                <p>{{ article.abstract }}</p>
-
+                <p class="mb-2">{{ article.abstract }}</p>
+                <hr
+                  v-if="article.toc.length < 2"
+                  :class="isDarkMode ? 'bg-light' : 'bg-dark'"
+                />
+              </template>
+              <template
+                v-if="article.type === 'stories' && article.toc.length >= 2"
+              >
                 <nav
-                  class="border py-3 px-3 mb-4 rounded"
+                  class="border py-3 px-md-4 px-3 my-4 rounded"
                   :class="isDarkMode ? 'border-light' : 'border-dark'"
                 >
                   <h4 class="mb-1">
@@ -80,21 +83,21 @@
                     :class="isDarkMode ? 'bg-light' : 'bg-dark'"
                   />
 
-                  <ol>
+                  <ul>
                     <!-- <li v-for="(link, i) in article.toc" :key="i"> -->
                     <li v-for="link of article.toc" :key="link.id">
                       <NuxtLink :to="`#${link.id}`">
                         <strong>
-                          <em>{{ link.text }}</em>
+                          {{ link.text }}
                         </strong>
                       </NuxtLink>
                     </li>
-                  </ol>
+                  </ul>
                 </nav>
               </template>
               <nuxt-content :document="article" />
 
-              <!-- <pre>{{ article }}</pre> -->
+              <!-- <pre class="text-light">{{ article }}</pre> -->
             </div>
           </div>
         </div>

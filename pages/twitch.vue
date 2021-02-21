@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="col-12 px-1 my-3">
       <h2 :class="isDarkMode ? 'text-light' : ''">
-        <strong><em>Twitch</em></strong>
+        <strong><em>Twitch / TeamBlklight</em></strong>
       </h2>
       <Twitch />
     </div>
