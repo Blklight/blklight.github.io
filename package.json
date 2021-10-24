@@ -1,7 +1,6 @@
 {
   "name": "blklight.github.io",
   "version": "1.0.0",
-  "author": "Julian Silva da Cunha a.k.a. Ultimate Mercer",
   "private": true,
   "scripts": {
     "dev": "nuxt",
