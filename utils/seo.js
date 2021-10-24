@@ -10,7 +10,7 @@ export const createSEOMeta = (data) => [
   {
     hid: "og:url",
     property: "og:url",
-    content: "blklight.github.io" + "/" + data.url,
+    content: data.url,
   },
   {
     hid: "twitter:title",
