@@ -16,7 +16,7 @@ export default {
         title: "Blklight",
         description:
           "Porque tudo começa com uma ideia! Isso é Blklight!",
-        image: "blklight-seo.jpg",
+        image: "/blklight-seo.jpg",
         url: "blklight.github.io",
       }),
     ],
