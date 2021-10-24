@@ -1,17 +1,27 @@
 export const state = () => ({
-  isDark: loadState("darkMode") || true,
+  isDark: loadState("darkTheme") || true,
+  isOpen: loadSidebarState("sidebarSwitch") || false,
 });
 
 export const mutations = {
-  darkMode(state) {
+  darkTheme(state) {
     state.isDark = !state.isDark;
-    localStorage.setItem("darkMode", JSON.stringify(state.isDark));
+    localStorage.setItem("darkTheme", JSON.stringify(state.isDark));
+  },
+
+  sidebarSwitch(state) {
+    state.isOpen = !state.isOpen;
+    localStorage.setItem("sidebarSwitch", JSON.stringify(state.isOpen));
   },
 };
 
 export const getters = {
-  isDarkMode(state) {
+  isDarkTheme(state) {
     return state.isDark;
+  },
+
+  isSidebarOpen(state) {
+    return state.isOpen;
   },
 };
 
@@ -20,5 +30,13 @@ function loadState(key) {
     return JSON.parse(window.localStorage.getItem(key));
   } catch (err) {
     return true;
+  }
+}
+
+function loadSidebarState(key) {
+  try {
+    return JSON.parse(window.localStorage.getItem(key));
+  } catch (err) {
+    return false;
   }
 }

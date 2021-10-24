@@ -1,0 +1,192 @@
+//
+// Base styles
+//
+
+.btn {
+  display: inline-block;
+  font-family: $btn-font-family;
+  font-weight: $btn-font-weight;
+  line-height: $btn-line-height;
+  color: $body-color;
+  text-align: center;
+  text-decoration: if($link-decoration == none, null, none);
+  white-space: $btn-white-space;
+  vertical-align: middle;
+  cursor: if($enable-button-pointers, pointer, null);
+  user-select: none;
+  background-color: transparent;
+  border: none;
+  letter-spacing: 1px;
+  outline: 0;
+  margin: 0.125rem;
+  @include button-size(
+    $btn-padding-y,
+    $btn-padding-x,
+    $btn-font-size,
+    $btn-border-radius
+  );
+  @include transition($btn-transition);
+
+  &.btn-raised {
+    @include shadow-2dp();
+
+    &:hover {
+      @include shadow-4dp();
+      //box-shadow: none;
+    }
+  }
+
+  &.btn-rounded {
+    border-radius: $btn-rounded-border;
+  }
+
+  &.btn-flat {
+    border-radius: $border-radius-flat;
+  }
+
+  &:hover {
+    color: $body-color;
+    text-decoration: if($link-hover-decoration == underline, none, null);
+  }
+
+  .btn-check:focus + &,
+  &:focus {
+    outline: 0;
+    box-shadow: none;
+  }
+
+  .btn-check:checked + &,
+  .btn-check:active + &,
+  &:active,
+  &.active {
+    //@include box-shadow($btn-active-box-shadow);
+    box-shadow: none;
+
+    &:focus {
+      //@include box-shadow($btn-focus-box-shadow, $btn-active-box-shadow);
+    }
+  }
+
+  &:disabled,
+  &.disabled,
+  fieldset:disabled & {
+    pointer-events: none;
+    opacity: $btn-disabled-opacity;
+    @include box-shadow(none);
+  }
+}
+
+//
+// Alternate buttons
+//
+
+// scss-docs-start btn-variant-loops
+@each $color, $value in $theme-colors {
+  .btn-#{$color} {
+    @include button-variant($value, $value);
+  }
+}
+
+@each $color, $value in $theme-colors {
+  .btn-outline-#{$color} {
+    @include button-outline-variant($value);
+  }
+}
+
+@each $color, $value in $theme-colors {
+  .btn-outline-v2-#{$color} {
+    @include button-outline-variant-two($value);
+  }
+}
+// scss-docs-end btn-variant-loops
+
+//
+// Link buttons
+//
+
+// Make a button look and behave like a link
+.btn-link {
+  font-weight: $font-weight-normal;
+  color: $btn-link-color;
+  text-decoration: $link-decoration;
+
+  &:hover {
+    color: $btn-link-hover-color;
+    text-decoration: $link-hover-decoration;
+  }
+
+  &:focus {
+    text-decoration: $link-hover-decoration;
+  }
+
+  &:disabled,
+  &.disabled {
+    color: $btn-link-disabled-color;
+  }
+
+  // No need for an active state here
+}
+
+//
+// Button Sizes
+//
+
+.btn-lg {
+  @include button-size(
+    $btn-padding-y-lg,
+    $btn-padding-x-lg,
+    $btn-font-size-lg,
+    $btn-border-radius-lg
+  );
+}
+
+.btn-sm {
+  @include button-size(
+    $btn-padding-y-sm,
+    $btn-padding-x-sm,
+    $btn-font-size-sm,
+    $btn-border-radius-sm
+  );
+}
+
+.btn-circle {
+  width: 32px;
+  height: 32px;
+  padding: 6px 0px;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1;
+
+  &-md {
+    width: 48px;
+    height: 48px;
+    padding: 10px 16px;
+    border-radius: 35px;
+    font-size: 18px;
+    line-height: 1.25;
+  }
+
+  &-xl {
+    width: 60px;
+    height: 60px;
+    padding: 8px 16px;
+    border-radius: 50%;
+    font-size: 24px;
+    line-height: 1.25;
+  }
+}
+
+.btn-read-more {
+  padding: 0.425rem 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+}
+
+.btn-read-more-sm {
+  padding: 0.325rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+}

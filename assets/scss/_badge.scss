@@ -1,0 +1,41 @@
+.badge {
+  display: inline-block;
+  padding: $badge-padding-y $badge-padding-x;
+  @include font-size($badge-font-size);
+  font-weight: $badge-font-weight;
+  line-height: 1;
+  color: $badge-color;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  margin: 0.125rem;
+  font-family: $font-family-monospace;
+  @include border-radius($badge-border-radius);
+  @include gradient-bg();
+
+  @at-root a#{&} {
+    text-decoration: none;
+  }
+
+  .badge-flat {
+    border-radius: 0;
+  }
+
+  .badge-bordered {
+  }
+
+  // Empty badges collapse automatically
+  &:empty {
+    display: none;
+  }
+}
+
+.badge-tag {
+  font-size: 90%;
+}
+
+// Quick fix for badges in buttons
+.btn .badge {
+  position: relative;
+  top: -1px;
+}

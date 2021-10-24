@@ -1,0 +1,265 @@
+.hover-card {
+  &-uv,
+  &-yellow,
+  &-red,
+  &-dark,
+  &-uv-bordered,
+  &-yellow-bordered,
+  &-red-bordered,
+  &-dark-bordered {
+    transition: 1s filter linear;
+    filter: none;
+    &:hover {
+      .hover-filter {
+        &-black-green {
+          transition: 1s filter linear;
+          filter: url("#black-green");
+        }
+
+        &-black-white {
+          transition: 1s filter linear;
+          filter: url("#black-white");
+        }
+
+        &-blue-red {
+          transition: 1s filter linear;
+          filter: url("#blue-red");
+        }
+
+        &-pink-blue {
+          transition: 1s filter linear;
+          filter: url("#pink-blue");
+        }
+
+        &-pink-cyan {
+          transition: 1s filter linear;
+          filter: url("#pink-cyan");
+        }
+
+        &-purple-red-green {
+          transition: 1s filter linear;
+          filter: url("#purple-red-green");
+        }
+
+        &-purple-red-orange {
+          transition: 1s filter linear;
+          filter: url("#purple-red-orange");
+        }
+
+        &-red-sunset {
+          transition: 1s filter linear;
+          filter: url("#red-sunset");
+        }
+
+        &-soft-blue-pink {
+          transition: 1s filter linear;
+          filter: url("#soft-blue-pink");
+        }
+
+        &-cyberpunk-v {
+          transition: 1s filter linear;
+          filter: url("#cyberpunk-v");
+        }
+
+        &-cyberpunk-vi {
+          transition: 1s filter linear;
+          filter: url("#cyberpunk-vi");
+        }
+
+        &-cyberpunk-vii {
+          transition: 1s filter linear;
+          filter: url("#cyberpunk-vii");
+        }
+      }
+    }
+  }
+}
+
+.hover-header {
+  .hover-filter {
+    &-black-green {
+      transition: 1s filter linear;
+      filter: url("#black-green");
+    }
+
+    &-black-white {
+      transition: 1s filter linear;
+      filter: url("#black-white");
+    }
+
+    &-blue-red {
+      transition: 1s filter linear;
+      filter: url("#blue-red");
+    }
+
+    &-pink-blue {
+      transition: 1s filter linear;
+      filter: url("#pink-blue");
+    }
+
+    &-pink-cyan {
+      transition: 1s filter linear;
+      filter: url("#pink-cyan");
+    }
+
+    &-purple-red-green {
+      transition: 1s filter linear;
+      filter: url("#purple-red-green");
+    }
+
+    &-purple-red-orange {
+      transition: 1s filter linear;
+      filter: url("#purple-red-orange");
+    }
+
+    &-red-sunset {
+      transition: 1s filter linear;
+      filter: url("#red-sunset");
+    }
+
+    &-soft-blue-pink {
+      transition: 1s filter linear;
+      filter: url("#soft-blue-pink");
+    }
+
+    &-cyberpunk-v {
+      transition: 1s filter linear;
+      filter: url("#cyberpunk-v");
+    }
+
+    &-cyberpunk-vi {
+      transition: 1s filter linear;
+      filter: url("#cyberpunk-vi");
+    }
+
+    &-cyberpunk-vii {
+      transition: 1s filter linear;
+      filter: url("#cyberpunk-vii");
+    }
+  }
+  &:hover {
+    .hover-filter {
+      &-black-green {
+        transition: 1s filter linear;
+        filter: none;
+      }
+
+      &-black-white {
+        transition: 1s filter linear;
+        filter: none;
+      }
+
+      &-blue-red {
+        transition: 1s filter linear;
+        filter: none;
+      }
+
+      &-pink-blue {
+        transition: 1s filter linear;
+        filter: none;
+      }
+
+      &-pink-cyan {
+        transition: 1s filter linear;
+        filter: none;
+      }
+
+      &-purple-red-green {
+        transition: 1s filter linear;
+        filter: none;
+      }
+
+      &-purple-red-orange {
+        transition: 1s filter linear;
+        filter: none;
+      }
+
+      &-red-sunset {
+        transition: 1s filter linear;
+        filter: none;
+      }
+
+      &-soft-blue-pink {
+        transition: 1s filter linear;
+        filter: none;
+      }
+
+      &-cyberpunk-v {
+        transition: 1s filter linear;
+        filter: none;
+      }
+
+      &-cyberpunk-vi {
+        transition: 1s filter linear;
+        filter: none;
+      }
+
+      &-cyberpunk-vii {
+        transition: 1s filter linear;
+        filter: none;
+      }
+    }
+  }
+}
+
+.filter {
+  &-black-green {
+    transition: 1s filter linear;
+    filter: url("#black-green");
+  }
+
+  &-black-white {
+    transition: 1s filter linear;
+    filter: url("#black-white");
+  }
+
+  &-blue-red {
+    transition: 1s filter linear;
+    filter: url("#blue-red");
+  }
+
+  &-pink-blue {
+    transition: 1s filter linear;
+    filter: url("#pink-blue");
+  }
+
+  &-pink-cyan {
+    transition: 1s filter linear;
+    filter: url("#pink-cyan");
+  }
+
+  &-purple-red-green {
+    transition: 1s filter linear;
+    filter: url("#purple-red-green");
+  }
+
+  &-purple-red-orange {
+    transition: 1s filter linear;
+    filter: url("#purple-red-orange");
+  }
+
+  &-red-sunset {
+    transition: 1s filter linear;
+    filter: url("#red-sunset");
+  }
+
+  &-soft-blue-pink {
+    transition: 1s filter linear;
+    filter: url("#soft-blue-pink");
+  }
+
+  &-cyberpunk-v {
+    transition: 1s filter linear;
+    filter: url("#cyberpunk-v");
+  }
+
+  &-cyberpunk-vi {
+    transition: 1s filter linear;
+    filter: url("#cyberpunk-vi");
+  }
+
+  &-cyberpunk-vii {
+    transition: 1s filter linear;
+    filter: url("#cyberpunk-vii");
+  }
+}

@@ -1,0 +1,567 @@
+// Variables
+//
+// Variables should follow the `$component-state-property-size` formula for
+// consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
+
+// Color system
+
+// scss-docs-start gray-color-variables
+$white: #fff;
+$gray-100: #eaeaea;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #121212;
+$black: #000;
+// scss-docs-end gray-color-variables
+
+// fusv-disable
+// scss-docs-start gray-colors-map
+$grays: (
+  "100": $gray-100,
+  "200": $gray-200,
+  "300": $gray-300,
+  "400": $gray-400,
+  "500": $gray-500,
+  "600": $gray-600,
+  "700": $gray-700,
+  "800": $gray-800,
+  "900": $gray-900,
+);
+// scss-docs-end gray-colors-map
+// fusv-enable
+
+// scss-docs-start color-variables
+$blue: #007bff;
+$indigo: #6610f2;
+$purple: #6f42c1;
+$pink: #d63384;
+$red: #dc3545;
+$orange: #ff6d00;
+$yellow: #fbc02d;
+$green: #00c853;
+$teal: #20c997;
+$cyan: #0dcaf0;
+$uv: darken(#480bff, 5%);
+$neon-yellow: #ffff00;
+$polen: #fff6dd;
+$crimson: #eb1e32;
+// scss-docs-end color-variables
+
+// scss-docs-start colors-map
+$colors: (
+  "blue": $blue,
+  "indigo": $indigo,
+  "purple": $purple,
+  "pink": $pink,
+  "red": $red,
+  "orange": $orange,
+  "yellow": $yellow,
+  "green": $green,
+  "teal": $teal,
+  "cyan": $cyan,
+  "white": $white,
+  "gray": $gray-600,
+  "gray-dark": $gray-800,
+  "gray-light": $gray-200,
+  "uv": $uv,
+  "neon-yellow": $neon-yellow,
+  "polen": $polen,
+  "crimson": $crimson,
+);
+// scss-docs-end colors-map
+
+// scss-docs-start theme-color-variables
+$primary: $blue;
+$secondary: $gray-400;
+$success: $green;
+$info: $cyan;
+$warning: $yellow;
+$danger: $red;
+$light: $gray-100;
+$dark: $gray-900;
+// scss-docs-end theme-color-variables
+
+// scss-docs-start theme-colors-map
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "success": $success,
+  "info": $info,
+  "warning": $warning,
+  "danger": $danger,
+  "light": $light,
+  "dark": $dark,
+  "uv": $uv,
+  "polen": $polen,
+  "neon-yellow": $neon-yellow,
+  "crimson": $crimson,
+  "orange": $orange,
+  "pink": $pink,
+  "indigo": $indigo,
+  "darkest": $black,
+);
+// scss-docs-end theme-colors-map
+
+// scss-docs-start theme-colors-rgb
+$theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
+// scss-docs-end theme-colors-rgb
+
+// The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
+// See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
+$min-contrast-ratio: 4.5;
+
+// Customize the light and dark text colors for use in our color contrast function.
+$color-contrast-dark: $gray-900;
+$color-contrast-light: $gray-100;
+
+// fusv-disable
+$blue-100: tint-color($blue, 80%);
+$blue-200: tint-color($blue, 60%);
+$blue-300: tint-color($blue, 40%);
+$blue-400: tint-color($blue, 20%);
+$blue-500: $blue;
+$blue-600: shade-color($blue, 20%);
+$blue-700: shade-color($blue, 40%);
+$blue-800: shade-color($blue, 60%);
+$blue-900: shade-color($blue, 80%);
+
+$indigo-100: tint-color($indigo, 80%);
+$indigo-200: tint-color($indigo, 60%);
+$indigo-300: tint-color($indigo, 40%);
+$indigo-400: tint-color($indigo, 20%);
+$indigo-500: $indigo;
+$indigo-600: shade-color($indigo, 20%);
+$indigo-700: shade-color($indigo, 40%);
+$indigo-800: shade-color($indigo, 60%);
+$indigo-900: shade-color($indigo, 80%);
+
+$purple-100: tint-color($purple, 80%);
+$purple-200: tint-color($purple, 60%);
+$purple-300: tint-color($purple, 40%);
+$purple-400: tint-color($purple, 20%);
+$purple-500: $purple;
+$purple-600: shade-color($purple, 20%);
+$purple-700: shade-color($purple, 40%);
+$purple-800: shade-color($purple, 60%);
+$purple-900: shade-color($purple, 80%);
+
+$pink-100: tint-color($pink, 80%);
+$pink-200: tint-color($pink, 60%);
+$pink-300: tint-color($pink, 40%);
+$pink-400: tint-color($pink, 20%);
+$pink-500: $pink;
+$pink-600: shade-color($pink, 20%);
+$pink-700: shade-color($pink, 40%);
+$pink-800: shade-color($pink, 60%);
+$pink-900: shade-color($pink, 80%);
+
+$red-100: tint-color($red, 80%);
+$red-200: tint-color($red, 60%);
+$red-300: tint-color($red, 40%);
+$red-400: tint-color($red, 20%);
+$red-500: $red;
+$red-600: shade-color($red, 20%);
+$red-700: shade-color($red, 40%);
+$red-800: shade-color($red, 60%);
+$red-900: shade-color($red, 80%);
+
+$orange-100: tint-color($orange, 80%);
+$orange-200: tint-color($orange, 60%);
+$orange-300: tint-color($orange, 40%);
+$orange-400: tint-color($orange, 20%);
+$orange-500: $orange;
+$orange-600: shade-color($orange, 20%);
+$orange-700: shade-color($orange, 40%);
+$orange-800: shade-color($orange, 60%);
+$orange-900: shade-color($orange, 80%);
+
+$yellow-100: tint-color($yellow, 80%);
+$yellow-200: tint-color($yellow, 60%);
+$yellow-300: tint-color($yellow, 40%);
+$yellow-400: tint-color($yellow, 20%);
+$yellow-500: $yellow;
+$yellow-600: shade-color($yellow, 20%);
+$yellow-700: shade-color($yellow, 40%);
+$yellow-800: shade-color($yellow, 60%);
+$yellow-900: shade-color($yellow, 80%);
+
+$green-100: tint-color($green, 80%);
+$green-200: tint-color($green, 60%);
+$green-300: tint-color($green, 40%);
+$green-400: tint-color($green, 20%);
+$green-500: $green;
+$green-600: shade-color($green, 20%);
+$green-700: shade-color($green, 40%);
+$green-800: shade-color($green, 60%);
+$green-900: shade-color($green, 80%);
+
+$teal-100: tint-color($teal, 80%);
+$teal-200: tint-color($teal, 60%);
+$teal-300: tint-color($teal, 40%);
+$teal-400: tint-color($teal, 20%);
+$teal-500: $teal;
+$teal-600: shade-color($teal, 20%);
+$teal-700: shade-color($teal, 40%);
+$teal-800: shade-color($teal, 60%);
+$teal-900: shade-color($teal, 80%);
+
+$cyan-100: tint-color($cyan, 80%);
+$cyan-200: tint-color($cyan, 60%);
+$cyan-300: tint-color($cyan, 40%);
+$cyan-400: tint-color($cyan, 20%);
+$cyan-500: $cyan;
+$cyan-600: shade-color($cyan, 20%);
+$cyan-700: shade-color($cyan, 40%);
+$cyan-800: shade-color($cyan, 60%);
+$cyan-900: shade-color($cyan, 80%);
+
+$polen-100: tint-color($polen, 80%);
+$polen-200: tint-color($polen, 60%);
+$polen-300: tint-color($polen, 40%);
+$polen-400: tint-color($polen, 20%);
+$polen-500: $polen;
+$polen-600: shade-color($polen, 20%);
+$polen-700: shade-color($polen, 40%);
+$polen-800: shade-color($polen, 60%);
+$polen-900: shade-color($polen, 80%);
+
+$uv-100: tint-color($uv, 80%);
+$uv-200: tint-color($uv, 60%);
+$uv-300: tint-color($uv, 40%);
+$uv-400: tint-color($uv, 20%);
+$uv-500: $uv;
+$uv-600: shade-color($uv, 20%);
+$uv-700: shade-color($uv, 40%);
+$uv-800: shade-color($uv, 60%);
+$uv-900: shade-color($uv, 80%);
+
+$crimson-100: tint-color($crimson, 80%);
+$crimson-200: tint-color($crimson, 60%);
+$crimson-300: tint-color($crimson, 40%);
+$crimson-400: tint-color($crimson, 20%);
+$crimson-500: $crimson;
+$crimson-600: shade-color($crimson, 20%);
+$crimson-700: shade-color($crimson, 40%);
+$crimson-800: shade-color($crimson, 60%);
+$crimson-900: shade-color($crimson, 80%);
+
+$neon-yellow-100: tint-color($neon-yellow, 80%);
+$neon-yellow-200: tint-color($neon-yellow, 60%);
+$neon-yellow-300: tint-color($neon-yellow, 40%);
+$neon-yellow-400: tint-color($neon-yellow, 20%);
+$neon-yellow-500: $neon-yellow;
+$neon-yellow-600: shade-color($neon-yellow, 20%);
+$neon-yellow-700: shade-color($neon-yellow, 40%);
+$neon-yellow-800: shade-color($neon-yellow, 60%);
+$neon-yellow-900: shade-color($neon-yellow, 80%);
+
+$blues: (
+  "blue-100": $blue-100,
+  "blue-200": $blue-200,
+  "blue-300": $blue-300,
+  "blue-400": $blue-400,
+  "blue-500": $blue-500,
+  "blue-600": $blue-600,
+  "blue-700": $blue-700,
+  "blue-800": $blue-800,
+  "blue-900": $blue-900,
+);
+
+$indigos: (
+  "indigo-100": $indigo-100,
+  "indigo-200": $indigo-200,
+  "indigo-300": $indigo-300,
+  "indigo-400": $indigo-400,
+  "indigo-500": $indigo-500,
+  "indigo-600": $indigo-600,
+  "indigo-700": $indigo-700,
+  "indigo-800": $indigo-800,
+  "indigo-900": $indigo-900,
+);
+
+$purples: (
+  "purple-100": $purple-200,
+  "purple-200": $purple-100,
+  "purple-300": $purple-300,
+  "purple-400": $purple-400,
+  "purple-500": $purple-500,
+  "purple-600": $purple-600,
+  "purple-700": $purple-700,
+  "purple-800": $purple-800,
+  "purple-900": $purple-900,
+);
+
+$pinks: (
+  "pink-100": $pink-100,
+  "pink-200": $pink-200,
+  "pink-300": $pink-300,
+  "pink-400": $pink-400,
+  "pink-500": $pink-500,
+  "pink-600": $pink-600,
+  "pink-700": $pink-700,
+  "pink-800": $pink-800,
+  "pink-900": $pink-900,
+);
+
+$reds: (
+  "red-100": $red-100,
+  "red-200": $red-200,
+  "red-300": $red-300,
+  "red-400": $red-400,
+  "red-500": $red-500,
+  "red-600": $red-600,
+  "red-700": $red-700,
+  "red-800": $red-800,
+  "red-900": $red-900,
+);
+
+$oranges: (
+  "orange-100": $orange-100,
+  "orange-200": $orange-200,
+  "orange-300": $orange-300,
+  "orange-400": $orange-400,
+  "orange-500": $orange-500,
+  "orange-600": $orange-600,
+  "orange-700": $orange-700,
+  "orange-800": $orange-800,
+  "orange-900": $orange-900,
+);
+
+$yellows: (
+  "yellow-100": $yellow-100,
+  "yellow-200": $yellow-200,
+  "yellow-300": $yellow-300,
+  "yellow-400": $yellow-400,
+  "yellow-500": $yellow-500,
+  "yellow-600": $yellow-600,
+  "yellow-700": $yellow-700,
+  "yellow-800": $yellow-800,
+  "yellow-900": $yellow-900,
+);
+
+$greens: (
+  "green-100": $green-100,
+  "green-200": $green-200,
+  "green-300": $green-300,
+  "green-400": $green-400,
+  "green-500": $green-500,
+  "green-600": $green-600,
+  "green-700": $green-700,
+  "green-800": $green-800,
+  "green-900": $green-900,
+);
+
+$teals: (
+  "teal-100": $teal-100,
+  "teal-200": $teal-200,
+  "teal-300": $teal-300,
+  "teal-400": $teal-400,
+  "teal-500": $teal-500,
+  "teal-600": $teal-600,
+  "teal-700": $teal-700,
+  "teal-800": $teal-800,
+  "teal-900": $teal-900,
+);
+
+$cyans: (
+  "cyan-100": $cyan-100,
+  "cyan-200": $cyan-200,
+  "cyan-300": $cyan-300,
+  "cyan-400": $cyan-400,
+  "cyan-500": $cyan-500,
+  "cyan-600": $cyan-600,
+  "cyan-700": $cyan-700,
+  "cyan-800": $cyan-800,
+  "cyan-900": $cyan-900,
+);
+
+$polens: (
+  "polen-100": $polen-100,
+  "polen-200": $polen-200,
+  "polen-300": $polen-300,
+  "polen-400": $polen-400,
+  "polen-500": $polen-500,
+  "polen-600": $polen-600,
+  "polen-700": $polen-700,
+  "polen-800": $polen-800,
+  "polen-900": $polen-900,
+);
+
+$uvs: (
+  "uv-100": $uv-100,
+  "uv-200": $uv-200,
+  "uv-300": $uv-300,
+  "uv-400": $uv-400,
+  "uv-500": $uv-500,
+  "uv-600": $uv-600,
+  "uv-700": $uv-700,
+  "uv-800": $uv-800,
+  "uv-900": $uv-900,
+);
+
+$crimsons: (
+  "crimson-100": $crimson-100,
+  "crimson-200": $crimson-200,
+  "crimson-300": $crimson-300,
+  "crimson-400": $crimson-400,
+  "crimson-500": $crimson-500,
+  "crimson-600": $crimson-600,
+  "crimson-700": $crimson-700,
+  "crimson-800": $crimson-800,
+  "crimson-900": $crimson-900,
+);
+
+$neon-yellows: (
+  "neon-yellow-100": $neon-yellow-100,
+  "neon-yellow-200": $neon-yellow-200,
+  "neon-yellow-300": $neon-yellow-300,
+  "neon-yellow-400": $neon-yellow-400,
+  "neon-yellow-500": $neon-yellow-500,
+  "neon-yellow-600": $neon-yellow-600,
+  "neon-yellow-700": $neon-yellow-700,
+  "neon-yellow-800": $neon-yellow-800,
+  "neon-yellow-900": $neon-yellow-900,
+);
+// fusv-enable
+
+// ############################################################################
+
+$enable-reduced-motion: false;
+
+// Prefix for :root CSS variables
+
+$variable-prefix: bs-;
+
+// Body
+// Settings for the `<body>` element.
+
+$body-bg: $gray-900;
+$body-color: $gray-100;
+$body-text-align: null;
+
+// Utilities maps
+// Extends the default `$theme-colors` maps to help create our utilities.
+
+// Come v6, we'll de-dupe these variables. Until then, for backward compatibility, we keep them to reassign.
+// scss-docs-start utilities-colors
+$utilities-colors: $theme-colors-rgb;
+// scss-docs-end utilities-colors
+
+// scss-docs-start utilities-text-colors
+$utilities-text: map-merge(
+  $utilities-colors,
+  (
+    "black": to-rgb($black),
+    "white": to-rgb($white),
+    "body": to-rgb($body-color),
+  )
+);
+$utilities-text-colors: map-loop($utilities-text, rgba-css-var, "$key", "text");
+// scss-docs-end utilities-text-colors
+
+// scss-docs-start utilities-bg-colors
+$utilities-bg: map-merge(
+  $utilities-colors,
+  (
+    "black": to-rgb($black),
+    "white": to-rgb($white),
+    "body": to-rgb($body-bg),
+  )
+);
+
+$utilities-bg-colors: map-loop($utilities-bg, rgba-css-var, "$key", "bg");
+// scss-docs-end utilities-bg-colors
+
+$font-size-base: 1rem; // Assumes the browser default, typically `16px`
+$small-font-size: 0.875em;
+$text-muted: $gray-600;
+
+$line-height-base: 1.5;
+
+$border-radius: 0.25rem;
+$border-radius-lg: 0.625rem;
+$border-radius-sm: 0.125rem;
+$border-radius-flat: 0;
+
+$font-family-sans-serif: "Overpass", "Roboto", Arial, sans-serif;
+$font-family-base: $font-family-sans-serif;
+$font-family-serif: "Lora", Georgia, serif;
+$font-family-monospace: "JetBrains Mono", Consolas, monospace;
+$font-family-sans-extra: "Exo 2", "Roboto", sans-serif;
+
+$h1-font-size: $font-size-base * 2.5;
+$h2-font-size: $font-size-base * 2;
+$h3-font-size: $font-size-base * 1.75;
+$h4-font-size: $font-size-base * 1.5;
+$h5-font-size: $font-size-base * 1.25;
+$h6-font-size: $font-size-base;
+
+$badge-padding-y: 0.5em;
+$badge-padding-x: 0.75em;
+$badge-border-radius: $border-radius;
+$badge-font-weight: 500;
+
+$card-bg: $gray-100;
+
+$btn-font-family: "Exo 2", "Overpass", "JetBrains Mono", monospace;
+$btn-font-weight: 500;
+$btn-padding-y: 0.5rem;
+$btn-padding-x: 1rem;
+$btn-padding-x-sm: 0.75rem;
+
+$btn-border-radius: $border-radius-sm;
+$btn-border-radius-lg: $border-radius-sm;
+$btn-border-radius-sm: $border-radius-sm;
+$btn-rounded-border: 10em;
+
+//Shadows custom
+$shadow-key-penumbra-opacity: 0.14;
+$shadow-key-umbra-opacity: 0.2;
+$shadow-ambient-shadow-opacity: 0.12;
+
+$card-border-radius: 0.5rem;
+
+// Forms
+
+// scss-docs-start form-text-variables
+$form-text-margin-top: 0.25rem;
+$form-text-font-size: $small-font-size;
+$form-text-font-style: null;
+$form-text-font-weight: null;
+$form-text-color: $text-muted;
+// scss-docs-end form-text-variables
+
+// scss-docs-start form-label-variables
+$form-label-margin-bottom: 0.5rem;
+$form-label-font-size: null;
+$form-label-font-style: null;
+$form-label-font-weight: null;
+$form-label-color: null;
+
+$form-color-width: 3rem;
+
+$input-background-transition: background 0.4s ease-in-out !important;
+
+$input-font-weight: 300;
+
+// scss-docs-start form-input-variables
+$input-padding-x: 0.75rem; //.75rem;
+$input-padding-y: 0.5rem;
+
+$input-padding-x-sm: 0.25rem; //.5rem;//8px
+$input-padding-y-sm: 0.125rem; //4px
+
+$input-padding-x-lg: 0.75rem; //1.5rem;//24px
+$input-padding-y-lg: 0.625rem; //12px
+
+$input-border-radius: $border-radius;
+$input-border-radius-sm: $border-radius;
+$input-border-radius-lg: $border-radius;
+
+$glitched-duration: 0.9s;
+$glitched-long-duration: 3s;
