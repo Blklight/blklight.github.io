@@ -21,6 +21,7 @@ export default {
       }),
     ],
     link: [
+      ...createCanonical(),
       { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com" },
@@ -48,7 +49,6 @@ export default {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,350;0,500;0,700;1,350;1,500;1,700&display=swap",
       },
-      ...createCanonical()
     ],
   },
 

@@ -1,18 +1,68 @@
 <template>
-  <main
-    class="d-flex flex-column justify-content-center"
-    style="height: 100vh !important"
-  >
-    <img
-      src="../static/blklight-white.svg"
-      title="Blklight"
-      width="200"
-      class="mx-auto my-2 d-block"
-    />
-    <h1 class="font-monospace text-center text-uppercase">Blklight</h1>
-  </main>
+  <LayoutContent>
+    <main class="d-flex flex-column justify-content-center py-3">
+      <template v-if="isDarkTheme">
+        <img
+          src="../static/blklight-white.svg"
+          title="Blklight"
+          width="125"
+          class="mx-auto my-2 d-block"
+        />
+      </template>
+      <template v-else>
+        <img
+          src="../static/blklight-black.svg"
+          title="Blklight"
+          width="125"
+          class="mx-auto my-2 d-block"
+        />
+      </template>
+      <h1 class="font-monospace text-center text-uppercase">Blklight</h1>
+    </main>
+    <section class="container-lg">
+      <CardHorizontal
+        v-for="article in articles"
+        :key="article.slug"
+        :article="article"
+      />
+    </section>
+  </LayoutContent>
 </template>
 
 <script>
-export default {};
+import { mapGetters } from "vuex";
+
+export default {
+  async asyncData({ $content, params }) {
+    const articles = await $content("articles", { deep: true }, params.slug)
+      .only([
+        "title",
+        "abstract",
+        "imageHeader",
+        "cover",
+        "slug",
+        "dir",
+        "channel",
+        "category",
+        "createdDate",
+        "featured",
+        "type",
+        "author",
+        "isPublished",
+      ])
+      .sortBy("createdDate", "desc")
+      .where({
+        type: "normal",
+        isPublished: true,
+        channel: { $ne: "Jobs" },
+      })
+      .fetch();
+
+    return { articles };
+  },
+
+  computed: {
+    ...mapGetters(["isDarkTheme"]),
+  },
+};
 </script>
