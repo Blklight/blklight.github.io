@@ -23,7 +23,7 @@
     </span>
     <span
       v-if="channel === 'Redlight'"
-      class="badge bg-dark text-pink border border-pink ms-0"
+      class="badge bg-pink text-light border border-dark ms-0"
       :class="isTag ? 'badge-tag' : ''"
     >
       Redlight
@@ -34,6 +34,13 @@
       :class="isTag ? 'badge-tag' : ''"
     >
       Blklight Gaming
+    </span>
+    <span
+      v-if="channel === 'Blklight Developers'"
+      class="badge bg-info text-dark border border-dark ms-0"
+      :class="isTag ? 'badge-tag' : ''"
+    >
+      Dev Team
     </span>
     <!-- <span v-else class="badge badge-dark"> {{ channel }}</span> -->
   </div>

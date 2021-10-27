@@ -1,5 +1,5 @@
 ---
-title: "Web3 — Uma visão para uma web descentralizada por Cloudflare"
+title: "Web3 - Uma visão para uma web descentralizada por Cloudflare"
 abstract: ""
 imageHeader: "https://i.imgur.com/lnJyNfD.png"
 cover: ""
@@ -10,7 +10,7 @@ category: "code"
 tags:
 featured: false
 type: "normal"
-headerLayout: "parallax"
+headerLayout: "landscape"
 layout: ""
 fontType: "base"
 isPublished: true

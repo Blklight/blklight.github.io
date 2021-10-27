@@ -1,27 +1,23 @@
 <template>
   <article
     class="card card-raised mb-4"
-    :class="[
-      isDarkTheme
-        ? 'card-plain hover-card-yellow-bordered border border-light'
-        : 'hover-card-uv-bordered border border-dark',
-    ]"
+    :class="[isDarkTheme ? 'card-plain hover-card-yellow' : 'hover-card-uv']"
   >
-    <div class="d-flex align-items-center px-3 py-2">
+    <div class="d-flex align-items-center px-3 py-3">
       <span
-        class="badge badge-tag bg-transparent border ms-0 me-1"
+        class="badge badge-tag bg-transparent border ms-0 me-2"
         :class="isDarkTheme ? ' border-neon-yellow' : ' border-uv text-dark'"
       >
         <DateFormat :date="article.createdDate" />
       </span>
       <ChannelBadge :channel="article.channel" is-tag />
     </div>
-    <div class="d-sm-flex align-items-center px-3 py-1">
+    <div class="d-sm-flex align-items-center px-3">
       <div class="flex-shrink-0">
         <img
           v-lazy="article.cover ? article.cover : article.imageHeader"
           :alt="article.title"
-          class="card-image-h card-img-border hover-filter-cyberpunk-v border"
+          class="card-image-h card-img-border hover-filter-cyberpunk-v"
           :class="isDarkTheme ? 'border-light' : 'border-dark'"
         />
       </div>
@@ -44,10 +40,10 @@
           </template>
         </p>
 
-        <p>Por {{ article.author.name }}</p>
+        <p class="font-monospace">Por {{ article.author.name }}</p>
       </div>
     </div>
-    <div class="d-flex align-items-center px-3 py-2">
+    <div class="d-flex align-items-center px-3 py-3">
       <NuxtLink
         :to="{
           name: `${slugName(article.dir)}-slug`,
@@ -86,8 +82,8 @@ export default {
 
 <style lang="scss">
 .card-image-h {
-  width: 325px;
-  height: 225px;
+  width: 350px;
+  height: 250px;
   object-fit: cover;
 }
 
@@ -102,7 +98,7 @@ export default {
 @media screen and (max-width: 576px) {
   .card-image-h {
     width: 100%;
-    height: 275px;
+    height: 300px;
     object-fit: cover;
   }
 }

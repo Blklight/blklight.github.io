@@ -31,7 +31,6 @@
               class="btn btn-uv btn-read-more"
             >
               <font-awesome-icon :icon="['fab', 'twitch']" size="lg" />
-              Twitch
             </a>
             <a
               href="#"
@@ -41,7 +40,6 @@
               class="btn btn-uv btn-read-more"
             >
               <font-awesome-icon :icon="['fab', 'facebook-f']" size="lg" />
-              Facebook
             </a>
           </div>
         </div>
@@ -50,7 +48,8 @@
             <strong><em> Sobre </em></strong>
           </h4>
           <ul>
-            <li><NuxtLink to="/about">Sobre</NuxtLink></li>
+            <li><NuxtLink to="/about/idea">Idea</NuxtLink></li>
+            <li><NuxtLink to="/about/team">Team</NuxtLink></li>
           </ul>
         </div>
       </div>

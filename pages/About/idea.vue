@@ -18,7 +18,7 @@
         />
       </template>
       <h3 class="font-monospace text-center text-uppercase mb-5">
-        Blklight Team
+        Blklight Idea
       </h3>
 
       <div
@@ -69,30 +69,8 @@
 import { mapGetters } from "vuex";
 
 export default {
-  async asyncData({ $content, params }) {
-    const members = await $content("project-blklight/members", params.slug)
-      .sortBy("name", "asc")
-      .fetch();
-    return {
-      members,
-    };
-  },
-
   computed: {
     ...mapGetters(["isDarkTheme"]),
   },
 };
 </script>
-<style lang="scss" scoped>
-.seize-font {
-  p {
-    font-size: 18px;
-  }
-
-  @media screen and (max-width: 768px) {
-    p {
-      font-size: 16px;
-    }
-  }
-}
-</style>

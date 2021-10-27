@@ -6,7 +6,6 @@
     <template v-else>
       <Article :article="article" :author="author" />
     </template>
-    <!-- <PrevNextArticles :prev="prev" :next="next" /> -->
   </LayoutContent>
 </template>
 <script>
@@ -14,29 +13,12 @@ import { createSEOMeta } from "~/utils/seo.js";
 
 export default {
   async asyncData({ $content, params }) {
-    const article = await $content("", params.slug).fetch();
-
+    const article = await $content("articles/Redlight", params.slug).fetch();
     const author = await $content("authors")
       .only(["username", "bio", "cover"])
       .where({ username: article.author.name })
       .fetch();
-    const [prev, next] = await $content("articles/DevCorporation")
-      .only([
-        "title",
-        "slug",
-        "cover",
-        "imageHeader",
-        "createdDate",
-        "channel",
-        "dir",
-      ])
-      .sortBy("createdDate", "desc")
-      .where({ isPublished: true })
-      .surround(params.slug)
-      .fetch();
-
-    console.log(article);
-    return { article, author, prev, next };
+    return { article, author };
   },
 
   head() {
@@ -45,7 +27,6 @@ export default {
       ? this.article.cover
       : this.article.imageHeader;
     const { title, description, channel } = this.article;
-
     return {
       title: `${title} - ${channel} - Blklight`,
       meta: createSEOMeta({ title, description, image, url }),

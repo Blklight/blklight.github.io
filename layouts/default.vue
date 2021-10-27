@@ -1,24 +1,13 @@
 <template>
   <main class="main-layout">
-    <!-- <sidebar> -->
+    <Sidebar :channels="data" />
     <div class="main-grid">
       <div
-        class="head-toolbar"
-        :class="
-          !isDarkTheme
-            ? 'text-dark bg-light border-bottom border-dark'
-            : 'border-bottom border-light'
-        "
+        class="head-toolbar shadow-navbar"
+        :class="!isDarkTheme ? 'text-dark bg-light' : ''"
       >
         <div class="d-flex align-middle py-2 px-md-4 px-2">
-          <nuxt-link
-            to="/"
-            class="
-              d-flex d-sm-none d-md-none d-xl-none d-xxl-none
-              text-center
-              px-2
-            "
-          >
+          <nuxt-link to="/" class="d-flex text-center px-2">
             <template v-if="isDarkTheme">
               <img
                 src="../static/blklight-white.svg"
@@ -77,6 +66,16 @@
 import { mapMutations, mapGetters } from "vuex";
 
 export default {
+  data() {
+    return {
+      data: [],
+    };
+  },
+
+  async fetch() {
+    this.data = await this.$content("channels").fetch();
+  },
+
   computed: {
     ...mapGetters(["isDarkTheme", "isSidebarOpen"]),
   },
@@ -111,17 +110,21 @@ export default {
 
 .head-toolbar {
   grid-area: Toolbar;
+  z-index: 50;
 }
 
 .content {
   grid-area: Content;
   max-width: 100%;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .footer {
   grid-area: Footer;
   max-width: 100%;
-  padding: 0.5rem 1rem 1rem;
+  padding: 1rem 1.5rem 1rem;
+  margin-top: auto;
 }
 </style>

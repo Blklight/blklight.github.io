@@ -99,6 +99,10 @@
 .shadow-image {
   @include shadow-big-navbar();
 }
+
+.shadow-navbar {
+  @include shadow-3dp();
+}
 //Neon Shadows
 
 .neon-shadow {

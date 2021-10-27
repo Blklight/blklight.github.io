@@ -20,6 +20,16 @@
       <h1 class="font-monospace text-center text-uppercase">Blklight</h1>
     </main>
     <section class="container-lg">
+      <h2
+        class="mb-4"
+        :class="
+          isDarkTheme
+            ? 'text-light cyber-underline-light'
+            : 'text-dark cyber-underline-dark'
+        "
+      >
+        <em>Últimas noticias</em>
+      </h2>
       <CardHorizontal
         v-for="article in articles"
         :key="article.slug"
@@ -57,7 +67,7 @@ export default {
         channel: { $ne: "Jobs" },
       })
       .fetch();
-
+    console.log(articles);
     return { articles };
   },
 
