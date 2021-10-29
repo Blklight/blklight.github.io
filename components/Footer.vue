@@ -47,9 +47,23 @@
           <h4 class="mb-3" :class="isDarkTheme ? 'text-light' : 'text-dark'">
             <strong><em> Sobre </em></strong>
           </h4>
-          <ul>
-            <li><NuxtLink to="/about/idea">Idea</NuxtLink></li>
-            <li><NuxtLink to="/about/team">Team</NuxtLink></li>
+          <ul class="list-unstyled">
+            <li>
+              <NuxtLink
+                to="/about/idea"
+                :class="isDarkTheme ? 'text-light' : 'text-dark'"
+              >
+                Idea
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink
+                to="/about/team"
+                :class="isDarkTheme ? 'text-light' : 'text-dark'"
+              >
+                Team
+              </NuxtLink>
+            </li>
           </ul>
         </div>
       </div>

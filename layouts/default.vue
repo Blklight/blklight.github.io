@@ -3,7 +3,7 @@
     <Sidebar :channels="data" />
     <div class="main-grid">
       <div
-        class="head-toolbar shadow-navbar"
+        class="head-toolbar"
         :class="!isDarkTheme ? 'text-dark bg-light' : ''"
       >
         <div class="d-flex align-middle py-2 px-md-4 px-2">

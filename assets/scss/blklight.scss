@@ -8,7 +8,7 @@
 @import "utilities";
 @import "reboot";
 @import "base";
-@import "type";
+@import "../../node_modules/bootstrap/scss/type";
 @import "images";
 @import "buttons";
 @import "forms";
@@ -25,3 +25,4 @@
 @import "extra";
 
 @import "colorFilters";
+@import "masks";
