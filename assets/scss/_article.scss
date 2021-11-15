@@ -99,6 +99,12 @@
     grid-column-end: 5;
   }
 
+  .nuxt-content > .nuxt-content-highlight {
+    grid-column-start: 2;
+    grid-column-end: -2;
+    margin: 16px 0 20px;
+  }
+
   @media screen and (max-width: 992px) {
     .nuxt-content {
       display: grid;
@@ -110,12 +116,19 @@
     }
 
     .nuxt-content > figure {
-      grid-column: 2 / -2;
-      margin: 20px 0;
+      grid-column-start: 2;
+      grid-column-end: -2;
+      margin: 16px 0 20px;
     }
 
     .nuxt-content > blockquote {
       grid-column: 3 / 5;
+    }
+
+    .nuxt-content > .nuxt-content-highlight {
+      grid-column-start: 2;
+      grid-column-end: -2;
+      margin: 16px 0 20px;
     }
   }
 
@@ -138,11 +151,16 @@
 
     .nuxt-content > figure {
       grid-column: 2;
-      margin: 20px 0;
+      margin: 16px 0 16px;
     }
 
     .nuxt-content > blockquote {
       grid-column: 2;
+    }
+
+    .nuxt-content > .nuxt-content-highlight {
+      grid-column: 2;
+      margin: 16px 0 16px;
     }
   }
 
@@ -152,13 +170,34 @@
 
 .main-article,
 .content-article {
+  background: url("../mask-overlays/11-extra.png");
+  background-attachment: local;
   .nuxt-content {
     letter-spacing: 0.01em;
     pre {
       text-shadow: none !important;
-      background-color: $black !important;
       border-radius: 0.25rem !important;
       white-space: pre-wrap !important;
+    }
+
+    mark {
+      background-color: $uv;
+      color: $light;
+    }
+
+    table {
+      margin-bottom: 1.5rem;
+    }
+
+    th,
+    td {
+      padding: 0.5rem;
+    }
+
+    table,
+    th,
+    td {
+      border: 1px solid $light;
     }
 
     p,
@@ -189,7 +228,7 @@
       border: 1px solid $neon-yellow;
       margin: 0.75rem 0 1.5rem !important;
       padding: 0.75rem 1rem;
-      border-radius: 0;
+      border-radius: 0.5rem;
       font-style: italic;
 
       p {
@@ -286,6 +325,7 @@
       font-family: $font-family-monospace;
       font-size: 18px !important;
       font-weight: 350 !important;
+      font-variant-ligatures: discretionary-ligatures;
 
       code {
         font-size: inherit;
@@ -322,8 +362,19 @@
     }
   }
   .light-theme {
-    color: $gray-900;
-    background-color: $gray-100;
+    color: $dark;
+    // background-color: $gray-100;
+
+    table,
+    th,
+    td {
+      border: 1px solid $dark;
+    }
+
+    mark {
+      background-color: $neon-yellow;
+      color: $dark;
+    }
 
     h1,
     h2,
@@ -357,10 +408,6 @@
       background-color: lighten($gray-100, 2%);
       border-left: 8px solid $uv !important;
       border: 1px solid $uv;
-      margin: 0.75rem 0 1.5rem !important;
-      padding: 0.75rem 1rem;
-      border-radius: 0;
-      font-style: italic;
     }
   }
 }
@@ -489,6 +536,12 @@
     margin: 16px 20px 20px;
   }
 
+  .nuxt-content > .nuxt-content-highlight {
+    grid-column-start: 1;
+    grid-column-end: -1;
+    margin: 16px 20px 20px;
+  }
+
   .nuxt-content > blockquote {
     grid-column-start: 2;
     grid-column-end: 4;
@@ -513,7 +566,12 @@
 
     .nuxt-content > figure {
       grid-column: 2 / -2;
-      margin: 20px 0;
+      margin: 16px 0 20px;
+    }
+
+    .nuxt-content > .nuxt-content-highlight {
+      grid-column: 2 / -2;
+      margin: 16px 0 20px;
     }
 
     .nuxt-content > blockquote {

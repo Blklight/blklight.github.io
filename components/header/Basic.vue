@@ -15,10 +15,16 @@
     </div>
 
     <div class="header-basic-content">
-      <h5 class="">
-        <span class="badge bg-uv border border-light">Websites</span>
-        <span class="badge bg-uv border border-light">Posters</span>
-      </h5>
+      <div class="d-flex mb-1">
+        <Badge :channel="article.channel" isTag class="me-1" />
+        <Badge
+          :channel="article.channel"
+          :category="article.category"
+          isTag
+          isCategory
+        />
+      </div>
+
       <h1 class="article-title">
         <em>
           <span class="text-light bg-dark py-1">

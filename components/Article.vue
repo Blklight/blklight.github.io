@@ -40,8 +40,26 @@
       </template>
       <nuxt-content
         :document="article"
-        :class="article.type === 'stories' ? 'mono-font' : ''"
+        :class="[
+          article.type === 'stories' ? 'mono-font' : '',
+          !isDarkTheme ? 'light-theme' : '',
+        ]"
       />
+
+      <template v-if="article.tags">
+        <div class="nuxt-content">
+          <h5>Tags:</h5>
+          <div class="d-flex">
+            <span
+              v-for="tag in article.tags"
+              :key="tag"
+              class="badge bg-secondary text-dark"
+            >
+              {{ tag }}
+            </span>
+          </div>
+        </div>
+      </template>
     </article>
     <Author :author="authorInfo" />
   </section>

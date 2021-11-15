@@ -20,49 +20,23 @@
       <h3 class="font-monospace text-center text-uppercase mb-5">
         Blklight Idea
       </h3>
-
-      <div
-        v-for="(member, i) in members"
-        :key="i"
-        class="d-md-flex align-middle my-4"
-      >
-        <div>
-          <img
-            v-lazy="member.cover"
-            alt=""
-            class="member-avatar rounded mx-auto d-block filter-cyberpunk-v"
-            :class="isDarkTheme ? 'border border-light' : 'border border-dark'"
-          />
-        </div>
-        <div class="" :class="isDarkTheme ? 'text-light' : 'text-dark'">
-          <div class="px-lg-5 py-1 px-3 seize-font text-lg-start text-center">
-            <h2
-              class="mb-3"
-              :class="
-                isDarkTheme
-                  ? 'text-light cyber-underline-light'
-                  : 'text-dark cyber-underline-dark'
-              "
-            >
-              <em>{{ member.nickname }}</em>
-            </h2>
-            <!-- <h4>
-            <em>{{ member.name }}</em>
-          </h4> -->
-            <span
-              v-for="(role, j) in member.role"
-              :key="j"
-              class="badge badge-tag ml-0 mr-1 mb-3"
-              :class="isDarkTheme ? 'bg-light text-dark' : 'bg-dark text-light'"
-            >
-              {{ role }}
-            </span>
-
-            <p class="font-monospace">{{ member.description }}</p>
-          </div>
-        </div>
-      </div>
     </div>
+    <section class="main-article py-4">
+      <article
+        class="nuxt-content mono-font"
+        :class="!isDarkTheme ? 'light-theme' : ''"
+      >
+        <h3>Quando surgiu?</h3>
+        <p>Verão de 2019, num dia em que 3 amigos foram doar sangue.</p>
+        <h3>Objetivo</h3>
+        <p>
+          Atualmente nosso objetivo é poder desenvolver esta ideia junto do
+          nosso circulo de amigos, e inicialmente através da disponibilização de
+          artigos, desenvolver habilidades, trabalhar a criatividade e quem sabe
+          isso não a base para um projeto maior.
+        </p>
+      </article>
+    </section>
   </LayoutContent>
 </template>
 <script>

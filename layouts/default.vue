@@ -1,6 +1,6 @@
 <template>
   <main class="main-layout">
-    <Sidebar :channels="data" />
+    <!-- <Sidebar :channels="data" /> -->
     <div class="main-grid">
       <div
         class="head-toolbar"
@@ -72,9 +72,9 @@ export default {
     };
   },
 
-  async fetch() {
-    this.data = await this.$content("channels").fetch();
-  },
+  // async fetch() {
+  //   this.data = await this.$content("channels").fetch();
+  // },
 
   computed: {
     ...mapGetters(["isDarkTheme", "isSidebarOpen"]),
@@ -126,5 +126,6 @@ export default {
   max-width: 100%;
   padding: 1rem 1.5rem 1rem;
   margin-top: auto;
+  min-height: 250px;
 }
 </style>

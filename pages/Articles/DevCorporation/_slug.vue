@@ -6,16 +6,17 @@
     <template v-else>
       <Article :article="article" :author="author" />
     </template>
-    <PrevNextArticles :prev="prev" :next="next" />
+    <!-- <PrevNextArticles :prev="prev" :next="next" /> -->
   </LayoutContent>
 </template>
 <script>
-import { createSEOMeta } from "~/utils/seo.js";
+// import global from "@/utils/global";
+import getSiteMeta from "@/utils/getSiteMeta";
 
 export default {
   async asyncData({ $content, params }) {
     const article = await $content(
-      "articles/DevCorporation",
+      "Articles/DevCorporation",
       params.slug
     ).fetch();
 
@@ -23,7 +24,7 @@ export default {
       .only(["username", "bio", "cover"])
       .where({ username: article.author.name })
       .fetch();
-    const [prev, next] = await $content("articles/DevCorporation")
+    const [prev, next] = await $content("Articles/DevCorporation")
       .only([
         "title",
         "slug",
@@ -42,16 +43,38 @@ export default {
   },
 
   head() {
-    const url = this.article.slug;
-    const image = this.article.cover
-      ? this.article.cover
-      : this.article.imageHeader;
-    const { title, description, channel } = this.article;
-
     return {
-      title: `${title} - ${channel} - Blklight`,
-      meta: createSEOMeta({ title, description, image, url }),
+      title: this.article.title,
+      meta: [
+        ...this.meta,
+        {
+          property: "article:published_time",
+          content: this.article.createdDate,
+        },
+        { name: "twitter:label1", content: "By" },
+        { name: "twitter:data1", content: this.article.channel || "" },
+      ],
+      link: [
+        {
+          hid: "canonical",
+          rel: "canonical",
+          href: `${this.$config.baseUrl}/${this.$route.params.slug}`,
+        },
+      ],
     };
+  },
+
+  computed: {
+    meta() {
+      const metaData = {
+        type: "article",
+        title: this.article.title,
+        description: this.article.abstract,
+        url: `${this.$config.baseUrl}/${this.$route.params.slug}`,
+        mainImage: this.article.image,
+      };
+      return getSiteMeta(metaData);
+    },
   },
 };
 </script>

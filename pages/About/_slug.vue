@@ -10,8 +10,6 @@
   </LayoutContent>
 </template>
 <script>
-import { createSEOMeta } from "~/utils/seo.js";
-
 export default {
   async asyncData({ $content, params }) {
     const article = await $content("", params.slug).fetch();
@@ -37,19 +35,6 @@ export default {
 
     console.log(article);
     return { article, author, prev, next };
-  },
-
-  head() {
-    const url = this.article.slug;
-    const image = this.article.cover
-      ? this.article.cover
-      : this.article.imageHeader;
-    const { title, description, channel } = this.article;
-
-    return {
-      title: `${title} - ${channel} - Blklight`,
-      meta: createSEOMeta({ title, description, image, url }),
-    };
   },
 };
 </script>

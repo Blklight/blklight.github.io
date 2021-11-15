@@ -1,6 +1,6 @@
 <template>
   <LayoutContent>
-    <main class="d-flex flex-column justify-content-center py-3">
+    <main class="d-flex flex-column justify-content-center py-2">
       <template v-if="isDarkTheme">
         <img
           src="../static/blklight-white.svg"
@@ -28,12 +28,14 @@
             : 'text-dark cyber-underline-dark'
         "
       >
-        <em>Últimas noticias</em>
+        <em>Últimas artigos</em>
       </h2>
       <CardHorizontal
         v-for="article in articles"
         :key="article.slug"
         :article="article"
+        badgeIsTag
+        category
       />
     </section>
   </LayoutContent>
@@ -44,10 +46,10 @@ import { mapGetters } from "vuex";
 
 export default {
   async asyncData({ $content, params }) {
-    const articles = await $content("articles", { deep: true }, params.slug)
+    const articles = await $content("Articles", { deep: true }, params.slug)
       .only([
         "title",
-        "abstract",
+        "description",
         "imageHeader",
         "cover",
         "slug",
@@ -59,6 +61,8 @@ export default {
         "type",
         "author",
         "isPublished",
+        "path",
+        "tags",
       ])
       .sortBy("createdDate", "desc")
       .where({
@@ -67,7 +71,7 @@ export default {
         channel: { $ne: "Jobs" },
       })
       .fetch();
-    console.log(articles);
+    // console.log(articles);
     return { articles };
   },
 

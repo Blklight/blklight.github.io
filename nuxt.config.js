@@ -1,28 +1,47 @@
-import { createSEOMeta } from "./utils/seo.js";
-import { createCanonical } from "./utils/canonicalLink.js"
+import global from "./utils/global";
+import getSiteMeta from "./utils/getSiteMeta";
+import getRoutes from "./utils/getRoutes";
+
+const meta = getSiteMeta();
+
+// import { createSEOMeta } from "./utils/seo.js";
+// import { createCanonical } from "./utils/canonicalLink.js";
 
 export default {
   // Target: https://go.nuxtjs.dev/config-target
-  target: 'static',
+  target: "static",
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'Blklight',
+    title: "Blklight",
     meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { name: 'format-detection', content: 'telephone=no' },
-      ...createSEOMeta({
-        title: "Blklight",
-        description:
-          "Porque tudo começa com uma ideia! Isso é Blklight!",
-        image: "/blklight-seo.jpg",
-        url: "blklight.github.io"
-      }),
+      ...meta,
+      { charset: "utf-8" },
+      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "format-detection", content: "telephone=no" },
+      {
+        hid: "description",
+        name: "description",
+        content: global.siteDesc || "",
+      },
+      { property: "og:site_name", content: global.siteName || "" },
+      {
+        hid: "description",
+        name: "description",
+        content: global.siteDesc || "",
+      },
+      { property: "og:image:width", content: "740" },
+      { property: "og:image:height", content: "300" },
+      { name: "twitter:site", content: global.siteName || "" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     link: [
-      ...createCanonical(),
       { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+      {
+        hid: "canonical",
+        rel: "canonical",
+        href: global.siteUrl,
+      },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com" },
       {
@@ -55,7 +74,6 @@ export default {
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ["~/assets/scss/blklight.scss"],
 
-
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: ["~/plugins/vue-lazyload"],
 
@@ -65,18 +83,19 @@ export default {
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/eslint
-    '@nuxtjs/eslint-module',
+    "@nuxtjs/eslint-module",
     "@nuxtjs/fontawesome",
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios',
+    "@nuxtjs/axios",
     // https://go.nuxtjs.dev/pwa
-    '@nuxtjs/pwa',
+    "@nuxtjs/pwa",
     // https://go.nuxtjs.dev/content
-    '@nuxt/content',
+    "@nuxt/content",
+    "@nuxtjs/sitemap",
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -85,8 +104,8 @@ export default {
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {
-      lang: 'en'
-    }
+      lang: "en",
+    },
   },
 
   // Content module configuration: https://go.nuxtjs.dev/config-content
@@ -94,12 +113,16 @@ export default {
     fullTextSearchFields: ["title", "category", "channel"],
     markdown: {
       prism: {
-        // theme: "prism-themes/themes/prism-xonokai.css",
-        // theme: "prism-themes/themes/prism-synthwave84.css",
-        // theme: "prism-themes/themes/prism-dracula.css",
-        // theme: "prism-themes/themes/prism-shades-of-purple.css",
         theme: "prism-themes/themes/prism-a11y-dark.css",
+        // theme: "prism-themes/themes/prism-dracula.css",
       },
+    },
+  },
+
+  sitemap: {
+    hostname: global.siteUrl,
+    routes() {
+      return getRoutes();
     },
   },
 
@@ -123,6 +146,7 @@ export default {
         "faChevronRight",
         "faChevronLeft",
         "faSearch",
+        "faHome",
       ],
       regular: ["faSun", "faMoon", "faWindowClose"],
       brands: [
@@ -136,4 +160,4 @@ export default {
       ],
     },
   },
-}
+};

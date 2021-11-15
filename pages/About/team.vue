@@ -20,23 +20,26 @@
       <h3 class="font-monospace text-center text-uppercase mb-5">
         Blklight Team
       </h3>
-
-      <div
+    </div>
+    <div class="container">
+      <article
         v-for="(member, i) in members"
         :key="i"
-        class="d-md-flex align-middle my-4"
+        class="card card-raised mb-4"
+        :class="[
+          isDarkTheme ? 'card-plain hover-card-yellow' : 'hover-card-uv',
+        ]"
       >
-        <div>
-          <img
-            v-lazy="member.cover"
-            alt=""
-            class="member-avatar rounded mx-auto d-block filter-cyberpunk-v"
-            :class="isDarkTheme ? 'border border-light' : 'border border-dark'"
-          />
-        </div>
-        <div class="" :class="isDarkTheme ? 'text-light' : 'text-dark'">
-          <div class="px-lg-5 py-1 px-3 seize-font text-lg-start text-center">
-            <h2
+        <div class="d-sm-flex align-items-center p-4">
+          <div class="flex-shrink-0">
+            <img
+              v-lazy="member.cover"
+              :alt="member.nickname"
+              class="member-avatar card-img-border hover-filter-cyberpunk-v"
+            />
+          </div>
+          <div class="flex-grow-1 ms-sm-3">
+            <h3
               class="mb-3"
               :class="
                 isDarkTheme
@@ -45,10 +48,14 @@
               "
             >
               <em>{{ member.nickname }}</em>
-            </h2>
-            <!-- <h4>
-            <em>{{ member.name }}</em>
-          </h4> -->
+            </h3>
+
+            <div class="seize-font">
+              <p class="d-xl-block d-lg-block d-sm-none font-monospace mb-2">
+                {{ member.description }}
+              </p>
+            </div>
+
             <span
               v-for="(role, j) in member.role"
               :key="j"
@@ -57,11 +64,9 @@
             >
               {{ role }}
             </span>
-
-            <p class="font-monospace">{{ member.description }}</p>
           </div>
         </div>
-      </div>
+      </article>
     </div>
   </LayoutContent>
 </template>
@@ -70,7 +75,7 @@ import { mapGetters } from "vuex";
 
 export default {
   async asyncData({ $content, params }) {
-    const members = await $content("project-blklight/members", params.slug)
+    const members = await $content("about/members", params.slug)
       .sortBy("name", "asc")
       .fetch();
     return {

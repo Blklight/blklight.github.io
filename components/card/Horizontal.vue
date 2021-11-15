@@ -5,12 +5,15 @@
   >
     <div class="d-flex align-items-center px-3 py-3">
       <span
-        class="badge badge-tag bg-transparent border ms-0 me-2"
-        :class="isDarkTheme ? ' border-neon-yellow' : ' border-uv text-dark'"
+        class="badge bg-transparent border ms-0 me-2"
+        :class="[
+          isDarkTheme ? ' border-neon-yellow' : ' border-uv text-dark',
+          badgeIsTag ? 'badge-tag' : '',
+        ]"
       >
         <DateFormat :date="article.createdDate" />
       </span>
-      <ChannelBadge :channel="article.channel" is-tag />
+      <Badge :channel="article.channel" :isTag="badgeIsTag" />
     </div>
     <div class="d-sm-flex align-items-center px-3">
       <div class="flex-shrink-0">
@@ -22,33 +25,43 @@
         />
       </div>
       <div class="flex-grow-1 ms-sm-3">
+        <template v-if="category">
+          <Badge
+            :channel="article.channel"
+            :category="article.category"
+            isCategory
+            class="mt-2"
+          />
+        </template>
         <h5 class="font-monospace my-2">
           <em>
             {{ article.title }}
           </em>
         </h5>
 
-        <p class="d-xl-block d-lg-block d-sm-none">
-          <template v-if="article.abstract">
-            {{ article.abstract }}
-          </template>
-          <template v-else>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Unde
-            aliquam ut fuga non delectus fugiat, aperiam nulla autem officia,
-            hic pariatur temporibus voluptatem saepe magni, beatae laboriosam et
-            maxime repellendus.
+        <p class="d-xl-block d-lg-block d-sm-none mb-1">
+          <template v-if="article.description">
+            {{ article.description }}
           </template>
         </p>
 
-        <p class="font-monospace">Por {{ article.author.name }}</p>
+        <p class="font-monospace mb-1">Por {{ article.author.name }}</p>
+        <template v-if="tags">
+          <div class="d-xl-block d-lg-block d-sm-none">
+            <span
+              v-for="tag in article.tags"
+              :key="tag"
+              class="badge bg-secondary text-dark"
+            >
+              {{ tag }}
+            </span>
+          </div>
+        </template>
       </div>
     </div>
     <div class="d-flex align-items-center px-3 py-3">
       <NuxtLink
-        :to="{
-          name: `${slugName(article.dir)}-slug`,
-          params: { slug: `${article.slug}` },
-        }"
+        :to="`${article.dir}/${article.slug}`"
         class="btn btn-raised btn-read-more-sm ms-auto"
         :class="isDarkTheme ? 'btn-neon-yellow' : 'btn-uv'"
       >
@@ -64,6 +77,21 @@ export default {
     article: {
       type: Object,
       default: null,
+    },
+
+    badgeIsTag: {
+      type: Boolean,
+      default: false,
+    },
+
+    category: {
+      type: Boolean,
+      default: false,
+    },
+
+    tags: {
+      type: Boolean,
+      default: false,
     },
   },
 
