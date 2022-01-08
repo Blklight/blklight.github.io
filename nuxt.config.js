@@ -9,7 +9,7 @@ const meta = getSiteMeta();
 
 export default {
   // Target: https://go.nuxtjs.dev/config-target
-  target: "static",
+  target: 'static',
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -83,28 +83,32 @@ export default {
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/eslint
-    "@nuxtjs/eslint-module",
+    '@nuxtjs/eslint-module',
     "@nuxtjs/fontawesome",
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
-    "@nuxtjs/axios",
+    '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
-    "@nuxtjs/pwa",
+    '@nuxtjs/pwa',
     // https://go.nuxtjs.dev/content
-    "@nuxt/content",
+    '@nuxt/content',
     "@nuxtjs/sitemap",
+
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
+    baseURL: '/',
+  },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {
-      lang: "en",
+      lang: 'en',
     },
   },
 
@@ -145,6 +149,7 @@ export default {
         "faWindowClose",
         "faChevronRight",
         "faChevronLeft",
+        "faChevronDown",
         "faSearch",
         "faHome",
       ],
@@ -160,4 +165,4 @@ export default {
       ],
     },
   },
-};
+}

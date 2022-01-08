@@ -25,7 +25,7 @@
               />
             </template>
           </nuxt-link>
-          <div class="d-flex d-sm-none d-md-none d-xl-none d-xxl-none ms-2">
+          <!-- <div class="d-flex d-sm-none d-md-none d-xl-none d-xxl-none ms-2">
             <button
               type="button"
               class="btn"
@@ -34,16 +34,22 @@
             >
               <font-awesome-icon :icon="['fas', 'bars']" size="lg" />
             </button>
-          </div>
+          </div> -->
 
           <div class="ms-auto">
-            <NuxtLink
+            <!-- <NuxtLink
               to="/search"
               class="btn ml-auto"
               :class="isDarkTheme ? 'btn-outline-light' : 'btn-outline-dark'"
             >
               <font-awesome-icon :icon="['fas', 'search']" />
-            </NuxtLink>
+            </NuxtLink> -->
+            <span
+              class="badge bg-uv text-light border border-dark font-monospace"
+            >
+              Alpha v0.0.1
+            </span>
+
             <button
               class="btn ml-auto"
               :class="isDarkTheme ? 'btn-outline-light' : 'btn-outline-dark'"
@@ -51,6 +57,7 @@
             >
               <font-awesome-icon :icon="['fas', 'adjust']" />
             </button>
+            <UserSettings />
           </div>
         </div>
       </div>

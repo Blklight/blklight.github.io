@@ -25,7 +25,7 @@
       <article
         v-for="(member, i) in members"
         :key="i"
-        class="card card-raised mb-4"
+        class="card card-raised background-texture mb-4"
         :class="[
           isDarkTheme ? 'card-plain hover-card-yellow' : 'hover-card-uv',
         ]"

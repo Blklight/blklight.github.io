@@ -1,6 +1,23 @@
 <template>
   <LayoutContent>
+    <div class="container my-4">
+      <MTSSidebar />
+    </div>
     <div class="container">
+      <Dropdown />
+    </div>
+    <!-- <div class="container mb-4">
+      <UserSettings />
+    </div>
+    <div class="container">
+
+    </div> -->
+    <!-- <div class="container py-4">
+      <button class="btn btn-orange btn-sm">
+        <font-awesome-icon :icon="['fas', 'chevron-down']" size="lg" />
+      </button>
+    </div> -->
+    <!-- <div class="container">
       <div
         class="card card-raised card-background view-anchor mb-4"
         :class="[
@@ -36,15 +53,17 @@
           </h3>
         </div>
       </div>
-    </div>
+    </div> -->
   </LayoutContent>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex'
 
 export default {
+  name: 'Playground',
   computed: {
-    ...mapGetters(["isDarkTheme"]),
+    ...mapGetters(['isDarkTheme']),
   },
-};
+}
 </script>
+<style lang="scss"></style>

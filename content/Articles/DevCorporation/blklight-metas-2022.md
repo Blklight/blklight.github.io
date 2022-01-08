@@ -1,9 +1,9 @@
 ---
-title: "Blklight - Release 0.0.0"
+title: "Metas para o Blklight em 2022"
 description: "Após muitos testes e idas e vindas, finalmente é tirada do papel e colocada online uma versão do Blklight!"
-imageHeader: "https://i.imgur.com/qLXp16t.jpg"
+imageHeader: "https://i.imgur.com/ngzO1zj.jpg"
 cover: ""
-createdDate: "2021-10-31 21:45"
+createdDate: "2021-12-30 10:50"
 updatedDate: ""
 channel: "Dev Corporation"
 category: "Team Blklight"
@@ -22,7 +22,7 @@ author:
   quote: "Finalmente sinto que o que eu desenvolvi está relativamente OK, mas agora é seguir aprimorando e evoluindo mais essa ideia!"
 ---
 
-## Release 0.0.0
+## Metas para 2022
 
 Finalmente após um bom tempo planejando, desenvolvendo, lidando com confiança, criatividade, pandemia e estudos, pretendo colocar online uma versão inicial de um projeto pessoal de longa data chamado Blklight.
 
