@@ -1,12 +1,11 @@
 .article-title {
-  //font-size: 2.5rem;
-  font-family: "Exo 2", "Overpass", Roboto, sans-serif;
+  font-family: 'Exo 2', 'Overpass', Roboto, sans-serif;
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
 
 .article-meta {
-  font-family: "Exo 2", "Overpass", Roboto, sans-serif;
+  font-family: 'Exo 2', 'Overpass', Roboto, sans-serif;
   font-weight: 500;
   margin-bottom: 0.5rem;
 }
@@ -18,61 +17,6 @@
 
   .article-meta {
     font-size: 1.25rem;
-  }
-}
-
-/* Pagination */
-
-.article-pagination {
-  margin-bottom: 4rem;
-
-  > .btn {
-    border-radius: 2rem;
-  }
-}
-
-.marker {
-  padding: 0.125rem 0;
-  line-height: 1.5;
-
-  &.marker-link {
-    padding: 0.25rem 0.5rem;
-  }
-
-  &.marker-small {
-    padding: 0.125rem 0;
-  }
-
-  &.marker-title {
-    padding: 0.25rem;
-  }
-
-  &.marker-tag {
-    padding: 0.25rem 0.5rem;
-  }
-}
-
-// @each $color, $value in $theme-colors {
-//   .marker-#{$color} {
-//     @include marker-variant($value);
-//   }
-// }
-
-.page-book {
-  line-height: 1.33;
-  padding: 3.5rem 4rem;
-  font-family: $font-family-serif;
-  font-size: 1.33rem;
-  background-color: $polen;
-
-  p {
-    margin: 0.25rem;
-  }
-
-  @media screen and (max-width: 768px) {
-    .page-book {
-      padding: 1rem 1.5rem;
-    }
   }
 }
 
@@ -168,255 +112,11 @@
   }
 }
 
-.main-article,
-.content-article {
-  background: url("../mask-overlays/11-extra.png");
-  background-attachment: local;
-  .nuxt-content {
-    letter-spacing: 0.01em;
-    pre {
-      text-shadow: none !important;
-      border-radius: 0.25rem !important;
-      white-space: pre-wrap !important;
-    }
-
-    mark {
-      background-color: $uv;
-      color: $light;
-    }
-
-    table {
-      margin-bottom: 1.5rem;
-    }
-
-    th,
-    td {
-      padding: 0.5rem;
-    }
-
-    table,
-    th,
-    td {
-      border: 1px solid $light;
-    }
-
-    p,
-    li,
-    em {
-      code {
-        // color: #e83e8c !important;
-        color: lighten(#fbc02d, 10%);
-        font-weight: 500;
-      }
-    }
-
-    a {
-      color: lighten(#ff00ff, 20%) !important;
-
-      :hover {
-        color: #ff00ff !important;
-      }
-
-      :visited {
-        color: darken(#ff00ff, 2.5%) !important;
-      }
-    }
-
-    blockquote {
-      background-color: darken($gray-900, 2.5%);
-      border-left: 8px solid $neon-yellow !important;
-      border: 1px solid $neon-yellow;
-      margin: 0.75rem 0 1.5rem !important;
-      padding: 0.75rem 1rem;
-      border-radius: 0.5rem;
-      font-style: italic;
-
-      p {
-        margin-bottom: 1rem;
-      }
-    }
-
-    @media screen and (max-width: 992px) {
-      font-size: 18px; //18px
-    }
-
-    h1,
-    h2,
-    h3 {
-      position: relative;
-      padding-bottom: 12px;
-      &:before {
-        content: "";
-        display: block;
-        position: absolute;
-        bottom: 0px;
-        // left: 2px;
-        left: 0px;
-        width: 100%;
-        height: 10px;
-        background-color: $light;
-        clip-path: polygon(
-          0px 0px,
-          85px 0px,
-          90px 5px,
-          100% 5px,
-          100% 6px,
-          85px 6px,
-          80px 10px,
-          0px 10px
-        );
-      }
-
-      &:after {
-        content: "_";
-        animation-name: hxafter;
-        animation-duration: $glitched-duration;
-        animation-iteration-count: infinite;
-        animation-timing-function: linear;
-      }
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      font-family: "IBM Plex Sans Condensed", "Exo 2", Roboto, Helvetica,
-        sans-serif;
-      font-weight: 700 !important;
-      margin-top: 0;
-      margin-bottom: 1.25rem;
-    }
-
-    strong {
-      font-weight: bold;
-    }
-
-    ul {
-      margin-top: 0;
-    }
-
-    li {
-      margin-bottom: 1rem;
-    }
-
-    p,
-    img,
-    ul,
-    ol,
-    figure,
-    blockquote,
-    pre,
-    code {
-      margin-bottom: 1.5rem;
-    }
-
-    pre,
-    code {
-      margin-bottom: 1.5rem !important;
-    }
-
-    &.serif-font {
-      font-family: $font-family-serif;
-    }
-
-    &.mono-font {
-      font-family: $font-family-monospace;
-      font-size: 18px !important;
-      font-weight: 350 !important;
-      font-variant-ligatures: discretionary-ligatures;
-
-      code {
-        font-size: inherit;
-      }
-
-      @media screen and (max-width: 768px) {
-        font-size: 16px !important;
-
-        code {
-          font-size: inherit;
-        }
-      }
-    }
-
-    &.base-font {
-      font-family: $font-family-base;
-      font-size: 20px;
-
-      code {
-        font-size: inherit;
-      }
-
-      @media screen and (max-width: 768px) {
-        font-size: 17px !important;
-
-        code {
-          font-size: inherit;
-        }
-      }
-    }
-
-    &.sans-font {
-      font-family: $font-family-sans-extra;
-    }
-  }
-  .light-theme {
-    color: $dark;
-    // background-color: $gray-100;
-
-    table,
-    th,
-    td {
-      border: 1px solid $dark;
-    }
-
-    mark {
-      background-color: $neon-yellow;
-      color: $dark;
-    }
-
-    h1,
-    h2,
-    h3 {
-      &:before {
-        background-color: $dark;
-      }
-    }
-
-    a {
-      color: $blue !important;
-
-      :hover {
-        color: $blue !important;
-      }
-
-      :visited {
-        color: darken($blue, 2.5%) !important;
-      }
-    }
-    p,
-    li,
-    em {
-      code {
-        color: darken(#00bfa5, 2.5%);
-        font-weight: 500;
-      }
-    }
-
-    blockquote {
-      background-color: lighten($gray-100, 2%);
-      border-left: 8px solid $uv !important;
-      border: 1px solid $uv;
-    }
-  }
-}
-
 .two-column-article {
   max-width: 100vw;
   display: grid;
   grid-template-columns: 45% 55%;
-  grid-template-areas: "Info Content";
+  grid-template-areas: 'Info Content';
 }
 
 @media screen and (max-width: 992px) {
@@ -425,8 +125,8 @@
     display: grid;
     grid-template-columns: 1fr;
     grid-template-areas:
-      "Info"
-      "Content";
+      'Info'
+      'Content';
   }
 }
 
@@ -478,7 +178,7 @@
 
   &-image {
     width: 100%;
-    height: calc(100vh - 60px);
+    height: 100vh;
     object-fit: cover;
   }
 
@@ -607,93 +307,66 @@
   }
 }
 
-.two-col-grid {
-  max-width: 100vw;
-  display: grid;
-  grid-template-columns: 45% 55%;
-  grid-template-areas: "Image Text";
-}
-
-.image-col {
-  grid-area: Image;
-  position: relative;
-  .sticky-img {
-    z-index: 1000;
-    position: sticky;
-    top: 0;
-    height: calc(100vh - 60px);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
-  .sticky-content {
-    z-index: 1000;
-    position: sticky;
-    top: 0;
-  }
-
-  .image-content {
-    width: 100%;
-    height: calc(100vh - 60px);
-    object-fit: cover;
-  }
-
-  .overlay {
-    z-index: 1001;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    padding: 2.5rem 1.5rem;
-  }
-}
-
-.text-col {
-  grid-area: Text;
-  padding: 1.5rem 0;
-
+.main-article,
+.content-article {
+  background: url('../mask-overlays/11-extra.png');
+  background-attachment: local;
   .nuxt-content {
-    display: grid;
-    grid-template-columns: 1fr 10px 5fr 10px 1fr;
-    font-size: 20px;
-
+    letter-spacing: 0.01em;
     pre {
       text-shadow: none !important;
-      background-color: $black !important;
       border-radius: 0.25rem !important;
+      white-space: pre-wrap !important;
+    }
+
+    mark {
+      background-color: $neon-yellow;
+      color: $dark;
+    }
+
+    table {
+      margin-bottom: 1.5rem;
+    }
+
+    th,
+    td {
+      padding: 0.5rem;
+    }
+
+    table,
+    th,
+    td {
+      border: 1px solid $dark;
     }
 
     p,
     li,
     em {
       code {
-        // color: #e83e8c !important;
-        color: lighten(#fbc02d, 10%);
+        color: darken(#00bfa5, 2.5%);
         font-weight: 500;
       }
     }
 
     a {
-      color: lighten(#ff00ff, 20%) !important;
+      color: $blue !important;
 
       :hover {
-        color: #ff00ff !important;
+        color: $blue !important;
       }
 
       :visited {
-        color: darken(#ff00ff, 2.5%) !important;
+        color: darken($blue, 2.5%) !important;
       }
     }
 
     blockquote {
-      background-color: darken($gray-900, 2.5%);
-      border-left: 8px solid $neon-yellow !important;
-      border: 1px solid $neon-yellow;
+      background-color: lighten($gray-100, 2%);
+      border-left: 8px solid $uv !important;
+      border: 1px solid $uv;
       margin: 0.75rem 0 1.5rem !important;
       padding: 0.75rem 1rem;
-      border-radius: 0;
+      border-radius: 0.5rem;
       font-style: italic;
 
       p {
@@ -707,11 +380,48 @@
 
     h1,
     h2,
+    h3 {
+      position: relative;
+      padding-bottom: 12px;
+      &:before {
+        content: '';
+        display: block;
+        position: absolute;
+        bottom: 0px;
+        // left: 2px;
+        left: 0px;
+        width: 100%;
+        height: 10px;
+        background-color: $dark;
+        clip-path: polygon(
+          0px 0px,
+          85px 0px,
+          90px 5px,
+          100% 5px,
+          100% 6px,
+          85px 6px,
+          80px 10px,
+          0px 10px
+        );
+      }
+
+      &:after {
+        content: '_';
+        animation-name: hxafter;
+        animation-duration: $glitched-duration;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+      }
+    }
+
+    h1,
+    h2,
     h3,
     h4,
     h5,
     h6 {
-      font-family: "Exo 2", Roboto, Helvetica, sans-serif;
+      font-family: 'IBM Plex Sans Condensed', 'Exo 2', Roboto, Helvetica,
+        sans-serif;
       font-weight: 700 !important;
       margin-top: 0;
       margin-bottom: 1.25rem;
@@ -737,7 +447,7 @@
     blockquote,
     pre,
     code {
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
 
     pre,
@@ -753,6 +463,7 @@
       font-family: $font-family-monospace;
       font-size: 18px !important;
       font-weight: 350 !important;
+      font-variant-ligatures: discretionary-ligatures;
 
       code {
         font-size: inherit;
@@ -788,110 +499,81 @@
       font-family: $font-family-sans-extra;
     }
   }
+  .dark-theme {
+    color: $light;
 
-  .light-theme {
-    color: $gray-900;
-    background-color: $gray-100;
+    table,
+    th,
+    td {
+      border: 1px solid $light;
+    }
+
+    mark {
+      background-color: $neon-yellow;
+      color: $dark;
+    }
 
     a {
-      color: $blue !important;
+      color: $pink !important;
 
       :hover {
-        color: $blue !important;
+        color: $pink !important;
       }
 
       :visited {
-        color: darken($blue, 2.5%) !important;
+        color: darken($pink, 2.5%) !important;
       }
     }
+
     p,
     li,
     em {
       code {
-        color: darken(#00bfa5, 2.5%);
+        color: darken($yellow, 2.5%);
         font-weight: 500;
       }
     }
 
-    p,
-    img,
-    ul,
-    ol,
-    figure,
-    blockquote,
-    pre,
-    code {
-      margin-bottom: 1rem;
-    }
-
     blockquote {
-      background-color: lighten($gray-100, 2%);
+      background-color: darken($dark, 2%);
       border-left: 8px solid $uv !important;
       border: 1px solid $uv;
-      margin: 0.75rem 0 1.5rem !important;
-      padding: 0.75rem 1rem;
-      border-radius: 0;
-      font-style: italic;
-    }
-  }
-
-  .nuxt-content > * {
-    grid-column-start: 3;
-    grid-column-end: 3;
-  }
-
-  .nuxt-content > figure {
-    grid-column-start: 1;
-    grid-column-end: -1;
-    margin: 16px 20px 20px;
-  }
-
-  .nuxt-content > blockquote {
-    grid-column-start: 2;
-    grid-column-end: 4;
-  }
-}
-
-@media screen and (max-width: 1200px) {
-  .text-col {
-    .nuxt-content {
-      display: grid;
-      grid-template-columns: 1fr 10px 8fr 10px 1fr;
     }
 
-    .nuxt-content > * {
-      grid-column-start: 3;
-      grid-column-end: 3;
-    }
-  }
-}
+    h1,
+    h2,
+    h3 {
+      position: relative;
+      padding-bottom: 12px;
+      &:before {
+        content: '';
+        display: block;
+        position: absolute;
+        bottom: 0px;
+        // left: 2px;
+        left: 0px;
+        width: 100%;
+        height: 10px;
+        background-color: $light;
+        clip-path: polygon(
+          0px 0px,
+          85px 0px,
+          90px 5px,
+          100% 5px,
+          100% 6px,
+          85px 6px,
+          80px 10px,
+          0px 10px
+        );
+      }
 
-@media screen and (max-width: 992px) {
-  .two-col-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "Image"
-      "Text";
-  }
-
-  .text-col {
-    .nuxt-content {
-      display: grid;
-      grid-template-columns: 1fr 1fr 10px 600px 10px 1fr 1fr;
-    }
-    .nuxt-content > * {
-      grid-column-start: 4;
-      grid-column-end: 4;
-    }
-
-    .nuxt-content > figure {
-      grid-column: 2 / -2;
-      margin: 20px 0;
-    }
-
-    .nuxt-content > blockquote {
-      grid-column: 3 / 5;
+      &:after {
+        content: '_';
+        animation-name: hxafter;
+        animation-duration: $glitched-duration;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+      }
     }
   }
 }

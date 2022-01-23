@@ -13,7 +13,7 @@ tags:
   - "Projetos"
 featured: false
 type: "normal"
-headerLayout: "basic"
+headerLayout: "landscape"
 layout: "normal"
 fontType: "mono"
 isPublished: true

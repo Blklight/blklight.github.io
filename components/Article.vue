@@ -1,7 +1,7 @@
 <template>
   <section class="main-article mb-5">
     <ArticleHeader :article="headerData" />
-    <article class="mb-5" :class="[!isDarkTheme ? 'light-theme' : '']">
+    <article class="mb-5" :class="[isDarkTheme ? 'dark-theme' : '']">
       <template v-if="article.type === 'stories'">
         <div
           class="nuxt-content"
@@ -26,7 +26,7 @@
             <h4 class="mb-1">
               <strong><em>Índice</em></strong>
             </h4>
-            <hr class="mt-2" :class="isDarkMode ? 'bg-light' : 'bg-dark'" />
+            <hr class="mt-2" :class="isDarkTheme ? 'bg-dark' : 'bg-light'" />
 
             <ul>
               <li v-for="link of article.toc" :key="link.id" class="mb-2">
@@ -42,7 +42,7 @@
         :document="article"
         :class="[
           article.type === 'stories' ? 'mono-font' : '',
-          !isDarkTheme ? 'light-theme' : '',
+          isDarkTheme ? 'dark-theme' : '',
         ]"
       />
 
@@ -65,7 +65,7 @@
   </section>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -81,7 +81,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["isDarkTheme"]),
+    ...mapGetters(['isDarkTheme']),
     headerData() {
       return {
         title: this.article.title,
@@ -93,7 +93,7 @@ export default {
         cover: this.article.cover,
         imageHeader: this.article.imageHeader,
         headerLayout: this.article.headerLayout,
-      };
+      }
     },
     authorInfo() {
       return {
@@ -101,10 +101,10 @@ export default {
         bio: this.author[0].bio,
         quote: this.article.author.quote,
         cover: this.author[0].cover,
-      };
+      }
     },
   },
-};
+}
 </script>
 <style lang="scss">
 .gallery-block {

@@ -13,8 +13,8 @@ tags:
   - "Projetos"
 featured: false
 type: "normal"
-headerLayout: "basic"
-layout: "normal"
+headerLayout: "fullpage"
+layout: "two-column"
 fontType: "mono"
 isPublished: true
 author:
