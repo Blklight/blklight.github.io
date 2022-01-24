@@ -7,7 +7,9 @@
             :key="parent.id"
             class="badge badge-tag"
             :class="[
-              activeParents.includes(parent.id) ? 'bg-orange' : 'bg-dark',
+              {
+                'bg-orange': activeParents.find((obj) => obj.id === parent.id),
+              },
             ]"
             @click.prevent="toggleParent(parent)"
           >
@@ -21,7 +23,7 @@
             :key="tag.id"
             class="badge"
             :class="[
-              activeTags.includes(tag)
+              activeTags.find((e) => e === tag)
                 ? 'bg-neon-yellow text-dark'
                 : 'bg-secondary text-dark',
             ]"
@@ -36,101 +38,14 @@
         <h2 class="">Active Parents</h2>
         <pre>{{ activeParents }}</pre>
       </div>
-      <div class="text-dark mt-5">
-        <h2 class="">Tags</h2>
-        <pre>{{ tags }}</pre>
-      </div>
+
       <div class="text-dark mt-5">
         <h2 class="">ActiveTags</h2>
         <pre>{{ activeTags }}</pre>
       </div>
-    </div>
-    <div class="first">
-      <div class="second">
-        <div class="third">
-          <FlexSidebar />
-          <!-- <div class="element-left">
-            <nav>
-              <div class="element-left-content">
-                <div class="element-left-brand">
-                  <img
-                    :src="logo"
-                    title="Ultimate Mercer"
-                    width="60"
-                    class="mx-auto d-block"
-                  />
-                </div>
-                <div class="element-left-block">
-                  <div class="element-left-links">
-                    <img
-                      :src="logo"
-                      title="Ultimate Mercer"
-                      width="40"
-                      class="filter-cyberpunk-v mx-auto d-block"
-                    />
-                  </div>
-                  <div class="element-left-links">
-                    <img
-                      :src="logo"
-                      title="Ultimate Mercer"
-                      width="40"
-                      class="filter-cyberpunk-v mx-auto d-block"
-                    />
-                  </div>
-                  <div class="element-left-links">
-                    <img
-                      :src="logo"
-                      title="Ultimate Mercer"
-                      width="40"
-                      class="filter-cyberpunk-v mx-auto d-block"
-                    />
-                  </div>
-                </div>
-                <div class="element-left-block">
-                  <div class="element-left-links">
-                    <img
-                      :src="logo"
-                      title="Ultimate Mercer"
-                      width="40"
-                      class="filter-cyberpunk-purple-red-orange mx-auto d-block"
-                    />
-                  </div>
-                </div>
-              </div>
-            </nav>
-          </div> -->
-
-          <footer class="element-footer">
-            <div class="element-footer-content">
-              <div class="element-footer-container">
-                <div class="element-footer-items">
-                  <img
-                    :src="logo"
-                    title="Ultimate Mercer"
-                    width="30"
-                    class="mx-auto d-block"
-                  />
-                </div>
-                <div class="element-footer-items">
-                  <img
-                    :src="logo"
-                    title="Ultimate Mercer"
-                    width="30"
-                    class="mx-auto d-block"
-                  />
-                </div>
-                <div class="element-footer-items">
-                  <img
-                    :src="logo"
-                    title="Ultimate Mercer"
-                    width="30"
-                    class="mx-auto d-block"
-                  />
-                </div>
-              </div>
-            </div>
-          </footer>
-        </div>
+      <div class="text-dark mt-5">
+        <h2 class="">Tags</h2>
+        <pre>{{ tags }}</pre>
       </div>
     </div>
   </main>
@@ -195,28 +110,30 @@ export default {
   },
   methods: {
     toggleParent(parent) {
-      const isActive = this.activeParents.includes(parent.id) // true or false
-      // const children = this.tags.filter(id => id === parent.id)
+      const isActive = this.activeParents.find((obj) => obj.id === parent.id) // true or false
+      debugger
       if (isActive) {
-        // this.activeParents.filter(id=> id !== parent.id)
-        const index = this.activeParents.indexOf(parent.id)
+        const index = this.activeParents.indexOf(parent)
+        debugger
         if (index > -1) {
           this.activeParents.splice(index, 1)
         }
+        this.checkChildrenByParents(parent)
         console.log(this.activeParents)
         return
       }
       this.activeParents.push(parent)
+      debugger
       this.checkChildrenByParents(parent)
       console.log(this.activeParents)
     },
     toggleChildren(children) {
-      const isActive = this.activeTags.includes(children)
+      const isActive = this.activeTags.find((obj) => obj.id === children.id)
       // eslint-disable-next-line no-debugger
       debugger
       if (isActive) {
-        this.activeTags.find((id) => id !== children.id)
-        const index = this.activeTags.indexOf(children)
+        // this.activeTags.find((id) => id !== children.id)
+        const index = this.activeTags.findIndex((obj) => obj.id === children.id)
         if (index > -1) {
           this.activeTags.splice(index, 1)
         }
@@ -226,19 +143,34 @@ export default {
       // eslint-disable-next-line no-debugger
       debugger
     },
+
     checkChildrenByParents(parent) {
-      const isActive = this.activeTags.includes(parent.id)
+      const isActive = this.activeTags.find((obj) => obj.parentId === parent.id) // true or false
       // eslint-disable-next-line no-debugger
       debugger
       if (isActive) {
-        this.activeTags.find((obj) => obj.parentId !== parent.id)
-        const index = this.activeTags.indexOf()
-        if (index > -1) {
-          this.activeTags.splice(index, 1)
+        const uncheck = this.activeTags
+          .filter((obj) => obj.parentId === parent.id)
+          .map((obj) => ({
+            ...obj,
+          }))
+        console.log(JSON.stringify(uncheck))
+        debugger
+        for (let i = 0; i < uncheck.length; i++) {
+          const element = uncheck[i]
+          console.log(element)
+          debugger
+          const index = this.activeTags.findIndex(
+            (obj) => obj.id === element.id
+          )
+          if (index > -1) {
+            this.activeTags.splice(index, 1)
+            this.tags.splice(index, 1)
+          }
         }
+        debugger
         return
       }
-      console.log(parent)
       const mappedTags = this.templateChildrens
         .filter((obj) => obj.parentId === parent.id)
         .map((obj) => ({
