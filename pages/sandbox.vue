@@ -5,7 +5,7 @@
         <template v-for="parent in parents">
           <span
             :key="parent.id"
-            class="badge badge-tag"
+            class="badge text-dark badge-tag"
             :class="[
               {
                 'bg-orange': activeParents.find((obj) => obj.id === parent.id),
