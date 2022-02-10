@@ -9,7 +9,7 @@
                 <img
                   src="../static/blklight-white.svg"
                   title="Ultimate Mercer"
-                  width="45"
+                  width="50"
                   class="mx-auto d-block"
                 />
               </template>
@@ -17,7 +17,7 @@
                 <img
                   src="../static/blklight-black.svg"
                   title="Ultimate Mercer"
-                  width="45"
+                  width="50"
                   class="mx-auto d-block"
                 />
               </template>
@@ -82,7 +82,8 @@ export default {
   align-self: flex-start;
   top: 0;
   position: sticky;
-  z-index: 1;
+  z-index: 1000;
+  box-shadow: 0px 0px 8px 0px rgba(18, 18, 18, 0.75);
 
   nav {
     height: 100%;

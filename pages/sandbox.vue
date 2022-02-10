@@ -1,217 +1,656 @@
 <template>
   <main>
-    <div class="container bg-light p-5">
-      <div class="d-flex">
-        <template v-for="parent in parents">
-          <span
-            :key="parent.id"
-            class="badge text-dark badge-tag"
-            :class="[
-              {
-                'bg-orange': activeParents.find((obj) => obj.id === parent.id),
-              },
-            ]"
-            @click.prevent="toggleParent(parent)"
+    <div class="container py-5">
+      <article
+        class="card card-raised bg-javascript text-dark mb-4"
+        :class="[
+          isDarkTheme
+            ? 'border border-javascript hover-card-javascript'
+            : 'border border-dark hover-card-dark',
+        ]"
+      >
+        <div class="d-flex align-items-center px-3 py-3">
+          <span class="badge badge-tag bg-dark text-javascript" value=""
+            >Ultimates</span
           >
-            {{ parent.title }}
-          </span>
-        </template>
-      </div>
-      <div class="d-flex">
-        <template v-for="tag in tags">
-          <span
-            :key="tag.id"
-            class="badge"
-            :class="[
-              activeTags.find((e) => e === tag)
-                ? 'bg-neon-yellow text-dark'
-                : 'bg-secondary text-dark',
-            ]"
-            :title="tag.title"
-            @click.prevent="toggleChildren(tag)"
+          <span class="badge badge-tag bg-dark text-javascript" value=""
+            >Ultimates</span
           >
-            {{ tag.title }}
-          </span>
-        </template>
+          <span class="badge badge-tag bg-dark text-javascript" value=""
+            >Ultimates</span
+          >
+        </div>
+        <div class="d-sm-flex align-items-center px-1">
+          <div class="flex-grow-1 ms-sm-3">
+            <h4 class="font-monospace mb-2">
+              <span class="marker-line py-1 bg-dark text-javascript">
+                Ultimate Series - Javascript
+              </span>
+            </h4>
+            <p class="mb-1">10 de fevereiro de 2022, às 19:45</p>
+            <p class="d-xl-block d-lg-block d-sm-none mb-1">
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum
+              quas fuga debitis, nostrum tempore aut. Quis ipsum unde, neque
+              temporibus corporis qui incidunt? Beatae ullam molestiae atque
+              quia! Voluptates, officiis?
+            </p>
+
+            <p class="font-monospace mb-1">Por Ultimate</p>
+          </div>
+        </div>
+        <div class="d-flex align-items-center px-3 py-3">
+          <NuxtLink
+            to="#"
+            class="btn btn-read-more-sm btn-dark text-javascript ms-auto"
+          >
+            Ler mais...
+          </NuxtLink>
+        </div>
+      </article>
+      <article
+        class="card card-raised bg-vue text-dark mb-4"
+        :class="[
+          isDarkTheme
+            ? 'border border-vue hover-card-vue'
+            : 'border border-dark hover-card-dark',
+        ]"
+      >
+        <div class="d-flex align-items-center px-3 py-3 rounded-top">
+          <span class="badge badge-tag bg-dark text-vue" value=""
+            >Ultimates</span
+          >
+          <span class="badge badge-tag bg-dark text-vue" value=""
+            >Ultimates</span
+          >
+          <span class="badge badge-tag bg-dark text-vue" value=""
+            >Ultimates</span
+          >
+        </div>
+        <div class="d-sm-flex align-items-center px-1">
+          <div class="flex-grow-1 ms-sm-3">
+            <h4 class="font-monospace mb-2">
+              <span class="marker-line py-1 text-vue bg-dark">
+                Ultimate Series - Vue
+              </span>
+            </h4>
+
+            <p class="d-xl-block d-lg-block d-sm-none mb-1">
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum
+              quas fuga debitis, nostrum tempore aut. Quis ipsum unde, neque
+              temporibus corporis qui incidunt? Beatae ullam molestiae atque
+              quia! Voluptates, officiis?
+            </p>
+
+            <p class="font-monospace mb-1">Por Ultimate</p>
+          </div>
+        </div>
+        <div class="d-flex align-items-center px-3 py-3">
+          <NuxtLink
+            to="#"
+            class="btn btn-read-more-sm btn-dark text-vue ms-auto"
+          >
+            Ler mais...
+          </NuxtLink>
+        </div>
+      </article>
+      <article
+        class="card card-raised bg-react text-dark mb-4"
+        :class="[
+          isDarkTheme
+            ? 'border border-react hover-card-react'
+            : 'border border-dark hover-card-dark',
+        ]"
+      >
+        <div class="d-flex align-items-center px-3 py-3 rounded-top">
+          <span class="badge badge-tag bg-dark text-react" value=""
+            >Ultimates</span
+          >
+          <span class="badge badge-tag bg-dark text-react" value=""
+            >Ultimates</span
+          >
+          <span class="badge badge-tag bg-dark text-react" value=""
+            >Ultimates</span
+          >
+        </div>
+        <div class="d-sm-flex align-items-center px-1">
+          <div class="flex-grow-1 ms-sm-3">
+            <h4 class="font-monospace mb-2">
+              <span class="marker-line py-1 text-react bg-dark">
+                Ultimate Series - React
+              </span>
+            </h4>
+
+            <p class="d-xl-block d-lg-block d-sm-none mb-1">
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum
+              quas fuga debitis, nostrum tempore aut. Quis ipsum unde, neque
+              temporibus corporis qui incidunt? Beatae ullam molestiae atque
+              quia! Voluptates, officiis?
+            </p>
+
+            <p class="font-monospace mb-1">Por Ultimate</p>
+          </div>
+        </div>
+        <div class="d-flex align-items-center px-3 py-3">
+          <NuxtLink
+            to="#"
+            class="btn btn-read-more-sm btn-dark text-react ms-auto"
+          >
+            Ler mais...
+          </NuxtLink>
+        </div>
+      </article>
+      <article
+        badge-tag
+        class="card card-raised bg-orange text-dark mb-4"
+        :class="[
+          isDarkTheme
+            ? 'border border-orange hover-card-orange'
+            : 'border border-dark hover-card-dark',
+        ]"
+      >
+        <div class="d-flex align-items-center px-3 py-3 rounded-top">
+          <span class="badge badge-tag text-orange bg-dark" value=""
+            >Ultimates</span
+          >
+          <span class="badge badge-tag text-orange bg-dark" value=""
+            >Ultimates</span
+          >
+          <span class="badge badge-tag text-orange bg-dark" value=""
+            >Ultimates</span
+          >
+        </div>
+        <div class="d-sm-flex align-items-center px-1">
+          <div class="flex-grow-1 ms-sm-3">
+            <h4 class="font-monospace mb-2">
+              <span class="marker-line py-1 text-orange bg-dark">
+                Ultimate Series - CSS
+              </span>
+            </h4>
+
+            <p class="d-xl-block d-lg-block d-sm-none mb-1">
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum
+              quas fuga debitis, nostrum tempore aut. Quis ipsum unde, neque
+              temporibus corporis qui incidunt? Beatae ullam molestiae atque
+              quia! Voluptates, officiis?
+            </p>
+
+            <p class="font-monospace mb-1">Por Ultimate</p>
+          </div>
+        </div>
+        <div class="d-flex align-items-center px-3 py-3">
+          <NuxtLink
+            to="#"
+            class="btn btn-read-more-sm btn-dark text-orange ms-auto"
+          >
+            Ler mais...
+          </NuxtLink>
+        </div>
+      </article>
+      <article
+        class="card card-raised bg-danger text-dark mb-4"
+        :class="[
+          isDarkTheme
+            ? 'border border-secondary hover-card-secondary'
+            : 'border border-dark hover-card-dark',
+        ]"
+      >
+        <div class="d-flex align-items-center px-3 py-3 rounded-top">
+          <span class="badge badge-tag bg-dark text-danger" value=""
+            >Ultimates</span
+          >
+          <span class="badge badge-tag bg-dark text-danger" value=""
+            >Ultimates</span
+          >
+          <span class="badge badge-tag bg-dark text-danger" value=""
+            >Ultimates</span
+          >
+        </div>
+        <div class="d-sm-flex align-items-center px-1">
+          <div class="flex-grow-1 ms-sm-3">
+            <h4 class="font-monospace mb-2">
+              <span class="marker-line py-1 text-danger bg-dark">
+                Ultimate Series - HTML
+              </span>
+            </h4>
+
+            <p class="d-xl-block d-lg-block d-sm-none mb-1">
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum
+              quas fuga debitis, nostrum tempore aut. Quis ipsum unde, neque
+              temporibus corporis qui incidunt? Beatae ullam molestiae atque
+              quia! Voluptates, officiis?
+            </p>
+
+            <p class="font-monospace mb-1">Por Ultimate</p>
+          </div>
+        </div>
+        <div class="d-flex align-items-center px-3 py-3">
+          <NuxtLink
+            to="#"
+            class="btn btn-read-more-sm btn-dark text-danger ms-auto"
+          >
+            Ler mais...
+          </NuxtLink>
+        </div>
+      </article>
+      <article
+        class="card card-raised bg-polen text-dark mb-4"
+        :class="[
+          isDarkTheme
+            ? 'border border-uv hover-card-uv'
+            : 'border border-uv hover-card-uv',
+        ]"
+      >
+        <div class="d-flex align-items-center px-3 py-3 rounded-top">
+          <span class="badge badge-tag bg-light text-uv" value=""
+            >Ultimates</span
+          >
+          <span class="badge badge-tag bg-light text-uv" value=""
+            >Ultimates</span
+          >
+          <span class="badge badge-tag bg-light text-uv" value=""
+            >Ultimates</span
+          >
+        </div>
+        <div class="d-sm-flex align-items-center px-1">
+          <div class="flex-grow-1 ms-sm-3">
+            <h4 class="font-monospace mb-2">
+              <span class="marker-line py-1 text-uv bg-light">
+                Ultimate Series - HTML
+              </span>
+            </h4>
+
+            <p class="d-xl-block d-lg-block d-sm-none mb-1">
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum
+              quas fuga debitis, nostrum tempore aut. Quis ipsum unde, neque
+              temporibus corporis qui incidunt? Beatae ullam molestiae atque
+              quia! Voluptates, officiis?
+            </p>
+
+            <p class="font-monospace mb-1">Por Ultimate</p>
+          </div>
+        </div>
+        <div class="d-flex align-items-center px-3 py-3">
+          <NuxtLink
+            to="#"
+            class="btn btn-read-more-sm btn-light text-uv ms-auto"
+          >
+            Ler mais...
+          </NuxtLink>
+        </div>
+      </article>
+      <div class="card card-raised card-background">
+        <img
+          src="https://i.imgur.com/KMN1KQ5.jpg"
+          class="card-background-image card-img-border"
+          alt=""
+        />
+        <div
+          class="card-img-overlay h-100 d-flex flex-column justify-content-end"
+        >
+          <h4 class="font-monospace mb-2">
+            <span class="marker-line py-1 bg-dark text-light">
+              Ultimate Series
+            </span>
+          </h4>
+        </div>
       </div>
-      <div class="text-dark mt-5">
-        <h2 class="">Active Parents</h2>
-        <pre>{{ activeParents }}</pre>
+    </div>
+    <div class="container-fluid bg-light p-5">
+      <div class="py-5">
+        <select id="" class="mts-form-select" name="">
+          <option value="">Ultimates</option>
+          <option value="">Ultimates</option>
+          <option value="">Ultimates</option>
+        </select>
       </div>
 
-      <div class="text-dark mt-5">
-        <h2 class="">ActiveTags</h2>
-        <pre>{{ activeTags }}</pre>
-      </div>
-      <div class="text-dark mt-5">
-        <h2 class="">Tags</h2>
-        <pre>{{ tags }}</pre>
+      <div class="py-5">
+        <div class="select-container">div</div>
       </div>
     </div>
   </main>
 </template>
 <script>
-import Logo from '@/assets/images/ultimate-logo-red.svg'
+import { mapGetters } from "vuex";
+
+import Logo from "@/assets/images/ultimate-logo-red.svg";
 export default {
+  async asyncData({ $content, params }) {
+    const articles = await $content("Articles", { deep: true }, params.slug)
+      .only([
+        "title",
+        "description",
+        "imageHeader",
+        "cover",
+        "slug",
+        "dir",
+        "channel",
+        "category",
+        "createdDate",
+        "featured",
+        "type",
+        "author",
+        "isPublished",
+        "path",
+        "tags",
+      ])
+      .sortBy("createdDate", "desc")
+      .where({
+        type: "normal",
+        isPublished: true,
+        channel: { $ne: "Jobs" },
+      })
+      .fetch();
+    // console.log(articles);
+    return { articles };
+  },
   data() {
     return {
       logo: Logo,
       parents: [
         {
           id: 1,
-          title: 'Ultimates',
+          title: "All",
+          tagsId: [
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+            20,
+          ],
         },
         {
           id: 2,
-          title: 'Prototype',
+          title: "Basics",
+          tagsId: [1, 2],
         },
         {
           id: 3,
-          title: 'Super Saiyans',
+          title: "Front-end Frameworks",
+          tagsId: [3, 4, 5, 6],
+        },
+        {
+          id: 4,
+          title: "Back-end Frameworks",
+          tagsId: [7, 8, 9, 10, 11],
+        },
+        {
+          id: 5,
+          title: "Startups Ideas",
+          tagsId: [],
+        },
+        {
+          id: 6,
+          title: "Databases",
+          tagsId: [12, 13, 14, 15, 16, 17, 18],
+        },
+        {
+          id: 7,
+          title: "CMS",
+          tagsId: [19, 20, 21],
+        },
+        {
+          id: 8,
+          title: "Games",
+          tagsId: [],
+        },
+        {
+          id: 9,
+          title: "Games",
+          tagsId: [],
+        },
+        {
+          id: 10,
+          title: "APIs",
+          tagsId: [],
+        },
+        {
+          id: 11,
+          title: "Crypto, NFT & Metaverse",
+          tagsId: [],
+        },
+        {
+          id: 12,
+          title: "Social",
+          tagsId: [],
+        },
+        {
+          id: 13,
+          title: "Payment",
+          tagsId: [],
+        },
+        {
+          id: 14,
+          title: "Authentication",
+          tagsId: [],
         },
       ],
       templateChildrens: [
         {
           id: 1,
-          title: 'Mercer',
-          parentId: 1,
+          title: "Portfolio",
         },
         {
           id: 2,
-          title: 'Alex J. Mercer',
-          parentId: 2,
+          title: "Blog",
         },
         {
           id: 3,
-          title: 'Goku',
-          parentId: 3,
+          title: "React",
         },
         {
           id: 4,
-          title: 'Vegeta',
-          parentId: 3,
+          title: "Angular",
         },
         {
           id: 5,
-          title: 'Dana Mercer',
-          parentId: 2,
+          title: "Vue",
         },
         {
           id: 6,
-          title: 'Watson',
-          parentId: 1,
+          title: "Svelte",
+        },
+        {
+          id: 7,
+          title: "Next.JS",
+        },
+        {
+          id: 8,
+          title: "Nuxt",
+        },
+        {
+          id: 9,
+          title: "Gatsby",
+        },
+        {
+          id: 10,
+          title: "Express",
+        },
+        {
+          id: 11,
+          title: "Fastify",
+        },
+        {
+          id: 12,
+          title: "Fauna",
+        },
+        {
+          id: 13,
+          title: "Upstash",
+        },
+        {
+          id: 14,
+          title: "Prisma",
+        },
+        {
+          id: 15,
+          title: "PlanetScale",
+        },
+        {
+          id: 16,
+          title: "MySQL",
+        },
+        {
+          id: 17,
+          title: "PostgreSQL",
+        },
+        {
+          id: 18,
+          title: "MongoDB",
+        },
+        {
+          id: 19,
+          title: "DatoCMS",
+        },
+        {
+          id: 20,
+          title: "Sanity.io",
+        },
+        {
+          id: 21,
+          title: "Forestry",
         },
       ],
       childrens: [],
       tags: [],
-      activeParents: [],
+      defaultParent: {
+        id: 1,
+        title: "All",
+        tagsId: [
+          1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+        ],
+      },
+      activeParent: {
+        id: null,
+        title: "",
+        tagsId: [],
+      },
       activeTags: [],
-    }
+      test: "",
+    };
+  },
+  computed: {
+    ...mapGetters(["isDarkTheme"]),
+  },
+  mounted() {
+    this.activeParent = {
+      ...this.defaultParent,
+    };
+    this.showChildrenByParent(this.activeParent);
+
+    this.getAllCategories();
   },
   methods: {
     toggleParent(parent) {
-      const isActive = this.activeParents.find((obj) => obj.id === parent.id) // true or false
-      debugger
+      const isActive = this.activeParent.id === parent.id; // true or false
       if (isActive) {
-        const index = this.activeParents.indexOf(parent)
-        debugger
-        if (index > -1) {
-          this.activeParents.splice(index, 1)
-        }
-        this.checkChildrenByParents(parent)
-        console.log(this.activeParents)
-        return
+        this.activeParent = {
+          ...this.defaultParent,
+        };
+        this.showChildrenByParent(this.activeParent);
+        return;
       }
-      this.activeParents.push(parent)
-      debugger
-      this.checkChildrenByParents(parent)
-      console.log(this.activeParents)
+      this.activeParent = {
+        id: parent.id,
+        title: parent.title,
+        tagsId: [...parent.tagsId],
+      };
+      this.showChildrenByParent(parent);
     },
     toggleChildren(children) {
-      const isActive = this.activeTags.find((obj) => obj.id === children.id)
-      // eslint-disable-next-line no-debugger
-      debugger
+      const isActive = this.activeTags.find((obj) => obj.id === children.id);
+
       if (isActive) {
-        // this.activeTags.find((id) => id !== children.id)
-        const index = this.activeTags.findIndex((obj) => obj.id === children.id)
+        const index = this.activeTags.findIndex(
+          (obj) => obj.id === children.id
+        );
         if (index > -1) {
-          this.activeTags.splice(index, 1)
+          this.activeTags.splice(index, 1);
         }
-        return
+        return;
       }
-      this.activeTags.push(children)
-      // eslint-disable-next-line no-debugger
-      debugger
+      this.activeTags.push(children);
+    },
+
+    showChildrenByParent(parent) {
+      const tagsForShow = this.templateChildrens
+        .filter((obj) => parent.tagsId.includes(obj.id))
+        .map((obj) => ({
+          ...obj,
+        }));
+
+      this.tags = [];
+      for (let i = 0; i < tagsForShow.length; i++) {
+        this.tags.push(tagsForShow[i]);
+      }
     },
 
     checkChildrenByParents(parent) {
-      const isActive = this.activeTags.find((obj) => obj.parentId === parent.id) // true or false
-      // eslint-disable-next-line no-debugger
-      debugger
+      const isActive = this.activeTags.find(
+        (obj) => obj.parentId === parent.id
+      ); // true or false
       if (isActive) {
         const uncheck = this.activeTags
           .filter((obj) => obj.parentId === parent.id)
           .map((obj) => ({
             ...obj,
-          }))
-        console.log(JSON.stringify(uncheck))
-        debugger
+          }));
+        console.log(JSON.stringify(uncheck));
+        debugger;
         for (let i = 0; i < uncheck.length; i++) {
-          const element = uncheck[i]
-          console.log(element)
-          debugger
+          const element = uncheck[i];
+          console.log(element);
+          debugger;
           const index = this.activeTags.findIndex(
             (obj) => obj.id === element.id
-          )
+          );
           if (index > -1) {
-            this.activeTags.splice(index, 1)
-            this.tags.splice(index, 1)
+            this.activeTags.splice(index, 1);
+            this.tags.splice(index, 1);
           }
         }
-        debugger
-        return
+        debugger;
+        return;
       }
       const mappedTags = this.templateChildrens
         .filter((obj) => obj.parentId === parent.id)
         .map((obj) => ({
           ...obj,
-        }))
-      debugger
-      console.log(JSON.stringify(this.tags, undefined, 2))
-      console.log(JSON.stringify(mappedTags, undefined, 2))
-      const order = []
-      order.unshift(mappedTags)
-      console.log('Order', JSON.stringify(order, undefined, 2))
-      debugger
+        }));
       for (let i = mappedTags.length - 1; i >= 0; i--) {
-        const element = mappedTags[i]
-        this.toggleChildren(element)
-        const filter = this.tags.find((obj) => obj.id === element.id)
-        const isTrue = filter
+        const element = mappedTags[i];
+        this.toggleChildren(element);
+        const filter = this.tags.find((obj) => obj.id === element.id);
+        const isTrue = filter;
         if (!isTrue) {
-          this.tags.unshift(element)
+          this.tags.unshift(element);
         }
       }
-      this.filterDuplicates()
+      this.filterDuplicates();
     },
     filterDuplicates() {
-      this.activeParents = Array.from(
-        new Set(this.activeParents.map((obj) => obj.id))
+      this.activeParent = Array.from(
+        new Set(this.activeParent.map((obj) => obj.id))
       ).map((id) => {
-        return this.activeParents.find((e) => e.id === id)
-      })
+        return this.activeParent.find((e) => e.id === id);
+      });
       this.activeTags = Array.from(
         new Set(this.activeTags.map((obj) => obj.id))
       ).map((id) => {
-        return this.activeTags.find((e) => e.id === id)
-      })
+        return this.activeTags.find((e) => e.id === id);
+      });
+    },
+
+    async getAllCategories() {
+      const categories = await this.$axios.$get(
+        "https://api.nytimes.com/svc/topstories/v2/home.json?api-key=oPWIpYcGwSdzOH2cqYKkyvcotJCkGRNn"
+      );
+      this.test = categories.results[0];
+      console.log(this.test);
     },
   },
-}
+};
 </script>
 <style lang="scss" scoped>
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 *,
 ::before,
 ::after {
@@ -222,7 +661,7 @@ body {
   text-rendering: optimizeLegibility;
   color: rgba(0, 0, 0, 0.8);
   font-weight: 400;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .first {
@@ -309,6 +748,31 @@ body {
     align-items: center;
     justify-content: center;
     flex: 1 1 0%;
+  }
+}
+</style>
+<style lang="scss" scoped>
+$mts-form-select-padding: 0.5rem 0.75rem * 3 0.5rem 0.75rem;
+$mts-form-select-bg: #ffffff;
+$mts-form-select-border: 1px solid #ffffff;
+$mts-form-select-border-radius: 8px;
+
+.mts-form-select {
+  display: block;
+  width: 100%;
+  min-width: 150px;
+  color: blue;
+  padding: $mts-form-select-padding;
+  background-color: $mts-form-select-bg;
+  border: $mts-form-select-border;
+  border-radius: $mts-form-select-border-radius;
+
+  &:focus {
+    outline: 0;
+  }
+  > option {
+    padding: 8px 4px !important;
+    font-weight: bold;
   }
 }
 </style>

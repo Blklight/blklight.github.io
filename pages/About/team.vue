@@ -21,7 +21,7 @@
         Blklight Team
       </h3>
     </div>
-    <div class="container">
+    <div class="container pb-5">
       <article
         v-for="(member, i) in members"
         :key="i"
@@ -71,22 +71,22 @@
   </LayoutContent>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex'
 
 export default {
   async asyncData({ $content, params }) {
-    const members = await $content("about/members", params.slug)
-      .sortBy("name", "asc")
-      .fetch();
+    const members = await $content('about/members', params.slug)
+      .sortBy('name', 'asc')
+      .fetch()
     return {
       members,
-    };
+    }
   },
 
   computed: {
-    ...mapGetters(["isDarkTheme"]),
+    ...mapGetters(['isDarkTheme']),
   },
-};
+}
 </script>
 <style lang="scss" scoped>
 .seize-font {

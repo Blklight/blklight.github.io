@@ -20,6 +20,7 @@ isPublished: true
 author:
   name: "Ultimate Mercer"
   quote: "Finalmente sinto que o que eu desenvolvi está relativamente OK, mas agora é seguir aprimorando e evoluindo mais essa ideia!"
+cardComponent: "CardText"
 ---
 
 ## Release 0.0.0

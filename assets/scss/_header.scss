@@ -4,7 +4,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  padding: 1rem;
+  padding: 1.5rem 1.25rem;
 }
 
 .header-portrait {
@@ -29,7 +29,6 @@
     background-repeat: no-repeat;
     background-position: center;
     height: 650px;
-
     &-full {
       background-size: cover;
       background-repeat: no-repeat;
@@ -45,6 +44,16 @@
     &-light-border {
       border-right: 1px solid #eaeaea;
       border-bottom: 1px solid #eaeaea;
+    }
+
+    &-left-border {
+      border-bottom-left-radius: 2rem;
+      border-top-left-radius: 2rem;
+    }
+
+    &-right-border {
+      border-bottom-right-radius: 2rem;
+      border-top-right-radius: 2rem;
     }
   }
 
@@ -99,13 +108,16 @@
   cursor: default;
   overflow: hidden;
   margin-bottom: 2rem;
+  border-bottom-left-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+  @include shadow-big-navbar();
 
   &-img {
     width: 100%;
     // background-size: cover;
     // background-repeat: no-repeat;
     // background-position: center;
-    height: calc(100vh - 60px);
+    height: calc(100vh - 100px);
     object-fit: cover;
   }
 }
@@ -224,8 +236,8 @@
   // max-width: 60vw;
   //display: flex;
   height: auto;
-  margin: 1.25rem auto 2rem;
-  padding: 1.25rem 0;
+  margin: 0 auto 2rem;
+  padding: 2.5rem 0;
 
   &-avatar {
     width: 325px !important;

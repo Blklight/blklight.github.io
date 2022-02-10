@@ -1,0 +1,70 @@
+[
+  {
+    "id": 1,
+    "title": "All",
+    "tagsId": [
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+      20
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Basics",
+    "tagsId": [1, 2]
+  },
+  {
+    "id": 3,
+    "title": "Front-end Frameworks",
+    "tagsId": [3, 4, 5, 6]
+  },
+  {
+    "id": 4,
+    "title": "Back-end Frameworks",
+    "tagsId": [7, 8, 9, 10, 11]
+  },
+  {
+    "id": 5,
+    "title": "Startups Ideas",
+    "tagsId": []
+  },
+  {
+    "id": 6,
+    "title": "Databases",
+    "tagsId": [12, 13, 14, 15, 16, 17, 18]
+  },
+  {
+    "id": 7,
+    "title": "CMS",
+    "tagsId": [19, 20, 21]
+  },
+  {
+    "id": 8,
+    "title": "Games",
+    "tagsId": []
+  },
+  {
+    "id": 9,
+    "title": "APIs",
+    "tagsId": []
+  },
+  {
+    "id": 10,
+    "title": "Crypto, NFT & Metaverse",
+    "tagsId": []
+  },
+  {
+    "id": 11,
+    "title": "Social",
+    "tagsId": []
+  },
+  {
+    "id": 12,
+    "title": "Payment",
+    "tagsId": []
+  },
+  {
+    "id": 13,
+    "title": "Authentication",
+    "tagsId": []
+  }
+]

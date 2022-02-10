@@ -1,6 +1,6 @@
 <template>
   <article
-    class="card card-raised mb-4"
+    class="card mb-4"
     :class="[
       isDarkTheme ? 'card-plain hover-card-neon-yellow' : 'hover-card-uv',
     ]"
@@ -71,7 +71,7 @@
   </article>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 export default {
   props: {
     article: {
@@ -96,20 +96,20 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['isDarkTheme']),
+    ...mapGetters(["isDarkTheme"]),
   },
 
   methods: {
     slugName(data) {
-      const link = data.replace('articles/', '').replace('/', '')
-      return link
+      const link = data.replace("articles/", "").replace("/", "");
+      return link;
     },
   },
-}
+};
 </script>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 
 .card-image-h {
   width: 350px;
@@ -134,6 +134,6 @@ export default {
 }
 
 .card-font-test {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
 }
 </style>

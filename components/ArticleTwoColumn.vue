@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section class="two-column-article mb-5">
+    <section class="two-column-article py-4">
       <ArticleTCHeader :article="headerData" />
 
       <article class="content-article">
@@ -9,7 +9,7 @@
             class="nuxt-content"
             :class="[
               article.type === 'stories' ? 'mono-font' : '',
-              !isDarkTheme ? 'light-theme' : '',
+              isDarkTheme ? 'dark-theme' : '',
             ]"
           >
             <p class="mb-2">{{ article.abstract }}</p>
@@ -24,7 +24,7 @@
             class="nuxt-content"
             :class="[
               article.type === 'stories' ? 'mono-font' : '',
-              !isDarkTheme ? 'light-theme' : '',
+              isDarkTheme ? 'dark-theme' : '',
             ]"
           >
             <nav
@@ -50,7 +50,7 @@
           :document="article"
           :class="[
             article.type === 'stories' ? 'mono-font' : '',
-            !isDarkTheme ? 'light-theme' : '',
+            isDarkTheme ? 'dark-theme' : '',
           ]"
         />
         <template v-if="article.tags">
@@ -73,7 +73,7 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -89,7 +89,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["isDarkTheme"]),
+    ...mapGetters(['isDarkTheme']),
     headerData() {
       return {
         title: this.article.title,
@@ -101,7 +101,7 @@ export default {
         cover: this.article.cover,
         imageHeader: this.article.imageHeader,
         headerLayout: this.article.headerLayout,
-      };
+      }
     },
     authorInfo() {
       return {
@@ -109,8 +109,8 @@ export default {
         bio: this.author[0].bio,
         quote: this.article.author.quote,
         cover: this.author[0].cover,
-      };
+      }
     },
   },
-};
+}
 </script>

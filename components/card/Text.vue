@@ -1,19 +1,20 @@
 <template>
   <article
-    class="card card-plain card-flat py-4 border-bottom border-secondary"
+    class="card card-flat card-plain py-3 border-bottom border-secondary mb-4"
+    :class="isDarkTheme ? 'hover-card-secondary' : 'hover-card-dark'"
   >
     <div class="card-body">
       <p class="mb-3 fw-normal">
         <DateFormat :date="article.createdDate" full />
       </p>
-      <h2 class="font-monospace mb-3">
+      <h3 class="font-monospace mb-3">
         <span
           class="py-2"
           :class="isDarkTheme ? 'text-dark bg-light' : 'text-light bg-dark'"
         >
           <span class="marker-line">{{ article.title }}</span>
         </span>
-      </h2>
+      </h3>
       <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla eos et
         explicabo cupiditate suscipit iusto, error repellendus culpa doloremque
@@ -37,7 +38,7 @@
   </article>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 
 export default {
   props: {
@@ -48,8 +49,8 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['isDarkTheme']),
+    ...mapGetters(["isDarkTheme"]),
   },
-}
+};
 </script>
 <style lang="scss" scoped></style>

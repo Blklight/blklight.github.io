@@ -171,7 +171,7 @@
 }
 
 .card-img-fit {
-  height: 300px;
+  height: 500px;
   object-fit: cover;
 }
 
@@ -351,7 +351,7 @@
     &.with-hover-overlay:before {
       display: block;
       position: absolute;
-      content: " ";
+      content: ' ';
       background: $dark;
       opacity: 0;
       width: 100%;
