@@ -680,14 +680,6 @@ export default {
         return this.activeTags.find((e) => e.id === id);
       });
     },
-
-    async getAllCategories() {
-      const categories = await this.$axios.$get(
-        "https://api.nytimes.com/svc/topstories/v2/home.json?api-key=oPWIpYcGwSdzOH2cqYKkyvcotJCkGRNn"
-      );
-      this.test = categories.results[0];
-      console.log(this.test);
-    },
   },
 };
 </script>
