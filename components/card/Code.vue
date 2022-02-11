@@ -1,6 +1,6 @@
 <template>
   <article
-    class="card mb-4"
+    class="card card-raised mb-4"
     :class="[
       isDarkTheme ? codeStyle.hover.dark : codeStyle.hover.light,
       codeStyle.card,

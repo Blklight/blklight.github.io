@@ -2,6 +2,46 @@
   <main>
     <div class="container py-5">
       <article
+        class="card card-flat card-raised bg-polen text-dark mb-4"
+        :class="[
+          isDarkTheme
+            ? 'border border-javascript hover-card-javascript'
+            : 'border border-dark hover-card-dark',
+        ]"
+        style="border-left: 8px solid #121212 !important"
+      >
+        <div class="d-flex align-items-center px-3 py-3 bg-dark mb-3">
+          <span class="badge badge-tag bg-light text-dark" value=""
+            >21 ago 2021</span
+          >
+          <span class="badge badge-tag bg-light text-dark" value=""
+            >Full Stack</span
+          >
+        </div>
+        <div class="d-sm-flex align-items-center px-1">
+          <div class="flex-grow-1 ms-sm-3">
+            <h3 class="mb-2">Ultimate Series - Javascript</h3>
+            <p class="mb-1">10 de fevereiro de 2022, às 19:45</p>
+            <p class="d-xl-block d-lg-block d-sm-none mb-1">
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum
+              quas fuga debitis, nostrum tempore aut. Quis ipsum unde, neque
+              temporibus corporis qui incidunt? Beatae ullam molestiae atque
+              quia! Voluptates, officiis?
+            </p>
+          </div>
+        </div>
+        <div class="d-flex align-items-center px-3 py-3">
+          <NuxtLink
+            to="#"
+            class="btn btn-read-more-sm btn-dark text-javascript ms-auto"
+          >
+            Ler mais...
+          </NuxtLink>
+        </div>
+      </article>
+    </div>
+    <div class="container py-5">
+      <article
         class="card card-raised bg-javascript text-dark mb-4"
         :class="[
           isDarkTheme
@@ -278,7 +318,10 @@
           </NuxtLink>
         </div>
       </article>
-      <div class="card card-raised card-background">
+      <div
+        class="card card-raised card-background"
+        :class="[isDarkTheme ? 'hover-card-neon-yellow' : 'hover-card-uv']"
+      >
         <img
           src="https://i.imgur.com/KMN1KQ5.jpg"
           class="card-background-image card-img-border"
@@ -287,11 +330,11 @@
         <div
           class="card-img-overlay h-100 d-flex flex-column justify-content-end"
         >
-          <h4 class="font-monospace mb-2">
+          <h3 class="mb-2">
             <span class="marker-line py-1 bg-dark text-light">
               Ultimate Series
             </span>
-          </h4>
+          </h3>
         </div>
       </div>
     </div>

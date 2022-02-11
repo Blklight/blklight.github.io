@@ -440,28 +440,14 @@
   }
 }
 
-.hover-card {
-  &-uv,
-  &-yellow,
-  &-dark,
-  &-uv-bordered,
-  &-yellow-bordered,
-  &-dark-bordered {
-    .card-img-border {
-      border-radius: 0.5rem;
-    }
+.card {
+  .card-img-border {
+    border-radius: 0.5rem;
   }
 
-  &-uv,
-  &-yellow,
-  &-dark,
-  &-uv-bordered,
-  &-yellow-bordered,
-  &-dark-bordered {
-    &:hover {
-      .card-img-border {
-        border-radius: 0 !important;
-      }
+  &:hover {
+    .card-img-border {
+      border-radius: 0 !important;
     }
   }
 }
@@ -560,6 +546,6 @@ hr {
 }
 
 .background-texture {
-  background: url('../mask-overlays/13-extra.png');
+  background: url("../mask-overlays/13-extra.png");
   background-attachment: local;
 }

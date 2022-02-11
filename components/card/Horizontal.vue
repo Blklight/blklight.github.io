@@ -1,6 +1,6 @@
 <template>
   <article
-    class="card mb-4"
+    class="card card-raised mb-4"
     :class="[
       isDarkTheme ? 'card-plain hover-card-neon-yellow' : 'hover-card-uv',
     ]"
@@ -35,9 +35,9 @@
             class="mt-2"
           />
         </template>
-        <h3 class="card-font-test my-2">
+        <h4 class="card-font-test my-2">
           {{ article.title }}
-        </h3>
+        </h4>
 
         <p class="d-xl-block d-lg-block d-sm-none mb-1">
           <template v-if="article.description">
@@ -134,6 +134,6 @@ export default {
 }
 
 .card-font-test {
-  font-family: "Playfair Display", serif;
+  font-family: "Inter", sans-serif;
 }
 </style>

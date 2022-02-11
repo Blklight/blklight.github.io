@@ -4,36 +4,39 @@
     :class="isDarkTheme ? 'hover-card-secondary' : 'hover-card-dark'"
   >
     <div class="card-body">
-      <p class="mb-3 fw-normal">
+      <p class="mb-2 fw-normal">
         <DateFormat :date="article.createdDate" full />
       </p>
-      <h3 class="font-monospace mb-3">
+      <h4 class="card-font-test mb-3">
         <span
-          class="py-2"
+          class="py-1"
           :class="isDarkTheme ? 'text-dark bg-light' : 'text-light bg-dark'"
         >
           <span class="marker-line">{{ article.title }}</span>
         </span>
-      </h3>
+      </h4>
       <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla eos et
         explicabo cupiditate suscipit iusto, error repellendus culpa doloremque
         sit quidem, perspiciatis qui soluta. Blanditiis aspernatur veritatis
         ipsa officia alias.
       </p>
-      <nuxt-link
-        v-if="article.isPublished"
-        :to="article.path"
-        :class="!isDarkTheme ? 'text-dark' : 'text-light'"
-      >
-        Ler mais...
-      </nuxt-link>
-      <p v-else>
-        <u>
-          <font-awesome-icon :icon="['fas', 'pen']" />
-          <em> Em atualização...</em>
-        </u>
-      </p>
+      <div class="d-flex justify-content-end">
+        <nuxt-link
+          v-if="article.isPublished"
+          :to="article.path"
+          class="mx-2"
+          :class="!isDarkTheme ? 'text-dark' : 'text-light'"
+        >
+          Ler mais...
+        </nuxt-link>
+        <p v-else>
+          <u>
+            <font-awesome-icon :icon="['fas', 'pen']" />
+            <em> Em atualização...</em>
+          </u>
+        </p>
+      </div>
     </div>
   </article>
 </template>
