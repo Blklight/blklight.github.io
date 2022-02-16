@@ -20,13 +20,11 @@
         :class="twoColumn ? 'text-lg-center mx-1' : ''"
       >
         <h1 class="article-title">
-          <em>
-            <span class="text-light bg-dark p-1">
-              <i class="marker-line">
-                {{ article.title }}
-              </i>
-            </span>
-          </em>
+          <span class="text-light bg-dark p-1">
+            <i class="marker-line">
+              {{ article.title }}
+            </i>
+          </span>
         </h1>
         <h5 class="article-meta">
           <span class="text-light bg-dark p-1">{{ dateFormat }}</span>

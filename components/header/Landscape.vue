@@ -21,11 +21,9 @@
             <span class="badge bg-dark border border-light">Posters</span>
           </h5>
           <h1 class="article-title">
-            <em>
-              <span class="text-light bg-dark p-1">
-                <i class="marker-line"> {{ article.title }} </i>
-              </span>
-            </em>
+            <span class="text-light bg-dark p-1">
+              <span class="marker-line"> {{ article.title }} </span>
+            </span>
           </h1>
           <h5 class="article-meta">
             <em>

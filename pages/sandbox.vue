@@ -1,5 +1,14 @@
 <template>
   <main>
+    <div class="header-overflow">
+      <div class="header-overflow-background"></div>
+      <div class="header-overflow-content">
+        <div class="header-overflow-content-info">
+          <h1>Ultimate Series - Javascript</h1>
+          <p class="mb-1">10 de fevereiro de 2022, às 19:45</p>
+        </div>
+      </div>
+    </div>
     <div class="container py-5">
       <article
         class="card card-flat card-raised bg-polen text-dark mb-4"
@@ -577,8 +586,6 @@ export default {
       ...this.defaultParent,
     };
     this.showChildrenByParent(this.activeParent);
-
-    this.getAllCategories();
   },
   methods: {
     toggleParent(parent) {
@@ -783,6 +790,36 @@ body {
     align-items: center;
     justify-content: center;
     flex: 1 1 0%;
+  }
+}
+
+.header-overflow {
+  width: 100%;
+  height: auto;
+  position: relative;
+
+  &-background {
+    background-image: url("https://i.imgur.com/KMN1KQ5.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    width: 100%;
+    height: 500px;
+  }
+
+  &-content {
+    display: grid;
+    grid-template-columns: 1fr 10px 750px 10px 1fr;
+    grid-template-areas: ". . Info . .";
+
+    &-info {
+      border-top-left-radius: 0.5rem;
+      border-top-right-radius: 0.5rem;
+      background-color: #eaeaea;
+      grid-area: Info;
+      padding: 1.25rem 10px;
+      margin-top: -150px;
+    }
   }
 }
 </style>

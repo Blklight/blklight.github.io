@@ -99,21 +99,21 @@ export default {
   data() {
     return {
       open: false,
-    }
+    };
   },
   mounted() {
-    document.addEventListener('click', this.close)
+    document.addEventListener("click", this.close);
   },
   beforeDestroy() {
-    document.removeEventListener('click', this.close)
+    document.removeEventListener("click", this.close);
   },
   methods: {
     toggle() {
-      this.open = !this.open
+      this.open = !this.open;
     },
     close(e) {
       if (!this.$el.contains(e.target)) {
-        this.open = false
+        this.open = false;
       }
     },
     // orgClicked(org) {
@@ -124,10 +124,10 @@ export default {
     //   this.activeData = org
     // },
   },
-}
+};
 </script>
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap'); */
 .mts-sidebar {
   max-width: 275px;
   height: 90vh;
@@ -135,7 +135,7 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: white;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 
   &-brand {
     cursor: pointer;
@@ -173,7 +173,7 @@ export default {
       background-color: lighten(#480bff, 45%);
 
       ::after {
-        content: '>';
+        content: ">";
         position: absolute;
         margin-left: auto;
       }

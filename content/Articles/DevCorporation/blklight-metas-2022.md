@@ -39,4 +39,4 @@ Agora é fazer acontecer.
 
 **Um abraço, Ultimate Mercer!**
 
-_Obs: Peço desculpas caso o texto possa parecer confuso, ainda preciso melhorar minhas \_skills_ de escrita\_
+_Obs: Peço desculpas caso o texto possa parecer confuso, ainda preciso melhorar minhas _skills_ de escrita_

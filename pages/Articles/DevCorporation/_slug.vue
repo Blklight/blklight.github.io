@@ -3,6 +3,9 @@
     <template v-if="article.layout === 'two-column'">
       <ArticleTwoColumn :article="article" :author="author" />
     </template>
+    <template v-if="article.layout === 'alternate'">
+      <ArticleAlternate :article="article" :author="author" />
+    </template>
     <template v-else>
       <Article :article="article" :author="author" />
     </template>
@@ -11,33 +14,33 @@
 </template>
 <script>
 // import global from "@/utils/global";
-import getSiteMeta from '@/utils/getSiteMeta'
+import getSiteMeta from "@/utils/getSiteMeta";
 
 export default {
   async asyncData({ $content, params }) {
     const article = await $content(
-      'Articles/DevCorporation',
+      "Articles/DevCorporation",
       params.slug
-    ).fetch()
-    const author = await $content('authors')
-      .only(['username', 'bio', 'cover'])
+    ).fetch();
+    const author = await $content("authors")
+      .only(["username", "bio", "cover"])
       .where({ username: article.author.name })
-      .fetch()
-    const [prev, next] = await $content('Articles/DevCorporation')
+      .fetch();
+    const [prev, next] = await $content("Articles/DevCorporation")
       .only([
-        'title',
-        'slug',
-        'cover',
-        'imageHeader',
-        'createdDate',
-        'channel',
-        'dir',
+        "title",
+        "slug",
+        "cover",
+        "imageHeader",
+        "createdDate",
+        "channel",
+        "dir",
       ])
-      .sortBy('createdDate', 'desc')
+      .sortBy("createdDate", "desc")
       .where({ isPublished: true })
       .surround(params.slug)
-      .fetch()
-    return { article, author, prev, next }
+      .fetch();
+    return { article, author, prev, next };
   },
   head() {
     return {
@@ -45,34 +48,34 @@ export default {
       meta: [
         ...this.meta,
         {
-          property: 'article:published_time',
+          property: "article:published_time",
           content: this.article.createdDate,
         },
-        { name: 'twitter:label1', content: 'By' },
-        { name: 'twitter:data1', content: this.article.channel || '' },
+        { name: "twitter:label1", content: "By" },
+        { name: "twitter:data1", content: this.article.channel || "" },
       ],
       link: [
         {
-          hid: 'canonical',
-          rel: 'canonical',
+          hid: "canonical",
+          rel: "canonical",
           href: `${this.$config.baseUrl}/${this.$route.params.slug}`,
         },
       ],
-    }
+    };
   },
   computed: {
     meta() {
       const metaData = {
-        type: 'article',
+        type: "article",
         title: this.article.title,
         description: this.article.abstract,
         url: `${this.$config.baseUrl}/${this.$route.params.slug}`,
         mainImage: this.article.image,
-      }
-      return getSiteMeta(metaData)
+      };
+      return getSiteMeta(metaData);
     },
   },
-}
+};
 </script>
 
 <style lang="scss">

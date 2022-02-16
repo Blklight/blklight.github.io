@@ -9,7 +9,7 @@
             : 'text-dark cyber-underline-dark'
         "
       >
-        <em>Últimas artigos</em>
+        Últimos artigos
       </h2>
       <template v-for="article in articles">
         <CardText

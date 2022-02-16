@@ -1,31 +1,22 @@
 <template>
-  <div class="sticky-content hover-header">
-    <img
-      v-lazy="article.cover ? article.cover : article.imageHeader"
-      class="info-article-image"
+  <header class="header-overflow-basic hover-header">
+    <div
+      v-lazy:background-image="article.imageHeader"
+      class="header-overflow-basic-background"
       :class="colorFilterRandom"
-    />
-    <div class="info-article-overlay">
-      <div class="h-100 d-flex flex-column justify-content-end">
-        <h1 class="article-title">
-          <span class="text-light bg-dark p-1">
-            <i class="marker-line">
-              {{ article.title }}
-            </i>
-          </span>
-        </h1>
-        <h5 class="article-meta">
-          <em>
-            <span class="text-light bg-dark py-1">
-              <i class="marker-line">
-                <DateFormat :date="article.date" full />
-              </i>
-            </span>
-          </em>
+    ></div>
+    <div class="header-overflow-basic-content">
+      <div
+        class="header-overflow-basic-content-info background-texture"
+        :class="[isDarkTheme ? 'bg-dark' : 'bg-light']"
+      >
+        <h1 class="article-title">{{ article.title }}</h1>
+        <h5 class="article-meta mb-1">
+          <DateFormat :date="article.date" full />
         </h5>
       </div>
     </div>
-  </div>
+  </header>
 </template>
 <script>
 import { mapGetters } from "vuex";
@@ -37,9 +28,9 @@ export default {
       default: null,
     },
   },
+
   computed: {
     ...mapGetters(["isDarkTheme"]),
-
     colorFilterRandom() {
       const filters = [
         "black-green",
@@ -49,6 +40,7 @@ export default {
         "cyberpunk-vi",
         "cyberpunk-vii",
         "pink-blue",
+        "purple-red-green",
         "purple-red-orange",
         "red-sunset",
         "soft-blue-pink",

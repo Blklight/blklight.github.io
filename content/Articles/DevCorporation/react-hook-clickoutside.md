@@ -12,8 +12,8 @@ tags:
   - "Hooks"
 featured: false
 type: "normal"
-headerLayout: "profile"
-layout: ""
+headerLayout: "basic-overflow"
+layout: "alternate"
 fontType: "base"
 isPublished: true
 author:

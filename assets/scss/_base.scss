@@ -13,7 +13,8 @@ body {
   margin: 0;
   padding: 0;
   position: relative;
-  font-family: 'Inter', sans-serif;
+  font-family: "Lexend", "Inter", sans-serif;
+  font-weight: 300;
   min-height: 100vh;
 }
 
@@ -28,7 +29,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Exo 2', 'Overpass', consolas, sans-serif;
+  font-family: "Exo 2", "Overpass", consolas, sans-serif;
   font-weight: 700;
   margin-top: 0;
   margin-bottom: 0.5rem;
@@ -73,7 +74,7 @@ h6 {
   h1 {
     em {
       &:after {
-        content: '_';
+        content: "_";
         animation-name: hxafter;
         animation-duration: $glitched-duration;
         animation-iteration-count: infinite;

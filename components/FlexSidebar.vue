@@ -53,20 +53,19 @@
   </div>
 </template>
 <script>
-import { mapMutations, mapGetters } from 'vuex'
+import { mapMutations, mapGetters } from "vuex";
 
 export default {
   computed: {
-    ...mapGetters(['isDarkTheme', 'isSidebarOpen']),
+    ...mapGetters(["isDarkTheme"]),
   },
 
   methods: {
     ...mapMutations({
-      darkTheme: 'darkTheme',
-      sidebarSwitch: 'sidebarSwitch',
+      darkTheme: "darkTheme",
     }),
   },
-}
+};
 </script>
 <style lang="scss">
 .flex-sidebar {
