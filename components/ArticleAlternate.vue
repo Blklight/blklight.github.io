@@ -1,33 +1,48 @@
 <template>
   <section class="alter-article mb-5">
-    <HeaderBasicOverflow :article="article" />
+    <div
+      v-lazy:background-image="article.imageHeader"
+      class="alter-article-header"
+    ></div>
+    <!-- <HeaderBasicOverflow :article="article" /> -->
 
     <div class="alter-article-block">
-      <div class="alter-article-content">
-        <div class="alter-article-content-text">
-          <nuxt-content
-            :document="article"
-            :class="[
-              article.type === 'stories' ? 'mono-font' : '',
-              isDarkTheme ? 'dark-theme' : '',
-            ]"
-          />
+      <div
+        class="alter-article-container"
+        :class="isDarkTheme ? 'bg-dark' : 'bg-light'"
+      >
+        <div class="alter-article-container-title">
+          <h1 class="article-title">{{ article.title }}</h1>
+          <h5 class="article-meta mb-1">
+            <DateFormat :date="headerData.date" full />
+          </h5>
         </div>
-        <div class="alter-article-content-info">
-          <template v-if="article.tags">
-            <div class="nuxt-content">
-              <h5>Tags:</h5>
-              <div class="d-flex">
-                <span
-                  v-for="tag in article.tags"
-                  :key="tag"
-                  class="badge bg-secondary text-dark"
-                >
-                  {{ tag }}
-                </span>
+        <div class="alter-article-content">
+          <div class="alter-article-content-text">
+            <nuxt-content
+              :document="article"
+              :class="[
+                article.type === 'stories' ? 'mono-font' : '',
+                isDarkTheme ? 'dark-theme' : '',
+              ]"
+            />
+          </div>
+          <div class="alter-article-content-info">
+            <template v-if="article.tags">
+              <div class="nuxt-content">
+                <h5>Tags:</h5>
+                <div class="d-flex">
+                  <span
+                    v-for="tag in article.tags"
+                    :key="tag"
+                    class="badge bg-secondary text-dark"
+                  >
+                    {{ tag }}
+                  </span>
+                </div>
               </div>
-            </div>
-          </template>
+            </template>
+          </div>
         </div>
       </div>
     </div>
@@ -71,6 +86,24 @@ export default {
         quote: this.article.author.quote,
         cover: this.author[0].cover,
       };
+    },
+    colorFilterRandom() {
+      const filters = [
+        "black-green",
+        "black-white",
+        "blue-red",
+        "cyberpunk-v",
+        "cyberpunk-vi",
+        "cyberpunk-vii",
+        "pink-blue",
+        "purple-red-green",
+        "purple-red-orange",
+        "red-sunset",
+        "soft-blue-pink",
+      ];
+      const num = Math.floor(Math.random() * filters.length);
+      const filter = `hover-filter-${filters[num]}`;
+      return filter;
     },
   },
 };

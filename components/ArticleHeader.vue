@@ -33,9 +33,7 @@
     <template v-if="headerLayout === 'overflow'">
       <HeaderOverflow :article="article" />
     </template>
-    <template v-if="headerLayout === 'basic-overflow'">
-      <HeaderBasicOverflow :article="article" />
-    </template>
+
     <template v-if="headerLayout === 'basic'">
       <HeaderBasic :article="article" />
     </template>

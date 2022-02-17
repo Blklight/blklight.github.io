@@ -6,7 +6,7 @@
     <template v-if="article.layout === 'alternate'">
       <ArticleAlternate :article="article" :author="author" />
     </template>
-    <template v-else>
+    <template v-if="article.layout === ''">
       <Article :article="article" :author="author" />
     </template>
     <!-- <PrevNextArticles :prev="prev" :next="next" /> -->
