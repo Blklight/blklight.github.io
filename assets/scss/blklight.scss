@@ -2,14 +2,17 @@
 @import "variables";
 @import "../../node_modules/bootstrap/scss/variables";
 @import "mixins";
+// @import "../../node_modules/bootstrap/scss/utilities";
+@import "utilities";
 
 @import "../../node_modules/bootstrap/scss/root";
 @import "shadows";
-@import "utilities";
 @import "reboot";
 @import "base";
 @import "../../node_modules/bootstrap/scss/type";
 @import "images";
+@import "../../node_modules/bootstrap/scss/containers";
+@import "../../node_modules/bootstrap/scss/grid";
 @import "buttons";
 @import "forms";
 @import "badge";
@@ -20,9 +23,9 @@
 
 @import "../../node_modules/bootstrap/scss/helpers";
 
-@import "../../node_modules/bootstrap/scss/utilities/api";
-
 @import "extra";
 
 @import "colorFilters";
 @import "masks";
+
+@import "../../node_modules/bootstrap/scss/utilities/api";

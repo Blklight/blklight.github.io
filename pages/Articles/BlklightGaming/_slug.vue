@@ -1,13 +1,16 @@
 <template>
-  <LayoutContent>
+  <section>
     <template v-if="article.layout === 'two-column'">
       <ArticleTwoColumn :article="article" :author="author" />
     </template>
-    <template v-else>
+    <template v-if="article.layout === 'alternate'">
+      <ArticleAlternate :article="article" :author="author" />
+    </template>
+    <template v-if="article.layout === ''">
       <Article :article="article" :author="author" />
     </template>
-    <PrevNextArticles :prev="prev" :next="next" />
-  </LayoutContent>
+    <!-- <PrevNextArticles :prev="prev" :next="next" /> -->
+  </section>
 </template>
 <script>
 // import global from "@/utils/global";

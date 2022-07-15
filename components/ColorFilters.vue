@@ -15,6 +15,7 @@
     <FilterPurple-Red-Orange />
     <FilterRed-Sunset />
     <FilterSoft-Blue-Pink />
+    <FilterBlue-Red-Golden />
     <!-- <FilterPurple-Red-Green /> -->
   </svg>
 </template>

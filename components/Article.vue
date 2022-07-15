@@ -1,7 +1,7 @@
 <template>
   <section class="main-article mb-5">
     <ArticleHeader :article="headerData" />
-    <article class="mb-5" :class="[isDarkTheme ? 'dark-theme' : '']">
+    <article class="mb-5">
       <template v-if="article.type === 'stories'">
         <div
           class="nuxt-content"
@@ -60,8 +60,8 @@
           </div>
         </div>
       </template>
+      <Author :author="authorInfo" />
     </article>
-    <Author :author="authorInfo" />
   </section>
 </template>
 <script>

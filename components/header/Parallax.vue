@@ -14,27 +14,27 @@
     <div class="header-overlay">
       <div class="h-100 d-flex flex-column justify-content-center">
         <h1 class="text-center">
-          <em>
-            <span class="text-light bg-dark p-1">
-              {{ article.title }}
-            </span>
-          </em>
+          <span class="text-light bg-dark p-1">
+            {{ article.title }}
+          </span>
         </h1>
         <h5 class="text-center">
-          <em>
-            <DateFormat
-              class="text-light bg-dark py-1 px-2"
-              :date="article.date"
-              full
-            />
-          </em>
+          <DateFormat
+            class="text-light bg-dark py-1 px-2"
+            :date="article.date"
+            full
+          />
         </h5>
-        <h5 class="text-center">
+        <div class="text-center">
           <span>
-            <span class="badge bg-uv border border-light">Websites</span>
-            <span class="badge bg-uv border border-light">Posters</span></span
+            <span class="badge badge-tag bg-uv border border-light"
+              >Websites</span
+            >
+            <span class="badge badge-tag bg-uv border border-light"
+              >Posters</span
+            ></span
           >
-        </h5>
+        </div>
       </div>
     </div>
   </header>
@@ -69,17 +69,18 @@ export default {
     },
     colorFilterRandom() {
       const filters = [
-        "black-green",
-        "black-white",
-        "blue-red",
-        "cyberpunk-v",
-        "cyberpunk-vi",
-        "cyberpunk-vii",
-        "pink-blue",
-        "purple-red-green",
-        "purple-red-orange",
-        "red-sunset",
-        "soft-blue-pink",
+        // "black-green",
+        // "black-white",
+        // "blue-red",
+        // "cyberpunk-v",
+        // "cyberpunk-vi",
+        // "cyberpunk-vii",
+        // "pink-blue",
+        // "purple-red-green",
+        // "purple-red-orange",
+        // "red-sunset",
+        // "soft-blue-pink",
+        "blue-red-golden",
       ];
       const num = Math.floor(Math.random() * filters.length);
       const filter = `hover-filter-${filters[num]}`;

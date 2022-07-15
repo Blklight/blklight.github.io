@@ -1,7 +1,7 @@
 ---
 title: "React - Hooks - useClickOutside"
 abstract: ""
-imageHeader: "https://i.imgur.com/OI6Iuq2.jpg"
+imageHeader: "https://i.imgur.com/NHYFqmD.jpg"
 cover: ""
 createdDate: "2022-02-09 20:30"
 updatedDate: ""
@@ -12,7 +12,7 @@ tags:
   - "Hooks"
 featured: false
 type: "normal"
-headerLayout: "basic-overflow"
+headerLayout: "fullpage"
 layout: "alternate"
 fontType: "base"
 isPublished: true
@@ -22,29 +22,55 @@ author:
 cardComponent: "CardCode"
 ---
 
-### Ultimate Series - Nºxxx - Sabrina - All-out CHAOS/CHAOS Unleashed!
+# Partim festum mecum inutilior natusque adpellavere Lycias
 
-Dificilmente em minha jornada escrevo ou crio artigos sobre o que eu desenvolvo, tanto para a parte de programação quanto para a parte de produção/edição de artes digitais, porém recentemente gostaria de desenvolver uma certa habilidade com a escrita, isso me permitiria evoluir pessoalmente, além de possibilitar o desenvolvimento e o avanço de alguns projetos pessoais que demandam a criação de artigos.
+## Et resecuta stabam
 
-Minhas experiências recentes com escrita foram através de artigos cientificos na faculdade, porém é tipo de escrita bem amarrado e digamos mais chato XD.
+Lorem [markdownum](http://hicconstitit.net/vel.html), ira festas heros domosque
+haberent Achaemenide nostris regis, porrexit Si **clipeus**, Teucras lumine.
+Mihi mihi in dicenti bracchia quoque: praemia laboris visis non sonant ire
+infert animique iustis, Pudor concessit satis. An aeratae. Per cum mihi, vim
+habenis Lethaei gelidae in, ne. Ipso milite vincloque ignis tegit: _non_ quid?
 
-Porém, durante o a noite do dia 20 de outubro de 2021, ao terminar de exportar a inúmeras versões da mesma arte criada, senti que seria um bom momento para praticar a escrita, explicando algumas ideias e referencias que usei no processo de criação desta arte.
+Enim ipsa per tuos humum petit genitus iactantem si dixit quos. [Plus iam
+fuso](http://obscuram.com/et-nomina.php) supplex, positas ne vocibus attulit
+veros unam lumina hederae potest auras. Tamen septima vultuque quaeque. Illis
+nunc per haec more solet tecta praeside erat. Est **obsessa**: que fecit terra
+concurrere sigillis infelix fraga, et.
 
-### About
+> Gradieris nati sonitum infelix duris novique Clymene querellas locus glandes
+> celare praesepia vincat. Media sonanti correptus libratus corpus, fallax
+> ignes, urbes quo dant tu quae **sorores scire**, in.
 
-Quando eu penso em desenvolver alguma arte, na maioria das vezes a imagem base(aquela no qual está, por assim dizer, o personagem principal da imagem) é escolhida com dias de antecedência, visto que, para criar a arte que eu desejo é necessário que a criatividade esteja em alta, pois creio eu, a maioria das pessoas que lidam com areas que envolvam criar e desenvolver, possuem momentos em que sua criatividade está tão alta que não existem limites e em outros momentos, a sua criatividade está tão baixa que você apenas só fica parado sem nenhuma ideia.
+## Lupi luce vinclis
 
-Certo dia, quando eu começo a desenvolver a arte a partir do protaganista, já vou prestando atenção a qualidade e detalhes na imagem, além de imaginar o cenário que irá compor o background da arte.
-_imagem base sabrina spellman_
+Adsensere vernos. Deus nudaverat oppida tempestivus ventis meis illum? Ait virgo
+discedet quod visis **referam**, imperiumque mille tamen statione successibus
+Finis artus in diemque **antris**.
 
-Para esta arte especificamente, imaginei um cenário onde o a utilização do poder da personagem altera e interfere visualmente e fisicament no cenário em que ela se encontra.
+1. Quam numen
+2. Verba maxima sed et Veneris telique linguae
+3. Quacumque unda parente ama esses frondibus medere
+4. Arborea molles videre manusque
+5. Crescentemque nulla luget
+6. Passuque opus
 
-Como referencia, me recordei de 2 exemplos especificos, um deles sendo quando o Doutor Estranho em Vingadores: Guerra Infinita contra-ataca Thanos com a "Dimensão Espelhada"_(Mirror dimension)_, e quando o _Superboy Prime_ quebra a realidade com um soco, se eu não me engano em uma HQ da saga _Crise Infinita_.
-_imagem dr strange_
-_imagem superboy prime_
-Com esses 2 exemplos em mente, realizei algumas pesquisas e encontrei uma imagem que acabou me servindo servindo como base para a criação uma camada de fragmentação na imagem.
-_imagem base de fragmentação_
+## Fatalia natalis
 
-Além disso, busquei criar uma aura em volta da personagem, focando em representar a emananação de poder
+Matrem non scilicet referam pectoribusque tulit puerosque. Nec est quartus
+aliqua, calescit pressistis humo carinas _modo_, esse in nequeam quantum paravi
+iugulati.
 
-Depois de a arte estar toda ela construida e estilizada, busco adicionar uma leve granulação.
+> Extemplo sinus silva sumptas terraeque sibi, lapsum lugebat successu unde.
+> Quis spem victa arcuit, in eram rogantis ubi purpureus sumere, edidit taedas
+> virum [morte feres](http://factum.io/sideraque), de. Conbibitur sorores
+> fortibus Thisbes Nilo, vincere volucrisque.
+
+Exhibuere qui. Parvoque dominae siquis sinuantur Delius nec miserabile in
+_distantes vicinum_ capiat naturale, raptam.
+
+Da iam, sui fert est sibi lapidum, ortygiam septem retinere figuras ora diuque
+gerit mora Pallante? Felicia quanta **iuvenaliter turba eam** tuli gravitas;
+enim ut idem poste viasque erat praestantes. Longo Centaurorum postquam mortali,
+aves _coiere_, est cum esse Surrentino caelo boum Oeclides consultus copia. Saxo
+me fama viribus pervenit; **in ense**, satae; nox infelix.

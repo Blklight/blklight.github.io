@@ -1,9 +1,15 @@
 <template>
   <section class="alter-article mb-5">
-    <div
-      v-lazy:background-image="article.imageHeader"
-      class="alter-article-header"
-    ></div>
+    <div class="hover-header">
+      <div
+        v-lazy:background-image="
+          article.imageHeader ? article.imageHeader : article.cover
+        "
+        class="alter-article-header hover-header"
+        :class="[colorFilterRandom]"
+      ></div>
+    </div>
+
     <!-- <HeaderBasicOverflow :article="article" /> -->
 
     <div class="alter-article-block">
@@ -31,7 +37,21 @@
             <template v-if="article.tags">
               <div class="nuxt-content">
                 <h5>Tags:</h5>
-                <div class="d-flex">
+                <div class="d-flex flex-wrap">
+                  <span
+                    v-for="tag in article.tags"
+                    :key="tag"
+                    class="badge bg-secondary text-dark"
+                  >
+                    {{ tag }}
+                  </span>
+                  <span
+                    v-for="tag in article.tags"
+                    :key="tag"
+                    class="badge bg-secondary text-dark"
+                  >
+                    {{ tag }}
+                  </span>
                   <span
                     v-for="tag in article.tags"
                     :key="tag"

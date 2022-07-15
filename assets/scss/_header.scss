@@ -146,6 +146,7 @@
 }
 
 .header-parallaxAlt {
+  padding-top: 1rem;
   margin-bottom: 2rem;
 
   &-content {
@@ -201,10 +202,18 @@
   }
 
   &-content {
-    width: 70%;
+    max-width: 740px;
     height: auto;
     margin: 1rem auto 1rem;
     display: block;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .header-basic {
+    &-content {
+      max-width: 600px;
+    }
   }
 }
 

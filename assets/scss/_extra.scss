@@ -267,6 +267,12 @@
 }
 
 @each $color, $value in $theme-colors {
+  .hover-card-bordered-#{$color} {
+    @include hover-card-bordered-variant($color, $value);
+  }
+}
+
+@each $color, $value in $theme-colors {
   @include shadow-pop-bl($color, $value);
 }
 
@@ -442,14 +448,14 @@
 
 .card {
   .card-img-border {
-    border-radius: 0.5rem;
+    border-radius: 1rem;
   }
 
-  &:hover {
-    .card-img-border {
-      border-radius: 0 !important;
-    }
-  }
+  // &:hover {
+  //   .card-img-border {
+  //     border-radius: 0 !important;
+  //   }
+  // }
 }
 
 .member-avatar {

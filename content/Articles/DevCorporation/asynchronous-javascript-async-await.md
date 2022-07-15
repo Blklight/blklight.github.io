@@ -20,7 +20,7 @@ author:
 cardComponent: "CardHorizontal"
 ---
 
-## _**Async functions**_
+## **Async functions**
 
 `Async/await` é relativamente uma nova maneira para se escrever código assíncrono em Javascript. Antes nós utilizávamos `callbacks` e `promises`. `Async/await` na verdade se baseia em `promises`. Se você ainda não havia utilizado `promises`, este é um bom momento para você aprender sobre.
 
@@ -38,7 +38,7 @@ Algo que você precisa saber sobre funções `async` é que elas sempre retornam
 
 No caso onde nós explicitamente returnamos algo que não é uma `promise`, como acima, o valor retornado é automáticamente incluído em uma `promise` resolvida, sendo o valor resolvido sendo uma _`non-promise`_. Para o código acima, `asyncFunc().then(result => console.log(result))`, irá retorna a string Hey!.
 
-## **_Await_**
+## **Await**
 
 A palavra-chave `await` só pode ser utilizada junto de um bloco `async`, caso contrário, irá gerar um erro de sintaxe. Isso significa que você não pode utilizar o `await` no nível superior do código, basicamente pode ser utilizado sozinho.
 
@@ -79,7 +79,7 @@ async function asyncFunc() {
 }
 ```
 
-## _**Error handling**_
+## **Error handling**
 
 Como nós podemos lidar com erros? Nós temos algumas opções, vamos explorar elas:
 
@@ -126,7 +126,7 @@ asyncFunc().catch((error) => {
 });
 ```
 
-## _**Fun facts**_
+## **Fun facts**
 
 #### **Async on class methods**
 
@@ -177,7 +177,7 @@ async function asyncFunc() {
 }
 ```
 
-## _**Conclusão**_
+## **Conclusão**
 
 Em síntese, `async/await` é uma sintaxe limpa para se escrever código Javascript assíncrono. Aprimorando sua legibilidade e o fluxo do seu código.
 

@@ -1,17 +1,97 @@
 <template>
   <main>
-    <div class="header-overflow">
-      <div class="header-overflow-background"></div>
-      <div class="header-overflow-content">
-        <div class="header-overflow-content-info">
-          <h1>Ultimate Series - Javascript</h1>
-          <p class="mb-1">10 de fevereiro de 2022, às 19:45</p>
+    <h1>{{ text }}</h1>
+    <!-- <div class="card__new-repo">
+      <div class="" style="display: flex; column-gap: 16px">
+        <div class="" style="display: flex; flex: 1 1 auto">
+          <input
+            type="text"
+            style="
+              width: 100%;
+              padding: 8px 12px;
+              background-color: transparent;
+              border: 1px solid rgba(255, 255, 255, 0.1);
+              border-radius: 4px;
+            "
+          />
+        </div>
+        <div class="" style="display: flex; flex: 1 1 auto">
+          <input
+            type="text"
+            style="
+              width: 100%;
+              padding: 8px 12px;
+              background-color: transparent;
+              border: 1px solid rgba(255, 255, 255, 0.1);
+              border-radius: 4px;
+            "
+          />
         </div>
       </div>
+
+      <div class="" style="display: flex; column-gap: 16px">
+        <div class="" style="display: flex; flex: 1 1 auto">
+          <input
+            type="text"
+            style="
+              width: 100%;
+              padding: 8px 12px;
+              background-color: transparent;
+              border: 1px solid rgba(255, 255, 255, 0.1);
+              border-radius: 4px;
+            "
+          />
+        </div>
+        <div class="" style="display: flex; flex: 1 1 auto">
+          <input
+            type="text"
+            style="
+              width: 100%;
+              padding: 8px 12px;
+              background-color: transparent;
+              border: 1px solid rgba(255, 255, 255, 0.1);
+              border-radius: 4px;
+            "
+          />
+        </div>
+      </div>
+
+      <div class="" style="display: flex; column-gap: 16px">
+        <div class="" style="display: flex; flex: 1 1 auto">
+          <input
+            type="text"
+            style="
+              width: 100%;
+              padding: 8px 12px;
+              background-color: transparent;
+              border: 1px solid rgba(255, 255, 255, 0.1);
+              border-radius: 4px;
+            "
+          />
+        </div>
+        <div class="" style="display: flex; flex: 1 1 auto">
+          <input
+            type="text"
+            style="
+              width: 100%;
+              padding: 8px 12px;
+              background-color: transparent;
+              border: 1px solid rgba(255, 255, 255, 0.1);
+              border-radius: 4px;
+            "
+          />
+        </div>
+      </div>
+    </div> -->
+    <!-- <div class="container py-5">
+      <div class="test-cat-btn">
+        <img src="../static/blklight-white.svg" width="40" alt="" />
+      </div>
     </div>
+
     <div class="container py-5">
       <article
-        class="card card-flat card-raised bg-polen text-dark mb-4"
+        class="card card-raised bg-polen text-dark mb-4"
         :class="[
           isDarkTheme
             ? 'border border-javascript hover-card-javascript'
@@ -19,7 +99,9 @@
         ]"
         style="border-left: 8px solid #121212 !important"
       >
-        <div class="d-flex align-items-center px-3 py-3 bg-dark mb-3">
+        <div
+          class="d-flex rounded-top-3 align-items-center px-3 py-3 bg-dark mb-3"
+        >
           <span class="badge badge-tag bg-light text-dark" value=""
             >21 ago 2021</span
           >
@@ -359,7 +441,7 @@
       <div class="py-5">
         <div class="select-container">div</div>
       </div>
-    </div>
+    </div> -->
   </main>
 </template>
 <script>
@@ -398,7 +480,10 @@ export default {
   },
   data() {
     return {
+      isShowEffect: false,
+      steps: ["Step 1", "Step 2", "Step 3"],
       logo: Logo,
+      text: "",
       parents: [
         {
           id: 1,
@@ -586,8 +671,30 @@ export default {
       ...this.defaultParent,
     };
     this.showChildrenByParent(this.activeParent);
+    this.updateLoading(this.steps);
   },
   methods: {
+    updateLoading(array) {
+      for (let i = 0; i < array.length; i++) {
+        setTimeout(() => {
+          this.isShowEffect = false;
+          console.log("start", this.isShowEffect);
+          const element = array[i];
+          this.isShowEffect = true;
+          this.text = element;
+          console.log(element, this.isShowEffect);
+          setTimeout(() => {
+            this.isShowEffect = undefined;
+            console.log("end", this.isShowEffect);
+          }, 2000);
+        }, i * 5000);
+      }
+      // setTimeout(() => {
+      //   this.classEffect = "fade-in-bottom";
+      //   this.text = text;
+      // });
+    },
+
     toggleParent(parent) {
       const isActive = this.activeParent.id === parent.id; // true or false
       if (isActive) {
@@ -606,7 +713,6 @@ export default {
     },
     toggleChildren(children) {
       const isActive = this.activeTags.find((obj) => obj.id === children.id);
-
       if (isActive) {
         const index = this.activeTags.findIndex(
           (obj) => obj.id === children.id
@@ -618,20 +724,17 @@ export default {
       }
       this.activeTags.push(children);
     },
-
     showChildrenByParent(parent) {
       const tagsForShow = this.templateChildrens
         .filter((obj) => parent.tagsId.includes(obj.id))
         .map((obj) => ({
           ...obj,
         }));
-
       this.tags = [];
       for (let i = 0; i < tagsForShow.length; i++) {
         this.tags.push(tagsForShow[i]);
       }
     },
-
     checkChildrenByParents(parent) {
       const isActive = this.activeTags.find(
         (obj) => obj.parentId === parent.id
@@ -846,5 +949,219 @@ $mts-form-select-border-radius: 8px;
     padding: 8px 4px !important;
     font-weight: bold;
   }
+}
+
+.spin-right {
+  animation-name: spin;
+  animation-duration: 5000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  transform-origin: 50% 50%;
+}
+
+.spin-left {
+  animation-name: spin;
+  animation-duration: 5000ms;
+  animation-direction: reverse;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  transform-origin: 50% 50%;
+}
+
+@-ms-keyframes spin {
+  from {
+    -ms-transform: rotate(0deg);
+  }
+  to {
+    -ms-transform: rotate(360deg);
+  }
+}
+
+@-moz-keyframes spin {
+  from {
+    -moz-transform: rotate(0deg);
+  }
+  to {
+    -moz-transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rect-test {
+  /* transform: rotate(45deg) rotate(-45deg); */
+  transform: rotate(90deg) translate(0, -100%)
+    /* go from bottom right to top right */ rotate(90deg) translate(0, 100%);
+  /* doesn't work as intended in Firefox
+   * % values are taken relative to the SVG, not the element
+   * which actually seems to be correct */
+  transform-origin: 50% 50%;
+}
+
+.mask-svg-test svg g path {
+  fill: linear-gradient(
+    90deg,
+    rgba(244, 205, 59, 1) 0%,
+    rgba(241, 102, 34, 1) 54%,
+    rgba(232, 72, 86, 1) 100%
+  );
+  /* background: linear-gradient(
+    90deg,
+    rgba(244, 205, 59, 1) 0%,
+    rgba(241, 102, 34, 1) 54%,
+    rgba(232, 72, 86, 1) 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    rgba(244, 205, 59, 1) 0%,
+    rgba(241, 102, 34, 1) 54%,
+    rgba(232, 72, 86, 1) 100%
+  ); */
+}
+</style>
+<style>
+.test-cat-btn {
+  width: 64px;
+  height: 64px;
+  background-color: #480bff;
+  color: #eaeaea;
+  vertical-align: middle;
+  padding: 12px 12px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.bohr {
+  background: rgb(244, 204, 58);
+  background: linear-gradient(
+    180deg,
+    rgba(244, 204, 58, 1) 0%,
+    rgba(242, 100, 25, 1) 50%,
+    rgba(232, 72, 85, 1) 100%
+  );
+}
+
+.basics {
+  background: rgb(227, 233, 236);
+  background: linear-gradient(
+    180deg,
+    rgba(227, 233, 236, 1) 0%,
+    rgba(194, 206, 213, 1) 100%
+  );
+}
+
+.api {
+  background: rgb(245, 126, 142);
+  background: linear-gradient(
+    180deg,
+    rgba(245, 126, 142, 1) 0%,
+    rgba(232, 72, 85, 1) 100%
+  );
+}
+
+.authentication {
+  background: rgb(213, 139, 240);
+  background: linear-gradient(
+    180deg,
+    rgba(213, 139, 240, 1) 0%,
+    rgba(170, 83, 221, 1) 100%
+  );
+}
+
+.backend {
+  background: rgb(102, 149, 171);
+  background: linear-gradient(
+    180deg,
+    rgba(102, 149, 171, 1) 0%,
+    rgba(54, 92, 115, 1) 100%
+  );
+}
+
+.cms {
+  background: rgb(219, 157, 64);
+  background: linear-gradient(
+    180deg,
+    rgba(219, 157, 64, 1) 0%,
+    rgba(181, 100, 30, 1) 100%
+  );
+}
+
+.crypto {
+  background: rgb(250, 232, 108);
+  background: linear-gradient(
+    180deg,
+    rgba(250, 232, 108, 1) 0%,
+    rgba(244, 204, 58, 1) 100%
+  );
+}
+
+.databases {
+  background: rgb(251, 215, 89);
+  background: linear-gradient(
+    180deg,
+    rgba(251, 215, 89, 1) 0%,
+    rgba(246, 174, 45, 1) 100%
+  );
+}
+
+.frontend {
+  background: rgb(142, 240, 242);
+  background: linear-gradient(
+    180deg,
+    rgba(142, 240, 242, 1) 0%,
+    rgba(85, 221, 224, 1) 100%
+  );
+}
+
+.games {
+  background: rgb(253, 183, 239);
+  background: linear-gradient(
+    180deg,
+    rgba(253, 183, 239, 1) 0%,
+    rgba(249, 128, 218, 1) 100%
+  );
+}
+
+.payment {
+  background: rgb(139, 240, 165);
+  background: linear-gradient(
+    180deg,
+    rgba(139, 240, 165, 1) 0%,
+    rgba(83, 221, 108, 1) 100%
+  );
+}
+
+.social {
+  background: rgb(139, 178, 240);
+  background: linear-gradient(
+    180deg,
+    rgba(139, 178, 240, 1) 0%,
+    rgba(83, 122, 221, 1) 100%
+  );
+}
+
+.startups {
+  background: rgb(139, 208, 157);
+  background: linear-gradient(
+    180deg,
+    rgba(139, 208, 157, 1) 0%,
+    rgba(83, 163, 100, 1) 100%
+  );
 }
 </style>

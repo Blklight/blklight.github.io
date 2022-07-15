@@ -1,6 +1,6 @@
 <template>
   <div class="py-4">
-    <section class="container-lg">
+    <section class="container-xxl">
       <h2
         class="mb-4"
         :class="
@@ -64,7 +64,6 @@ export default {
       ])
       .sortBy("createdDate", "desc")
       .where({
-        type: "normal",
         isPublished: true,
         channel: { $ne: "Jobs" },
       })

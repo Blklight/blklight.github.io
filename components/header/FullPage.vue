@@ -9,19 +9,17 @@
       <div class="h-100 d-flex flex-column justify-content-end">
         <h1 class="article-title">
           <span class="text-light bg-dark p-1">
-            <i class="marker-line">
+            <span class="marker-line">
               {{ article.title }}
-            </i>
+            </span>
           </span>
         </h1>
         <h5 class="article-meta">
-          <em>
-            <span class="text-light bg-dark py-1">
-              <i class="marker-line">
-                <DateFormat :date="article.date" full />
-              </i>
+          <span class="text-light bg-dark py-1">
+            <span class="marker-line">
+              <DateFormat :date="article.date" full />
             </span>
-          </em>
+          </span>
         </h5>
       </div>
     </div>
@@ -52,6 +50,7 @@ export default {
         "purple-red-orange",
         "red-sunset",
         "soft-blue-pink",
+        "blue-red-golden",
       ];
       const num = Math.floor(Math.random() * filters.length);
       const filter = `hover-filter-${filters[num]}`;

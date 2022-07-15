@@ -21,18 +21,14 @@
           "
         >
           <h1 class="article-title">
-            <em>
-              <span
-                class="p-1"
-                :class="
-                  isDarkTheme ? 'text-dark bg-light' : 'text-light bg-dark'
-                "
-              >
-                <i class="marker-line">
-                  {{ article.title }}
-                </i>
+            <span
+              class="p-1"
+              :class="isDarkTheme ? 'text-dark bg-light' : 'text-light bg-dark'"
+            >
+              <span class="marker-line">
+                {{ article.title }}
               </span>
-            </em>
+            </span>
           </h1>
           <h5 class="article-meta">
             <em>

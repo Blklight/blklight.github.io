@@ -4,40 +4,32 @@
     :class="isDarkTheme ? 'bg-neon-yellow text-dark' : 'bg-uv text-light'"
   >
     <div class="container">
-      <div class="py-3">
+      <div class="py-2">
         <!-- <h4 class="text-center"><em>Escrito por</em></h4> -->
 
         <div class="d-md-flex align-middle">
           <img
             v-lazy="author.cover"
             :alt="author.username"
-            class="
-              author-avatar
-              my-3
-              rounded-circle
-              border border-dark
-              filter-cyberpunk-v
-            "
+            class="author-avatar my-3 rounded-circle border border-dark filter-cyberpunk-v"
           />
-          <div class="py-2 px-5 mx-md-3">
+          <div
+            class="py-2 px-5 mx-md-3 d-flex flex-column justify-content-center"
+          >
             <h3>
               <span class="py-1 px-2 bg-dark text-light">
-                <em>
-                  <i class="marker-line">{{ author.username }}</i>
-                </em>
+                <span class="marker-line">{{ author.username }}</span>
               </span>
             </h3>
             <h5 v-if="author.quote" class="mb-3">
               <span class="bg-dark text-light p-1">
-                <em>
-                  <i class="marker-line">"{{ author.quote }}"</i>
-                </em>
+                <span class="marker-line">"{{ author.quote }}"</span>
               </span>
             </h5>
-            <h5><em> Sobre o autor:</em></h5>
+            <!-- <h5><em> Sobre o autor:</em></h5>
             <p>
               {{ author.bio }}
-            </p>
+            </p> -->
           </div>
         </div>
       </div>

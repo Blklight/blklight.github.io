@@ -2,7 +2,7 @@
   <article
     class="card card-raised mb-4"
     :class="[
-      isDarkTheme ? 'card-plain hover-card-neon-yellow' : 'hover-card-uv',
+      isDarkTheme ? 'card-plain hover-card-neon-yellow' : ' hover-card-uv',
     ]"
   >
     <div class="d-flex align-items-center px-3 py-3">
@@ -22,7 +22,7 @@
         <img
           v-lazy="article.cover ? article.cover : article.imageHeader"
           :alt="article.title"
-          class="card-image-h card-img-border hover-filter-cyberpunk-v"
+          class="card-image-h card-img-border hover-filter-blue-red-golden"
           :class="isDarkTheme ? 'border-light' : 'border-dark'"
         />
       </div>
@@ -35,9 +35,9 @@
             class="mt-2"
           />
         </template>
-        <h4 class="card-font-test my-2">
+        <h3 class="my-2">
           {{ article.title }}
-        </h4>
+        </h3>
 
         <p class="d-xl-block d-lg-block d-sm-none mb-1">
           <template v-if="article.description">
@@ -112,7 +112,7 @@ export default {
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 
 .card-image-h {
-  width: 350px;
+  width: 375px;
   height: 250px;
   object-fit: cover;
 }
