@@ -2,7 +2,7 @@
 title: "React - Hooks - useClickOutside"
 abstract: ""
 imageHeader: "https://i.imgur.com/NHYFqmD.jpg"
-cover: ""
+cover: "https://i.imgur.com/xvgBwEt.jpg"
 createdDate: "2022-02-09 20:30"
 updatedDate: ""
 channel: "Dev Corporation"

@@ -35,11 +35,11 @@
             ]"
           >
             <nav
-              class="border py-3 px-md-4 px-3 my-4 rounded"
+              class="border py-3 px-md-4 px-3 my-4"
               :class="isDarkTheme ? 'border-light' : 'border-dark'"
             >
               <h4 class="mb-1">
-                <strong><em>Índice</em></strong>
+                <strong>Índice</strong>
               </h4>
               <hr class="mt-2" :class="isDarkTheme ? 'bg-light' : 'bg-dark'" />
 

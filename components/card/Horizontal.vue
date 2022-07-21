@@ -1,8 +1,10 @@
 <template>
   <article
-    class="card card-raised mb-4"
+    class="card card-flat border mb-4"
     :class="[
-      isDarkTheme ? 'card-plain hover-card-neon-yellow' : ' hover-card-uv',
+      isDarkTheme
+        ? 'card-plain border-light hover-card-bordered-neon-yellow'
+        : 'border-dark hover-card-bordered-uv',
     ]"
   >
     <div class="d-flex align-items-center px-3 py-3">
@@ -62,7 +64,7 @@
     <div class="d-flex align-items-center px-3 py-3">
       <NuxtLink
         :to="`${article.dir}/${article.slug}`"
-        class="btn btn-raised btn-read-more-sm ms-auto"
+        class="btn btn-read-more-sm ms-auto"
         :class="isDarkTheme ? 'btn-neon-yellow' : 'btn-uv'"
       >
         Ler mais...

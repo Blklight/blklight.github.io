@@ -1,20 +1,20 @@
 <template>
   <article
-    class="card card-raised py-3 border-bottom border-secondary mb-4"
+    class="card card-flat py-3 border-bottom border-secondary mb-4"
     :class="isDarkTheme ? 'card-plain hover-card-secondary' : 'hover-card-dark'"
   >
     <div class="card-body">
       <p class="mb-2 fw-normal">
         <DateFormat :date="article.createdDate" full />
       </p>
-      <h4 class="mb-3">
+      <h3 class="mb-3">
         <span
           class="py-1"
           :class="isDarkTheme ? 'text-dark bg-light' : 'text-light bg-dark'"
         >
           <span class="marker-line">{{ article.title }}</span>
         </span>
-      </h4>
+      </h3>
       <!-- <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla eos et
         explicabo cupiditate suscipit iusto, error repellendus culpa doloremque
