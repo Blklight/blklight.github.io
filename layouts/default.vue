@@ -5,7 +5,8 @@
         <FlexSidebar />
         <div class="main-content">
           <Nuxt />
-          <!-- <Footer /> -->
+          <Footer />
+          <NavbarFooter />
           <ColorFilters />
         </div>
       </div>
@@ -13,30 +14,27 @@
   </main>
 </template>
 <script>
-import { mapMutations, mapGetters } from 'vuex'
+import { mapMutations, mapGetters } from "vuex";
 
 export default {
   data() {
     return {
       data: [],
-    }
+    };
   },
-
   // async fetch() {
   //   this.data = await this.$content("channels").fetch();
   // },
-
   computed: {
-    ...mapGetters(['isDarkTheme', 'isSidebarOpen']),
+    ...mapGetters(["isDarkTheme", "isSidebarOpen"]),
   },
-
   methods: {
     ...mapMutations({
-      darkTheme: 'darkTheme',
-      sidebarSwitch: 'sidebarSwitch',
+      darkTheme: "darkTheme",
+      sidebarSwitch: "sidebarSwitch",
     }),
   },
-}
+};
 </script>
 <style lang="scss">
 .bar-test {
@@ -50,11 +48,11 @@ export default {
   grid-template-columns: auto auto auto;
   grid-template-rows: 60px auto;
   grid-template-areas:
-    'Toolbar Toolbar Toolbar'
-    'Content Content Content '
-    'Content Content Content '
-    'Content Content Content '
-    'Footer Footer Footer ';
+    "Toolbar Toolbar Toolbar"
+    "Content Content Content "
+    "Content Content Content "
+    "Content Content Content "
+    "Footer Footer Footer ";
   height: 100vh;
 }
 
@@ -74,7 +72,7 @@ export default {
 .footer {
   grid-area: Footer;
   max-width: 100%;
-  padding: 1rem 1.5rem 1rem;
+  padding: 1rem 1.5rem 4rem;
   margin-top: auto;
   min-height: 250px;
 }

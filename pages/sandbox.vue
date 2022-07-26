@@ -1,88 +1,9 @@
 <template>
   <main>
-    <h1>{{ text }}</h1>
-    <!-- <div class="card__new-repo">
-      <div class="" style="display: flex; column-gap: 16px">
-        <div class="" style="display: flex; flex: 1 1 auto">
-          <input
-            type="text"
-            style="
-              width: 100%;
-              padding: 8px 12px;
-              background-color: transparent;
-              border: 1px solid rgba(255, 255, 255, 0.1);
-              border-radius: 4px;
-            "
-          />
-        </div>
-        <div class="" style="display: flex; flex: 1 1 auto">
-          <input
-            type="text"
-            style="
-              width: 100%;
-              padding: 8px 12px;
-              background-color: transparent;
-              border: 1px solid rgba(255, 255, 255, 0.1);
-              border-radius: 4px;
-            "
-          />
-        </div>
-      </div>
+    <h1 :class="isShowEffect ? 'fade-in-bottom' : 'fade-out-top'">
+      {{ text }}
+    </h1>
 
-      <div class="" style="display: flex; column-gap: 16px">
-        <div class="" style="display: flex; flex: 1 1 auto">
-          <input
-            type="text"
-            style="
-              width: 100%;
-              padding: 8px 12px;
-              background-color: transparent;
-              border: 1px solid rgba(255, 255, 255, 0.1);
-              border-radius: 4px;
-            "
-          />
-        </div>
-        <div class="" style="display: flex; flex: 1 1 auto">
-          <input
-            type="text"
-            style="
-              width: 100%;
-              padding: 8px 12px;
-              background-color: transparent;
-              border: 1px solid rgba(255, 255, 255, 0.1);
-              border-radius: 4px;
-            "
-          />
-        </div>
-      </div>
-
-      <div class="" style="display: flex; column-gap: 16px">
-        <div class="" style="display: flex; flex: 1 1 auto">
-          <input
-            type="text"
-            style="
-              width: 100%;
-              padding: 8px 12px;
-              background-color: transparent;
-              border: 1px solid rgba(255, 255, 255, 0.1);
-              border-radius: 4px;
-            "
-          />
-        </div>
-        <div class="" style="display: flex; flex: 1 1 auto">
-          <input
-            type="text"
-            style="
-              width: 100%;
-              padding: 8px 12px;
-              background-color: transparent;
-              border: 1px solid rgba(255, 255, 255, 0.1);
-              border-radius: 4px;
-            "
-          />
-        </div>
-      </div>
-    </div> -->
     <!-- <div class="container py-5">
       <div class="test-cat-btn">
         <img src="../static/blklight-white.svg" width="40" alt="" />
@@ -481,7 +402,7 @@ export default {
   data() {
     return {
       isShowEffect: false,
-      steps: ["Step 1", "Step 2", "Step 3"],
+      steps: ["Step 1", "Step 2", "Step 3", "Step 4", "Step 5", "Step 6"],
       logo: Logo,
       text: "",
       parents: [
@@ -683,11 +604,18 @@ export default {
           this.isShowEffect = true;
           this.text = element;
           console.log(element, this.isShowEffect);
-          setTimeout(() => {
-            this.isShowEffect = undefined;
-            console.log("end", this.isShowEffect);
-          }, 2000);
-        }, i * 5000);
+          // this.isShowEffect = undefined;
+          // console.log("end", this.isShowEffect);
+
+          if (i !== array.length - 1) {
+            setTimeout(() => {
+              console.time();
+              this.isShowEffect = undefined;
+              console.log("end", this.isShowEffect);
+              console.timeEnd();
+            }, 3000);
+          }
+        }, i * 4000);
       }
       // setTimeout(() => {
       //   this.classEffect = "fade-in-bottom";
@@ -1163,5 +1091,67 @@ $mts-form-select-border-radius: 8px;
     rgba(139, 208, 157, 1) 0%,
     rgba(83, 163, 100, 1) 100%
   );
+}
+</style>
+
+<style scoped>
+.fade-in-bottom {
+  -webkit-animation: fade-in-bottom 0.6s cubic-bezier(0.39, 0.575, 0.565, 1)
+    both;
+  animation: fade-in-bottom 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+}
+
+@-webkit-keyframes fade-in-bottom {
+  0% {
+    -webkit-transform: translateY(50px);
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes fade-in-bottom {
+  0% {
+    -webkit-transform: translateY(50px);
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.fade-out-top {
+  -webkit-animation: fade-out-top 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation: fade-out-top 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@-webkit-keyframes fade-out-top {
+  0% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: translateY(-50px);
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+}
+@keyframes fade-out-top {
+  0% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: translateY(-50px);
+    transform: translateY(-50px);
+    opacity: 0;
+  }
 }
 </style>

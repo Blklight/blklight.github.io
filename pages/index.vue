@@ -26,6 +26,13 @@
           badgeIsTag
           category
         />
+        <CardBackground
+          v-else-if="article.cardComponent === 'CardBackground'"
+          :key="article.slug"
+          :article="article"
+          badgeIsTag
+          category
+        />
         <CardCode
           v-else-if="article.cardComponent === 'CardCode'"
           :key="article.slug"

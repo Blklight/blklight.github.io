@@ -7,7 +7,7 @@
         : 'border-dark hover-card-bordered-uv',
     ]"
   >
-    <div class="d-flex align-items-center px-3 py-3">
+    <div class="d-flex align-items-center px-3 pt-3 pb-2">
       <span
         class="badge bg-transparent border ms-0 me-2"
         :class="[
@@ -29,25 +29,31 @@
         />
       </div>
       <div class="flex-grow-1 ms-sm-3">
-        <template v-if="category">
-          <Badge
-            :channel="article.channel"
-            :category="article.category"
-            isCategory
-            class="mt-2"
-          />
-        </template>
-        <h3 class="my-2">
+        <h3 class="mb-1">
           {{ article.title }}
         </h3>
 
-        <p class="d-xl-block d-lg-block d-sm-none mb-1">
-          <template v-if="article.description">
-            {{ article.description }}
-          </template>
+        <p
+          v-if="article.description"
+          class="d-xl-block d-lg-block d-sm-none mb-3"
+        >
+          {{ article.description }}
         </p>
 
-        <p class="font-monospace mb-1">Por {{ article.author.name }}</p>
+        <div class="d-flex align-items-center">
+          <span class="badge bg-dark text-light border border-dark">
+            Por {{ article.author.name }}
+          </span>
+
+          <template v-if="category">
+            <Badge
+              :channel="article.channel"
+              :category="article.category"
+              isCategory
+            />
+          </template>
+        </div>
+
         <template v-if="tags">
           <div class="d-xl-block d-lg-block d-sm-none">
             <span
@@ -61,7 +67,7 @@
         </template>
       </div>
     </div>
-    <div class="d-flex align-items-center px-3 py-3">
+    <div class="d-flex align-items-center px-3 pt-2 pb-3">
       <NuxtLink
         :to="`${article.dir}/${article.slug}`"
         class="btn btn-read-more-sm ms-auto"

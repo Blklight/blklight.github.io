@@ -13,7 +13,7 @@ type: "normal"
 headerLayout: "basic"
 layout: ""
 fontType: "base"
-isPublished: true
+isPublished: false
 author:
   name: "Ultimate Mercer"
   quote: ""

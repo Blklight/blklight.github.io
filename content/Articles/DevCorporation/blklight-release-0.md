@@ -1,7 +1,7 @@
 ---
 title: "Blklight - Release 0.0.0"
 description: "Após muitos testes e idas e vindas, finalmente é tirada do papel e colocada online uma versão do Blklight!"
-imageHeader: "https://i.imgur.com/qLXp16t.jpg"
+imageHeader: "https://i.imgur.com/r93xTZp.jpg"
 cover: ""
 createdDate: "2021-10-31 21:45"
 updatedDate: ""
@@ -20,7 +20,7 @@ isPublished: true
 author:
   name: "Ultimate Mercer"
   quote: "Finalmente sinto que o que eu desenvolvi está relativamente OK, mas agora é seguir aprimorando e evoluindo mais essa ideia!"
-cardComponent: "CardText"
+cardComponent: "CardBackground"
 ---
 
 ## Release 0.0.0

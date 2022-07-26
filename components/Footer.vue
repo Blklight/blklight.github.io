@@ -18,9 +18,9 @@
         />
       </template>
       <div class="d-md-flex justify-content-between">
-        <div class="">
-          <h4 class="mb-3" :class="isDarkTheme ? 'text-light' : 'text-dark'">
-            <strong><em> Redes sociais </em></strong>
+        <div class="" style="flex: 1 1 auto">
+          <h4 class="mb-2" :class="isDarkTheme ? 'text-light' : 'text-dark'">
+            <strong>Redes sociais</strong>
           </h4>
           <div class="mt-2 mb-4">
             <a
@@ -43,9 +43,9 @@
             </a>
           </div>
         </div>
-        <div>
-          <h4 class="mb-3" :class="isDarkTheme ? 'text-light' : 'text-dark'">
-            <strong><em> Sobre </em></strong>
+        <div class="text-md-end" style="flex: 1 1 auto">
+          <h4 class="mb-2" :class="isDarkTheme ? 'text-light' : 'text-dark'">
+            <strong>Sobre </strong>
           </h4>
           <ul class="list-unstyled">
             <li>

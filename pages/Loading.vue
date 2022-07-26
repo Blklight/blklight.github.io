@@ -84,55 +84,12 @@ export default {
   display: block;
 }
 
-.text__update:after {
-  content: " . ";
-  animation: dots-yellow 1s steps(5, end) infinite;
-}
-
 .text__details {
   margin: 8px 0;
   text-align: right;
   font-size: 24px;
   font-weight: 700;
   color: hsl(181, 69%, 61%);
-}
-
-@keyframes dots-yellow {
-  0%,
-  20% {
-    color: hsl(0, 0%, 0%);
-    text-shadow: 0.25em 0 0 hsl(0, 0%, 0%), 0.5em 0 0 hsl(0, 0%, 0%);
-  }
-  40% {
-    color: hsl(47, 89%, 59%);
-    text-shadow: 0.25em 0 0 hsl(0, 0%, 0%), 0.5em 0 0 hsl(0, 0%, 0%);
-  }
-  60% {
-    text-shadow: 0.25em 0 0 hsl(47, 89%, 59%), 0.5em 0 0 hsl(0, 0%, 0%);
-  }
-  80%,
-  100% {
-    text-shadow: 0.25em 0 0 hsl(47, 89%, 59%), 0.5em 0 0 hsl(47, 89%, 59%);
-  }
-}
-
-@keyframes dots-blue {
-  0%,
-  20% {
-    color: hsl(0, 0%, 0%);
-    text-shadow: 0.25em 0 0 hsl(0, 0%, 0%), 0.5em 0 0 hsl(0, 0%, 0%);
-  }
-  40% {
-    color: hsl(181, 69%, 61%);
-    text-shadow: 0.25em 0 0 hsl(0, 0%, 0%), 0.5em 0 0 hsl(0, 0%, 0%);
-  }
-  60% {
-    text-shadow: 0.25em 0 0 hsl(181, 69%, 61%), 0.5em 0 0 hsl(0, 0%, 0%);
-  }
-  80%,
-  100% {
-    text-shadow: 0.25em 0 0 hsl(181, 69%, 61%), 0.5em 0 0 hsl(181, 69%, 61%);
-  }
 }
 
 .update__block span:nth-child(1) {
@@ -401,5 +358,47 @@ export default {
     transform-origin: bottom right;
     opacity: 1;
   }
+}
+
+/* Copy this @keyframes block to your CSS*/
+@keyframes yourAnimation {
+  0.0% {
+    transform-origin: bottom left;
+    transform: scale(0.25) translate(0, 50px);
+    top: 40px;
+  }
+  100% {
+    opacity: 0;
+    transform-origin: bottom left;
+  }
+
+  19.6% {
+    transform-origin: bottom left;
+    transform: scale(1) translate(0, 0px);
+    opacity: 1;
+    top: 8px;
+  }
+  79.6% {
+    transform-origin: bottom left;
+    transform: scale(1) translate(0, 0px);
+    opacity: 1;
+    top: 8px;
+  }
+  89.8% {
+    opacity: 0;
+    transform-origin: bottom left;
+    transform: translate(0, -150px);
+  }
+  9.9% {
+    transform-origin: bottom left;
+    transform: scale(0.5) translate(0, 25px);
+    opacity: 0.66;
+    top: 24px;
+  }
+}
+
+/* Add the animation: property to whichever element you want to animate */
+#elementToAnimate {
+  animation: yourAnimation 4s ease 2s alternate forwards;
 }
 </style>

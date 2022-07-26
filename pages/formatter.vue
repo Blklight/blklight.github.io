@@ -2,25 +2,18 @@
   <section class="loading__block">
     <div class="loading__displays">
       <div class="update__block">
-        <span class="d-block text__update">Compiling your site</span>
-        <span class="d-block text__update">Loading resources</span>
-        <span class="d-block text__update">Gathering basics</span>
-        <span class="d-block text__update">Step 4</span>
-        <span class="d-block text__update">Step 5</span>
-        <span class="d-block text__update">Step 6</span>
+        <span
+          class="text__update"
+          :class="isShowEffect ? 'fade-in-bottom' : 'fade-out-top'"
+          >{{ stepText }}</span
+        >
       </div>
       <div class="detail__block">
-        <span class="text__details"
-          >Delivering your site to <br />
-          187 servers in our edge network</span
+        <span
+          class="text__details"
+          :class="isDetailsEffect ? 'fade-in-bottom' : 'fade-out-top'"
+          >{{ detailsText }}</span
         >
-        <span class="text__details">
-          This loads faster and reduces CO2 emission
-        </span>
-        <span class="text__details"> Step 3 </span>
-        <span class="text__details"> Step 4 </span>
-        <span class="text__details"> Step 5 </span>
-        <span class="text__details"> Step 6 </span>
       </div>
     </div>
     <div class="logo__container">
@@ -36,20 +29,73 @@ export default {
   },
 
   data() {
-    return {};
+    return {
+      steps: [
+        "Gathering basics",
+        "Loading resources",
+        "Compiling your site",
+        "Delivering your site to edge network",
+      ],
+      stepText: "",
+      details: [
+        "Delivering your site to\n 187 servers in our edge network",
+        "This loads faster and reduces\n CO2 emission",
+      ],
+      detailsText: "",
+      isShowEffect: false,
+      isDetailsEffect: false,
+    };
+  },
+
+  mounted() {
+    this.updateLoading(this.steps);
+    this.updateDetails(this.details);
+  },
+
+  methods: {
+    updateLoading(array) {
+      for (let i = 0; i < array.length; i++) {
+        setTimeout(() => {
+          this.isShowEffect = false;
+          const element = array[i];
+          this.isShowEffect = true;
+          this.stepText = element;
+
+          if (i !== array.length - 1) {
+            setTimeout(() => {
+              this.isShowEffect = undefined;
+            }, 3000);
+          }
+        }, i * 5000);
+      }
+    },
+
+    updateDetails(array) {
+      for (let i = 0; i < array.length; i++) {
+        setTimeout(() => {
+          this.isDetailsEffect = false;
+          const element = array[i];
+          this.isDetailsEffect = true;
+          this.detailsText = element;
+          setTimeout(() => {
+            this.isDetailsEffect = undefined;
+          }, 4000);
+        }, i * 6000);
+      }
+    },
   },
 };
 </script>
 <style scoped>
 .logo__container {
-  margin-top: 40px;
+  margin-top: 120px;
   display: flex;
   justify-content: center;
 }
 
 .logo__size {
-  width: 400px;
-  height: 400px;
+  width: 300px;
+  height: 300px;
   margin: 0 auto;
   display: block;
 }
@@ -57,7 +103,7 @@ export default {
 .loading__block {
   display: block;
   position: relative;
-  padding: 16px;
+  padding: 16px 0;
 }
 
 .loading__displays {
@@ -74,6 +120,7 @@ export default {
   display: block;
   position: relative;
   flex: 1 1 auto;
+  text-align: right !important;
 }
 
 .text__update {
@@ -90,11 +137,13 @@ export default {
 }
 
 .text__details {
-  margin: 8px 0;
-  text-align: right;
+  margin-top: 16px !important;
+  text-align: right !important;
   font-size: 24px;
   font-weight: 700;
   color: hsl(181, 69%, 61%);
+  display: block;
+  white-space: pre;
 }
 
 @keyframes dots-yellow {
@@ -133,128 +182,6 @@ export default {
   100% {
     text-shadow: 0.25em 0 0 hsl(181, 69%, 61%), 0.5em 0 0 hsl(181, 69%, 61%);
   }
-}
-
-.update__block span:nth-child(1) {
-  position: absolute;
-  animation-name: slide-update;
-  animation-fill-mode: forwards;
-  animation-duration: 8s;
-  animation-timing-function: ease;
-}
-
-.update__block span:nth-child(2) {
-  position: absolute;
-  opacity: 0;
-  animation-name: slide-update;
-  animation-fill-mode: forwards;
-  animation-duration: 8s;
-  animation-delay: 2s;
-  animation-timing-function: ease;
-}
-
-.update__block span:nth-child(3) {
-  opacity: 0;
-  position: absolute;
-  animation-name: slide-update;
-  animation-fill-mode: forwards;
-  animation-duration: 8s;
-  animation-delay: 4s;
-  animation-timing-function: ease;
-}
-
-.update__block span:nth-child(4) {
-  opacity: 0;
-  position: absolute;
-  animation-name: slide-update;
-  animation-fill-mode: forwards;
-  animation-duration: 8s;
-  animation-delay: 6s;
-  animation-timing-function: ease;
-}
-
-.update__block span:nth-child(5) {
-  opacity: 0;
-  position: absolute;
-  animation-name: slide-update;
-  animation-fill-mode: forwards;
-  animation-duration: 8s;
-  animation-delay: 8s;
-  animation-timing-function: ease;
-}
-
-.update__block span:nth-child(6) {
-  opacity: 0;
-  position: absolute;
-  animation-name: last-slide-update;
-  animation-fill-mode: forwards;
-  animation-duration: 8s;
-  animation-delay: 10s;
-  animation-timing-function: ease;
-}
-
-.detail__block span:nth-child(1) {
-  position: absolute;
-  right: 4px;
-  animation-name: slide-detail;
-  animation-fill-mode: forwards;
-  animation-duration: 8s;
-  animation-timing-function: ease;
-}
-
-.detail__block span:nth-child(2) {
-  position: absolute;
-  right: 4px;
-  opacity: 0;
-  animation-name: slide-detail;
-  animation-fill-mode: forwards;
-  animation-duration: 8s;
-  animation-delay: 2s;
-  animation-timing-function: ease;
-}
-
-.detail__block span:nth-child(3) {
-  position: absolute;
-  right: 4px;
-  opacity: 0;
-  animation-name: slide-detail;
-  animation-fill-mode: forwards;
-  animation-duration: 8s;
-  animation-delay: 4s;
-  animation-timing-function: ease;
-}
-
-.detail__block span:nth-child(4) {
-  position: absolute;
-  right: 4px;
-  opacity: 0;
-  animation-name: slide-detail;
-  animation-fill-mode: forwards;
-  animation-duration: 8s;
-  animation-delay: 6s;
-  animation-timing-function: ease;
-}
-
-.detail__block span:nth-child(5) {
-  position: absolute;
-  right: 4px;
-  opacity: 0;
-  animation-name: slide-detail;
-  animation-fill-mode: forwards;
-  animation-duration: 8s;
-  animation-delay: 8s;
-  animation-timing-function: ease;
-}
-
-.detail__block span:nth-child(6) {
-  position: absolute;
-  right: 4px;
-  opacity: 0;
-  animation-name: slide-detail;
-  animation-fill-mode: forwards;
-  animation-duration: 8s;
-  animation-delay: 10s;
-  animation-timing-function: ease;
 }
 
 @keyframes slide-update {
@@ -400,6 +327,68 @@ export default {
     -webkit-transform-origin: bottom right;
     transform-origin: bottom right;
     opacity: 1;
+  }
+}
+</style>
+
+<style scoped>
+.fade-in-bottom {
+  -webkit-animation: fade-in-bottom 0.6s cubic-bezier(0.39, 0.575, 0.565, 1)
+    both;
+  animation: fade-in-bottom 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+}
+
+@-webkit-keyframes fade-in-bottom {
+  0% {
+    -webkit-transform: translateY(50px);
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes fade-in-bottom {
+  0% {
+    -webkit-transform: translateY(50px);
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.fade-out-top {
+  -webkit-animation: fade-out-top 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation: fade-out-top 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@-webkit-keyframes fade-out-top {
+  0% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: translateY(-50px);
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+}
+@keyframes fade-out-top {
+  0% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: translateY(-50px);
+    transform: translateY(-50px);
+    opacity: 0;
   }
 }
 </style> -->

@@ -13,7 +13,7 @@ type: "stories"
 headerLayout: "fullpage"
 layout: "two-column"
 fontType: "monospace"
-isPublished: true
+isPublished: false
 author:
   name: "Ultimate Mercer"
   quote: ""

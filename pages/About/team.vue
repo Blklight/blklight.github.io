@@ -25,10 +25,7 @@
       <article
         v-for="(member, i) in members"
         :key="i"
-        class="card card-raised background-texture mb-4"
-        :class="[
-          isDarkTheme ? 'card-plain hover-card-yellow' : 'hover-card-uv',
-        ]"
+        class="card card-raised card-flat background-texture mb-4"
       >
         <div class="d-sm-flex align-items-center p-4">
           <div class="flex-shrink-0">
@@ -47,7 +44,7 @@
                   : 'text-dark cyber-underline-dark'
               "
             >
-              <em>{{ member.nickname }}</em>
+              {{ member.nickname }}
             </h3>
 
             <div class="seize-font">
@@ -71,22 +68,22 @@
   </LayoutContent>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 
 export default {
   async asyncData({ $content, params }) {
-    const members = await $content('about/members', params.slug)
-      .sortBy('name', 'asc')
-      .fetch()
+    const members = await $content("about/members", params.slug)
+      .sortBy("name", "asc")
+      .fetch();
     return {
       members,
-    }
+    };
   },
 
   computed: {
-    ...mapGetters(['isDarkTheme']),
+    ...mapGetters(["isDarkTheme"]),
   },
-}
+};
 </script>
 <style lang="scss" scoped>
 .seize-font {

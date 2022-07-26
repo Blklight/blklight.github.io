@@ -26,7 +26,7 @@
         class="container font-monospace"
         :class="isDarkTheme ? 'text-light' : 'text-dark'"
       >
-        <div class="p-3 mb-3 background-texture">
+        <!-- <div class="p-3 mb-3 background-texture">
           <h2
             :class="
               isDarkTheme ? 'cyber-underline-light' : 'cyber-underline-dark'
@@ -35,7 +35,7 @@
             Quando surgiu?
           </h2>
           <p>Verão de 2019, num dia em que 3 amigos foram doar sangue.</p>
-        </div>
+        </div> -->
         <div class="p-3 mb-3 background-texture">
           <h2
             :class="

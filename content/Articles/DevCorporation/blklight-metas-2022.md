@@ -1,7 +1,7 @@
 ---
 title: "Metas e ideias para o Blklight em 2022"
 description: ""
-imageHeader: "https://i.imgur.com/ngzO1zj.jpg"
+imageHeader: "https://i.imgur.com/qLXp16t.jpg"
 cover: ""
 createdDate: "2022-02-10 19:45"
 updatedDate: ""
@@ -39,4 +39,4 @@ Agora é fazer acontecer.
 
 **Um abraço, Ultimate Mercer!**
 
-_Obs: Peço desculpas caso o texto possa parecer confuso, ainda preciso melhorar minhas _skills_ de escrita_
+_Obs: Peço desculpas caso o texto possa parecer confuso, ainda preciso melhorar minhas skills de escrita_
