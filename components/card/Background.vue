@@ -1,6 +1,6 @@
 <template>
   <div
-    class="card card-flat card-background border view-anchor mb-4"
+    class="card card-background border view-anchor mb-4"
     :class="[
       isDarkTheme
         ? 'hover-card-bordered-neon-yellow border-light'
@@ -44,7 +44,8 @@
       <div class="d-flex justify-content-between mt-auto">
         <nuxt-link
           :to="`${article.dir}/${article.slug}`"
-          class="btn btn-uv btn-read-more-sm ms-auto"
+          class="btn btn-read-more-sm ms-auto"
+          :class="isDarkTheme ? 'btn-neon-yellow' : 'btn-uv'"
         >
           Ler mais...
         </nuxt-link>

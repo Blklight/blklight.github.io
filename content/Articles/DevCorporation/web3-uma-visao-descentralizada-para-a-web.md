@@ -14,7 +14,7 @@ type: "normal"
 headerLayout: "landscape"
 layout: ""
 fontType: "base"
-isPublished: false
+isPublished: true
 author:
   name: "Ultimate Mercer"
   quote: ""

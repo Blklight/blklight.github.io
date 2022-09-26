@@ -1,5 +1,9 @@
 <template>
   <LayoutContent>
+    <div class="bg-polen mt-5 p-5">
+      <h4>Message:</h4>
+      <p>{{ receivedText }}</p>
+    </div>
     <div class="m-5 p-5">
       <div class="test-svg-div">
         <p class="text-light">Hover</p>
@@ -38,11 +42,37 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
+// import { BroadcastChannel } from "broadcast-channel";
 
 export default {
   name: "Playground",
+  data() {
+    return {
+      receivedText: "",
+      broadcastChannel: {},
+    };
+  },
   computed: {
     ...mapGetters(["isDarkTheme"]),
+  },
+  created() {},
+  mounted() {
+    // const broadcastChannel = new BroadcastChannel("TestBroadcast");
+    // console.log(broadcastChannel);
+    // broadcastChannel.onmessage = (messageEvent) => {
+    //   if (messageEvent.data === "testBroadcast") {
+    //     console.log(messageEvent);
+    //     this.receivedText = localStorage.getItem("broadcast");
+    //   }
+    //   debugger;
+    // };
+    const broadcast = new BroadcastChannel("channel");
+    broadcast.onmessage = (msg) => console.dir(msg.data);
+  },
+
+  updated() {
+    const broadcast = new BroadcastChannel("channel");
+    broadcast.onmessage = (msg) => console.dir(msg.data);
   },
 };
 </script>

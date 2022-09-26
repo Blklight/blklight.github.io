@@ -1,6 +1,6 @@
 <template>
   <article
-    class="card card-flat border mb-4"
+    class="card border mb-4"
     :class="[
       isDarkTheme
         ? 'card-plain border-light hover-card-bordered-neon-yellow'
@@ -9,11 +9,8 @@
   >
     <div class="d-flex align-items-center px-3 pt-3 pb-2">
       <span
-        class="badge bg-transparent border ms-0 me-2"
-        :class="[
-          isDarkTheme ? ' border-neon-yellow' : ' border-uv text-dark',
-          badgeIsTag ? 'badge-tag' : '',
-        ]"
+        class="badge bg-dark border border-dark ms-0 me-2"
+        :class="[badgeIsTag ? 'badge-tag' : '']"
       >
         <DateFormat :date="article.createdDate" />
       </span>
@@ -28,7 +25,7 @@
           :class="isDarkTheme ? 'border-light' : 'border-dark'"
         />
       </div>
-      <div class="flex-grow-1 ms-sm-3">
+      <div class="flex-grow-1 ms-sm-3 mt-sm-0 mt-2">
         <h3 class="mb-1">
           {{ article.title }}
         </h3>

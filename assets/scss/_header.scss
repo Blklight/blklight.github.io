@@ -108,16 +108,16 @@
   cursor: default;
   overflow: hidden;
   margin-bottom: 2rem;
-  border-bottom-left-radius: 2rem;
-  border-bottom-right-radius: 2rem;
-  @include shadow-big-navbar();
+  // border-bottom-left-radius: 2rem;
+  // border-bottom-right-radius: 2rem;
+  // @include shadow-big-navbar();
 
   &-img {
     width: 100%;
     // background-size: cover;
     // background-repeat: no-repeat;
     // background-position: center;
-    height: calc(100vh - 100px);
+    height: 87.5vh;
     object-fit: cover;
   }
 }

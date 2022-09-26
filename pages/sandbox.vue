@@ -1,8 +1,17 @@
 <template>
   <main>
-    <h1 :class="isShowEffect ? 'fade-in-bottom' : 'fade-out-top'">
+    <div>
+      <button class="btn btn-primary" @click.prevent="sendValue">
+        Send message
+      </button>
+    </div>
+    <TestComponent
+      :validateSelect="validateSelect"
+      :class="validateSelect ? 'text-danger' : 'text-primary'"
+    />
+    <!-- <h1 :class="isShowEffect ? 'fade-in-bottom' : 'fade-out-top'">
       {{ text }}
-    </h1>
+    </h1> -->
 
     <!-- <div class="container py-5">
       <div class="test-cat-btn">
@@ -367,8 +376,9 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-
+// import { BroadcastChannel } from "broadcast-channel";
 import Logo from "@/assets/images/ultimate-logo-red.svg";
+import TestComponent from "~/components/TestComponent.vue";
 export default {
   async asyncData({ $content, params }) {
     const articles = await $content("Articles", { deep: true }, params.slug)
@@ -582,19 +592,36 @@ export default {
       },
       activeTags: [],
       test: "",
+      validateSelect: false,
     };
   },
   computed: {
     ...mapGetters(["isDarkTheme"]),
   },
+  created() {},
   mounted() {
     this.activeParent = {
       ...this.defaultParent,
     };
     this.showChildrenByParent(this.activeParent);
-    this.updateLoading(this.steps);
+    // this.updateLoading(this.steps);
   },
   methods: {
+    sendValue() {
+      this.validateSelect = !this.validateSelect;
+    },
+
+    sendMessage() {
+      const broadcast = new BroadcastChannel("channel");
+      broadcast.postMessage("Testing broadcast channel");
+      // broadcastChannel.onmessage = (messageEvent) => {
+      //   if (messageEvent) {
+      //     debugger;
+      //     console.log(messageEvent);
+      //   }
+      // };
+      // debugger;
+    },
     updateLoading(array) {
       for (let i = 0; i < array.length; i++) {
         setTimeout(() => {
@@ -606,7 +633,6 @@ export default {
           console.log(element, this.isShowEffect);
           // this.isShowEffect = undefined;
           // console.log("end", this.isShowEffect);
-
           if (i !== array.length - 1) {
             setTimeout(() => {
               console.time();
@@ -622,7 +648,6 @@ export default {
       //   this.text = text;
       // });
     },
-
     toggleParent(parent) {
       const isActive = this.activeParent.id === parent.id; // true or false
       if (isActive) {
@@ -719,6 +744,7 @@ export default {
       });
     },
   },
+  components: { TestComponent },
 };
 </script>
 <style lang="scss" scoped>
