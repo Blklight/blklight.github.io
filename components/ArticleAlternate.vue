@@ -1,72 +1,95 @@
 <template>
-  <section class="alter-article mb-5">
-    <div class="hover-header">
-      <div
-        v-lazy:background-image="
-          article.imageHeader ? article.imageHeader : article.cover
-        "
-        class="alter-article-header hover-header"
-        :class="[colorFilterRandom]"
-      ></div>
-    </div>
+  <div class="">
+    <section class="alter-article">
+      <div class="hover-header">
+        <div
+          v-lazy:background-image="
+            article.imageHeader ? article.imageHeader : article.cover
+          "
+          class="alter-article-header hover-header"
+          :class="[colorFilterRandom]"
+        ></div>
+      </div>
 
-    <!-- <HeaderBasicOverflow :article="article" /> -->
+      <!-- <HeaderBasicOverflow :article="article" /> -->
 
-    <div class="alter-article-block">
-      <div
-        class="alter-article-container"
-        :class="isDarkTheme ? 'bg-dark' : 'bg-light'"
-      >
-        <div class="alter-article-container-title">
-          <h1 class="article-title">{{ article.title }}</h1>
-          <h5 class="article-meta mb-1">
-            <DateFormat :date="headerData.date" full />
-          </h5>
-        </div>
-        <div class="alter-article-content">
-          <div class="alter-article-content-text">
-            <nuxt-content
-              :document="article"
-              :class="[
-                article.type === 'stories' ? 'mono-font' : '',
-                isDarkTheme ? 'dark-theme' : '',
-              ]"
-            />
+      <div class="alter-article-block">
+        <div
+          class="alter-article-container"
+          :class="isDarkTheme ? 'bg-dark' : 'bg-light'"
+        >
+          <div class="alter-article-container-title">
+            <h1 class="article-title">{{ article.title }}</h1>
+            <h5 class="article-meta mb-1">
+              <DateFormat :date="headerData.date" fulltime />
+            </h5>
           </div>
-          <div class="alter-article-content-info">
-            <template v-if="article.tags">
-              <div class="nuxt-content">
-                <h5>Tags:</h5>
+          <div class="alter-article-content">
+            <div class="alter-article-content-text">
+              <nuxt-content
+                :document="article"
+                :class="[
+                  article.type === 'stories' ? 'mono-font' : '',
+                  isDarkTheme ? 'dark-theme' : '',
+                ]"
+              />
+            </div>
+            <div class="alter-article-content-info">
+              <div class="nuxt-content mb-3">
+                <span class="mb-2" style="font-size: 18px; font-weight: 500"
+                  >Canal:</span
+                >
                 <div class="d-flex flex-wrap">
-                  <span
-                    v-for="tag in article.tags"
-                    :key="tag"
-                    class="badge bg-secondary text-dark"
-                  >
-                    {{ tag }}
-                  </span>
-                  <span
-                    v-for="tag in article.tags"
-                    :key="tag"
-                    class="badge bg-secondary text-dark"
-                  >
-                    {{ tag }}
-                  </span>
-                  <span
-                    v-for="tag in article.tags"
-                    :key="tag"
-                    class="badge bg-secondary text-dark"
-                  >
-                    {{ tag }}
+                  <span class="badge bg-secondary text-dark">
+                    {{ article.channel }}
                   </span>
                 </div>
               </div>
-            </template>
+              <div class="nuxt-content mb-3">
+                <span class="mb-2" style="font-size: 18px; font-weight: 500"
+                  >Categoria:</span
+                >
+                <div class="d-flex flex-wrap">
+                  <span class="badge bg-secondary text-dark">
+                    {{ article.category }}
+                  </span>
+                </div>
+              </div>
+              <template v-if="article.tags">
+                <div class="nuxt-content">
+                  <h5>Tags:</h5>
+                  <div class="d-flex flex-wrap">
+                    <span
+                      v-for="tag in article.tags"
+                      :key="tag"
+                      class="badge bg-secondary text-dark"
+                    >
+                      {{ tag }}
+                    </span>
+                    <span
+                      v-for="tag in article.tags"
+                      :key="tag"
+                      class="badge bg-secondary text-dark"
+                    >
+                      {{ tag }}
+                    </span>
+                    <span
+                      v-for="tag in article.tags"
+                      :key="tag"
+                      class="badge bg-secondary text-dark"
+                    >
+                      {{ tag }}
+                    </span>
+                  </div>
+                </div>
+              </template>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+    <Author :author="authorInfo" />
+  </div>
 </template>
 <script>
 import { mapGetters } from "vuex";

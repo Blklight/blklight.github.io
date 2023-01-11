@@ -1,10 +1,5 @@
 <template>
-  <section
-    class="info-article"
-    :class="
-      isDarkTheme ? 'info-article-light-border' : 'info-article-dark-border'
-    "
-  >
+  <section class="info-article">
     <template v-if="headerLayout === 'profile'">
       <HeaderProfile :article="article" twoColumn />
     </template>

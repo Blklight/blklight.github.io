@@ -25,7 +25,7 @@
       <article
         v-for="(member, i) in members"
         :key="i"
-        class="card card-raised card-flat background-texture mb-4"
+        class="card card-flat background-texture mb-4"
       >
         <div class="d-sm-flex align-items-center p-4">
           <div class="flex-shrink-0">
@@ -37,21 +37,21 @@
           </div>
           <div class="flex-grow-1 ms-sm-3">
             <h3
-              class="mb-3"
+              class="mb-3 border-bottom"
               :class="
                 isDarkTheme
-                  ? 'text-light cyber-underline-light'
-                  : 'text-dark cyber-underline-dark'
+                  ? 'text-light border-light'
+                  : 'text-dark border-dark'
               "
             >
               {{ member.nickname }}
             </h3>
 
-            <div class="seize-font">
-              <p class="d-xl-block d-lg-block d-sm-none font-monospace mb-2">
+            <!-- <div class="seize-font">
+              <p class="d-xl-block d-lg-block d-sm-none mb-2">
                 {{ member.description }}
               </p>
-            </div>
+            </div> -->
 
             <span
               v-for="(role, j) in member.role"
@@ -88,7 +88,7 @@ export default {
 <style lang="scss" scoped>
 .seize-font {
   p {
-    font-size: 18px;
+    font-size: 20px;
   }
 
   @media screen and (max-width: 768px) {

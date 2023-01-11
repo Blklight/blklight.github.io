@@ -1,13 +1,18 @@
 <template>
   <div
-    class="container-fluid mb-4"
-    :class="isDarkTheme ? 'bg-neon-yellow text-dark' : 'bg-uv text-light'"
+    class="container-fluid background-texture mb-4"
+    :class="isDarkTheme ? 'text-light' : 'text-dark'"
   >
     <div class="container">
-      <div class="py-2">
-        <!-- <h4 class="text-center"><em>Escrito por</em></h4> -->
+      <div class="py-5">
+        <h3
+          class="mb-3"
+          :class="isDarkTheme ? 'bg-light text-dark' : 'bg-dark text-light'"
+        >
+          <span class="marker-line py-2 px-3">Escrito por:</span>
+        </h3>
 
-        <div class="d-md-flex align-middle">
+        <div class="d-flex align-items-center">
           <img
             v-lazy="author.cover"
             :alt="author.username"
@@ -16,16 +21,26 @@
           <div
             class="py-2 px-5 mx-md-3 d-flex flex-column justify-content-center"
           >
-            <h3>
-              <span class="py-1 px-2 bg-dark text-light">
+            <h2 class="mb-3">
+              <span
+                class="py-1 px-2"
+                :class="
+                  isDarkTheme ? 'bg-light text-dark' : 'bg-dark text-light'
+                "
+              >
                 <span class="marker-line">{{ author.username }}</span>
               </span>
-            </h3>
-            <h5 v-if="author.quote" class="mb-3">
-              <span class="bg-dark text-light p-1">
+            </h2>
+            <h4 v-if="author.quote" class="fw-normal mb-3">
+              <span
+                class="p-1"
+                :class="
+                  isDarkTheme ? 'bg-light text-dark' : 'bg-dark text-light'
+                "
+              >
                 <span class="marker-line">"{{ author.quote }}"</span>
               </span>
-            </h5>
+            </h4>
             <!-- <h5><em> Sobre o autor:</em></h5>
             <p>
               {{ author.bio }}

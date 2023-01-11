@@ -1,6 +1,9 @@
 <template>
   <span>
-    <template v-if="full">
+    <template v-if="fulltime">
+      {{ formatFullTime(date) }}
+    </template>
+    <template v-else-if="full">
       {{ formatDateFull(date) }}
     </template>
     <template v-else>
@@ -21,6 +24,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    fulltime: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     formatDate(date) {
@@ -33,15 +40,21 @@ export default {
     },
 
     formatDateFull(date) {
-      const formattedDate = format(
+      const formattedDate = format(new Date(date), "dd 'de' MMMM 'de' yyyy'", {
+        locale: ptBR,
+      });
+      return formattedDate;
+    },
+
+    formatFullTime(date) {
+      const fulltime = format(
         new Date(date),
         "dd 'de' MMMM 'de' yyyy', às' H:mm",
         {
           locale: ptBR,
         }
       );
-
-      return formattedDate;
+      return fulltime;
     },
   },
 };

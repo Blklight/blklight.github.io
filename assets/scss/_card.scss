@@ -77,6 +77,9 @@
 }
 
 .card-title {
+  font-family: "Barlow", "Exo 2", sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.01em;
   margin-bottom: $card-title-spacer-y;
   &.-material {
     margin-top: 1.75rem;

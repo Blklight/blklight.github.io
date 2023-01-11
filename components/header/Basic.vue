@@ -1,5 +1,36 @@
 <template>
   <header class="header-basic">
+    <div class="header-basic-content">
+      <!-- <div class="d-flex mb-1">
+        <Badge :channel="article.channel" isTag class="me-1" />
+        <Badge
+          :channel="article.channel"
+          :category="article.category"
+          isTag
+          isCategory
+        />
+      </div> -->
+      <h5 class="article-meta">
+        <span
+          class="p-1"
+          :class="isDarkTheme ? 'text-dark bg-light' : 'text-light bg-dark'"
+        >
+          <span class="marker-line">
+            <DateFormat :date="article.date" full />
+          </span>
+        </span>
+      </h5>
+      <h1 class="article-title">
+        <span
+          class="py-1"
+          :class="isDarkTheme ? 'text-dark bg-light' : 'text-light bg-dark'"
+        >
+          <span class="marker-line">
+            {{ article.title }}
+          </span>
+        </span>
+      </h1>
+    </div>
     <div class="header-basic-container">
       <picture class="">
         <div class="hover-header">
@@ -12,33 +43,6 @@
           />
         </div>
       </picture>
-    </div>
-
-    <div class="header-basic-content">
-      <div class="d-flex mb-1">
-        <Badge :channel="article.channel" isTag class="me-1" />
-        <Badge
-          :channel="article.channel"
-          :category="article.category"
-          isTag
-          isCategory
-        />
-      </div>
-
-      <h1 class="article-title">
-        <span class="text-light bg-dark py-1">
-          <span class="marker-line">
-            {{ article.title }}
-          </span>
-        </span>
-      </h1>
-      <h5 class="article-meta">
-        <span class="text-light bg-dark p-1">
-          <span class="marker-line">
-            <DateFormat :date="article.date" full />
-          </span>
-        </span>
-      </h5>
     </div>
   </header>
 </template>

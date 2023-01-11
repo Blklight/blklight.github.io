@@ -11,9 +11,9 @@ tags:
 featured: false
 type: "normal"
 headerLayout: "parallax"
-layout: ""
+layout: "alternate"
 fontType: "base"
-isPublished: false
+isPublished: true
 author:
   name: "Ultimate Mercer"
   quote: ""

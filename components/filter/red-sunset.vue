@@ -7,7 +7,7 @@
     height="120%"
     filterUnits="objectBoundingBox"
     primitiveUnits="userSpaceOnUse"
-    color-interpolation-filters="sRGB"
+    color-interpolation-filters="linearRGB"
   >
     <feColorMatrix
       type="matrix"

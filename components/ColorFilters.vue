@@ -9,6 +9,8 @@
     <FilterCyberpunk-v />
     <FilterCyberpunk-vi />
     <FilterCyberpunk-vii />
+    <FilterCyberpunk-viii />
+    <FilterCyberpunk-ix />
     <FilterPink-Blue />
     <FilterPink-Cyan />
     <FilterPurple-Red-Green />

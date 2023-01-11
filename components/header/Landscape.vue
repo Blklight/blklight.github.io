@@ -16,15 +16,6 @@
     <div class="header-overlay">
       <div class="h-100 d-flex flex-column justify-content-end">
         <div class="px-3">
-          <h5>
-            <span class="badge bg-dark border border-light">Websites</span>
-            <span class="badge bg-dark border border-light">Posters</span>
-          </h5>
-          <h1 class="article-title">
-            <span class="text-light bg-dark p-1">
-              <span class="marker-line"> {{ article.title }} </span>
-            </span>
-          </h1>
           <h5 class="article-meta">
             <span class="text-light bg-dark p-1">
               <span class="marker-line">
@@ -32,6 +23,11 @@
               </span>
             </span>
           </h5>
+          <h1 class="article-title mb-4">
+            <span class="text-light bg-dark p-1">
+              <span class="marker-line"> {{ article.title }} </span>
+            </span>
+          </h1>
         </div>
       </div>
     </div>

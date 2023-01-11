@@ -5,17 +5,17 @@ imageHeader: "https://i.imgur.com/3RTvMMl.jpg"
 cover: ""
 createdDate: "2022-02-10 19:45"
 updatedDate: ""
-channel: "Dev Corporation"
+channel: "Blklight Gaming"
 category: "Team Blklight"
 tags:
   - "Ideia"
   - "Projetos"
 featured: false
 type: "normal"
-headerLayout: "parallax"
+headerLayout: "portrait-left-full"
 layout: ""
 fontType: "mono"
-isPublished: false
+isPublished: true
 author:
   name: "Ultimate Mercer"
   quote: "Finalmente sinto que o que eu desenvolvi está relativamente OK, mas agora é seguir aprimorando e evoluindo mais essa ideia!"

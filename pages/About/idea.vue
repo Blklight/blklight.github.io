@@ -17,13 +17,11 @@
           class="mx-auto d-block mt-3 mb-3"
         />
       </template>
-      <h3 class="font-monospace text-center text-uppercase mb-5">
-        Blklight Idea
-      </h3>
+      <h3 class="text-center text-uppercase mb-5">Blklight Idea</h3>
     </div>
     <section class="py-4">
       <article
-        class="container font-monospace"
+        class="container"
         :class="isDarkTheme ? 'text-light' : 'text-dark'"
       >
         <!-- <div class="p-3 mb-3 background-texture">
@@ -38,13 +36,12 @@
         </div> -->
         <div class="p-3 mb-3 background-texture">
           <h2
-            :class="
-              isDarkTheme ? 'cyber-underline-light' : 'cyber-underline-dark'
-            "
+            class="border-bottom"
+            :class="isDarkTheme ? 'border-light' : 'border-dark'"
           >
             Objetivo
           </h2>
-          <p>
+          <p style="font-size: 20px">
             Atualmente nosso objetivo é poder desenvolver esta ideia junto do
             nosso circulo de amigos, e inicialmente através da disponibilização
             de artigos, desenvolver habilidades, trabalhar a criatividade e quem

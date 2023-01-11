@@ -272,9 +272,9 @@
   }
 }
 
-@each $color, $value in $theme-colors {
-  @include shadow-pop-bl($color, $value);
-}
+// @each $color, $value in $theme-colors {
+//   @include shadow-pop-bl($color, $value);
+// }
 
 // @each $color, $value in $theme-colors {
 //   .btn-outline-v2-#{$color} {

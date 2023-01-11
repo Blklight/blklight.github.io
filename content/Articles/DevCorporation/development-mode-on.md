@@ -10,10 +10,10 @@ category: "LPJ"
 tags: ""
 featured: true
 type: "stories"
-headerLayout: "fullpage"
-layout: "two-column"
+headerLayout: "basic"
+layout: ""
 fontType: "monospace"
-isPublished: false
+isPublished: true
 author:
   name: "Ultimate Mercer"
   quote: ""
@@ -111,7 +111,7 @@ Abra o PowerShell e execute este comando para definir o WSL 2 como a versão pad
 wsl --set-default-version 2
 ```
 
-#### _Etapa 6 - Instalar a distribuição do Linux de sua escolha_
+###### _Etapa 6 - Instalar a distribuição do Linux de sua escolha_
 
 1. Abra a [Microsoft Store](https://aka.ms/wslstore) e escolha sua distribuição do Linux favorita.
    Os links a seguir abrirão a página da Microsoft Store para cada distribuição:
@@ -135,7 +135,7 @@ Na primeira vez que você iniciar uma distribuição do Linux recém-instalada, 
 
 Em seguida, você precisará [criar uma conta de usuário e uma senha para sua nova distribuição do Linux.](https://docs.microsoft.com/pt-br/windows/wsl/user-support)
 
-#### _**Definir a versão de distribuição para WSL 1 ou WSL 2**_
+###### _**Definir a versão de distribuição para WSL 1 ou WSL 2**_
 
 Verifique a versão do WSL atribuída a cada uma das distribuições do Linux instaladas abrindo a linha de comando do PowerShell e inserindo o comando (disponível somente no [Windows Build 18362 ou superior](ms-settings:windowsupdate)): `wsl -l -v`
 

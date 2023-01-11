@@ -7,6 +7,13 @@
     />
     <div class="info-article-overlay">
       <div class="h-100 d-flex flex-column justify-content-end">
+        <h5 class="article-meta">
+          <span class="text-light bg-dark py-1">
+            <span class="marker-line">
+              <DateFormat :date="article.date" fulltime />
+            </span>
+          </span>
+        </h5>
         <h1 class="article-title">
           <span class="text-light bg-dark p-1">
             <span class="marker-line">
@@ -14,13 +21,6 @@
             </span>
           </span>
         </h1>
-        <h5 class="article-meta">
-          <span class="text-light bg-dark py-1">
-            <span class="marker-line">
-              <DateFormat :date="article.date" full />
-            </span>
-          </span>
-        </h5>
       </div>
     </div>
   </div>

@@ -3,7 +3,38 @@
 @import "../../node_modules/bootstrap/scss/variables";
 @import "mixins";
 // @import "../../node_modules/bootstrap/scss/utilities";
+
 @import "utilities";
+
+$new-colors: map-merge-multiple($uvs, $polens, $crimsons, $neon-yellows);
+
+$utilities: map-merge(
+  $utilities,
+  (
+    "color":
+      map-merge(
+        map-get($utilities, "color"),
+        (
+          values:
+            map-merge(
+              map-get(map-get($utilities, "color"), "values"),
+              ($new-colors)
+            ),
+        )
+      ),
+    "background-color":
+      map-merge(
+        map-get($utilities, "background-color"),
+        (
+          values:
+            map-merge(
+              map-get(map-get($utilities, "background-color"), "values"),
+              ($new-colors)
+            ),
+        )
+      ),
+  )
+);
 
 @import "../../node_modules/bootstrap/scss/root";
 @import "shadows";

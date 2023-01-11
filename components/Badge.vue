@@ -3,7 +3,7 @@
     <span
       v-if="channel === 'Dev Corporation'"
       class="badge bg-dark text-info border border-info ms-0"
-      :class="isTag ? 'badge-tag' : ''"
+      :class="[isTag ? 'badge-tag' : '', isFlat ? 'rounded-0' : '']"
     >
       <template v-if="!isCategory">{{ channel }}</template>
       <template v-else>{{ category }}</template>
@@ -11,7 +11,7 @@
     <span
       v-if="channel === 'Danger Zone'"
       class="badge bg-neon-yellow text-dark border border-dark ms-0"
-      :class="isTag ? 'badge-tag' : ''"
+      :class="[isTag ? 'badge-tag' : '', isFlat ? 'rounded-0' : '']"
     >
       <template v-if="!isCategory">{{ channel }}</template>
       <template v-else>{{ category }}</template>
@@ -19,7 +19,7 @@
     <span
       v-if="channel === 'arts'"
       class="badge badge-indigo ms-0"
-      :class="isTag ? 'badge-tag' : ''"
+      :class="[isTag ? 'badge-tag' : '', isFlat ? 'rounded-0' : '']"
     >
       <template v-if="!isCategory">{{ channel }}</template>
       <template v-else>{{ category }}</template>
@@ -27,7 +27,7 @@
     <span
       v-if="channel === 'Redlight'"
       class="badge bg-pink text-light border border-dark ms-0"
-      :class="isTag ? 'badge-tag' : ''"
+      :class="[isTag ? 'badge-tag' : '', isFlat ? 'rounded-0' : '']"
     >
       <template v-if="!isCategory">{{ channel }}</template>
       <template v-else>{{ category }}</template>
@@ -35,7 +35,7 @@
     <span
       v-if="channel === 'Blklight Gaming'"
       class="badge bg-dark text-orange border border-orange ms-0"
-      :class="isTag ? 'badge-tag' : ''"
+      :class="[isTag ? 'badge-tag' : '', isFlat ? 'rounded-0' : '']"
     >
       <template v-if="!isCategory">{{ channel }}</template>
       <template v-else>{{ category }}</template>
@@ -43,7 +43,7 @@
     <span
       v-if="channel === 'Team Blklight'"
       class="badge bg-info text-dark border border-dark ms-0"
-      :class="isTag ? 'badge-tag' : ''"
+      :class="[isTag ? 'badge-tag' : '', isFlat ? 'rounded-0' : '']"
     >
       <template v-if="!isCategory">{{ channel }}</template>
       <template v-else>{{ category }}</template>
@@ -73,6 +73,11 @@ export default {
     },
 
     isTag: {
+      type: Boolean,
+      default: false,
+    },
+
+    isFlat: {
       type: Boolean,
       default: false,
     },

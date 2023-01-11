@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="flex-sidebar"
-    :class="isDarkTheme ? 'border-end border-light' : 'border-end border-dark'"
-  >
+  <div class="flex-sidebar border-end border-secondary">
     <nav>
       <div class="flex-sidebar-container">
         <div class="flex-sidebar-content">
@@ -28,26 +25,33 @@
           </div>
           <div class="d-block">
             <div class="flex-sidebar-items">
-              <NuxtLink
-                to="/search"
-                class="btn btn-flat mx-auto d-block"
-                :class="isDarkTheme ? 'btn-outline-light' : 'btn-outline-dark'"
-              >
-                <font-awesome-icon :icon="['fas', 'search']" />
-              </NuxtLink>
+              <!-- <div class="text-center">
+                <NuxtLink
+                  to="/search"
+                  class="btn rounded-2"
+                  :class="
+                    isDarkTheme ? 'btn-outline-light' : 'btn-outline-dark'
+                  "
+                >
+                  <font-awesome-icon :icon="['fas', 'search']" />
+                </NuxtLink>
+              </div> -->
             </div>
-            <div class="flex-sidebar-items"></div>
           </div>
           <div class="d-block">
             <div class="flex-sidebar-items">
-              <a
-                href="#"
-                class="btn btn-flat mx-auto d-block"
-                :class="isDarkTheme ? 'btn-outline-light' : 'btn-outline-dark'"
-                @click.prevent="darkTheme"
-              >
-                <font-awesome-icon :icon="['fas', 'adjust']" />
-              </a>
+              <div class="text-center">
+                <a
+                  href="#"
+                  class="btn rounded-2"
+                  :class="
+                    isDarkTheme ? 'btn-outline-light' : 'btn-outline-dark'
+                  "
+                  @click.prevent="darkTheme"
+                >
+                  <font-awesome-icon :icon="['fas', 'adjust']" />
+                </a>
+              </div>
             </div>
           </div>
         </div>

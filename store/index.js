@@ -1,11 +1,11 @@
 export const state = () => ({
-  isDark: loadState("darkTheme") || false,
+  isDark: loadState("darkMode") || false,
 });
 
 export const mutations = {
   darkTheme(state) {
     state.isDark = !state.isDark;
-    localStorage.setItem("darkTheme", JSON.stringify(state.isDark));
+    localStorage.setItem("darkMode", JSON.stringify(state.isDark));
   },
 };
 

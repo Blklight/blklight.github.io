@@ -14,7 +14,7 @@
       >
         <DateFormat :date="article.createdDate" />
       </span>
-      <Badge :channel="article.channel" :isTag="badgeIsTag" />
+      <Badge :channel="article.channel" :isTag="badgeIsTag" isFlat />
     </div>
     <div class="d-sm-flex align-items-center px-3">
       <div class="flex-shrink-0">
@@ -22,7 +22,6 @@
           v-lazy="article.cover ? article.cover : article.imageHeader"
           :alt="article.title"
           class="card-image-h card-img-border hover-filter-blue-red-golden"
-          :class="isDarkTheme ? 'border-light' : 'border-dark'"
         />
       </div>
       <div class="flex-grow-1 ms-sm-3 mt-sm-0 mt-2">
@@ -64,6 +63,7 @@
         </template>
       </div>
     </div>
+
     <div class="d-flex align-items-center px-3 pt-2 pb-3">
       <NuxtLink
         :to="`${article.dir}/${article.slug}`"

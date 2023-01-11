@@ -1,6 +1,6 @@
 <template>
   <filter
-    id="cyberpunk-vii"
+    id="dunastone"
     x="-10%"
     y="-10%"
     width="120%"
@@ -19,9 +19,9 @@
       result="colormatrix"
     />
     <feComponentTransfer in="colormatrix" result="componentTransfer">
-      <feFuncR type="table" tableValues="0 0.28 0.01 1" />
-      <feFuncG type="table" tableValues="0 0.04 0.66 1" />
-      <feFuncB type="table" tableValues="0 1 0.96 1" />
+      <feFuncR type="table" tableValues="0 1 1 0.98 0 1" />
+      <feFuncG type="table" tableValues="0.34 0 0.43 0.75 1 1" />
+      <feFuncB type="table" tableValues="0.78 0.64 0 0.18 0.88 1" />
       <feFuncA type="table" tableValues="0 1" />
     </feComponentTransfer>
     <feBlend

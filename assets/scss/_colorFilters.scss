@@ -147,6 +147,11 @@
         transition: 1s filter linear;
         filter: url("#cyberpunk-vii");
       }
+
+      &-cyberpunk-ix {
+        transition: 1s filter linear;
+        filter: url("#cyberpunk-ix");
+      }
     }
   }
 }
@@ -216,6 +221,10 @@
     &-cyberpunk-vii {
       transition: 1s filter linear;
       filter: url("#cyberpunk-vii");
+    }
+    &-cyberpunk-viii {
+      transition: 1s filter linear;
+      filter: url("#cyberpunk-viii");
     }
   }
   &:hover {
@@ -351,5 +360,15 @@
   &-cyberpunk-vii {
     transition: 1s filter linear;
     filter: url("#cyberpunk-vii");
+  }
+
+  &-cyberpunk-viii {
+    transition: 1s filter linear;
+    filter: url("#cyberpunk-viii");
+  }
+
+  &-cyberpunk-ix {
+    transition: 1s filter linear;
+    filter: url("#cyberpunk-ix");
   }
 }

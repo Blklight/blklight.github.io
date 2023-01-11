@@ -1,9 +1,9 @@
 ---
-title: "Metas e ideias para o Blklight em 2022"
+title: "Metas e ideias para o Blklight em 2023"
 description: ""
 imageHeader: "https://i.imgur.com/qLXp16t.jpg"
 cover: ""
-createdDate: "2022-02-10 19:45"
+createdDate: "2022-10-14 19:45"
 updatedDate: ""
 channel: "Dev Corporation"
 category: "Team Blklight"
@@ -22,7 +22,7 @@ author:
 cardComponent: "CardHorizontal"
 ---
 
-## Metas e ideias para 2022
+## Metas e ideias para 2023
 
 Nos últimos meses venho pensando em algumas ideias com o objetivo de começar a desenvolver conteúdo para o Blklight, além de aproveitar este projeto para seguir aprimorando minhas _skills_.
 

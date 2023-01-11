@@ -3,14 +3,7 @@
     <section class="two-column-article">
       <ArticleTCHeader :article="headerData" />
 
-      <article
-        class="content-article"
-        :class="
-          isDarkTheme
-            ? 'content-article-light-border'
-            : 'content-article-dark-border'
-        "
-      >
+      <article class="content-article">
         <template v-if="article.type === 'stories'">
           <div
             class="nuxt-content"

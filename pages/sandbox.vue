@@ -1,6 +1,80 @@
 <template>
   <main>
-    <div>
+    <div class="container-fluid">
+      <img
+        src="https://i.imgur.com/B1CVohQ.jpg"
+        class="img-fluid my-3 filter-cyberpunk-v"
+        alt=""
+      />
+      <img
+        src="https://i.imgur.com/B1CVohQ.jpg"
+        class="img-fluid my-3 filter-cyberpunk-vi"
+        alt=""
+      />
+      <img
+        src="https://i.imgur.com/B1CVohQ.jpg"
+        class="img-fluid my-3 filter-cyberpunk-vii"
+        alt=""
+      />
+      <img
+        src="https://i.imgur.com/B1CVohQ.jpg"
+        class="img-fluid my-3 filter-cyberpunk-viii"
+        alt=""
+      />
+      <img
+        src="https://i.imgur.com/B1CVohQ.jpg"
+        class="img-fluid my-3 filter-cyberpunk-ix"
+        alt=""
+      />
+      <img
+        src="https://i.imgur.com/B1CVohQ.jpg"
+        class="img-fluid my-3 filter-blue-red-golden"
+        alt=""
+      />
+      <img
+        src="https://i.imgur.com/B1CVohQ.jpg"
+        class="img-fluid my-3 filter-blue-red"
+        alt=""
+      />
+      <img
+        src="https://i.imgur.com/B1CVohQ.jpg"
+        class="img-fluid my-3 filter-red-sunset"
+        alt=""
+      />
+      <img
+        src="https://i.imgur.com/B1CVohQ.jpg"
+        class="img-fluid my-3 filter-pink-blue"
+        alt=""
+      />
+      <img
+        src="https://i.imgur.com/B1CVohQ.jpg"
+        class="img-fluid my-3 filter-pink-cyan"
+        alt=""
+      />
+      <img
+        src="https://i.imgur.com/B1CVohQ.jpg"
+        class="img-fluid my-3 filter-soft-blue-pink"
+        alt=""
+      />
+      <img
+        src="https://i.imgur.com/B1CVohQ.jpg"
+        class="img-fluid my-3 filter-purple-red-orange"
+        alt=""
+      />
+    </div>
+    <!-- <div class="">
+      <div class="d-block w-100 h-50 bg-neon-yellow-100 p-5 my-1"></div>
+      <div class="d-block w-100 h-50 bg-neon-yellow-200 p-5 my-1"></div>
+      <div class="d-block w-100 h-50 bg-neon-yellow-300 p-5 my-1"></div>
+      <div class="d-block w-100 h-50 bg-neon-yellow-400 p-5 my-1"></div>
+      <div class="d-block w-100 h-50 bg-neon-yellow-500 p-5 my-1"></div>
+      <div class="d-block w-100 h-50 bg-neon-yellow-600 p-5 my-1"></div>
+      <div class="d-block w-100 h-50 bg-neon-yellow-700 p-5 my-1"></div>
+      <div class="d-block w-100 h-50 bg-neon-yellow-800 p-5 my-1"></div>
+      <div class="d-block w-100 h-50 bg-neon-yellow-900 p-5 my-1"></div>
+    </div> -->
+
+    <!-- <div>
       <button class="btn btn-primary" @click.prevent="sendValue">
         Send message
       </button>
@@ -8,7 +82,7 @@
     <TestComponent
       :validateSelect="validateSelect"
       :class="validateSelect ? 'text-danger' : 'text-primary'"
-    />
+    /> -->
     <!-- <h1 :class="isShowEffect ? 'fade-in-bottom' : 'fade-out-top'">
       {{ text }}
     </h1> -->
@@ -378,7 +452,7 @@
 import { mapGetters } from "vuex";
 // import { BroadcastChannel } from "broadcast-channel";
 import Logo from "@/assets/images/ultimate-logo-red.svg";
-import TestComponent from "~/components/TestComponent.vue";
+// import TestComponent from "~/components/TestComponent.vue";
 export default {
   async asyncData({ $content, params }) {
     const articles = await $content("Articles", { deep: true }, params.slug)
@@ -744,7 +818,7 @@ export default {
       });
     },
   },
-  components: { TestComponent },
+  // components: { TestComponent },
 };
 </script>
 <style lang="scss" scoped>
@@ -886,6 +960,30 @@ $mts-form-select-bg: #ffffff;
 $mts-form-select-border: 1px solid #ffffff;
 $mts-form-select-border-radius: 8px;
 
+.bg {
+  $color: #ffff00;
+
+  &-regular {
+    background-color: $color;
+  }
+
+  &-lighten {
+    background-color: lighten($color, 7.5%);
+  }
+
+  &-lightest {
+    background-color: lighten($color, 12.5%);
+  }
+
+  &-darken {
+    background-color: darken($color, 7.5%);
+  }
+
+  &-darkesst {
+    background-color: darken($color, 12.5%);
+  }
+}
+
 .mts-form-select {
   display: block;
   width: 100%;
@@ -987,197 +1085,5 @@ $mts-form-select-border-radius: 8px;
     rgba(241, 102, 34, 1) 54%,
     rgba(232, 72, 86, 1) 100%
   ); */
-}
-</style>
-<style>
-.test-cat-btn {
-  width: 64px;
-  height: 64px;
-  background-color: #480bff;
-  color: #eaeaea;
-  vertical-align: middle;
-  padding: 12px 12px;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-}
-.bohr {
-  background: rgb(244, 204, 58);
-  background: linear-gradient(
-    180deg,
-    rgba(244, 204, 58, 1) 0%,
-    rgba(242, 100, 25, 1) 50%,
-    rgba(232, 72, 85, 1) 100%
-  );
-}
-
-.basics {
-  background: rgb(227, 233, 236);
-  background: linear-gradient(
-    180deg,
-    rgba(227, 233, 236, 1) 0%,
-    rgba(194, 206, 213, 1) 100%
-  );
-}
-
-.api {
-  background: rgb(245, 126, 142);
-  background: linear-gradient(
-    180deg,
-    rgba(245, 126, 142, 1) 0%,
-    rgba(232, 72, 85, 1) 100%
-  );
-}
-
-.authentication {
-  background: rgb(213, 139, 240);
-  background: linear-gradient(
-    180deg,
-    rgba(213, 139, 240, 1) 0%,
-    rgba(170, 83, 221, 1) 100%
-  );
-}
-
-.backend {
-  background: rgb(102, 149, 171);
-  background: linear-gradient(
-    180deg,
-    rgba(102, 149, 171, 1) 0%,
-    rgba(54, 92, 115, 1) 100%
-  );
-}
-
-.cms {
-  background: rgb(219, 157, 64);
-  background: linear-gradient(
-    180deg,
-    rgba(219, 157, 64, 1) 0%,
-    rgba(181, 100, 30, 1) 100%
-  );
-}
-
-.crypto {
-  background: rgb(250, 232, 108);
-  background: linear-gradient(
-    180deg,
-    rgba(250, 232, 108, 1) 0%,
-    rgba(244, 204, 58, 1) 100%
-  );
-}
-
-.databases {
-  background: rgb(251, 215, 89);
-  background: linear-gradient(
-    180deg,
-    rgba(251, 215, 89, 1) 0%,
-    rgba(246, 174, 45, 1) 100%
-  );
-}
-
-.frontend {
-  background: rgb(142, 240, 242);
-  background: linear-gradient(
-    180deg,
-    rgba(142, 240, 242, 1) 0%,
-    rgba(85, 221, 224, 1) 100%
-  );
-}
-
-.games {
-  background: rgb(253, 183, 239);
-  background: linear-gradient(
-    180deg,
-    rgba(253, 183, 239, 1) 0%,
-    rgba(249, 128, 218, 1) 100%
-  );
-}
-
-.payment {
-  background: rgb(139, 240, 165);
-  background: linear-gradient(
-    180deg,
-    rgba(139, 240, 165, 1) 0%,
-    rgba(83, 221, 108, 1) 100%
-  );
-}
-
-.social {
-  background: rgb(139, 178, 240);
-  background: linear-gradient(
-    180deg,
-    rgba(139, 178, 240, 1) 0%,
-    rgba(83, 122, 221, 1) 100%
-  );
-}
-
-.startups {
-  background: rgb(139, 208, 157);
-  background: linear-gradient(
-    180deg,
-    rgba(139, 208, 157, 1) 0%,
-    rgba(83, 163, 100, 1) 100%
-  );
-}
-</style>
-
-<style scoped>
-.fade-in-bottom {
-  -webkit-animation: fade-in-bottom 0.6s cubic-bezier(0.39, 0.575, 0.565, 1)
-    both;
-  animation: fade-in-bottom 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) both;
-}
-
-@-webkit-keyframes fade-in-bottom {
-  0% {
-    -webkit-transform: translateY(50px);
-    transform: translateY(50px);
-    opacity: 0;
-  }
-  100% {
-    -webkit-transform: translateY(0);
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-@keyframes fade-in-bottom {
-  0% {
-    -webkit-transform: translateY(50px);
-    transform: translateY(50px);
-    opacity: 0;
-  }
-  100% {
-    -webkit-transform: translateY(0);
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-.fade-out-top {
-  -webkit-animation: fade-out-top 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-  animation: fade-out-top 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-}
-
-@-webkit-keyframes fade-out-top {
-  0% {
-    -webkit-transform: translateY(0);
-    transform: translateY(0);
-    opacity: 1;
-  }
-  100% {
-    -webkit-transform: translateY(-50px);
-    transform: translateY(-50px);
-    opacity: 0;
-  }
-}
-@keyframes fade-out-top {
-  0% {
-    -webkit-transform: translateY(0);
-    transform: translateY(0);
-    opacity: 1;
-  }
-  100% {
-    -webkit-transform: translateY(-50px);
-    transform: translateY(-50px);
-    opacity: 0;
-  }
 }
 </style>

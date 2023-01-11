@@ -1,13 +1,13 @@
 <template>
   <filter
-    id="cyberpunk-vii"
+    id="neon-lights"
     x="-10%"
     y="-10%"
     width="120%"
     height="120%"
     filterUnits="objectBoundingBox"
     primitiveUnits="userSpaceOnUse"
-    color-interpolation-filters="linearRGB"
+    color-interpolation-filters="sRGB"
   >
     <feColorMatrix
       type="matrix"
@@ -19,9 +19,9 @@
       result="colormatrix"
     />
     <feComponentTransfer in="colormatrix" result="componentTransfer">
-      <feFuncR type="table" tableValues="0 0.28 0.01 1" />
-      <feFuncG type="table" tableValues="0 0.04 0.66 1" />
-      <feFuncB type="table" tableValues="0 1 0.96 1" />
+      <feFuncR type="table" tableValues="0 1 0 1" />
+      <feFuncG type="table" tableValues="0.34 0 1 1" />
+      <feFuncB type="table" tableValues="0.78 0.64 0.88 1" />
       <feFuncA type="table" tableValues="0 1" />
     </feComponentTransfer>
     <feBlend

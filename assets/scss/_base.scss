@@ -22,13 +22,13 @@ body {
   color: $gray-900;
   background-color: $light;
   // background-color: $gray-plus;
-  font-weight: 350;
+  font-weight: 400;
   font-size: 16px;
   line-height: 1.5;
   margin: 0;
   padding: 0;
   position: relative;
-  font-family: "Inter", "Overpass", "Lexend", sans-serif;
+  font-family: "Barlow", "Inter", "Overpass", "Lexend", sans-serif;
   // font-weight: 300;
   min-height: 100vh;
 }
@@ -44,11 +44,12 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Lexend", "Exo 2", "Overpass", consolas, sans-serif;
+  font-family: "Barlow", "Lexend", "Exo 2", "Overpass", consolas, sans-serif;
   font-weight: 700;
   margin-top: 0;
   margin-bottom: 0.5rem;
   line-height: 1.5;
+  letter-spacing: 0.03em;
 }
 
 .main-layout {

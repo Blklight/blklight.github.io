@@ -1,68 +1,70 @@
 <template>
-  <section class="main-article mb-5">
-    <ArticleHeader :article="headerData" />
-    <article class="mb-5">
-      <template v-if="article.type === 'stories'">
-        <div
-          class="nuxt-content"
-          :class="article.type === 'stories' ? 'mono-font' : ''"
-        >
-          <p class="mb-2">{{ article.abstract }}</p>
-          <hr
-            v-if="article.toc.length < 2"
-            :class="isDarkTheme ? 'bg-light' : 'bg-dark'"
-          />
-        </div>
-      </template>
-      <template v-if="article.type === 'stories' && article.toc.length >= 2">
-        <div
-          class="nuxt-content"
-          :class="article.type === 'stories' ? 'mono-font' : ''"
-        >
-          <nav
-            class="border py-3 px-md-4 px-3 my-4 rounded"
-            :class="isDarkTheme ? 'border-light' : 'border-dark'"
+  <div>
+    <section class="main-article">
+      <ArticleHeader :article="headerData" />
+      <article class="">
+        <template v-if="article.type === 'stories'">
+          <div
+            class="nuxt-content"
+            :class="article.type === 'stories' ? 'mono-font' : ''"
           >
-            <h4 class="mb-1">
-              <strong><em>Índice</em></strong>
-            </h4>
-            <hr class="mt-2" :class="isDarkTheme ? 'bg-dark' : 'bg-light'" />
-
-            <ul>
-              <li v-for="link of article.toc" :key="link.id" class="mb-2">
-                <NuxtLink :to="`#${link.id}`">
-                  {{ link.text }}
-                </NuxtLink>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </template>
-      <nuxt-content
-        :document="article"
-        :class="[
-          article.type === 'stories' ? 'mono-font' : '',
-          isDarkTheme ? 'dark-theme' : '',
-        ]"
-      />
-
-      <template v-if="article.tags">
-        <div class="nuxt-content">
-          <h5>Tags:</h5>
-          <div class="d-flex">
-            <span
-              v-for="tag in article.tags"
-              :key="tag"
-              class="badge bg-secondary text-dark"
-            >
-              {{ tag }}
-            </span>
+            <p class="mb-2">{{ article.abstract }}</p>
+            <hr
+              v-if="article.toc.length < 2"
+              :class="isDarkTheme ? 'bg-light' : 'bg-dark'"
+            />
           </div>
-        </div>
-      </template>
-      <Author :author="authorInfo" />
-    </article>
-  </section>
+        </template>
+        <template v-if="article.type === 'stories' && article.toc.length >= 2">
+          <div
+            class="nuxt-content"
+            :class="article.type === 'stories' ? 'mono-font' : ''"
+          >
+            <nav
+              class="border py-3 px-md-4 px-3 my-4 rounded"
+              :class="isDarkTheme ? 'border-light' : 'border-dark'"
+            >
+              <h4 class="mb-1">
+                <strong><em>Índice</em></strong>
+              </h4>
+              <hr class="mt-2" :class="isDarkTheme ? 'bg-light' : 'bg-dark'" />
+
+              <ul>
+                <li v-for="link of article.toc" :key="link.id" class="mb-2">
+                  <NuxtLink :to="`#${link.id}`">
+                    {{ link.text }}
+                  </NuxtLink>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </template>
+        <nuxt-content
+          :document="article"
+          :class="[
+            article.type === 'stories' ? 'mono-font' : '',
+            isDarkTheme ? 'dark-theme' : '',
+          ]"
+        />
+
+        <template v-if="article.tags">
+          <div class="nuxt-content">
+            <h5>Tags:</h5>
+            <div class="d-flex">
+              <span
+                v-for="tag in article.tags"
+                :key="tag"
+                class="badge bg-secondary text-dark"
+              >
+                {{ tag }}
+              </span>
+            </div>
+          </div>
+        </template>
+      </article>
+    </section>
+    <Author :author="authorInfo" />
+  </div>
 </template>
 <script>
 import { mapGetters } from "vuex";

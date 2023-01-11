@@ -190,11 +190,11 @@
 
   &-container {
     margin: 0 auto 1.25rem;
-    max-width: 80%;
+    max-width: 1080px;
     display: block;
     &-image {
       width: 100%;
-      height: 500px;
+      height: 650px;
       object-fit: cover;
       // border-radius: 0.5rem;
       // @include shadow-big-navbar();
@@ -202,7 +202,7 @@
   }
 
   &-content {
-    max-width: 740px;
+    max-width: 1080px;
     height: auto;
     margin: 1rem auto 1rem;
     display: block;
@@ -212,7 +212,7 @@
 @media screen and (max-width: 992px) {
   .header-basic {
     &-content {
-      max-width: 600px;
+      max-width: 900px;
     }
   }
 }
@@ -226,7 +226,7 @@
     }
     &-image {
       width: 100%;
-      height: 450px;
+      height: 500px;
       object-fit: cover;
       // border-bottom-right-radius: 0.5rem;
       // border-bottom-left-radius: 0.5rem;
