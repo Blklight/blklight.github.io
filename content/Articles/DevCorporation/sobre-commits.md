@@ -10,8 +10,9 @@ category: "code"
 tags:
 featured: false
 type: "normal"
-headerLayout: "basic"
+headerLayout: "double-parallax"
 layout: ""
+filter: "filter-cyberpunk-ix"
 fontType: "base"
 isPublished: true
 author:

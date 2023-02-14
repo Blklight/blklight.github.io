@@ -1,6 +1,6 @@
 <template>
   <main>
-    <div class="container-fluid">
+    <!-- <div class="container-fluid">
       <img
         src="https://i.imgur.com/B1CVohQ.jpg"
         class="img-fluid my-3 filter-cyberpunk-v"
@@ -61,18 +61,18 @@
         class="img-fluid my-3 filter-purple-red-orange"
         alt=""
       />
-    </div>
-    <!-- <div class="">
-      <div class="d-block w-100 h-50 bg-neon-yellow-100 p-5 my-1"></div>
-      <div class="d-block w-100 h-50 bg-neon-yellow-200 p-5 my-1"></div>
-      <div class="d-block w-100 h-50 bg-neon-yellow-300 p-5 my-1"></div>
-      <div class="d-block w-100 h-50 bg-neon-yellow-400 p-5 my-1"></div>
-      <div class="d-block w-100 h-50 bg-neon-yellow-500 p-5 my-1"></div>
-      <div class="d-block w-100 h-50 bg-neon-yellow-600 p-5 my-1"></div>
-      <div class="d-block w-100 h-50 bg-neon-yellow-700 p-5 my-1"></div>
-      <div class="d-block w-100 h-50 bg-neon-yellow-800 p-5 my-1"></div>
-      <div class="d-block w-100 h-50 bg-neon-yellow-900 p-5 my-1"></div>
     </div> -->
+    <div class="">
+      <div class="d-block w-100 h-50 bg-light-100 p-5 my-1"></div>
+      <div class="d-block w-100 h-50 bg-light-200 p-5 my-1"></div>
+      <div class="d-block w-100 h-50 bg-light-300 p-5 my-1"></div>
+      <div class="d-block w-100 h-50 bg-light-400 p-5 my-1"></div>
+      <div class="d-block w-100 h-50 bg-light-500 p-5 my-1"></div>
+      <div class="d-block w-100 h-50 bg-light-600 p-5 my-1"></div>
+      <div class="d-block w-100 h-50 bg-light-700 p-5 my-1"></div>
+      <div class="d-block w-100 h-50 bg-light-800 p-5 my-1"></div>
+      <div class="d-block w-100 h-50 bg-light-900 p-5 my-1"></div>
+    </div>
 
     <!-- <div>
       <button class="btn btn-primary" @click.prevent="sendValue">

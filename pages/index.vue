@@ -34,12 +34,10 @@
 
         <div class="subcontent-grid">
           <div class="lasts">
-            <CardBackground
+            <CardText
               v-for="article in articles"
               :key="article.slug"
               :article="article"
-              badgeIsTag
-              category
             />
           </div>
           <div class="reviews">

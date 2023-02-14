@@ -13,6 +13,7 @@ type: "normal"
 headerLayout: "parallax"
 layout: "alternate"
 fontType: "base"
+filter: "filter-cyberpunk-ix"
 isPublished: true
 author:
   name: "Ultimate Mercer"

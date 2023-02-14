@@ -101,6 +101,7 @@ export default {
         cover: this.article.cover,
         imageHeader: this.article.imageHeader,
         headerLayout: this.article.headerLayout,
+        filter: this.article.filter,
       };
     },
     authorInfo() {

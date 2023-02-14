@@ -13,6 +13,7 @@ type: "stories"
 headerLayout: "basic"
 layout: ""
 fontType: "monospace"
+filter: "filter-cyberpunk-ix"
 isPublished: true
 author:
   name: "Ultimate Mercer"

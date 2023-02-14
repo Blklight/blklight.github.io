@@ -39,21 +39,23 @@ export default {
     ...mapGetters(["isDarkTheme"]),
 
     colorFilterRandom() {
-      const filters = [
-        "black-green",
-        "black-white",
-        "blue-red",
-        "cyberpunk-v",
-        "cyberpunk-vi",
-        "cyberpunk-vii",
-        "pink-blue",
-        "purple-red-orange",
-        "red-sunset",
-        "soft-blue-pink",
-        "blue-red-golden",
-      ];
-      const num = Math.floor(Math.random() * filters.length);
-      const filter = `hover-filter-${filters[num]}`;
+      // const filters = [
+      //   "black-green",
+      //   "black-white",
+      //   "blue-red",
+      //   "cyberpunk-v",
+      //   "cyberpunk-vi",
+      //   "cyberpunk-vii",
+      //   "pink-blue",
+      //   "purple-red-orange",
+      //   "red-sunset",
+      //   "soft-blue-pink",
+      //   "blue-red-golden",
+      // ];
+      // const num = Math.floor(Math.random() * filters.length);
+      // const filter = `hover-filter-${filters[num]}`;
+      console.log(`hover-${this.article.filter}`);
+      const filter = `hover-${this.article.filter}`;
       return filter;
     },
   },

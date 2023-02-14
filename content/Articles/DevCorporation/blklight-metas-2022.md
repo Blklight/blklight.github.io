@@ -16,6 +16,7 @@ headerLayout: "fullpage"
 layout: "two-column"
 fontType: "mono"
 isPublished: true
+filter: "filter-cyberpunk-ix"
 author:
   name: "Ultimate Mercer"
   quote: "Finalmente sinto que o que eu desenvolvi está relativamente OK, mas agora é seguir aprimorando e evoluindo mais essa ideia!"

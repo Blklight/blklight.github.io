@@ -14,6 +14,7 @@ featured: false
 type: "normal"
 headerLayout: "fullpage"
 layout: "two-column"
+filter: "filter-cyberpunk-ix"
 fontType: "mono"
 isPublished: true
 author:

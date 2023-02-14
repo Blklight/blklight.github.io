@@ -6,7 +6,14 @@
 
 @import "utilities";
 
-$new-colors: map-merge-multiple($uvs, $polens, $crimsons, $neon-yellows);
+$new-colors: map-merge-multiple(
+  $uvs,
+  $polens,
+  $crimsons,
+  $neon-yellows,
+  $darks,
+  $lights
+);
 
 $utilities: map-merge(
   $utilities,

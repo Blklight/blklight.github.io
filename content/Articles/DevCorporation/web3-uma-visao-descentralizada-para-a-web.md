@@ -14,6 +14,7 @@ type: "normal"
 headerLayout: "landscape"
 layout: ""
 fontType: "base"
+filter: "filter-cyberpunk-ix"
 isPublished: true
 author:
   name: "Ultimate Mercer"

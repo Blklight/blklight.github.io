@@ -16,6 +16,7 @@ type: "normal"
 headerLayout: "fullpage"
 layout: "two-column"
 fontType: "mono"
+filter: "filter-cyberpunk-ix"
 isPublished: true
 author:
   name: "Ultimate Mercer"
