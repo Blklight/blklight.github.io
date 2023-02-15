@@ -34,14 +34,13 @@ const SimpleLayout = ({ frontmatter, authordetails, next, prev, children }) => {
         url={`${siteMetadata.siteUrl}/articles/${slug}`}
         canonicalUrl={`${siteMetadata.siteUrl}/articles/${slug}`}
         authorDetails={authordetails}
-        cover={frontmatter.cover ? frontmatter.cover : frontmatter.imageHeader}
         images={images}
         {...frontmatter}
       />
       <section className="main-article py-4">
         <ScrollTopAndComment />
-        <header className="article-grid text-center">
-          <h5 className="md:text-2xl text-xl font-medium tracking-wide">
+        <header className="article-grid">
+          <h5 className="md:text-2xl text-xl font-semibold tracking-wide">
             <DateFormat date={date} fulltimestamp />
           </h5>
           <h1 className="md:text-5xl text-3xl font-extrabold tracking-wide mb-4">
@@ -55,8 +54,8 @@ const SimpleLayout = ({ frontmatter, authordetails, next, prev, children }) => {
         </article>
         {frontmatter.gallery && frontmatter.gallery.length > 0 && (
           <div className="article-grid">
-            <h3 className="mb-4 bg-dark-500 text-3xl font-bold text-light-500 dark:bg-light-500 dark:text-dark-500">
-              <span className="marker-line !py-2 !px-3">Galeria:</span>
+            <h3 className="mb-4 rounded-md bg-dark-500 text-3xl font-bold text-light-500 dark:bg-light-500 dark:text-dark-500">
+              <span className="marker-line  !py-2 !px-3">Galeria:</span>
             </h3>
             <ScrollArea className="h-full w-full p-4">
               <div className="table min-w-full">
@@ -82,7 +81,7 @@ const SimpleLayout = ({ frontmatter, authordetails, next, prev, children }) => {
           </div>
         )}
         <div className="article-grid mb-8">
-          <h3 className="mb-4 bg-dark-500 text-3xl font-bold text-light-500 dark:bg-light-500 dark:text-dark-500">
+          <h3 className="mb-4 rounded-md bg-dark-500 text-3xl font-bold text-light-500 dark:bg-light-500 dark:text-dark-500">
             <span className="marker-line !py-2 !px-3">Escrito por:</span>
           </h3>
           {authordetails.map((author, index) => (
@@ -101,7 +100,7 @@ const SimpleLayout = ({ frontmatter, authordetails, next, prev, children }) => {
               {prev.frontmatter && (
                 <div className="mb-6">
                   <h4 className="mb-4 text-2xl font-bold tracking-wide">
-                    <span className="marker-line bg-dark-500 !p-2 text-light-500 dark:bg-light-500 dark:text-dark-500">
+                    <span className="marker-line rounded-md bg-dark-500 !p-2 text-light-500 dark:bg-light-500 dark:text-dark-500">
                       Artigo anterior
                     </span>
                   </h4>
@@ -114,7 +113,7 @@ const SimpleLayout = ({ frontmatter, authordetails, next, prev, children }) => {
               {next.frontmatter && (
                 <div className="mb-6">
                   <h4 className="mb-4 text-2xl font-bold tracking-wide md:text-right">
-                    <span className="marker-line bg-dark-500 !p-2 text-light-500 dark:bg-light-500 dark:text-dark-500">
+                    <span className="marker-line rounded-md bg-dark-500 !p-2 text-light-500 dark:bg-light-500 dark:text-dark-500">
                       Próximo artigo
                     </span>
                   </h4>

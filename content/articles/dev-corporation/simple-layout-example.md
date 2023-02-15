@@ -1,8 +1,8 @@
 ---
 title: "Simple Layout Example"
 description: ""
-imageHeader: ""
-cover: ""
+imageHeader: "https://i.imgur.com/AOOqa0N.jpg"
+cover: "https://i.imgur.com/AOOqa0N.jpg"
 date: "2023-01-30 11:00"
 modifiedDate: ""
 channel: "Pessoal"

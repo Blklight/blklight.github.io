@@ -22,7 +22,6 @@ export async function getStaticProps({ params }) {
 
 const Article = ({ doc, authordetails, prev, next }) => {
   const { mdxSource, toc, frontmatter } = doc;
-  console.log("slug:", frontmatter.layout);
   return (
     <>
       {frontmatter.draft !== true ? (

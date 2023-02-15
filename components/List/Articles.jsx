@@ -58,7 +58,7 @@ const ListArticles = ({
           </h1>
         )}
 
-        <h2 className="mb-3 border-b border-dark dark:border-light font-bold text-4xl">
+        <h2 className="mb-3 border-b border-dark-500 dark:border-light-500 font-bold text-4xl">
           {" "}
           <span className="marker-line">Destaques</span>{" "}
         </h2>

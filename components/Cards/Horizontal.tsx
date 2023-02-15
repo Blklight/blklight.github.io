@@ -27,29 +27,17 @@ const CardHorizontal = ({ document, authors }: any) => {
           <div className="shrink-0">
             <img
               src={image}
-              className={` ${document.filter} lg:w-[250px] w-full lg:h-[250px] h-[300px] object-cover rounded-lg`}
+              className={` ${document.filter} lg:w-[275px] w-full lg:h-[275px] h-[300px] object-cover rounded-lg`}
               alt={`${document.title} image`}
             />
           </div>
           <div className="grow md:py-1 py-2 md:px-6">
-            <div className="flex flex-wrap items-center mb-1">
+            <div className="flex flex-wrap items-center">
               <span className="dark:text-light-500 text-lg font-medium text-dark-500">
                 <DateFormat date={document.date} fulldate />
               </span>
             </div>
-            <div className="flex flex-wrap items-center">
-              <div className="flex items-center leading-normal !text-base mr-2 mb-1">
-                <span className="marker-line !py-1 bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 capitalize font-medium">
-                  {document.channel}
-                </span>
-              </div>
 
-              <div className="flex items-center leading-normal !text-base mb-1 ">
-                <span className="marker-line !py-1 bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 capitalize font-medium">
-                  {document.category}
-                </span>
-              </div>
-            </div>
             <h3 className="card-title text-3xl">
               <Link className="" href={`/articles/${document.slug}`}>
                 <span className=" dark:text-light-500 text-dark-500 hover:underline underline-offset-1">
@@ -63,13 +51,25 @@ const CardHorizontal = ({ document, authors }: any) => {
                 {document.description}
               </p>
             )}
+            <div className="flex flex-wrap items-center my-2">
+              <div className="flex items-center leading-normal !text-base mr-2">
+                <span className="marker-line rounded-md !py-1 bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 capitalize font-medium">
+                  {document.channel}
+                </span>
+              </div>
 
+              <div className="flex items-center leading-normal !text-base">
+                <span className="marker-line rounded-md !py-1 bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 capitalize font-medium">
+                  {document.category}
+                </span>
+              </div>
+            </div>
             {document.tags && (
               <div className="flex gap-2 items-center mb-2">
                 {document.tags.map((tag: any) => (
                   <span
                     key={tag}
-                    className="py-1 px-2 bg-slate-400 text-dark tracking-wide font-medium rounded"
+                    className="py-1 px-2 bg-gray-300 text-dark tracking-wide font-medium rounded-md"
                   >
                     {tag}
                   </span>
@@ -99,7 +99,7 @@ const CardHorizontal = ({ document, authors }: any) => {
 
               <div className="flex flex-1 items-center">
                 <Link className="ml-auto" href={`/articles/${document.slug}`}>
-                  <button className="tracking-wider text-light-500 dark:text-dark-500 bg-uv-500 dark:bg-neon-yellow-500 hover:ring-2 ring-uv-300 dark:ring-neon-yellow-200 py-1 px-3 rounded font-medium transition-all !text-base">
+                  <button className="tracking-wider text-light-500 dark:text-dark-500 bg-uv-500 dark:bg-neon-yellow-500 hover:ring-2 ring-uv-300 dark:ring-neon-yellow-200 py-1.5 px-3 rounded-md font-medium transition-all !text-base">
                     Ler mais...
                   </button>
                 </Link>

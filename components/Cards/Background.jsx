@@ -24,10 +24,10 @@ const CardBackground = ({ document, authors, isFeatured = false }) => {
 
   useEffect(() => setMounted(true), []);
   return (
-    <div className="card card-background hover:hover-card !rounded-2xl hover:hover-card-uv hover:dark:hover-card-neon-yellow view-anchor">
+    <div className="card card-background hover:hover-card !rounded-xl hover:hover-card-uv hover:dark:hover-card-neon-yellow view-anchor">
       <img
         src={image}
-        className={`!rounded-2xl ${document.filter} ${
+        className={`!rounded-xl ${document.filter} ${
           isFeatured
             ? "card-background-image-featured"
             : "card-background-image"
@@ -44,35 +44,31 @@ const CardBackground = ({ document, authors, isFeatured = false }) => {
         alt={`${document.title} image`}
       /> */}
       <div className="card-img-overlay flex flex-col">
-        <div className="flex">
-          <div className="flex items-center leading-normal !text-base">
-            <span className="text-light-500 text-base font-medium bg-dark-500 !py-1">
-              <span className="marker-line">
-                <DateFormat date={document.date} />
-              </span>
-            </span>
-          </div>
+        <div className="flex items-center leading-normal !text-base">
+          <span className="marker-line text-light-500 rounded-md font-medium bg-dark-500 !py-1 text-lg tracking-wide">
+            <DateFormat date={document.date} />
+          </span>
         </div>
       </div>
       <div className="card-img-overlay flex flex-col justify-end">
         <div className="flex items-center mb-2 leading-normal !text-base">
-          <span className="marker-line !py-1 bg-dark-500 text-light-500 capitalize font-medium mr-2">
+          <span className="marker-line rounded-md !py-1 bg-dark-500 text-light-500 capitalize font-medium mr-2">
             {document.channel}
           </span>
-          <span className="marker-line !py-1 bg-dark-500 text-light-500 capitalize font-medium">
+          <span className="marker-line rounded-md !py-1 bg-dark-500 text-light-500 capitalize font-medium">
             {document.category}
           </span>
         </div>
 
         <h3 className="card-title text-3xl">
           <Link className="" href={`/articles/${document.slug}`}>
-            <span className="marker-line bg-dark-500 text-light-500 !py-1 hover:underline underline-offset-1">
+            <span className="marker-line rounded-md bg-dark-500 text-light-500 !py-1 hover:underline underline-offset-1">
               {document.title}
             </span>
           </Link>
         </h3>
 
-        <div className="flex">
+        <div className="flex mt-1">
           {authors.map((author) => (
             <div key={author.name} className="flex items-center my-1">
               <div className="shrink-0">
@@ -95,7 +91,7 @@ const CardBackground = ({ document, authors, isFeatured = false }) => {
 
           <div className="flex flex-1 items-center">
             <Link className="ml-auto" href={`/articles/${document.slug}`}>
-              <button className="tracking-wider text-light-500 dark:text-dark-500 bg-uv-500 dark:bg-neon-yellow-500 hover:ring-2 ring-uv-300 dark:ring-neon-yellow-200 py-1 px-3 rounded font-medium transition-all !text-base">
+              <button className="tracking-wider text-light-500 dark:text-dark-500 bg-uv-500 dark:bg-neon-yellow-500 hover:ring-2 ring-uv-300 dark:ring-neon-yellow-200 py-1.5 px-3 rounded-md font-medium transition-all !text-base">
                 Ler mais...
               </button>
             </Link>

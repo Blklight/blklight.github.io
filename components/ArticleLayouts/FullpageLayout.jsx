@@ -61,15 +61,15 @@ const FullpageLayout = ({
             <div className="info-article-overlay">
               <div className="flex h-full flex-col justify-end">
                 <h5 className="article-meta">
-                  <span className="bg-dark-500 p-1 text-light-500">
+                  <span className="bg-dark-500 p-1 rounded-md text-light-500">
                     <span className="marker-line">
                       <DateFormat date={date} fulltimestamp />
                     </span>
                   </span>
                 </h5>
                 <h1 className="md:text-5xl text-3xl font-extrabold tracking-wide mb-2">
-                  <span className="bg-dark-500 p-1 text-light-500">
-                    <span className="marker-line">{title}</span>
+                  <span className="marker-line bg-dark-500 !py-1 !px-3 rounded-md text-light-500">
+                    {title}
                   </span>
                 </h1>
               </div>
@@ -84,7 +84,7 @@ const FullpageLayout = ({
           </div>
           {frontmatter.gallery && frontmatter.gallery.length > 0 && (
             <div className="tc-article-grid">
-              <h3 className="mb-4 bg-dark-500 text-3xl font-bold text-light-500 dark:bg-light-500 dark:text-dark-500">
+              <h3 className="rounded-md mb-4 bg-dark-500 text-3xl font-bold text-light-500 dark:bg-light-500 dark:text-dark-500">
                 <span className="marker-line !py-2 !px-3">Galeria:</span>
               </h3>
               <ScrollArea className="h-full w-full p-4">
@@ -125,8 +125,8 @@ const FullpageLayout = ({
               </div>
             </div>
           )}
-          <div className="tc-article-grid mb-8">
-            <h3 className="mb-4 bg-dark-500 text-3xl font-bold text-light-500 dark:bg-light-500 dark:text-dark-500">
+          <div className="tc-article-grid mb-4">
+            <h3 className="mb-4 bg-dark-500 rounded-md text-3xl font-bold text-light-500 dark:bg-light-500 dark:text-dark-500">
               <span className="marker-line !py-2 !px-3">Escrito por:</span>
             </h3>
             {authordetails.map((author, index) => (
@@ -146,7 +146,7 @@ const FullpageLayout = ({
               {prev.frontmatter && (
                 <div className="mb-6">
                   <h4 className="mb-4 text-2xl font-bold tracking-wide">
-                    <span className="marker-line bg-dark-500 !p-2 text-light-500 dark:bg-light-500 dark:text-dark-500">
+                    <span className="marker-line rounded-md bg-dark-500 !p-2 text-light-500 dark:bg-light-500 dark:text-dark-500">
                       Artigo anterior
                     </span>
                   </h4>
@@ -159,7 +159,7 @@ const FullpageLayout = ({
               {next.frontmatter && (
                 <div className="mb-6">
                   <h4 className="mb-4 text-2xl font-bold tracking-wide md:text-right">
-                    <span className="marker-line bg-dark-500 !p-2 text-light-500 dark:bg-light-500 dark:text-dark-500">
+                    <span className="marker-line rounded-md bg-dark-500 !p-2 text-light-500 dark:bg-light-500 dark:text-dark-500">
                       Próximo artigo
                     </span>
                   </h4>
