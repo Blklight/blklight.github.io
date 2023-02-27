@@ -43,7 +43,7 @@ const NavigationBar = () => {
               <Link href="/">
                 <img
                   src="/blklight-white.svg"
-                  className="mx-auto hidden dark:block"
+                  className="!max-w-none mx-auto hidden dark:block"
                   width="50"
                   height="50"
                   alt="Ultimate Mercer Logo"
@@ -53,38 +53,15 @@ const NavigationBar = () => {
               <Link href="/">
                 <img
                   src="/blklight-black.svg"
-                  className="mx-auto block dark:hidden"
+                  className="!max-w-none mx-auto block dark:hidden"
                   width="50"
                   height="50"
                   alt="Ultimate Mercer Logo"
                 />
               </Link>
-              {/* <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    className="ml-6"
-                    variant="outline"
-                    size="sm"
-                    onClick={() =>
-                      setTheme(currentTheme === "dark" ? "light" : "dark")
-                    }
-                  >
-                    {mounted && (
-                      <>
-                        <SunMedium className="hidden dark:block" />
-                        <Moon className="block dark:hidden" />
-                      </>
-                    )}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent align="center" side="right">
-                  <p className="hidden dark:block">Modo claro</p>
-                  <p className="block dark:hidden">Modo escuro</p>
-                </TooltipContent>
-              </Tooltip> */}
             </div>
             <div className="block">
-              <NavigationMenu>
+              {/* <NavigationMenu>
                 <NavigationMenuList>
                   <NavigationMenuItem>
                     <NavigationMenuTrigger>Canais</NavigationMenuTrigger>
@@ -107,10 +84,6 @@ const NavigationBar = () => {
                                   <div className="mt-auto text-lg font-medium text-white">
                                     shadcn/ui
                                   </div>
-                                  {/* <p className="text-sm leading-tight text-white/90">
-                                    Beautifully designed components built with
-                                    Radix UI and Tailwind CSS.
-                                  </p> */}
                                 </Link>
                               </div>
                             </Link>
@@ -165,7 +138,7 @@ const NavigationBar = () => {
                     </NavigationMenuContent>
                   </NavigationMenuItem>
                 </NavigationMenuList>
-              </NavigationMenu>
+              </NavigationMenu> */}
             </div>
             <div className="block px-3">
               <Tooltip>

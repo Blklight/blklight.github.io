@@ -25,8 +25,8 @@ const BasicLayout = ({ frontmatter, authordetails, next, prev, children }) => {
   return (
     <>
       <ArticleSEO
-        url={`${siteMetadata.siteUrl}/projects/${slug}`}
-        canonicalUrl={`${siteMetadata.siteUrl}/projects/${slug}`}
+        url={`${siteMetadata.siteUrl}/articles/${slug}`}
+        canonicalUrl={`${siteMetadata.siteUrl}/articles/${slug}`}
         authorDetails={authordetails}
         cover={frontmatter.cover ? frontmatter.cover : frontmatter.imageHeader}
         images={images}

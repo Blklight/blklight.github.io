@@ -24,3 +24,7 @@ h5,
 h6 {
   @apply leading-normal #{!important};
 }
+
+.container-fluid {
+  @apply w-full px-4 mx-auto;
+}

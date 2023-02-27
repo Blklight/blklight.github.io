@@ -28,18 +28,18 @@ const Home = ({ documents, initialDisplayDocuments, pagination }: HomeProp) => {
         description={siteMetadata.description}
       />
       <section className="background-texture min-h-screen">
-        <div className="space-y-2 py-6 md:space-y-5">
-          <h1 className="text-center text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-7xl md:leading-14">
-            Articles
-          </h1>
-        </div>
-        <ListArticles
+        {/* <ListArticles
           documents={documents}
           initialDisplayDocuments={initialDisplayDocuments}
           pagination={pagination}
-        />
+        /> */}
         <div className="container mx-auto px-6">
-          <div className="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-5">
+          <div className="space-y-2 pt-6 md:space-y-5 border-b border-b-dark-500 dark:border-b-light-500 mb-4">
+            <h1 className="text-3xl font-extrabold leading-9 tracking-wide text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:leading-14">
+              Últimos artigos
+            </h1>
+          </div>
+          {/* <div className="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-5">
             {documents.map((frontmatter) => (
               <CardBasic
                 key={frontmatter.document.slug}
@@ -47,7 +47,7 @@ const Home = ({ documents, initialDisplayDocuments, pagination }: HomeProp) => {
                 authors={frontmatter.authordetails}
               />
             ))}
-          </div>
+          </div> */}
 
           <div className="grid grid-cols-1 gap-2">
             {documents.map((frontmatter) => (
@@ -58,7 +58,7 @@ const Home = ({ documents, initialDisplayDocuments, pagination }: HomeProp) => {
               />
             ))}
           </div>
-          <div className="grid lg:grid-cols-3 grid-cols-1 gap-5">
+          {/* <div className="grid lg:grid-cols-3 grid-cols-1 gap-5">
             {documents.map((frontmatter) => (
               <CardBackground
                 key={frontmatter.document.slug}
@@ -67,7 +67,7 @@ const Home = ({ documents, initialDisplayDocuments, pagination }: HomeProp) => {
                 isFeatured={false}
               />
             ))}
-          </div>
+          </div> */}
         </div>
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4">

@@ -22,12 +22,12 @@ const CardHorizontal = ({ document, authors }: any) => {
   }
   return (
     <div className="card card-plain hover:hover-card hover:hover-card-uv hover:dark:hover-card-neon-yellow">
-      <div className="card-body">
+      <div className="card-body !p-5">
         <div className="lg:flex">
           <div className="shrink-0">
             <img
               src={image}
-              className={` ${document.filter} lg:w-[275px] w-full lg:h-[275px] h-[300px] object-cover rounded-lg`}
+              className={` ${document.filter} lg:w-[300px] w-full lg:h-[275px] h-[300px] object-cover rounded-lg`}
               alt={`${document.title} image`}
             />
           </div>
@@ -69,7 +69,7 @@ const CardHorizontal = ({ document, authors }: any) => {
                 {document.tags.map((tag: any) => (
                   <span
                     key={tag}
-                    className="py-1 px-2 bg-gray-300 text-dark tracking-wide font-medium rounded-md"
+                    className="py-1 px-2  text-sm bg-gray-300 text-dark tracking-wide font-medium rounded-md"
                   >
                     {tag}
                   </span>
@@ -85,11 +85,11 @@ const CardHorizontal = ({ document, authors }: any) => {
                         <img
                           id={`anchor-${author.slug}-${document.slug}`}
                           src={author.avatar}
-                          className="w-[50px] h-[50px] object-cover rounded-full border border-dark mr-2"
+                          className="w-[50px] h-[50px] object-cover rounded-full border border-dark-500 mr-2"
                           alt={`${author.name} avatar`}
                         />
                       </TooltipTrigger>
-                      <TooltipContent align="center" side="bottom">
+                      <TooltipContent align="center" side="right">
                         <p>{author.name}</p>
                       </TooltipContent>
                     </Tooltip>
