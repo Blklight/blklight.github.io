@@ -6,12 +6,14 @@ import { PageSEO } from "@/components/SEO";
 import CardBackground from "@/components/Cards/Background";
 import ListArticles from "@/components/List/Articles";
 import siteMetadata from "@/content/siteMetadata";
-import { getAllDocuments } from "@/lib/services";
 import CardHorizontal from "@/components/Cards/Horizontal";
 import CardBasic from "@/components/Cards/Basic";
 
+import { getDocuments } from "@/lib/services";
+
 export async function getStaticProps() {
-  return getAllDocuments();
+  const docs = await getDocuments();
+  return docs;
 }
 
 interface HomeProp {

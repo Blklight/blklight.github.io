@@ -1,19 +1,22 @@
 ---
-title: "Docker - Lista de comandos"
-description: ""
-imageHeader: "https://i.imgur.com/GF3Gh2r.jpg"
-cover: "https://i.imgur.com/GF3Gh2r.jpg"
-date: "2022-11-24 19:45"
-modifiedDate: ""
-channel: "Dev Corporation"
-category: "Team Blklight"
-tags: ["Ideia", "Front-end"]
+title: Docker - Lista de comandos
+description:
+imageHeader: https://i.imgur.com/GF3Gh2r.jpg
+cover: https://i.imgur.com/GF3Gh2r.jpg
+date: 2022-11-24 19:45
+modifiedDate:
+channel: Dev Corporation
+category: Team Blklight
+tags:
+  - Ideia
+  - Front-end
 layout: FullpageLayout
-filter: "filter-cyberpunk-ix"
-typography: ""
+filter: filter-cyberpunk-ix
+typography:
 draft: false
 authors:
-  [{ name: "ultimatemercer", quote: "Listinha com comandos para ajudar!!" }]
+  - name: ultimatemercer
+    quote: Listinha com comandos para ajudar!!
 gallery:
 ---
 

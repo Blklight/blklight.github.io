@@ -1,18 +1,23 @@
 ---
-title: "Sobre commits, commits semânticos e commits atômicos"
-description: ""
-imageHeader: "https://i.imgur.com/eRs7j5A.png"
-cover: "https://i.imgur.com/eRs7j5A.png"
-date: "2023-01-29 15:00"
-modifiedDate: ""
-channel: "Dev Corporation"
-category: "Code"
-tags: ["Git", "Commits", "Artigos"]
-layout: "BasicOverflowLayout"
-filter: "filter-cyberpunk-ix"
-typography: ""
+title: Sobre commits, commits semânticos e commits atômicos
+description:
+imageHeader: https://i.imgur.com/eRs7j5A.png
+cover: https://i.imgur.com/eRs7j5A.png
+date: 2023-01-29 15:00
+modifiedDate:
+channel: Dev Corporation
+category: Code
+tags:
+  - Git
+  - Commits
+  - Artigos
+layout: BasicOverflowLayout
+filter: filter-cyberpunk-ix
+typography:
 draft: false
-authors: [{ name: "ultimatemercer", quote: "Sobre Commits" }]
+authors:
+  - name: ultimatemercer
+    quote: Sobre Commits
 gallery:
 ---
 

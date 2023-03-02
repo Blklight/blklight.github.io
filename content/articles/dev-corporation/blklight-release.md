@@ -1,24 +1,24 @@
 ---
-title: "Blklight - Release 0.0.1"
-description: "Após muitos testes e idas e vindas, finalmente é tirada do papel e colocada online uma versão do Blklight!"
-imageHeader: "https://i.imgur.com/r93xTZp.jpg"
-cover: "https://i.imgur.com/r93xTZp.jpg"
-date: "2023-01-31 22:45"
-modifiedDate: ""
-channel: "Dev Corporation"
-category: "Team Blklight"
-tags: ["Ideia", "Front-end", "Projetos", "Artigos"]
+title: Blklight - Release 0.0.1
+description: Após muitos testes e idas e vindas, finalmente é tirada do papel e colocada online uma versão do Blklight!
+imageHeader: https://i.imgur.com/r93xTZp.jpg
+cover: https://i.imgur.com/r93xTZp.jpg
+date: 2023-01-31 22:45
+modifiedDate:
+channel: Dev Corporation
+category: Team Blklight
+tags:
+  - Ideia
+  - Front-end
+  - Projetos
+  - Artigos
 layout: FullpageLayout
-filter: "filter-cyberpunk-viii"
-typography: ""
+filter: filter-cyberpunk-viii
+typography:
 draft: false
 authors:
-  [
-    {
-      name: "ultimatemercer",
-      quote: "Finalmente sinto que o que eu desenvolvi está relativamente OK, mas agora é seguir aprimorando e evoluindo mais essa ideia!",
-    },
-  ]
+  - name: Ultimate Mercer
+    quote: Finalmente sinto que o que eu desenvolvi está relativamente OK, mas agora é seguir aprimorando e evoluindo mais essa ideia!
 gallery:
 ---
 

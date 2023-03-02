@@ -1,24 +1,20 @@
 ---
-title: "Como instalar o elixir no Windows (usando WSL)"
-description: "Após muitos testes e idas e vindas, finalmente é tirada do papel e colocada online uma versão do Blklight!"
-imageHeader: "https://miro.medium.com/max/720/1*dTdgZnJdP-bzvupED1UOJA.png"
-cover: "https://miro.medium.com/max/720/1*dTdgZnJdP-bzvupED1UOJA.png"
-date: "2022-10-13 16:40"
-modifiedDate: ""
-channel: "Dev Corporation"
-category: "Tutorial"
-tags: []
+title: Como instalar o elixir no Windows (usando WSL)"
+description: Após muitos testes e idas e vindas, finalmente é tirada do papel e colocada online uma versão do Blklight!
+imageHeader: https://miro.medium.com/max/720/1*dTdgZnJdP-bzvupED1UOJA.png
+cover: https://miro.medium.com/max/720/1*dTdgZnJdP-bzvupED1UOJA.png
+date: 2022-10-13 16:40
+modifiedDate:
+channel: Dev Corporation
+category: Tutorial
+tags:
 layout: BasicLayout
-filter: "filter-blue-red-golden"
-typography: ""
+filter: filter-blue-red-golden
+typography:
 draft: false
 authors:
-  [
-    {
-      name: "tanukesensei",
-      quote: "Finalmente sinto que o que eu desenvolvi está relativamente OK, mas agora é seguir aprimorando e evoluindo mais essa ideia!",
-    },
-  ]
+  - name: tanukesensei
+    quote: Finalmente sinto que o que eu desenvolvi está relativamente OK, mas agora é seguir aprimorando e evoluindo mais essa ideia!
 gallery:
 ---
 

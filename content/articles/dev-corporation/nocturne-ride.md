@@ -1,18 +1,20 @@
 ---
-title: "Ultimate Series - Nocturne Ride"
-description: ""
-imageHeader: "https://i.imgur.com/xDEd3HH.jpg"
-cover: "https://i.imgur.com/xDEd3HH.jpg"
-date: "2021-04-29 20:00"
-modifiedDate: ""
-channel: "Pessoal"
-category: "Design"
-tags: []
-layout: "PortraitLayout"
-filter: "filter-purple-red-orange"
-typography: ""
+title: Ultimate Series - Nocturne Ride
+description:
+imageHeader: https://i.imgur.com/xDEd3HH.jpg
+cover: https://i.imgur.com/xDEd3HH.jpg
+date: 2021-04-29 20:00
+modifiedDate:
+channel: Pessoal
+category: Design
+tags:
+layout: PortraitLayout
+filter: filter-purple-red-orange
+typography:
 draft: false
-authors: [{ name: "ultimatemercer", quote: "" }]
+authors:
+  - name: Ultimate Mercer
+    quote:
 gallery:
   - https://i.imgur.com/BInJo5d.jpg
   - https://i.imgur.com/EfeNqFX.jpg

@@ -1,18 +1,20 @@
 ---
-title: "Ultimate Series - Nº 042"
-description: ""
-imageHeader: "https://i.imgur.com/LLMGR2k.jpg"
-cover: "https://i.imgur.com/LLMGR2k.jpg"
-date: "2021-05-24 22:00"
-modifiedDate: ""
-channel: "Pessoal"
-category: "Design"
-tags: []
+title: Ultimate Series - Nº 042
+description:
+imageHeader: https://i.imgur.com/LLMGR2k.jpg
+cover: https://i.imgur.com/LLMGR2k.jpg
+date: 2021-05-24 22:00
+modifiedDate:
+channel: Pessoal
+category: Design
+tags:
 layout: FullpageLayout
-filter: "filter-cyberpunk-ix"
-typography: ""
+filter: filter-cyberpunk-ix
+typography:
 draft: false
-authors: [{ name: "ultimatemercer", quote: "" }]
+authors:
+  - name: Ultimate Mercer
+    quote:
 gallery:
   - https://i.imgur.com/QIbzkYm.jpg
   - https://i.imgur.com/vtnrtpU.jpg

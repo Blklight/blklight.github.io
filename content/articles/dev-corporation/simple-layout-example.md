@@ -1,18 +1,20 @@
 ---
-title: "Simple Layout Example"
-description: ""
-imageHeader: "https://i.imgur.com/AOOqa0N.jpg"
-cover: "https://i.imgur.com/AOOqa0N.jpg"
-date: "2023-01-30 11:00"
-modifiedDate: ""
-channel: "Pessoal"
-category: "Design"
-tags: []
+title: Simple Layout Example
+description:
+imageHeader: https://i.imgur.com/AOOqa0N.jpg
+cover: https://i.imgur.com/AOOqa0N.jpg
+date: 2023-01-30 11:00
+modifiedDate:
+channel: Pessoal
+category: Design
+tags:
 layout: SimpleLayout
-filter: "filter-cyberpunk-ix"
-typography: ""
+filter: filter-cyberpunk-ix
+typography:
 draft: false
-authors: [{ name: "ultimatemercer", quote: "" }]
+authors:
+  - name: Ultimate Mercer
+    quote:
 gallery:
 ---
 

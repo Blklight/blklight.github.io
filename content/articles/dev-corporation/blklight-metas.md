@@ -1,24 +1,24 @@
 ---
-title: "Metas e ideias para o Blklight em 2023"
-description: ""
-imageHeader: "https://i.imgur.com/qLXp16t.jpg"
-cover: "https://i.imgur.com/qLXp16t.jpg"
-date: "2023-02-02 20:45"
-modifiedDate: ""
-channel: "Dev Corporation"
-category: "Team Blklight"
-tags: ["Ideia", "Front-end", "Projetos", "Artigos"]
+title: Metas e ideias para o Blklight em 2023
+description:
+imageHeader: https://i.imgur.com/qLXp16t.jpg
+cover: https://i.imgur.com/qLXp16t.jpg
+date: 2023-02-02 20:45
+modifiedDate:
+channel: Dev Corporation
+category: Team Blklight
+tags:
+  - Ideia
+  - Front-end
+  - Projetos
+  - Artigos
 layout: FullpageLayout
-filter: "filter-cyberpunk-ix"
-typography: ""
+filter: filter-cyberpunk-ix
+typography:
 draft: false
 authors:
-  [
-    {
-      name: "ultimatemercer",
-      quote: "Finalmente sinto que o que eu desenvolvi está relativamente OK, mas agora é seguir aprimorando e evoluindo mais essa ideia!",
-    },
-  ]
+  - name: ultimatemercer,
+    quote: Finalmente sinto que o que eu desenvolvi está relativamente OK, mas agora é seguir aprimorando e evoluindo mais essa ideia!
 gallery:
 ---
 
