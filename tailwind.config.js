@@ -171,10 +171,10 @@ module.exports = {
               margin: "0 0 1.25rem",
             },
             pre: {
-              backgroundColor: theme("colors.dark.500"),
               whiteSpace: "pre-wrap",
               marginTop: "0.5rem",
               marginBottom: "1.25rem",
+              fontSize: "14px",
             },
             code: {
               color: theme("colors.blue.600"),
