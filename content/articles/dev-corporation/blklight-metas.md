@@ -17,7 +17,7 @@ filter: filter-cyberpunk-ix
 typography:
 draft: false
 authors:
-  - name: ultimatemercer,
+  - name: Ultimate Mercer
     quote: Finalmente sinto que o que eu desenvolvi está relativamente OK, mas agora é seguir aprimorando e evoluindo mais essa ideia!
 gallery:
 ---

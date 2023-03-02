@@ -16,7 +16,7 @@ filter: filter-cyberpunk-ix
 typography:
 draft: false
 authors:
-  - name: ultimatemercer
+  - name: Ultimate Mercer
     quote: Sobre Commits
 gallery:
 ---

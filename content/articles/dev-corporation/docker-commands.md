@@ -15,7 +15,7 @@ filter: filter-cyberpunk-ix
 typography:
 draft: false
 authors:
-  - name: ultimatemercer
+  - name: Ultimate Mercer
     quote: Listinha com comandos para ajudar!!
 gallery:
 ---

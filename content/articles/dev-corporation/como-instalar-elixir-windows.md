@@ -13,7 +13,7 @@ filter: filter-blue-red-golden
 typography:
 draft: false
 authors:
-  - name: tanukesensei
+  - name: Tanuke Sensei
     quote: Finalmente sinto que o que eu desenvolvi está relativamente OK, mas agora é seguir aprimorando e evoluindo mais essa ideia!
 gallery:
 ---

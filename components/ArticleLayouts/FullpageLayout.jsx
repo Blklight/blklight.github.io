@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArticleSEO } from "@/components/SEO";
-import Image from "@/components/Image";
-import Tag from "@/components/Tag";
 import siteMetadata from "@/content/siteMetadata";
 import CardBackground from "@/components/Cards/Background";
 import CardHorizontal from "@/components/Cards/Horizontal";
@@ -12,49 +10,35 @@ import ScrollTopAndComment from "@/components/ArticleRelated/ScrollTopAndComment
 import DateFormat from "@/components/DateFormat";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
-const postDateTemplate = {
-  weekday: "long",
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-};
-
-const FullpageLayout = ({
-  frontmatter,
-  authordetails,
-  next,
-  prev,
-  children,
-}) => {
-  const { authors, slug, fileName, date, title, tags } = frontmatter;
+const FullpageLayout = ({ doc, authordetails, next, prev, children }) => {
+  const { authors, slug, fileName, date, title, tags } = doc;
 
   const [filter, setFilter] = useState(() =>
-    frontmatter.filter ? frontmatter.filter : "filter-cyberpunk-v"
+    doc.filter ? doc.filter : "filter-cyberpunk-v"
   );
   const [typography, setTypography] = useState(() =>
-    frontmatter.typography ? `${frontmatter.typography}-article` : ""
+    doc.typography ? `${doc.typography}-article` : ""
   );
 
-  const images = [frontmatter.cover || null, frontmatter.imageHeader || null];
+  const images = [doc.cover || null, doc.imageHeader || null];
 
+  console.log(authordetails);
   return (
     <>
       <ArticleSEO
         url={`${siteMetadata.siteUrl}/articles/${slug}`}
         canonicalUrl={`${siteMetadata.siteUrl}/articles/${slug}`}
         authorDetails={authordetails}
-        cover={frontmatter.cover ? frontmatter.cover : frontmatter.imageHeader}
+        cover={doc.cover ? doc.cover : doc.imageHeader}
         images={images}
-        {...frontmatter}
+        {...doc}
       />
       <section className="two-column-article">
         <ScrollTopAndComment />
         <div className="info-article">
           <div className="sticky-content hover:hover-header">
             <img
-              src={
-                frontmatter.cover ? frontmatter.cover : frontmatter.imageHeader
-              }
+              src={doc.cover ? doc.cover : doc.imageHeader}
               className={`info-article-image ${filter}`}
               alt={`${title} image`}
             />
@@ -82,7 +66,7 @@ const FullpageLayout = ({
           >
             {children}
           </div>
-          {frontmatter.gallery && frontmatter.gallery.length > 0 && (
+          {doc.gallery && doc.gallery.length > 0 && (
             <div className="tc-article-grid">
               <h3 className="rounded-md mb-4 bg-dark-500 text-3xl font-bold text-light-500 dark:bg-light-500 dark:text-dark-500">
                 <span className="marker-line !py-2 !px-3">Galeria:</span>
@@ -90,7 +74,7 @@ const FullpageLayout = ({
               <ScrollArea className="h-full w-full p-4">
                 <div className="table min-w-full">
                   <div className="flex gap-5 pb-4">
-                    {frontmatter.gallery.map((image, index) => (
+                    {doc.gallery.map((image, index) => (
                       <Link
                         href={image}
                         target="_blank"
@@ -139,11 +123,11 @@ const FullpageLayout = ({
           </div>
         </div>
       </section>
-      {(next.frontmatter || prev.frontmatter) && (
+      {(next.document || prev.document) && (
         <div className="main-article py-8">
           <div className="mx-auto max-w-[1200px] px-4">
             <div className="grid grid-cols-1 gap-5">
-              {prev.frontmatter && (
+              {prev.document && (
                 <div className="mb-6">
                   <h4 className="mb-4 text-2xl font-bold tracking-wide">
                     <span className="marker-line rounded-md bg-dark-500 !p-2 text-light-500 dark:bg-light-500 dark:text-dark-500">
@@ -151,12 +135,12 @@ const FullpageLayout = ({
                     </span>
                   </h4>
                   <CardHorizontal
-                    document={prev.frontmatter}
+                    document={prev.document}
                     authors={prev.authordetails}
                   />
                 </div>
               )}
-              {next.frontmatter && (
+              {next.document && (
                 <div className="mb-6">
                   <h4 className="mb-4 text-2xl font-bold tracking-wide md:text-right">
                     <span className="marker-line rounded-md bg-dark-500 !p-2 text-light-500 dark:bg-light-500 dark:text-dark-500">
@@ -164,7 +148,7 @@ const FullpageLayout = ({
                     </span>
                   </h4>
                   <CardHorizontal
-                    document={next.frontmatter}
+                    document={next.document}
                     authors={next.authordetails}
                   />
                 </div>
