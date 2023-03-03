@@ -29,28 +29,10 @@
 .mono-article,
 .monospace-article {
   @apply font-mono #{!important};
-
-  // h1,
-  // h2,
-  // h3,
-  // h4,
-  // h5,
-  // h6 {
-  //   @apply font-mono #{!important};
-  // }
 }
 
 .serif-article {
   @apply font-serif #{!important};
-
-  // h1,
-  // h2,
-  // h3,
-  // h4,
-  // h5,
-  // h6 {
-  //   @apply font-serif #{!important};
-  // }
 }
 
 .main-article {
@@ -182,7 +164,7 @@
     right: 0;
     bottom: 0;
     left: 0;
-    padding: 2.5rem 1.5rem 3rem;
+    padding: 2rem 1.5rem 2rem;
   }
 }
 

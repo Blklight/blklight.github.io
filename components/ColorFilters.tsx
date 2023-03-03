@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import BlackWhite from "@/components/Filters/BlackWhite";
 import BlueRedGolden from "@/components/Filters/BlueRedGolden";
 import Burn from "@/components/Filters/Burn";
 import Cyberpunk2023 from "@/components/Filters/Cyberpunk2023";
@@ -35,6 +36,7 @@ const ColorFilters = () => {
           className="!block !w-auto !h-0"
           style={style}
         >
+          <BlackWhite />
           <BlueRedGolden />
           <Burn />
           <Cyberpunk2023 />

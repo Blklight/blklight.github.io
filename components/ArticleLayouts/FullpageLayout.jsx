@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArticleSEO } from "@/components/SEO";
-import siteMetadata from "@/content/siteMetadata";
+import siteMetadata from "@/lib/siteMetadata";
 import CardBackground from "@/components/Cards/Background";
 import CardHorizontal from "@/components/Cards/Horizontal";
 
@@ -22,12 +22,11 @@ const FullpageLayout = ({ doc, authordetails, next, prev, children }) => {
 
   const images = [doc.cover || null, doc.imageHeader || null];
 
-  console.log(authordetails);
   return (
     <>
       <ArticleSEO
-        url={`${siteMetadata.siteUrl}/articles/${slug}`}
-        canonicalUrl={`${siteMetadata.siteUrl}/articles/${slug}`}
+        url={`${siteMetadata.siteUrl}${slug}`}
+        canonicalUrl={`${siteMetadata.siteUrl}${slug}`}
         authorDetails={authordetails}
         cover={doc.cover ? doc.cover : doc.imageHeader}
         images={images}
@@ -97,10 +96,10 @@ const FullpageLayout = ({ doc, authordetails, next, prev, children }) => {
           {tags && tags.length > 0 && (
             <div className="tc-article-grid mb-10">
               <h4 className="text-2xl font-bold mb-4">Tags:</h4>
-              <div className="flex gap-4">
+              <div className="flex gap-2">
                 {tags.map((tag) => (
                   <span
-                    className="text-base font-mono leading-normal py-1 px-3 bg-gray-300 text-dark-500 font-medium rounded"
+                    className="text-sm leading-normal py-1 px-3 bg-gray-300 text-dark-500 font-medium rounded"
                     key={tag}
                   >
                     {tag}

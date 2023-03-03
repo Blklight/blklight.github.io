@@ -1,5 +1,10 @@
 @layer utilities {
   .filter {
+    &-black-white {
+      transition: 1s filter linear;
+      filter: url("#black-white");
+    }
+
     &-blue-red-golden {
       transition: 1s filter linear;
       filter: url("#blue-red-golden");

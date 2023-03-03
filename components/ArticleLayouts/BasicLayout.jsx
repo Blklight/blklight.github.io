@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArticleSEO } from "@/components/SEO";
-import siteMetadata from "@/content/siteMetadata";
+import siteMetadata from "@/lib/siteMetadata";
 import ScrollTopAndComment from "@/components/ArticleRelated/ScrollTopAndComment";
 import CardBackground from "@/components/Cards/Background";
 import CardBasic from "../Cards/Basic";
@@ -9,7 +9,7 @@ import AuthorInfo from "../ArticleRelated/AuthorInfo";
 import DateFormat from "@/components/DateFormat";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
-const BasicLayout = ({ document, authordetails, next, prev, children }) => {
+const BasicLayout = ({ doc, authordetails, next, prev, children }) => {
   const { authors, slug, fileName, date, title, tags } = doc;
   const [filter, setFilter] = useState(() =>
     doc.filter ? doc.filter : "filter-cyberpunk-v"
@@ -23,8 +23,8 @@ const BasicLayout = ({ document, authordetails, next, prev, children }) => {
   return (
     <>
       <ArticleSEO
-        url={`${siteMetadata.siteUrl}/articles/${slug}`}
-        canonicalUrl={`${siteMetadata.siteUrl}/articles/${slug}`}
+        url={`${siteMetadata.siteUrl}${slug}`}
+        canonicalUrl={`${siteMetadata.siteUrl}${slug}`}
         authorDetails={authordetails}
         cover={doc.cover ? doc.cover : doc.imageHeader}
         images={images}

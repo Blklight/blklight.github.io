@@ -1,6 +1,6 @@
 ---
 name: Ultimate Mercer
-avatar: https://i.imgur.com/1k8By32.png
+avatar: https://i.imgur.com/jZvckfb.jpg
 occupation: Developer
 email:
 twitter: https://twitter.com/Twitter

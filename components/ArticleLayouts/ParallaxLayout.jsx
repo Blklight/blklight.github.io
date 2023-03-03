@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArticleSEO } from "@/components/SEO";
-import siteMetadata from "@/content/siteMetadata";
+import siteMetadata from "@/lib/siteMetadata";
 import CardBackground from "@/components/Cards/Background";
 import AuthorInfo from "../ArticleRelated/AuthorInfo";
 import ScrollTopAndComment from "@/components/ArticleRelated/ScrollTopAndComment";
@@ -23,8 +23,8 @@ const ParallaxLayout = ({ doc, authordetails, next, prev, children }) => {
   return (
     <>
       <ArticleSEO
-        url={`${siteMetadata.siteUrl}/articles/${slug}`}
-        canonicalUrl={`${siteMetadata.siteUrl}/articles/${slug}`}
+        url={`${siteMetadata.siteUrl}${slug}`}
+        canonicalUrl={`${siteMetadata.siteUrl}${slug}`}
         authorDetails={authordetails}
         cover={doc.cover ? doc.cover : doc.imageHeader}
         images={images}

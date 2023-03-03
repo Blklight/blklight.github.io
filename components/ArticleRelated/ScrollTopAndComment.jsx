@@ -1,4 +1,4 @@
-// import siteMetadata from "@/content/siteMetadata";
+// import siteMetadata from "@/lib/siteMetadata";
 import { useEffect, useState } from "react";
 
 const ScrollTopAndComment = () => {

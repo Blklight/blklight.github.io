@@ -5,7 +5,7 @@ import Link from "next/link";
 import { PageSEO } from "@/components/SEO";
 import CardBackground from "@/components/Cards/Background";
 import ListArticles from "@/components/List/Articles";
-import siteMetadata from "@/content/siteMetadata";
+import siteMetadata from "@/lib/siteMetadata";
 import CardHorizontal from "@/components/Cards/Horizontal";
 import CardBasic from "@/components/Cards/Basic";
 

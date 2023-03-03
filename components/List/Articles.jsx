@@ -1,6 +1,6 @@
 import Link from "@/components/Link";
 import Tag from "@/components/Tag";
-import siteMetadata from "@/content/siteMetadata";
+import siteMetadata from "@/lib/siteMetadata";
 import { useState } from "react";
 import CardBackground from "@/components/Cards/Background";
 import formatDate from "@/lib/utils/formatDate";

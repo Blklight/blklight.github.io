@@ -1,5 +1,5 @@
 ---
-title: Como instalar o elixir no Windows (usando WSL)"
+title: Como instalar o elixir no Windows (usando WSL)
 description: Após muitos testes e idas e vindas, finalmente é tirada do papel e colocada online uma versão do Blklight!
 imageHeader: https://miro.medium.com/max/720/1*dTdgZnJdP-bzvupED1UOJA.png
 cover: https://miro.medium.com/max/720/1*dTdgZnJdP-bzvupED1UOJA.png

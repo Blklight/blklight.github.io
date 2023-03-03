@@ -1,6 +1,6 @@
 ---
 name: Tanuke Sensei
-avatar: https://i.imgur.com/1k8By32.png
+avatar: https://i.imgur.com/s7jHEMX.jpg
 occupation: Developer
 email:
 twitter: https://twitter.com/Twitter
