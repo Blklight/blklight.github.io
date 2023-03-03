@@ -184,7 +184,7 @@ module.exports = {
               paddingTop: "0",
               paddingBottom: "0",
               borderRadius: "0",
-              wordBreak: "break-all",
+              wordBreak: "break-word",
             },
             "code::before": {
               content: "none",
