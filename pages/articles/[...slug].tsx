@@ -4,7 +4,7 @@ import { getDocument, rawDocuments } from "@/lib/services";
 const DEFAULT_LAYOUT = "FullpageLayout";
 
 export async function getStaticPaths() {
-  const paths = rawDocuments.map((doc) => doc.slug);
+  const paths = rawDocuments.map((doc: any) => doc.slug);
   return {
     paths,
     fallback: false,
