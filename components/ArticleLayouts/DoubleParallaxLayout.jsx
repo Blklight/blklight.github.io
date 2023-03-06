@@ -7,6 +7,7 @@ import AuthorInfo from "../ArticleRelated/AuthorInfo";
 import ScrollTopAndComment from "@/components/ArticleRelated/ScrollTopAndComment";
 import DateFormat from "@/components/DateFormat";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import Tags from "@/components/Tags";
 
 const DoubleParallaxLayout = ({ doc, authordetails, next, prev, children }) => {
   const { authors, slug, fileName, date, title, tags } = doc;
@@ -64,35 +65,48 @@ const DoubleParallaxLayout = ({ doc, authordetails, next, prev, children }) => {
           className={`article-grid prose dark:prose-dark !pb-12 ${typography}-article`}
         >
           {children}
-        </article>
-        {doc.gallery && doc.gallery.length > 0 && (
-          <div className="article-grid">
-            <h3 className="text-3xl font-bold rounded-md bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 mb-4">
-              <span className="marker-line !py-2 !px-3">Galeria:</span>
-            </h3>
-            <ScrollArea className="h-full w-full p-4">
-              <div className="table min-w-full">
-                <div className="flex gap-5 pb-4">
-                  {doc.gallery.map((image, index) => (
-                    <Link
-                      href={image}
-                      target="_blank"
-                      key={index}
-                      className="contents"
-                    >
-                      <img
-                        src={image}
-                        className="max-w-full object-cover mx-auto"
-                        alt={`${title} image ${index}`}
-                      />
-                    </Link>
-                  ))}
+          {doc.gallery && doc.gallery.length > 0 && (
+            <>
+              <h3 className="text-3xl font-bold rounded-md bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 mb-4">
+                <span className="marker-line !py-2 !px-3">Galeria:</span>
+              </h3>
+              <ScrollArea className="h-full w-full p-4">
+                <div className="table min-w-full">
+                  <div className="flex gap-5 pb-4">
+                    {doc.gallery.map((image, index) => (
+                      <Link
+                        href={image}
+                        target="_blank"
+                        key={index}
+                        className="contents"
+                      >
+                        <img
+                          src={image}
+                          className="max-w-full object-cover mx-auto"
+                          alt={`${title} image ${index}`}
+                        />
+                      </Link>
+                    ))}
+                  </div>
                 </div>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
+            </>
+          )}
+          {tags && tags.length > 0 && (
+            <>
+              <h4 className="text-2xl rounded-md font-bold bg-dark-500 text-light-500 dark:!bg-light-500 dark:!text-dark-500 my-4">
+                <span className="marker-line  !py-2 !px-3">Tags:</span>
+              </h4>
+              <div className="flex gap-4">
+                {tags.map((tag) => (
+                  <Tags tag={tag} />
+                ))}
               </div>
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea>
-          </div>
-        )}
+            </>
+          )}
+        </article>
+
         <div className="article-grid mb-8">
           <h3 className="text-3xl font-bold rounded-md bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 mb-4">
             <span className="marker-line !py-2 !px-3">Escrito por:</span>

@@ -16,7 +16,8 @@
     "@next/next/no-img-element": 0,
     "tailwindcss/no-custom-classname": 0,
     "tailwindcss/classnames-order": 0,
-    "@next/next/no-html-link-for-pages": 0
+    "@next/next/no-html-link-for-pages": 0,
+    "react/jsx-key": 0
   },
   "settings": {
     "tailwindcss": {

@@ -8,6 +8,7 @@ import CardBasic from "../Cards/Basic";
 import AuthorInfo from "../ArticleRelated/AuthorInfo";
 import DateFormat from "@/components/DateFormat";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import Tags from "@/components/Tags";
 
 const BasicOverflowLayout = ({ doc, authordetails, next, prev, children }) => {
   const { authors, slug, fileName, date, title, tags } = doc;
@@ -88,12 +89,7 @@ const BasicOverflowLayout = ({ doc, authordetails, next, prev, children }) => {
                   </h4>
                   <div className="flex gap-4">
                     {tags.map((tag) => (
-                      <span
-                        className="py-1 px-3 bg-gray-300 text-dark-500 font-medium rounded"
-                        key={tag}
-                      >
-                        {tag}
-                      </span>
+                      <Tags tag={tag} />
                     ))}
                   </div>
                 </>

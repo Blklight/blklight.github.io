@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Card } from "@/types/card";
 import DateFormat from "@/components/DateFormat";
+import Tags from "@/components/Tags";
 import {
   Tooltip,
   TooltipContent,
@@ -20,6 +21,7 @@ const CardHorizontal = ({ document, authors }: any) => {
   } else {
     image = fallbackImage;
   }
+
   return (
     <div className="card card-plain hover:hover-card hover:hover-card-uv hover:dark:hover-card-neon-yellow">
       <div className="card-body !p-5">
@@ -67,12 +69,7 @@ const CardHorizontal = ({ document, authors }: any) => {
             {document.tags && (
               <div className="flex gap-2 items-center mb-2">
                 {document.tags.map((tag: any) => (
-                  <span
-                    key={tag}
-                    className="py-1 px-2  text-sm bg-gray-300 text-dark tracking-wide font-medium rounded-md"
-                  >
-                    {tag}
-                  </span>
+                  <Tags key={tag} tag={tag} />
                 ))}
               </div>
             )}

@@ -8,6 +8,7 @@ import CardBasic from "../Cards/Basic";
 import AuthorInfo from "../ArticleRelated/AuthorInfo";
 import DateFormat from "@/components/DateFormat";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import Tags from "@/components/Tags";
 
 const BasicLayout = ({ doc, authordetails, next, prev, children }) => {
   const { authors, slug, fileName, date, title, tags } = doc;
@@ -78,54 +79,50 @@ const BasicLayout = ({ doc, authordetails, next, prev, children }) => {
           className={`article-grid prose !pb-12 dark:prose-dark ${typography}-article`}
         >
           {children}
-        </article>
-        {doc.gallery && doc.gallery.length > 0 && (
-          <div className="article-grid">
-            <h3 className="mb-4 rounded-md bg-dark-500 text-3xl font-bold text-light-500 dark:bg-light-500 dark:text-dark-500">
-              <span className="marker-line rounded-md !py-2 !px-3">
-                Galeria:
-              </span>
-            </h3>
-            <ScrollArea className="h-full w-full p-4">
-              <div className="table min-w-full">
-                <div className="flex gap-5 pb-4">
-                  {doc.gallery.map((image, index) => (
-                    <Link
-                      href={image}
-                      target="_blank"
-                      key={index}
-                      className="contents"
-                    >
-                      <img
-                        src={image}
-                        className="max-w-full object-cover mx-auto"
-                        alt={`${title} image ${index}`}
-                      />
-                    </Link>
-                  ))}
-                </div>
-              </div>
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea>
-          </div>
-        )}
-        {tags && tags.length > 0 && (
-          <div className="article-grid">
-            <h4 className="text-2xl rounded-md font-bold bg-dark-500 text-light-500 dark:!bg-light-500 dark:!text-dark-500 my-4">
-              <span className="marker-line  !py-2 !px-3">Tags:</span>
-            </h4>
-            <div className="flex gap-4">
-              {tags.map((tag) => (
-                <span
-                  className="py-1 px-3 bg-gray-300 text-dark-500 font-medium rounded"
-                  key={tag}
-                >
-                  {tag}
+          {doc.gallery && doc.gallery.length > 0 && (
+            <>
+              <h3 className="mb-4 rounded-md bg-dark-500 text-3xl font-bold text-light-500 dark:bg-light-500 dark:text-dark-500">
+                <span className="marker-line rounded-md !py-2 !px-3">
+                  Galeria:
                 </span>
-              ))}
-            </div>
-          </div>
-        )}
+              </h3>
+              <ScrollArea className="h-full w-full p-4">
+                <div className="table min-w-full">
+                  <div className="flex gap-5 pb-4">
+                    {doc.gallery.map((image, index) => (
+                      <Link
+                        href={image}
+                        target="_blank"
+                        key={index}
+                        className="contents"
+                      >
+                        <img
+                          src={image}
+                          className="max-w-full object-cover mx-auto"
+                          alt={`${title} image ${index}`}
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
+            </>
+          )}
+          {tags && tags.length > 0 && (
+            <>
+              <h4 className="text-2xl rounded-md font-bold bg-dark-500 text-light-500 dark:!bg-light-500 dark:!text-dark-500 my-4">
+                <span className="marker-line  !py-2 !px-3">Tags:</span>
+              </h4>
+              <div className="flex gap-4">
+                {tags.map((tag) => (
+                  <Tags tag={tag} />
+                ))}
+              </div>
+            </>
+          )}
+        </article>
+
         <div className="article-grid mb-8">
           <h3 className="mb-4 rounded-md bg-dark-500 text-3xl font-bold text-light-500 dark:bg-light-500 dark:text-dark-500">
             <span className="marker-line  !py-2 !px-3">Escrito por:</span>
