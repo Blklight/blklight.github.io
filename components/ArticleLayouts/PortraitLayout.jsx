@@ -8,12 +8,13 @@ import ScrollTopAndComment from "@/components/ArticleRelated/ScrollTopAndComment
 import DateFormat from "@/components/DateFormat";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import Tags from "@/components/Tags";
+import ImageGallery from "@/components/ArticleRelated/ImageGallery";
 
 const PortraitLayout = ({ doc, authordetails, next, prev, children }) => {
   const { authors, slug, fileName, date, title, tags } = doc;
 
   const [filter, setFilter] = useState(() =>
-    doc.filter ? doc.filter : "filter-cyberpunk-v"
+    doc.filter ? doc.filter : "filter-black-white"
   );
   const [typography, setTypography] = useState(() =>
     doc.typography ? `${doc.typography}-article` : ""
@@ -69,20 +70,15 @@ const PortraitLayout = ({ doc, authordetails, next, prev, children }) => {
           {children}
           {doc.gallery && doc.gallery.length > 0 && (
             <>
-              <h3 className="text-3xl font-bold bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 mb-4">
+              <h3 className="text-3xl font-bold bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 rounded-md mb-4">
                 <span className="marker-line !py-2 !px-3">Galeria:</span>
               </h3>
               <figure>
                 <ScrollArea className="h-full w-full p-4">
                   <div className="table min-w-full">
-                    <div className="flex space-x-4 pb-4">
+                    <div className="flex gap-5 pb-4">
                       {doc.gallery.map((image, index) => (
-                        <img
-                          key={index}
-                          src={image}
-                          className="max-w-full object-cover mx-auto shadow-lg"
-                          alt={`${title} image ${index}`}
-                        />
+                        <ImageGallery key={index} image={image} title={title} />
                       ))}
                     </div>
                   </div>

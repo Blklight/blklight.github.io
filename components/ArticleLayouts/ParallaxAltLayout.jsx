@@ -8,12 +8,13 @@ import ScrollTopAndComment from "@/components/ArticleRelated/ScrollTopAndComment
 import DateFormat from "@/components/DateFormat";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import Tags from "@/components/Tags";
+import ImageGallery from "@/components/ArticleRelated/ImageGallery";
 
 const ParallaxAltLayout = ({ doc, authordetails, next, prev, children }) => {
   const { authors, slug, fileName, date, title, tags } = doc;
 
   const [filter, setFilter] = useState(() =>
-    doc.filter ? doc.filter : "filter-cyberpunk-v"
+    doc.filter ? doc.filter : "filter-black-white"
   );
   const [typography, setTypography] = useState(() =>
     doc.typography ? `${doc.typography}-article` : ""
@@ -74,18 +75,7 @@ const ParallaxAltLayout = ({ doc, authordetails, next, prev, children }) => {
                 <div className="table min-w-full">
                   <div className="flex gap-5 pb-4">
                     {doc.gallery.map((image, index) => (
-                      <Link
-                        href={image}
-                        target="_blank"
-                        key={index}
-                        className="contents"
-                      >
-                        <img
-                          src={image}
-                          className="max-w-full object-cover mx-auto"
-                          alt={`${title} image ${index}`}
-                        />
-                      </Link>
+                      <ImageGallery key={index} image={image} title={title} />
                     ))}
                   </div>
                 </div>
