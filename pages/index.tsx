@@ -162,6 +162,11 @@ const Home = ({ documents, initialDisplayDocuments, pagination }: HomeProp) => {
               className="max-w-full block mx-auto filter-purple-red-orange"
               alt=""
             />
+            <img
+              src="https://i.imgur.com/7ZTDbTz.png"
+              className="max-w-full block mx-auto filter-black-white"
+              alt=""
+            />
           </div>
         </div>
       </section>
