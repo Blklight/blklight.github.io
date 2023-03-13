@@ -29,7 +29,7 @@ const Home = ({ documents, initialDisplayDocuments, pagination }: HomeProp) => {
         title={siteMetadata.title}
         description={siteMetadata.description}
       />
-      <section className="background-texture min-h-screen">
+      <section className="min-h-screen">
         {/* <ListArticles
           documents={documents}
           initialDisplayDocuments={initialDisplayDocuments}

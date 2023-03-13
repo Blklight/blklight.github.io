@@ -33,9 +33,7 @@ const NavigationBar = () => {
   useEffect(() => setMounted(true), []);
 
   return (
-    <div
-      className={`flex justify-between items-center px-5 sticky top-0 dark:bg-dark-500 bg-light-500 shrink z-[100] h-16 w-full`}
-    >
+    <div className="flex justify-between items-center px-5 sticky top-0 dark:bg-dark-500 bg-light-500 shrink z-[100] h-16 w-full border-b border-b-dark-200 dark:border-b-light-800 shadow-md">
       <nav className="grow">
         <div className="">
           <div className="flex grow items-center justify-between flex-row ">
@@ -103,7 +101,7 @@ const NavigationBar = () => {
                         <li className="row-span-3">
                           <NavigationMenuLink asChild>
                             <a
-                              className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-cyan-300 to-uv-500 p-6 no-underline outline-none focus:shadow-md"
+                              className="flex h-full w-full select-none flex-col justify-end rounded-sm bg-gradient-to-b from-cyan-300 to-uv-500 p-6 no-underline outline-none focus:shadow-md"
                               href="/"
                             >
                               <div className="mt-4 mb-2 text-lg font-medium text-white">

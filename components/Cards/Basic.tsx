@@ -53,13 +53,13 @@ const CardBasic = ({ document, authors }: any) => {
         )}
         <div className="flex flex-wrap items-center my-2">
           <div className="flex items-center leading-normal !text-base mr-2 mb-1">
-            <span className="marker-line rounded-md !py-1 bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 capitalize font-medium">
+            <span className="marker-line rounded-sm !py-1 bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 capitalize font-medium">
               {document.channel}
             </span>
           </div>
 
           <div className="flex items-center leading-normal !text-base mb-1 ">
-            <span className="marker-line rounded-md !py-1 bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 capitalize font-medium">
+            <span className="marker-line rounded-sm !py-1 bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 capitalize font-medium">
               {document.category}
             </span>
           </div>

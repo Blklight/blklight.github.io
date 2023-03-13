@@ -45,24 +45,24 @@ const CardBackground = ({ document, authors, isFeatured = false }) => {
       /> */}
       <div className="card-img-overlay flex flex-col">
         <div className="flex items-center leading-normal !text-base">
-          <span className="marker-line text-light-500 rounded-md font-medium bg-dark-500 !py-1 text-lg tracking-wide">
+          <span className="marker-line text-light-500 rounded-sm font-medium bg-dark-500 !py-1 text-lg tracking-wide">
             <DateFormat date={document.date} />
           </span>
         </div>
       </div>
       <div className="card-img-overlay flex flex-col justify-end">
         <div className="flex items-center mb-2 leading-normal !text-base">
-          <span className="marker-line rounded-md !py-1 bg-dark-500 text-light-500 capitalize font-medium mr-2">
+          <span className="marker-line rounded-sm !py-1 bg-dark-500 text-light-500 capitalize font-medium mr-2">
             {document.channel}
           </span>
-          <span className="marker-line rounded-md !py-1 bg-dark-500 text-light-500 capitalize font-medium">
+          <span className="marker-line rounded-sm !py-1 bg-dark-500 text-light-500 capitalize font-medium">
             {document.category}
           </span>
         </div>
 
         <h3 className="card-title text-3xl">
           <Link className="" href={document.slug}>
-            <span className="marker-line rounded-md bg-dark-500 text-light-500 !py-1 hover:underline underline-offset-1">
+            <span className="marker-line rounded-sm bg-dark-500 text-light-500 !py-1 hover:underline underline-offset-1">
               {document.title}
             </span>
           </Link>

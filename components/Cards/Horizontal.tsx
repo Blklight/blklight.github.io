@@ -29,7 +29,7 @@ const CardHorizontal = ({ document, authors }: any) => {
           <div className="shrink-0">
             <img
               src={image}
-              className={` ${document.filter} lg:w-[300px] w-full lg:h-[275px] h-[300px] object-cover rounded-lg`}
+              className={` ${document.filter} lg:w-[350px] w-full lg:h-[275px] h-[300px] object-cover rounded-lg`}
               alt={`${document.title} image`}
             />
           </div>
@@ -55,13 +55,13 @@ const CardHorizontal = ({ document, authors }: any) => {
             )}
             <div className="flex flex-wrap items-center my-2">
               <div className="flex items-center leading-normal !text-base mr-2">
-                <span className="marker-line rounded-md !py-1 bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 capitalize font-medium">
+                <span className="marker-line rounded-sm !py-1 bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 capitalize font-medium">
                   {document.channel}
                 </span>
               </div>
 
               <div className="flex items-center leading-normal !text-base">
-                <span className="marker-line rounded-md !py-1 bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 capitalize font-medium">
+                <span className="marker-line rounded-sm !py-1 bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 capitalize font-medium">
                   {document.category}
                 </span>
               </div>

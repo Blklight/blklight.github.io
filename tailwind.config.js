@@ -174,7 +174,7 @@ module.exports = {
               whiteSpace: "pre-wrap",
               marginTop: "0.5rem",
               marginBottom: "1.25rem",
-              fontSize: "14px",
+              fontSize: "15px",
             },
             code: {
               color: theme("colors.blue.600"),

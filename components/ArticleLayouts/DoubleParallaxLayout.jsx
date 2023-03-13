@@ -48,12 +48,12 @@ const DoubleParallaxLayout = ({ doc, authordetails, next, prev, children }) => {
             <div className="h-full flex flex-col justify-center">
               <div className="bg-light-500 dark:bg-dark-500 background-texture py-4 px-3">
                 <h5 className="md:text-2xl text-xl font-medium tracking-wide mb-4">
-                  <span className="marker-line rounded-md !py-1 bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500">
+                  <span className="marker-line rounded-sm !py-1 bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500">
                     <DateFormat date={date} fulltimestamp />
                   </span>
                 </h5>
                 <h1 className="md:text-5xl text-4xl font-extrabold tracking-wide">
-                  <span className="marker-line rounded-md !py-1 bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500">
+                  <span className="marker-line rounded-sm !py-1 bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500">
                     {title}
                   </span>
                 </h1>
@@ -68,7 +68,7 @@ const DoubleParallaxLayout = ({ doc, authordetails, next, prev, children }) => {
           {children}
           {doc.gallery && doc.gallery.length > 0 && (
             <>
-              <h3 className="text-3xl font-bold rounded-md bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 mb-4">
+              <h3 className="text-3xl font-bold rounded-sm bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 mb-4">
                 <span className="marker-line !py-2 !px-3">Galeria:</span>
               </h3>
               <ScrollArea className="h-full w-full p-4">
@@ -85,12 +85,10 @@ const DoubleParallaxLayout = ({ doc, authordetails, next, prev, children }) => {
           )}
           {tags && tags.length > 0 && (
             <>
-              <h4 className="text-2xl rounded-md font-bold bg-dark-500 text-light-500 dark:!bg-light-500 dark:!text-dark-500 my-4">
-                <span className="marker-line  !py-2 !px-3">Tags:</span>
-              </h4>
+              <h4 className="text-2xl font-bold mb-4">Tags:</h4>
               <div className="flex gap-4">
                 {tags.map((tag) => (
-                  <Tags tag={tag} />
+                  <Tags key={tag} tag={tag} />
                 ))}
               </div>
             </>
@@ -98,7 +96,7 @@ const DoubleParallaxLayout = ({ doc, authordetails, next, prev, children }) => {
         </article>
 
         <div className="article-grid mb-8">
-          <h3 className="text-3xl font-bold rounded-md bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 mb-4">
+          <h3 className="text-3xl font-bold rounded-sm bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 mb-4">
             <span className="marker-line !py-2 !px-3">Escrito por:</span>
           </h3>
           {authordetails.map((author, index) => (
@@ -117,7 +115,7 @@ const DoubleParallaxLayout = ({ doc, authordetails, next, prev, children }) => {
               {prev.document && (
                 <div className="mb-6">
                   <h4 className="text-2xl font-bold tracking-wide mb-4">
-                    <span className="marker-line rounded-md !p-2 bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500">
+                    <span className="marker-line rounded-sm !p-2 bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500">
                       Artigo anterior
                     </span>
                   </h4>
@@ -131,7 +129,7 @@ const DoubleParallaxLayout = ({ doc, authordetails, next, prev, children }) => {
               {next.document && (
                 <div className="mb-6">
                   <h4 className="text-2xl font-bold tracking-wide md:text-right mb-4">
-                    <span className="marker-line rounded-md !p-2 bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500">
+                    <span className="marker-line rounded-sm !p-2 bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500">
                       Próximo artigo
                     </span>
                   </h4>

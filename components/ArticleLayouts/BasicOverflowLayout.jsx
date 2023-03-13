@@ -57,7 +57,7 @@ const BasicOverflowLayout = ({ doc, authordetails, next, prev, children }) => {
               {children}
               {doc.gallery && doc.gallery.length > 0 && (
                 <>
-                  <h3 className="text-3xl font-bold rounded-md bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 mb-4">
+                  <h3 className="text-3xl font-bold rounded-sm bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 mb-4">
                     <span className="marker-line !py-2 !px-3">Galeria:</span>
                   </h3>
                   <ScrollArea className="h-full w-full p-4">
@@ -78,28 +78,39 @@ const BasicOverflowLayout = ({ doc, authordetails, next, prev, children }) => {
               )}
               {tags && tags.length > 0 && (
                 <>
-                  <h4 className="text-2xl font-bold rounded-md bg-dark-500 text-light-500 dark:!bg-light-500 dark:!text-dark-500 my-4">
-                    <span className="marker-line !py-2 !px-3">Tags:</span>
-                  </h4>
+                  <h4 className="text-2xl font-bold mb-4">Tags:</h4>
                   <div className="flex gap-4">
                     {tags.map((tag) => (
-                      <Tags tag={tag} />
+                      <Tags key={tag} tag={tag} />
                     ))}
                   </div>
                 </>
               )}
+
+              <div className="my-8">
+                <h3 className="rounded-sm text-3xl font-bold bg-dark-500 text-light-500 dark:bg-light-500 dark:text-dark-500 mb-4">
+                  <span className="marker-line !py-2 !px-3">Escrito por:</span>
+                </h3>
+                {authordetails.map((author, index) => (
+                  <AuthorInfo
+                    key={index}
+                    author={author}
+                    quote={authors[index].quote}
+                  />
+                ))}
+              </div>
             </article>
           </div>
         </div>
       </section>
       {(next.document || prev.document) && (
-        <div className="main-article">
+        <div className="">
           <div className="mx-auto max-w-[1200px] px-4">
             <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
               {prev.document && (
                 <div className="mb-6">
                   <h4 className="mb-4 text-2xl font-bold tracking-wide">
-                    <span className="marker-line rounded-md bg-dark-500 !p-2 text-light-500 dark:bg-light-500 dark:text-dark-500">
+                    <span className="marker-line rounded-sm bg-dark-500 !p-2 text-light-500 dark:bg-light-500 dark:text-dark-500">
                       Artigo anterior
                     </span>
                   </h4>
@@ -112,7 +123,7 @@ const BasicOverflowLayout = ({ doc, authordetails, next, prev, children }) => {
               {next.document && (
                 <div className="mb-6">
                   <h4 className="mb-4 text-2xl font-bold tracking-wide md:text-right">
-                    <span className="marker-line rounded-md bg-dark-500 !p-2 text-light-500 dark:bg-light-500 dark:text-dark-500">
+                    <span className="marker-line rounded-sm bg-dark-500 !p-2 text-light-500 dark:bg-light-500 dark:text-dark-500">
                       Próximo artigo
                     </span>
                   </h4>

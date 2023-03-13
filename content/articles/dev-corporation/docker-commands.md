@@ -20,9 +20,7 @@ authors:
 gallery:
 ---
 
-## Lista de comandos
-
-## Async functions
+# Lista de comandos
 
 **Download imagem:**
 `docker pull image`

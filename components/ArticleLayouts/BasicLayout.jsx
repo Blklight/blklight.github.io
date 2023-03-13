@@ -37,12 +37,12 @@ const BasicLayout = ({ doc, authordetails, next, prev, children }) => {
         <header className="header-basic">
           <div className="header-basic-content">
             <h5 className="article-meta">
-              <span className="marker-line rounded-md bg-dark-500 !py-1 text-light-500 dark:bg-light-500 dark:text-dark-500">
+              <span className="marker-line rounded-sm bg-dark-500 !py-1 text-light-500 dark:bg-light-500 dark:text-dark-500">
                 <DateFormat date={date} fulltimestamp />
               </span>
             </h5>
             <h1 className="md:text-5xl text-3xl font-extrabold tracking-wide mb-4">
-              <span className="marker-line rounded-md bg-dark-500 !py-1 text-light-500 dark:bg-light-500 dark:text-dark-500">
+              <span className="marker-line rounded-sm bg-dark-500 !py-1 text-light-500 dark:bg-light-500 dark:text-dark-500">
                 {title}
               </span>
             </h1>
@@ -82,8 +82,8 @@ const BasicLayout = ({ doc, authordetails, next, prev, children }) => {
           {children}
           {doc.gallery && doc.gallery.length > 0 && (
             <>
-              <h3 className="mb-4 rounded-md bg-dark-500 text-3xl font-bold text-light-500 dark:bg-light-500 dark:text-dark-500">
-                <span className="marker-line rounded-md !py-2 !px-3">
+              <h3 className="mb-4 rounded-sm bg-dark-500 text-3xl font-bold text-light-500 dark:bg-light-500 dark:text-dark-500">
+                <span className="marker-line rounded-sm !py-2 !px-3">
                   Galeria:
                 </span>
               </h3>
@@ -101,12 +101,10 @@ const BasicLayout = ({ doc, authordetails, next, prev, children }) => {
           )}
           {tags && tags.length > 0 && (
             <>
-              <h4 className="text-2xl rounded-md font-bold bg-dark-500 text-light-500 dark:!bg-light-500 dark:!text-dark-500 my-4">
-                <span className="marker-line  !py-2 !px-3">Tags:</span>
-              </h4>
+              <h4 className="text-2xl font-bold mb-4">Tags:</h4>
               <div className="flex gap-4">
                 {tags.map((tag) => (
-                  <Tags tag={tag} />
+                  <Tags key={tag} tag={tag} />
                 ))}
               </div>
             </>
@@ -114,7 +112,7 @@ const BasicLayout = ({ doc, authordetails, next, prev, children }) => {
         </article>
 
         <div className="article-grid mb-8">
-          <h3 className="mb-4 rounded-md bg-dark-500 text-3xl font-bold text-light-500 dark:bg-light-500 dark:text-dark-500">
+          <h3 className="mb-4 rounded-sm bg-dark-500 text-3xl font-bold text-light-500 dark:bg-light-500 dark:text-dark-500">
             <span className="marker-line  !py-2 !px-3">Escrito por:</span>
           </h3>
           {authordetails.map((author, index) => (
@@ -127,13 +125,13 @@ const BasicLayout = ({ doc, authordetails, next, prev, children }) => {
         </div>
       </section>
       {(next.document || prev.document) && (
-        <div className="main-article">
+        <div className="py-8">
           <div className="mx-auto max-w-[1200px] px-4">
             <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
               {prev.document && (
                 <div className="mb-6">
                   <h4 className="mb-4 text-2xl font-bold tracking-wide">
-                    <span className="marker-line rounded-md bg-dark-500 !p-2 text-light-500 dark:bg-light-500 dark:text-dark-500">
+                    <span className="marker-line rounded-sm bg-dark-500 !p-2 text-light-500 dark:bg-light-500 dark:text-dark-500">
                       Artigo anterior
                     </span>
                   </h4>
@@ -146,7 +144,7 @@ const BasicLayout = ({ doc, authordetails, next, prev, children }) => {
               {next.document && (
                 <div className="mb-6">
                   <h4 className="mb-4 text-2xl font-bold tracking-wide md:text-right">
-                    <span className="marker-line rounded-md bg-dark-500 !p-2 text-light-500 dark:bg-light-500 dark:text-dark-500">
+                    <span className="marker-line rounded-sm bg-dark-500 !p-2 text-light-500 dark:bg-light-500 dark:text-dark-500">
                       Próximo artigo
                     </span>
                   </h4>
