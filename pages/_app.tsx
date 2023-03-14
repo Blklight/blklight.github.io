@@ -21,9 +21,10 @@ import {
   faCoffee,
   faSun,
   faMoon,
+  faHome,
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add(fab, faCheckSquare, faCoffee, faSun, faMoon);
+library.add(fab, faCheckSquare, faCoffee, faSun, faMoon, faHome);
 
 import { ClientReload } from "@/components/ClientReload";
 const isDevelopment = process.env.NODE_ENV === "development";

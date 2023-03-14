@@ -15,6 +15,11 @@
   -webkit-box-decoration-break: clone;
 }
 
+.notfound-page {
+  @apply w-screen object-cover;
+  height: calc(100vh - 64px);
+}
+
 @layer utilities {
   @include shadow-pop-bl("neon-yellow", theme("colors.neon-yellow.500"));
   @include shadow-pop-bl("uv", theme("colors.uv.500"));
