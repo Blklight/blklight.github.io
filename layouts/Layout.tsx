@@ -12,7 +12,7 @@ const Layout = ({ children }: LayoutProps) => {
       <div className="block m-auto max-w-full">
         <div className="block">
           <NavigationBar />
-          <div className="flex flex-1 flex-col max-w-full min-h-screen">
+          <div className="flex flex-1 flex-col max-w-full">
             {children}
             <Footer />
           </div>

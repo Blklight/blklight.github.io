@@ -9,6 +9,20 @@ import { PageSEO } from "@/components/SEO";
 import siteMetadata from "@/lib/siteMetadata";
 
 const About = () => {
+  const members = [
+    {
+      name: "Ultimate Mercer",
+      avatar: "https://i.imgur.com/jZvckfb.jpg",
+      role: ["Desenvolvedor Front-end", "Designer"],
+      bio: "Formado em tecnologia em sistemas para internet no IFSul, atualmente sou estudante de design digital na UFPel, e moro em Pelotas/RS.",
+    },
+    {
+      name: "Tanuke Sensei",
+      avatar: "https://i.imgur.com/s7jHEMX.jpg",
+      role: ["Desenvolvedor Back-end"],
+      bio: "Dev formado em Tecnologia em Sistemas para Internet no IFsul, otaku, gamer, suporte e principal personagem na saga Vitola Wars. 29 anos e atuando como desenvolvedor back-end no Blklight.",
+    },
+  ];
   return (
     <>
       <PageSEO
@@ -40,20 +54,51 @@ const About = () => {
           </h1>
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
-              <AccordionTrigger>Objetivo</AccordionTrigger>
+              <AccordionTrigger>
+                <h4 className="text-2xl tracking-wide"> Objetivo</h4>
+              </AccordionTrigger>
               <AccordionContent>
-                Atualmente nosso objetivo é poder desenvolver esta ideia junto
-                do nosso circulo de amigos, e inicialmente através da
-                disponibilização de artigos, desenvolver habilidades, trabalhar
-                a criatividade e quem sabe isso não a base para um projeto
-                maior.
+                <p className="text-lg">
+                  Atualmente nosso objetivo é poder desenvolver esta ideia junto
+                  do nosso circulo de amigos, e inicialmente através da
+                  disponibilização de artigos, desenvolver habilidades,
+                  trabalhar a criatividade e quem sabe isso não a base para um
+                  projeto maior.
+                </p>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
-              <AccordionTrigger>Membros</AccordionTrigger>
+              <AccordionTrigger>
+                <h4 className="text-2xl tracking-wide">Time</h4>
+              </AccordionTrigger>
               <AccordionContent>
-                Yes. It comes with default styles that matches the other
-                components' aesthetic.
+                {members.map((member) => (
+                  <div
+                    key={member.name}
+                    className="flex items-center px-2 mb-3"
+                  >
+                    <img
+                      src={member.avatar}
+                      className="w-40 h-40 object-cover rounded"
+                      alt=""
+                    />
+                    <div className="ml-4 flex flex-col flex-1 justify-center">
+                      <h4 className="text-2xl font-bold">{member.name}</h4>
+                      <div className="flex gap-1 mb-1">
+                        {member.role.map((role) => (
+                          <span
+                            key={role}
+                            className="text-sm text-dark-500 border border-dark-500 dark:text-light-500 dark:border-light-500 py-1 px-2 rounded"
+                          >
+                            {role}
+                          </span>
+                        ))}
+                      </div>
+
+                      <p className="text-lg">{member.bio}</p>
+                    </div>
+                  </div>
+                ))}
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3">
