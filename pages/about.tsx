@@ -58,13 +58,15 @@ const About = () => {
                 <h4 className="text-2xl tracking-wide"> Objetivo</h4>
               </AccordionTrigger>
               <AccordionContent>
-                <p className="text-lg">
-                  Atualmente nosso objetivo é poder desenvolver esta ideia junto
-                  do nosso circulo de amigos, e inicialmente através da
-                  disponibilização de artigos, desenvolver habilidades,
-                  trabalhar a criatividade e quem sabe isso não a base para um
-                  projeto maior.
-                </p>
+                <div className="px-2">
+                  <p className="text-lg">
+                    Atualmente nosso objetivo é poder desenvolver esta ideia
+                    junto do nosso circulo de amigos, e inicialmente através da
+                    disponibilização de artigos, desenvolver habilidades,
+                    trabalhar a criatividade e quem sabe isso não a base para um
+                    projeto maior.
+                  </p>
+                </div>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">

@@ -24,7 +24,7 @@ const CardBackground = ({ document, authors, isFeatured = false }) => {
 
   useEffect(() => setMounted(true), []);
   return (
-    <div className="card card-background hover:hover-card !rounded-xl hover:hover-card-uv hover:dark:hover-card-neon-yellow view-anchor">
+    <div className="card card-background hover-card !rounded-xl hover:hover-card-uv hover:dark:hover-card-neon-yellow view-anchor">
       <img
         src={image}
         className={`!rounded-xl ${document.filter} ${

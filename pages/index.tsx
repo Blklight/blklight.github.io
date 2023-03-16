@@ -71,7 +71,7 @@ const Home = ({ documents, initialDisplayDocuments, pagination }: HomeProp) => {
             ))}
           </div> */}
         </div>
-        <div className="container mx-auto">
+        {/* <div className="container mx-auto">
           <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4">
             <img
               src="https://i.imgur.com/7ZTDbTz.png"
@@ -168,7 +168,7 @@ const Home = ({ documents, initialDisplayDocuments, pagination }: HomeProp) => {
               alt=""
             />
           </div>
-        </div>
+        </div> */}
       </section>
     </>
   );

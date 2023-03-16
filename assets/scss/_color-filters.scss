@@ -96,6 +96,11 @@
   .hover-header,
   .hover-author {
     .filter {
+      &-black-white {
+        transition: 1s filter linear;
+        filter: none;
+      }
+
       &-blue-red-golden {
         transition: 1s filter linear;
         filter: none;
