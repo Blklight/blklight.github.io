@@ -20,7 +20,7 @@ import siteMetadata from "@/lib/siteMetadata";
 // }
 
 const About = ({ contacts }: any) => {
-  console.log(contacts);
+  // console.log(contacts);
   const members = [
     {
       name: "Ultimate Mercer",
