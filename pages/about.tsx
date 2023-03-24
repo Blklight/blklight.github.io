@@ -8,7 +8,19 @@ import { PageSEO } from "@/components/SEO";
 
 import siteMetadata from "@/lib/siteMetadata";
 
-const About = () => {
+// export async function getStaticProps() {
+//   const res = await fetch("http://localhost:3000/contacts");
+//   const contacts = await res.json();
+
+//   return {
+//     props: {
+//       contacts,
+//     },
+//   };
+// }
+
+const About = ({ contacts }: any) => {
+  console.log(contacts);
   const members = [
     {
       name: "Ultimate Mercer",
