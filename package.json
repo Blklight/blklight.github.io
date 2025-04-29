@@ -1,23 +1,22 @@
 {
-  "name": "blklihgt.dev",
+  "name": "blklight.dev",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
-    "export": "next build && next export",
     "start": "next start",
-    "lint": "next lint",
-    "deploy": ""
+    "lint": "next lint"
   },
-  "dependencies": {},
-  "devDependencies": {},
-  "lint-staged": {
-    "*.+(js|jsx|ts|tsx)": [
-      "eslint --fix"
-    ],
-    "*.+(js|jsx|ts|tsx|json|css|scss|md|mdx)": [
-      "prettier --write"
-    ]
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "next": "15.3.1"
+  },
+  "devDependencies": {
+    "typescript": "^5",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19"
   }
 }
