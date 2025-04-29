@@ -1,0 +1,102 @@
+---
+title: Maximizando o Desempenho em React com o Hook useMemo
+description:
+imageHeader: https://i.imgur.com/Wa0TqhR.jpg
+cover: https://i.imgur.com/Wa0TqhR.jpg
+date: 2024-01-23 11:45
+modifiedDate:
+channel: Dev Corporation
+category: Team Blklight
+tags:
+  - React
+  - Desempenho
+  - useMemo
+  - Otimização
+  - Hooks
+  - Componentes Funcionais
+  - Interface de Usuário
+  - Programação Reactiva
+layout: FullpageLayout
+filter: filter-cyberpunk-ix
+typography:
+draft: false
+authors:
+  - name: Sasha Watson
+    quote: Lorem Ipsum Dolor
+gallery:
+---
+
+# Introdução
+
+React é uma biblioteca poderosa para a construção de interfaces de usuário, mas em aplicações complexas, a otimização de desempenho pode se tornar crucial. O hook `useMemo` é uma ferramenta valiosa para otimizar o cálculo de valores em componentes funcionais. Neste artigo, exploraremos três contextos diferentes nos quais o useMemo pode ser aplicado para melhorar a eficiência.
+
+## 1. Cálculo de Resultado
+
+Vamos começar com uma situação comum - cálculos pesados. Imagine um componente de calculadora que precisa multiplicar dois números e exibir o resultado. Usar o useMemo nesse cenário permite que o resultado seja recalculado apenas quando os números mudam, evitando cálculos desnecessários a cada renderização.
+
+```jsx
+// Exemplo de Cálculo de Resultado usando useMemo
+const Calculadora = ({ numeroA, numeroB }) => {
+  const resultado = useMemo(() => {
+    console.log("Calculando resultado...");
+    return numeroA * numeroB;
+  }, [numeroA, numeroB]);
+
+  return (
+    <div>
+      <p>Número A: {numeroA}</p>
+      <p>Número B: {numeroB}</p>
+      <p>Resultado: {resultado}</p>
+    </div>
+  );
+};
+```
+
+## 2. Lista Filtrada:
+
+Em muitas aplicações, é comum exibir listas de dados e permitir que os usuários as filtrem. O useMemo é útil nesse contexto para evitar a filtragem da lista a cada renderização. No exemplo abaixo, a lista é filtrada apenas quando os dados ou o filtro mudam.
+
+```jsx
+// Exemplo de Lista Filtrada usando useMemo
+const ListaFiltrada = ({ dados, filtro }) => {
+  const listaFiltrada = useMemo(() => {
+    console.log("Filtrando lista...");
+    return dados.filter((item) => item.includes(filtro));
+  }, [dados, filtro]);
+
+  return (
+    <div>
+      <p>Filtro: {filtro}</p>
+      <ul>
+        {listaFiltrada.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+```
+
+## 3. Formatação de Data:
+
+Ao exibir informações temporais, como datas, a formatação adequada é crucial. O useMemo pode ser empregado para formatar datas de maneira específica para exibição, evitando a formatação a cada renderização.
+
+```jsx
+// Exemplo de Formatação de Data usando useMemo
+const DataFormatada = ({ data }) => {
+  const dataFormatada = useMemo(() => {
+    console.log("Formatando data...");
+    return new Intl.DateTimeFormat("pt-BR").format(data);
+  }, [data]);
+
+  return (
+    <div>
+      <p>Data: {dataFormatada}</p>
+    </div>
+  );
+};
+```
+
+## Conclusão
+
+O hook useMemo é uma ferramenta poderosa para otimizar o desempenho em aplicações React, especialmente em situações onde cálculos intensivos ou operações de filtragem são necessários. Ao memoizar valores e evitar recálculos desnecessários, podemos criar aplicações mais eficientes e responsivas. Considere cuidadosamente onde o useMemo pode ser aplicado em sua aplicação para obter benefícios significativos de desempenho.
