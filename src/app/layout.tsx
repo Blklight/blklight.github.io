@@ -12,6 +12,8 @@ import {
   playfair,
   roboto,
 } from "@/components/fonts";
+import { Layout } from "lucide-react";
+import { LayoutBase } from "@/components/layout-base";
 
 export const metadata: Metadata = {
   title: "All New Blklight",
@@ -26,7 +28,9 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${barlow.variable} ${ebgaramond.variable} ${jetbrains.variable} ${playfair.variable} ${roboto.variable} ${overpass.variable} antialiased`}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <LayoutBase>{children}</LayoutBase>
+        </Providers>
         <Toaster />
       </body>
     </html>
