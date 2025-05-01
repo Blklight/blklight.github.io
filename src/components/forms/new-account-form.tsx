@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useStore } from "@/store/use-store";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import {
   Form,
   FormControl,
