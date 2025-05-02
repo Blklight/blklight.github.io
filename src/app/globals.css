@@ -319,10 +319,11 @@
   /* Arquivo de estilos com Tailwind CSS usando @apply */
 }
 .background-texture {
-  background-image: url("../assets/images/grain.png");
+  /* background-image: url("../assets/images/grain.png"); */
+  background-image: url("../assets/images/noisy.png");
   background-attachment: local;
-  background-size: 50px 50px;
-  background-position: left top;
+  /* background-size: 50px 50px;
+  background-position: left top; */
 }
 
 .marker-line {
