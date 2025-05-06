@@ -10,6 +10,7 @@ import { SearchCommand } from "@/components/search-command";
 import { useRouter } from "next/navigation";
 import { useStore } from "@/store/use-store";
 import { LoginButton } from "@/components/login-button";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export const NavToolbar = () => {
   const { user } = useStore((state: any) => state);
@@ -24,6 +25,7 @@ export const NavToolbar = () => {
 
   return (
     <div className="flex justify-between items-center p-4 z-20 rounded-t-md">
+      <SidebarTrigger />
       <SearchCommand />
       <div className="flex items-center gap-2">
         {user && (

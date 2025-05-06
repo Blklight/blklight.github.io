@@ -12,7 +12,6 @@ import {
   playfair,
   roboto,
 } from "@/components/fonts";
-import { Layout } from "lucide-react";
 import { LayoutBase } from "@/components/layout-base";
 
 export const metadata: Metadata = {
