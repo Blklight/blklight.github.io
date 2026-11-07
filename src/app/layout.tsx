@@ -1,37 +1,65 @@
+import { GeistPixelCircle, GeistPixelSquare } from "geist/font/pixel";
 import type { Metadata } from "next";
+import { Inter, JetBrains_Mono, Merriweather } from "next/font/google";
+import { Html } from "@/components/html";
+import { LayoutBase } from "@/components/layout-base";
+import { QueryProvider } from "@/components/query-provider";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import "./globals.css";
 
-import { Providers } from "@/components/providers";
-import { Toaster } from "@/components/ui/sonner";
-import {
-  barlow,
-  ebgaramond,
-  inter,
-  jetbrains,
-  overpass,
-  playfair,
-  roboto,
-} from "@/components/fonts";
-import { LayoutBase } from "@/components/layout-base";
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+});
+
+const merriweather = Merriweather({
+  subsets: ["latin"],
+  variable: "--font-merriweather",
+  weight: ["300", "400", "700", "900"],
+});
+
+const jetBrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+});
 
 export const metadata: Metadata = {
-  title: "All New Blklight",
-  description: "Wireframes for the new Blklight website",
+  title: "Blklight",
+  description: "Plataforma Blklight",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${inter.variable} ${barlow.variable} ${ebgaramond.variable} ${jetbrains.variable} ${playfair.variable} ${roboto.variable} ${overpass.variable} antialiased`}
-      >
-        <Providers>
-          <LayoutBase>{children}</LayoutBase>
-        </Providers>
-        <Toaster />
+    <Html
+      className={cn(
+        "antialiased",
+        inter.variable,
+        "font-mono",
+        jetBrainsMono.variable,
+        merriweather.variable,
+        GeistPixelSquare.variable,
+        GeistPixelCircle.variable,
+      )}
+    >
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          themes={["light", "dark", "book", "system"]}
+          enableSystem
+          disableTransitionOnChange
+        >
+          <QueryProvider>
+            <TooltipProvider>
+              <LayoutBase>{children}</LayoutBase>
+            </TooltipProvider>
+            <Toaster />
+          </QueryProvider>
+        </ThemeProvider>
       </body>
-    </html>
+    </Html>
   );
 }
