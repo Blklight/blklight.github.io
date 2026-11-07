@@ -1,6 +1,8 @@
 import { GeistPixelCircle, GeistPixelSquare } from "geist/font/pixel";
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Merriweather } from "next/font/google";
+import { Html } from "@/components/html";
+import { LayoutBase } from "@/components/layout-base";
 import { QueryProvider } from "@/components/query-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -31,9 +33,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="pt-BR"
-      suppressHydrationWarning
+    <Html
       className={cn(
         "antialiased",
         inter.variable,
@@ -53,11 +53,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           disableTransitionOnChange
         >
           <QueryProvider>
-            <TooltipProvider>{children}</TooltipProvider>
+            <TooltipProvider>
+              <LayoutBase>{children}</LayoutBase>
+            </TooltipProvider>
             <Toaster />
           </QueryProvider>
         </ThemeProvider>
       </body>
-    </html>
+    </Html>
   );
 }
