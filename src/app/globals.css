@@ -20,6 +20,8 @@
 @theme {
   /* --- Fonts --- */
   --font-sans: var(--font-inter), "Inter", sans-serif;
+  --font-serif:
+    var(--font-merriweather), "Merriweather", ui-serif, Georgia, serif;
   --font-mono: var(--font-mono), "JetBrains Mono", monospace;
   --font-pixel: var(--font-geist-pixel-square), "Geist Pixel Square", monospace;
   --font-pixel-circle:
@@ -145,6 +147,36 @@
       rgba(37, 37, 37, 0.25) 100%
     );
   --background-paper-header: var(--background-paper-child-frame);
+  /* Grão 2 dos artigos (.paper-grain-overlay): ruído + tom uniforme.
+     Valores iniciais, espelhados em grains.ts (variants do "texture-item").
+     Podem ser sobrescritos por documento (paperStyle.grainSettings), via
+     custom properties inline no contêiner (PaperSurface). */
+  --paper-grain-overlay-noise: url("../assets/images/noise.webp");
+  /* Papel claro */
+  --paper-grain-overlay-light-tone: rgba(0, 0, 0, 0.06);
+  --paper-grain-overlay-light-blend: normal;
+  --paper-grain-overlay-light-opacity: 0.5;
+  /* Papel escuro (provisório) */
+  --paper-grain-overlay-dark-tone: rgba(255, 255, 255, 0.1);
+  --paper-grain-overlay-dark-blend: screen;
+  --paper-grain-overlay-dark-opacity: 0.3;
+  /* Cabeçalho/rodapé Blklight (.letterhead-grain-overlay).
+     Estado escuro do bloco: cópia de --background-paper-child-frame
+     (independente; mudar a original não afeta o cabeçalho).
+     Estado claro: cópia dos valores do tom claro do G3. Variáveis próprias
+     porque as do papel podem ser sobrescritas inline no contêiner do papel
+     (grainSettings) e herdariam para o cabeçalho, que fica dentro dele. */
+  --letterhead-grain-overlay-image:
+    url("../assets/images/noise.webp"),
+    linear-gradient(
+      to bottom,
+      rgba(37, 37, 37, 0.25) 0%,
+      rgba(37, 37, 37, 0.25) 100%
+    );
+  --letterhead-grain-noise-image: url("../assets/images/noise.webp");
+  --letterhead-grain-light-tone: rgba(0, 0, 0, 0.06);
+  --letterhead-grain-light-blend: normal;
+  --letterhead-grain-light-opacity: 0.5;
   --background-paper-child-index:
     var(--img-noise) center / auto repeat,
     linear-gradient(to right, #252525 0%, transparent 40vw),
@@ -278,6 +310,8 @@
   /* --- Fonts --- */
   --font-heading: var(--font-mono);
   --font-sans: var(--font-inter), "Inter", sans-serif;
+  --font-serif:
+    var(--font-merriweather), "Merriweather", ui-serif, Georgia, serif;
   --font-mono: var(--font-mono), "JetBrains Mono", monospace;
   --font-pixel: var(--font-geist-pixel-square), "Geist Pixel Square", monospace;
   --font-pixel-circle:
@@ -451,12 +485,137 @@
   }
 }
 
+.prose {
+  --tw-prose-body: var(--foreground);
+  --tw-prose-headings: var(--foreground);
+  --tw-prose-lead: var(--muted-foreground);
+  --tw-prose-links: var(--foreground);
+  --tw-prose-bold: var(--foreground);
+  --tw-prose-counters: var(--muted-foreground);
+  --tw-prose-bullets: var(--muted-foreground);
+  --tw-prose-hr: var(--border);
+  --tw-prose-quotes: var(--muted-foreground);
+  --tw-prose-quote-borders: var(--border);
+  --tw-prose-captions: var(--muted-foreground);
+  --tw-prose-code: var(--foreground);
+  --tw-prose-pre-code: var(--foreground);
+  --tw-prose-pre-bg: var(--secondary);
+  --tw-prose-th-borders: var(--border);
+  --tw-prose-td-borders: var(--border);
+  color: var(--tw-prose-body);
+}
+
+.prose a,
+.prose.ProseMirror a {
+  color: var(--tw-prose-links);
+}
+
+.prose :where(code):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  color: var(--tw-prose-code);
+}
+
 /* ============================================================
    TEXTURE & BACKGROUND UTILITIES
    ============================================================ */
 .background-texture {
   background-image: url("../assets/images/noisy.png");
   background-attachment: local;
+}
+
+/*
+ * Grãos do papel (documentos). Classes só para artigos, usadas por
+ * PaperSurface via getGrainClasses (registro em
+ * src/features/documents/design/grains.ts), sempre junto de "isolate" no
+ * contêiner, que cria o contexto de empilhamento.
+ * Camadas, de baixo para cima:
+ *   1. cor do papel       — background-color do contêiner
+ *   2. textura dots/grid  — div absoluto z-0
+ *   3. grãos              — ::before (.paper-grain-noise) e
+ *                           ::after (.paper-grain-overlay), z-index 5
+ *   4. conteúdo           — wrapper "relative z-10" (texto, capa,
+ *                           assinatura, timbre de cabeçalho/rodapé)
+ * Os grãos ficam POR BAIXO do conteúdo e podem estar ligados juntos.
+ */
+.paper-grain-noise::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  background-image: url("../assets/images/noisy.png");
+}
+
+/*
+ * Grão 2 (só artigos): ruído + tom uniforme, sem véu escuro.
+ * Fundo de apoio: o blend precisa de algo atrás dentro do grupo isolado
+ * ("isolate"); em papel sem cor (Tema Padrão) usa a cor da página. Quando o
+ * papel tem cor, o backgroundColor inline do PaperSurface prevalece.
+ * Variante:
+ *   - papel de cor fixa: data-paper-tone="light|dark" (PaperSurface, pela
+ *     cor do papel);
+ *   - Tema Padrão (sem atributo): pelo tema do site (.dark no <html>).
+ * Valores em :root (--paper-grain-overlay-{light,dark}-{tone,blend,opacity}).
+ */
+.paper-grain-overlay {
+  background-color: var(--background);
+  --pgo-tone: var(--paper-grain-overlay-light-tone);
+  --pgo-blend: var(--paper-grain-overlay-light-blend);
+  --pgo-opacity: var(--paper-grain-overlay-light-opacity);
+}
+
+.dark .paper-grain-overlay:not([data-paper-tone]),
+.paper-grain-overlay[data-paper-tone="dark"] {
+  --pgo-tone: var(--paper-grain-overlay-dark-tone);
+  --pgo-blend: var(--paper-grain-overlay-dark-blend);
+  --pgo-opacity: var(--paper-grain-overlay-dark-opacity);
+}
+
+.paper-grain-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    var(--paper-grain-overlay-noise),
+    linear-gradient(var(--pgo-tone), var(--pgo-tone));
+  mix-blend-mode: var(--pgo-blend);
+  opacity: var(--pgo-opacity);
+  transform: translateZ(0);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/*
+ * Texturas do cabeçalho/rodapé Blklight (presets "blklight"). Clones fiéis
+ * de .background-texture e .texture-item::after; as originais não mudam.
+ * O bloco usa fundo = --foreground e texto = --background:
+ *   - temas claro e livro: bloco ESCURO — clones idênticos às originais;
+ *   - tema escuro (.dark no <html>): bloco CLARO — o véu escuro com overlay
+ *     sujaria a superfície, então o ::after usa o tom claro (como o G3).
+ */
+.letterhead-grain-noise {
+  background-image: url("../assets/images/noisy.png");
+  background-attachment: local;
+}
+
+.letterhead-grain-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--letterhead-grain-overlay-image);
+  mix-blend-mode: overlay;
+  transform: translateZ(0);
+  pointer-events: none;
+}
+
+.dark .letterhead-grain-overlay::after {
+  background:
+    var(--letterhead-grain-noise-image),
+    linear-gradient(
+      var(--letterhead-grain-light-tone),
+      var(--letterhead-grain-light-tone)
+    );
+  mix-blend-mode: var(--letterhead-grain-light-blend);
+  opacity: var(--letterhead-grain-light-opacity);
 }
 
 .texturization-background::after {

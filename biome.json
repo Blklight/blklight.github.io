@@ -58,6 +58,16 @@
       }
     },
     {
+      "includes": ["**/src/components/document/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noArrayIndexKey": "off"
+          }
+        }
+      }
+    },
+    {
       "includes": ["**/src/components/ui/**"],
       "linter": {
         "rules": {
