@@ -1,30 +1,44 @@
+/* ============================================================
+   IMPORTS & PLUGINS
+   ============================================================ */
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
 @plugin "@tailwindcss/typography";
 @config "../../tailwind.config.js";
 
+/* ============================================================
+   CUSTOM VARIANTS
+   ============================================================ */
 @custom-variant dark (&:is(.dark *));
 @custom-variant book (&:is(.book *));
 
+/* ============================================================
+   THEME — DESIGN TOKENS
+   ============================================================ */
 @theme {
-  /* --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono); */
+  /* --- Fonts --- */
   --font-sans: var(--font-inter), "Inter", sans-serif;
-  --font-mono: var(--font-geist-mono), "Geist Mono", monospace;
+  --font-mono: var(--font-mono), "JetBrains Mono", monospace;
+  --font-pixel: var(--font-geist-pixel-square), "Geist Pixel Square", monospace;
+  --font-pixel-circle:
+    var(--font-geist-pixel-circle), "Geist Pixel Circle", monospace;
 
-  /* --color-blklight: oklch(56.344% 0.24855 282.35);
-  --color-bluesky: oklch(71.539% 0.16143 243.05); */
-
-  --color-dark: oklch(18.22% 0 0);
-  --color-light: oklch(97.5% 0 0);
-  --color-grey: oklch(94% 0 0);
+  /* --- Neutral base --- */
+  --color-dark: oklch(0.2645 0 0);
+  --color-light: oklch(0.9761 0 0);
+  --color-grey: oklch(0.937 0 0);
   --color-grey-medium: oklch(79.837% 0 0);
   --color-grey-dark: oklch(76.555% 0 0);
   --color-grey-darker: oklch(52.153% 0 0);
+
+  /* --- Sepia (book theme base) --- */
   --color-sepia: oklch(95.774% 0.03248 85.48);
   --color-sepia-medium: oklch(92.557% 0.04465 80.23);
   --color-sepia-grey: oklch(90.409% 0.00583 84.567);
 
+  /* --- Blklight (ultraviolet) --- */
   --color-blklight-50: oklch(98.727% 0.00667 295.45);
   --color-blklight-100: oklch(96.181% 0.02019 295.19);
   --color-blklight-200: oklch(85.566% 0.07764 292.04);
@@ -37,7 +51,7 @@
   --color-blklight-900: oklch(24.939% 0.16069 271.97);
   --color-blklight-950: oklch(20.417% 0.1297 273.67);
 
-  /* Blue Sky color */
+  /* --- Bluesky --- */
   --color-bluesky-50: oklch(95.372% 0.02582 235.35);
   --color-bluesky-100: oklch(92.324% 0.04328 235.39);
   --color-bluesky-200: oklch(86.478% 0.07696 236.55);
@@ -50,6 +64,7 @@
   --color-bluesky-900: oklch(27.817% 0.06805 243.6);
   --color-bluesky-950: oklch(20.759% 0.04744 239.86);
 
+  /* --- Havelock Blue --- */
   --color-havelock-blue-100: oklch(91.124% 0.03133 240.67);
   --color-havelock-blue-200: oklch(84.971% 0.05374 240.69);
   --color-havelock-blue-300: oklch(78.567% 0.07629 241.15);
@@ -61,6 +76,7 @@
   --color-havelock-blue-900: oklch(25.114% 0.04544 243.77);
   --color-havelock-blue-950: oklch(18.536% 0.02943 245.25);
 
+  /* --- Crimson --- */
   --color-crimson-50: oklch(87.578% 0.05841 11.737);
   --color-crimson-100: oklch(83.499% 0.07966 12.092);
   --color-crimson-200: oklch(75.846% 0.12502 14.266);
@@ -73,6 +89,7 @@
   --color-crimson-900: oklch(26.8% 0.09781 22.967);
   --color-crimson-950: oklch(20.078% 0.07002 20.224);
 
+  /* --- Cyber Yellow --- */
   --color-cyber-yellow-50: oklch(98.115% 0.09078 107.29);
   --color-cyber-yellow-100: oklch(97.553% 0.11355 107.26);
   --color-cyber-yellow-200: oklch(96.798% 0.15344 107.76);
@@ -85,6 +102,7 @@
   --color-cyber-yellow-900: oklch(45.459% 0.09816 108.24);
   --color-cyber-yellow-950: oklch(34.582% 0.07488 108.7);
 
+  /* --- Orange --- */
   --color-orange-50: oklch(90.344% 0.0609 58.067);
   --color-orange-100: oklch(87.644% 0.07936 57.825);
   --color-orange-200: oklch(82.689% 0.11495 57.216);
@@ -97,6 +115,7 @@
   --color-orange-900: oklch(36.784% 0.0973 49.963);
   --color-orange-950: oklch(26.431% 0.06656 53.616);
 
+  /* --- Magenta --- */
   --color-magenta-50: oklch(94.127% 0.0528 325.99);
   --color-magenta-100: oklch(90.512% 0.08744 326.27);
   --color-magenta-200: oklch(83.691% 0.15793 326.87);
@@ -110,120 +129,165 @@
   --color-magenta-950: oklch(24.722% 0.11362 328.36);
 }
 
+/* ============================================================
+   SEMANTIC TOKENS — LIGHT (default)
+   ============================================================ */
 :root {
+  /* --- Texture assets --- */
+  --img-noise: url("../assets/images/noise.webp");
+
+  /* --- Composite backgrounds --- */
+  --background-paper-child-frame:
+    var(--img-noise),
+    linear-gradient(
+      to bottom,
+      rgba(37, 37, 37, 0.25) 0%,
+      rgba(37, 37, 37, 0.25) 100%
+    );
+  --background-paper-header: var(--background-paper-child-frame);
+  --background-paper-child-index:
+    var(--img-noise) center / auto repeat,
+    linear-gradient(to right, #252525 0%, transparent 40vw),
+    linear-gradient(to left, #252525 0%, transparent 40vw),
+    linear-gradient(to right, rgba(37, 37, 37, 0.4) 0%, transparent 84px),
+    linear-gradient(to left, rgba(37, 37, 37, 0.4) 0%, transparent 84px);
+  --background-paper-child-article:
+    var(--img-noise), linear-gradient(to left, #000 0%, transparent 40vw),
+    linear-gradient(to top, #000 0%, transparent 340px);
+  --background-paper-child-section-danger:
+    var(--img-noise),
+    linear-gradient(to left, rgba(0, 0, 0, 0.5) 0%, transparent 40vw);
+  --background-paper-child-banner-danger:
+    var(--img-noise),
+    linear-gradient(to left, rgba(0, 0, 0, 0.1) 0%, transparent 80px);
+  --background-paper-child-aside:
+    var(--img-noise), linear-gradient(to top, #000 0%, transparent 340px);
+
+  /* --- Semantic color tokens --- */
   --background: var(--color-light);
   --foreground: var(--color-dark);
+  --ink: var(--foreground);
+  --surface: var(--muted);
   --card: var(--color-light);
   --card-foreground: var(--color-dark);
   --popover: var(--color-light);
   --popover-foreground: var(--color-dark);
-  --primary: var(--color-blklight-500);
+  --primary: var(--color-dark);
   --primary-foreground: var(--color-light);
-  --secondary: var(--color-havelock-blue-500);
-  --secondary-foreground: var(--color-light);
+  --secondary: var(--color-grey);
+  --secondary-foreground: var(--color-dark);
   --muted: var(--color-grey);
   --muted-foreground: var(--color-grey-darker);
-  --accent: var(--color-blklight-200);
+  --accent: var(--color-grey-medium);
   --accent-foreground: var(--color-dark);
   --destructive: var(--color-crimson-500);
-  --destructive-foreground: var(--color-crimson-500);
-  --border: var(--color-grey-medium);
-  --input: var(--color-grey-medium);
-  --ring: var(--color-blklight-200);
+  --destructive-foreground: var(--color-light);
+  --border: var(--color-grey-dark);
+  --input: var(--color-grey-dark);
+  --ring: var(--color-grey-dark);
+  --radius: 0.125rem;
+
+  /* --- Charts --- */
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
+
+  /* --- Sidebar --- */
   --sidebar: var(--color-light);
   --sidebar-foreground: var(--color-dark);
-  --sidebar-primary: oklch(0.21 0.034 264.665);
-  --sidebar-primary-foreground: oklch(0.985 0.002 247.839);
-  --sidebar-accent: oklch(0.967 0.003 264.542);
-  --sidebar-accent-foreground: oklch(0.21 0.034 264.665);
-  --sidebar-border: oklch(0.928 0.006 264.531);
-  --sidebar-ring: oklch(0.707 0.022 261.325);
+  --sidebar-primary: var(--color-dark);
+  --sidebar-primary-foreground: var(--color-light);
+  --sidebar-accent: var(--color-grey);
+  --sidebar-accent-foreground: var(--color-dark);
+  --sidebar-border: var(--color-grey-medium);
+  --sidebar-ring: var(--color-grey-dark);
 }
 
+/* ============================================================
+   SEMANTIC TOKENS — DARK
+   ============================================================ */
 .dark {
   --background: var(--color-dark);
   --foreground: var(--color-light);
-  --card: var(--color-dark);
+  --card: oklch(0.32 0 0);
   --card-foreground: var(--color-light);
-  --popover: var(--color-dark);
+  --popover: oklch(0.32 0 0);
   --popover-foreground: var(--color-light);
-  --primary: var(--color-blklight-500);
-  --primary-foreground: var(--color-light);
-  --secondary: var(--color-havelock-blue-500);
+  --primary: var(--color-light);
+  --primary-foreground: var(--color-dark);
+  --secondary: oklch(0.36 0 0);
   --secondary-foreground: var(--color-light);
-  --muted: var(--color-blklight-900);
+  --muted: oklch(0.36 0 0);
   --muted-foreground: var(--color-grey-medium);
-  --accent: var(--color-blklight-900);
+  --accent: oklch(0.4 0 0);
   --accent-foreground: var(--color-light);
   --destructive: var(--color-crimson-500);
-  --destructive-foreground: var(--color-crimson-500);
-  --border: var(--color-grey-darker);
-  --input: var(--color-grey-darker);
-  --ring: var(--color-blklight-100);
+  --destructive-foreground: var(--color-light);
+  --border: oklch(0.47 0 0);
+  --input: oklch(0.47 0 0);
+  --ring: var(--color-grey-darker);
+
+  /* --- Charts --- */
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.21 0.034 264.665);
-  --sidebar-foreground: oklch(0.985 0.002 247.839);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0.002 247.839);
-  --sidebar-accent: oklch(0.278 0.033 256.848);
-  --sidebar-accent-foreground: oklch(0.985 0.002 247.839);
-  --sidebar-border: oklch(0.278 0.033 256.848);
-  --sidebar-ring: oklch(0.446 0.03 256.802);
+
+  /* --- Sidebar --- */
+  --sidebar: oklch(0.32 0 0);
+  --sidebar-foreground: var(--color-light);
+  --sidebar-primary: var(--color-light);
+  --sidebar-primary-foreground: var(--color-dark);
+  --sidebar-accent: oklch(0.36 0 0);
+  --sidebar-accent-foreground: var(--color-light);
+  --sidebar-border: oklch(0.4 0 0);
+  --sidebar-ring: var(--color-grey-darker);
 }
 
+/* ============================================================
+   SEMANTIC TOKENS — BOOK
+   Only overrides what differs from :root (light)
+   ============================================================ */
 .book {
   --background: var(--color-sepia);
-  --foreground: var(--color-dark);
   --card: var(--color-sepia);
   --card-foreground: var(--color-dark);
   --popover: var(--color-sepia);
   --popover-foreground: var(--color-dark);
-  --primary: var(--color-blklight-500);
-  --primary-foreground: var(--color-light);
-  --secondary: var(--color-havelock-blue-500);
-  --secondary-foreground: var(--color-light);
-  --muted: var(--color-grey);
-  --muted-foreground: var(--color-grey-darker);
-  --accent: var(--color-blklight-200);
+  --secondary: var(--color-sepia-medium);
+  --secondary-foreground: var(--color-dark);
+  --muted: var(--color-sepia-medium);
+  --accent: var(--color-sepia-grey);
   --accent-foreground: var(--color-dark);
-  --destructive: var(--color-crimson-500);
-  --destructive-foreground: var(--color-crimson-500);
-  --border: var(--color-grey-medium);
-  --input: var(--color-grey-medium);
-  --ring: var(--color-blklight-200);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
+  --border: oklch(74.5% 0.012 84.567);
+  --input: oklch(74.5% 0.012 84.567);
   --sidebar: var(--color-sepia);
   --sidebar-foreground: var(--color-dark);
-  --sidebar-primary: oklch(0.21 0.034 264.665);
-  --sidebar-primary-foreground: oklch(0.985 0.002 247.839);
-  --sidebar-accent: oklch(0.967 0.003 264.542);
-  --sidebar-accent-foreground: oklch(0.21 0.034 264.665);
-  --sidebar-border: oklch(0.928 0.006 264.531);
-  --sidebar-ring: oklch(0.707 0.022 261.325);
+  --sidebar-accent: var(--color-sepia-medium);
+  --sidebar-accent-foreground: var(--color-dark);
+  --sidebar-border: var(--color-sepia-grey);
 }
 
+/* ============================================================
+   THEME INLINE — Tailwind token mapping
+   ============================================================ */
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  /* --- Fonts --- */
+  --font-heading: var(--font-mono);
+  --font-sans: var(--font-inter), "Inter", sans-serif;
+  --font-mono: var(--font-mono), "JetBrains Mono", monospace;
+  --font-pixel: var(--font-geist-pixel-square), "Geist Pixel Square", monospace;
+  --font-pixel-circle:
+    var(--font-geist-pixel-circle), "Geist Pixel Circle", monospace;
+
+  /* --- Semantic color mapping --- */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-ink: var(--ink);
+  --color-surface: var(--surface);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
@@ -237,6 +301,7 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -253,7 +318,41 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* --- Radius --- */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* --- Accordion animations --- */
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+
+  /* --- Aurora animation --- */
   --animate-aurora: aurora 8s ease-in-out infinite alternate;
+
   @keyframes aurora {
     0% {
       background-position: 0% 50%;
@@ -278,52 +377,110 @@
   }
 }
 
+/* ============================================================
+   BASE LAYER
+   ============================================================ */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
 
-  body {
-    @apply bg-background text-foreground;
-    font-family: "Inter", "Geist Sans", sans-serif;
+  html {
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    @apply font-mono;
   }
 
+  html::-webkit-scrollbar {
+    display: none;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /* --- Font utility classes --- */
   .font-inter {
     font-family: "Inter", "Geist Sans", sans-serif;
   }
-
   .font-barlow {
     font-family: "Barlow", "Inter", "Geist Sans", sans-serif;
   }
-
   .font-jetbrains {
     font-family: "JetBrains Mono", "Geist Mono", monospace;
   }
-
   .font-eb-garamond {
     font-family: "EB Garamond", serif;
   }
-
   .font-roboto {
     font-family: "Roboto", sans-serif;
   }
-
   .font-overpass {
     font-family: "Overpass", sans-serif;
   }
-
   .font-playfair {
     font-family: "Playfair Display", serif;
   }
+  .font-pixel {
+    font-family: var(--font-pixel);
+  }
+  .font-pixel-circle {
+    font-family: var(--font-pixel-circle);
+  }
 
-  /* Arquivo de estilos com Tailwind CSS usando @apply */
+  /* --- Prose overrides --- */
+  .prose p {
+    @apply indent-8;
+  }
+  .prose p + p {
+    margin-top: 0;
+  }
+  .prose p:not(:last-child) {
+    margin-bottom: 0;
+  }
+
+  @layer components {
+    .prose hr {
+      margin: 8px 0 !important;
+    }
+  }
+
+  ::selection {
+    background: hsl(var(--ink));
+    color: hsl(var(--background));
+  }
 }
+
+/* ============================================================
+   TEXTURE & BACKGROUND UTILITIES
+   ============================================================ */
 .background-texture {
-  /* background-image: url("../assets/images/grain.png"); */
   background-image: url("../assets/images/noisy.png");
   background-attachment: local;
-  /* background-size: 50px 50px;
-  background-position: left top; */
+}
+
+.texturization-background::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--background-paper-header);
+  mix-blend-mode: overlay;
+  transform: translateZ(0);
+  pointer-events: none;
+}
+
+.texture-item {
+  position: relative;
+}
+
+.texture-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--background-paper-child-frame);
+  mix-blend-mode: overlay;
+  transform: translateZ(0);
+  pointer-events: none;
 }
 
 .marker-line {
@@ -334,12 +491,46 @@
   -webkit-box-decoration-break: clone;
 }
 
-@layer components {
-  .prose hr {
-    margin: 8px 0 !important;
-  }
+/* ============================================================
+   LAYOUT COMPONENTS
+   ============================================================ */
+.background-header {
+  @apply sticky lg:top-2.25 top-0 w-full z-99 h-12 grid lg:grid-cols-[125px_3fr_1fr] md:grid-cols-[125px_3fr_1fr] grid-cols-[125px_3fr_1fr] justify-between items-center border-b border-foreground bg-background;
 }
 
+.background-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--background-paper-header);
+  mix-blend-mode: overlay;
+  transform: translateZ(0);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.editor-toolbar {
+  @apply sticky top-14.25 z-30 border-b rounded-xs bg-background border-foreground;
+}
+
+.editor-toolbar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--background-paper-header);
+  mix-blend-mode: overlay;
+  transform: translateZ(0);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.background-frame {
+  @apply bg-transparent border-[8px] border-[#252525] dark:border-[#eaeaea];
+}
+
+/* ============================================================
+   ARTICLE GRID
+   ============================================================ */
 .main-article {
   .article-grid {
     display: grid;
@@ -360,7 +551,7 @@
   }
 
   .article-grid > figure > pre {
-    font-family: JetBrains Mono, monospace;
+    font-family: "JetBrains Mono", monospace;
     border-radius: 8px;
   }
 
@@ -378,30 +569,24 @@
   .article-grid > hr {
     margin: 4px 0 16px !important;
   }
-
   .article-grid > p {
     margin: 0 0 16px !important;
   }
-
   .article-grid > h1 {
     font-size: 36px !important;
   }
-
   .article-grid > h2 {
     font-size: 32px !important;
   }
-
   .article-grid > h3 {
     font-size: 28px !important;
   }
-
   .article-grid > h4 {
     font-size: 24px !important;
   }
 
   @media screen and (max-width: 1024px) {
     .article-grid {
-      display: grid;
       grid-template-columns: 1fr 1fr 10px 675px 10px 1fr 1fr;
     }
 
@@ -429,38 +614,19 @@
 
   @media screen and (max-width: 768px) {
     .article-grid {
-      /* display: flex;
-      flex-direction: column; */
       display: block;
       padding: 0 16px;
-      /* display: grid;
-      grid-template-columns: 10px auto 10px; */
+
       p {
         font-size: 18px;
       }
-
       pre {
         white-space: pre-wrap !important;
       }
     }
-
-    .article-grid > * {
-      grid-column-start: 2;
-      grid-column-end: 2;
-    }
-
-    /* .article-grid > figure {
-      grid-column: 2;
-      margin: 16px 0 16px;
-    }
-
-    .article-grid > blockquote {
-      grid-column: 2;
-    } */
   }
-}
 
-.main-article {
+  /* --- Serif font variant inside article --- */
   .serif-font {
     h1,
     h2,
@@ -470,7 +636,6 @@
     h6 {
       font-family: "Playfair Display", serif !important;
     }
-
     p {
       font-family: "EB Garamond", serif !important;
       font-size: 20px !important;
@@ -478,20 +643,20 @@
   }
 }
 
-.barlow-font {
-  font-family: "Barlow", sans-serif !important;
-}
-
-.jetbrains-font {
-  font-family: "JetBrains Mono", monospace !important;
-}
-
+/* ============================================================
+   STANDALONE FONT VARIANT CLASSES
+   ============================================================ */
 .serif-font {
   font-family: "Playfair Display", serif !important;
 }
-
 .eb-serif-font {
   font-family: "EB Garamond", serif !important;
+}
+.barlow-font {
+  font-family: "Barlow", sans-serif !important;
+}
+.jetbrains-font {
+  font-family: "JetBrains Mono", monospace !important;
 }
 
 .serif-font p,
@@ -499,6 +664,9 @@
   font-family: "EB Garamond", serif !important;
 }
 
+/* ============================================================
+   TUTORIAL CONTENT
+   ============================================================ */
 .tutorial-content h1 {
   font-size: 2rem;
   font-weight: 700;
@@ -525,17 +693,14 @@
 .tutorial-content p {
   margin-bottom: 0.75rem;
 }
-
 .tutorial-content ul,
 .tutorial-content ol {
   padding-left: 1.5rem;
   margin-bottom: 0.75rem;
 }
-
 .tutorial-content ul {
   list-style-type: disc;
 }
-
 .tutorial-content ol {
   list-style-type: decimal;
 }
@@ -550,8 +715,9 @@
 }
 
 .tutorial-content code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
   font-size: 0.9em;
 }
 
@@ -562,7 +728,382 @@
   margin: 1rem 0;
 }
 
-/* Fix for code language selector */
+/* ============================================================
+   TICKER
+   ============================================================ */
+@keyframes scroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes slide {
+  0% {
+    transform: translate(100%);
+  }
+  100% {
+    transform: translate(-100%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 40s linear infinite;
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.ticker-container {
+  overflow: hidden;
+  width: 100% !important;
+  @apply lg:max-w-[calc(100vw-1.25rem)];
+}
+
+.ticker-container:hover .animate-scroll {
+  animation-play-state: paused;
+}
+
+.ticker-item:hover {
+  @apply bg-background! text-foreground! scale-110;
+}
+
+/* ============================================================
+   MISC
+   ============================================================ */
 .ProseMirror {
   position: relative;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+@layer utilities {
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+  .hairline {
+    border-width: 1px;
+    border-color: hsl(var(--ink));
+  }
+
+  .shadow-pop-bl {
+    animation: shadow-pop-bl 0.3s cubic-bezier(0.47, 0, 0.745, 0.715) both;
+  }
+  .shadow-pop-br {
+    animation: shadow-pop-br 0.3s cubic-bezier(0.47, 0, 0.745, 0.715) both;
+  }
+  .shadow-pop-tl {
+    animation: shadow-pop-tl 0.3s cubic-bezier(0.47, 0, 0.745, 0.715) both;
+  }
+  .shadow-pop-tr {
+    animation: shadow-pop-tr 0.3s cubic-bezier(0.47, 0, 0.745, 0.715) both;
+  }
+
+  @keyframes shadow-pop-bl {
+    0% {
+      box-shadow: 0 0 var(--shadow-pop-color, currentColor);
+      transform: translate(0, 0);
+    }
+    100% {
+      box-shadow:
+        -1px 1px var(--shadow-pop-color, currentColor),
+        -2px 2px var(--shadow-pop-color, currentColor),
+        -3px 3px var(--shadow-pop-color, currentColor),
+        -4px 4px var(--shadow-pop-color, currentColor),
+        -5px 5px var(--shadow-pop-color, currentColor),
+        -6px 6px var(--shadow-pop-color, currentColor),
+        -7px 7px var(--shadow-pop-color, currentColor),
+        -8px 8px var(--shadow-pop-color, currentColor);
+      transform: translate(8px, -8px);
+    }
+  }
+
+  @keyframes shadow-pop-br {
+    0% {
+      box-shadow: 0 0 var(--shadow-pop-color, currentColor);
+      transform: translate(0, 0);
+    }
+    100% {
+      box-shadow:
+        1px 1px var(--shadow-pop-color, currentColor),
+        2px 2px var(--shadow-pop-color, currentColor),
+        3px 3px var(--shadow-pop-color, currentColor),
+        4px 4px var(--shadow-pop-color, currentColor),
+        5px 5px var(--shadow-pop-color, currentColor),
+        6px 6px var(--shadow-pop-color, currentColor),
+        7px 7px var(--shadow-pop-color, currentColor),
+        8px 8px var(--shadow-pop-color, currentColor);
+      transform: translate(-8px, -8px);
+    }
+  }
+
+  @keyframes shadow-pop-tl {
+    0% {
+      box-shadow: 0 0 var(--shadow-pop-color, currentColor);
+      transform: translate(0, 0);
+    }
+    100% {
+      box-shadow:
+        -1px -1px var(--shadow-pop-color, currentColor),
+        -2px -2px var(--shadow-pop-color, currentColor),
+        -3px -3px var(--shadow-pop-color, currentColor),
+        -4px -4px var(--shadow-pop-color, currentColor),
+        -5px -5px var(--shadow-pop-color, currentColor),
+        -6px -6px var(--shadow-pop-color, currentColor),
+        -7px -7px var(--shadow-pop-color, currentColor),
+        -8px -8px var(--shadow-pop-color, currentColor);
+      transform: translate(8px, 8px);
+    }
+  }
+
+  @keyframes shadow-pop-tr {
+    0% {
+      box-shadow: 0 0 var(--shadow-pop-color, currentColor);
+      transform: translate(0, 0);
+    }
+    100% {
+      box-shadow:
+        1px -1px var(--shadow-pop-color, currentColor),
+        2px -2px var(--shadow-pop-color, currentColor),
+        3px -3px var(--shadow-pop-color, currentColor),
+        4px -4px var(--shadow-pop-color, currentColor),
+        5px -5px var(--shadow-pop-color, currentColor),
+        6px -6px var(--shadow-pop-color, currentColor),
+        7px -7px var(--shadow-pop-color, currentColor),
+        8px -8px var(--shadow-pop-color, currentColor);
+      transform: translate(-8px, 8px);
+    }
+  }
+
+  /* Utilitário de ruído/noisy usando pseudo-elemento */
+  .pattern-noisy {
+    position: relative;
+  }
+
+  .pattern-noisy::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 1; /* Ajuste a intensidade do ruído aqui */
+
+    /* URL da sua imagem ou SVG de ruído */
+    /* background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); */
+    background-image: url("../assets/images/noisy.png");
+
+    /* Se preferir usar blend-mode para mesclar melhor com as cores abaixo: */
+    /* mix-blend-mode: overlay; */
+  }
+
+  /* Garante que os filhos direto com posição relativa fiquem por cima da textura */
+  /* .pattern-noisy > * {
+    position: relative;
+    z-index: 20;
+  } */
+}
+
+@layer components {
+  .fx-card {
+    --mx: 50%;
+    --my: 50%;
+    --fx-opacity: 0;
+  }
+
+  .dither-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: calc(var(--fx-opacity, 0) * 0.95);
+    transition: opacity 320ms ease-out;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4'><circle cx='0.5' cy='0.5' r='0.55' fill='%230d0d0d'/><circle cx='2.5' cy='2.5' r='0.4' fill='%230d0d0d'/><circle cx='3.2' cy='1' r='0.25' fill='%230d0d0d'/></svg>");
+    background-size: 4px 4px;
+    -webkit-mask-image: radial-gradient(
+      circle 180px at var(--mx) var(--my),
+      rgba(0, 0, 0, 0.9),
+      rgba(0, 0, 0, 0.3) 50%,
+      transparent 78%
+    );
+    mask-image: radial-gradient(
+      circle 180px at var(--mx) var(--my),
+      rgba(0, 0, 0, 0.9),
+      rgba(0, 0, 0, 0.3) 50%,
+      transparent 78%
+    );
+    mix-blend-mode: multiply;
+  }
+
+  .dither-layer.is-inverted {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4'><circle cx='0.5' cy='0.5' r='0.55' fill='%23f5f3ee'/><circle cx='2.5' cy='2.5' r='0.4' fill='%23f5f3ee'/><circle cx='3.2' cy='1' r='0.25' fill='%23f5f3ee'/></svg>");
+    mix-blend-mode: screen;
+  }
+
+  /* Variante leve usada pelo SimpleFlipCard — preserva legibilidade do texto */
+  .simple-dither .dither-layer {
+    opacity: calc(var(--fx-opacity, 0) * 0.45);
+    background-size: 5px 5px;
+    -webkit-mask-image: radial-gradient(
+      circle 130px at var(--mx) var(--my),
+      rgba(0, 0, 0, 0.6),
+      rgba(0, 0, 0, 0.2) 45%,
+      transparent 65%
+    );
+    mask-image: radial-gradient(
+      circle 130px at var(--mx) var(--my),
+      rgba(0, 0, 0, 0.6),
+      rgba(0, 0, 0, 0.2) 45%,
+      transparent 65%
+    );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer utilities {
+  /* Base */
+  .shadow-pop-bl {
+    animation: shadow-pop-bl 0.3s cubic-bezier(0.47, 0, 0.745, 0.715) both;
+  }
+  .shadow-pop-br {
+    animation: shadow-pop-br 0.3s cubic-bezier(0.47, 0, 0.745, 0.715) both;
+  }
+  .shadow-pop-tl {
+    animation: shadow-pop-tl 0.3s cubic-bezier(0.47, 0, 0.745, 0.715) both;
+  }
+  .shadow-pop-tr {
+    animation: shadow-pop-tr 0.3s cubic-bezier(0.47, 0, 0.745, 0.715) both;
+  }
+
+  /* Hover: */
+  .hover\:shadow-pop-bl:hover {
+    animation: shadow-pop-bl 0.3s cubic-bezier(0.47, 0, 0.745, 0.715) both;
+  }
+  .hover\:shadow-pop-br:hover {
+    animation: shadow-pop-br 0.3s cubic-bezier(0.47, 0, 0.745, 0.715) both;
+  }
+  .hover\:shadow-pop-tl:hover {
+    animation: shadow-pop-tl 0.3s cubic-bezier(0.47, 0, 0.745, 0.715) both;
+  }
+  .hover\:shadow-pop-tr:hover {
+    animation: shadow-pop-tr 0.3s cubic-bezier(0.47, 0, 0.745, 0.715) both;
+  }
+
+  /* Group-hover: */
+  .group:hover .group-hover\:shadow-pop-bl {
+    animation: shadow-pop-bl 0.3s cubic-bezier(0.47, 0, 0.745, 0.715) both;
+  }
+  .group:hover .group-hover\:shadow-pop-br {
+    animation: shadow-pop-br 0.3s cubic-bezier(0.47, 0, 0.745, 0.715) both;
+  }
+  .group:hover .group-hover\:shadow-pop-tl {
+    animation: shadow-pop-tl 0.3s cubic-bezier(0.47, 0, 0.745, 0.715) both;
+  }
+  .group:hover .group-hover\:shadow-pop-tr {
+    animation: shadow-pop-tr 0.3s cubic-bezier(0.47, 0, 0.745, 0.715) both;
+  }
+}
+
+/* --- Chamfer Kit --- */
+@utility chamfer {
+  --c: 16px;
+  --tl: 0px;
+  --tr: 0px;
+  --br: 0px;
+  --bl: 0px;
+  clip-path: polygon(
+    var(--tl) 0,
+    calc(100% - var(--tr)) 0,
+    100% var(--tr),
+    100% calc(100% - var(--br)),
+    calc(100% - var(--br)) 100%,
+    var(--bl) 100%,
+    0 calc(100% - var(--bl)),
+    0 var(--tl)
+  );
+}
+@utility chamfer-tl {
+  --tl: var(--c);
+}
+@utility chamfer-tr {
+  --tr: var(--c);
+}
+@utility chamfer-br {
+  --br: var(--c);
+}
+@utility chamfer-bl {
+  --bl: var(--c);
+}
+@utility chamfer-all {
+  --tl: var(--c);
+  --tr: var(--c);
+  --br: var(--c);
+  --bl: var(--c);
+}
+@utility chamfer-xs {
+  --c: 4px;
+}
+@utility chamfer-sm {
+  --c: 8px;
+}
+@utility chamfer-lg {
+  --c: 24px;
+}
+@utility chamfer-xl {
+  --c: 32px;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility flip-scene {
+  perspective: 1200px;
+}
+@utility flip-inner {
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+@utility flip-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+@utility flip-back {
+  transform: rotateY(180deg);
+}
+@utility flipped {
+  transform: rotateY(180deg);
+}
+@utility flip-back-x {
+  transform: rotateX(180deg);
+}
+@utility flipped-x {
+  transform: rotateX(180deg);
 }
