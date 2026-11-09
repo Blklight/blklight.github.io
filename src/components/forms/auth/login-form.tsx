@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import { Eye, EyeOff, Loader2, Lock, LogIn, Mail } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -25,6 +25,9 @@ import { useAuthStore } from "@/store/useAuthStore";
 import type { ApiResponse, AuthResponse } from "@/types/api.types";
 import { type LoginFormData, loginSchema } from "@/types/form.schemas";
 
+const REMEMBER_ME_KEY = "blklight-remember-me";
+const REMEMBERED_IDENTIFIER_KEY = "blklight-remembered-identifier";
+
 interface LoginFormProps {
   onSuccess?: () => void;
 }
@@ -42,6 +45,16 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     },
   });
 
+  useEffect(() => {
+    try {
+      if (localStorage.getItem(REMEMBER_ME_KEY) === "true") {
+        form.setValue("rememberMe", true);
+      }
+      const identifier = localStorage.getItem(REMEMBERED_IDENTIFIER_KEY);
+      if (identifier) form.setValue("identifier", identifier);
+    } catch {}
+  }, [form]);
+
   const mutation = useMutation({
     mutationFn: async (data: LoginFormData) => {
       const response = await apiClient.post<ApiResponse<AuthResponse>>(
@@ -50,7 +63,14 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       );
       return response.data;
     },
-    onSuccess: (response) => {
+    onSuccess: (response, data) => {
+      try {
+        if (data.rememberMe) {
+          localStorage.setItem(REMEMBERED_IDENTIFIER_KEY, data.identifier);
+        } else {
+          localStorage.removeItem(REMEMBERED_IDENTIFIER_KEY);
+        }
+      } catch {}
       if (response.data) {
         setSession(response.data.user, response.data.accessToken);
         onSuccess?.();
@@ -100,6 +120,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                     {...field}
                     id={field.name}
                     type="text"
+                    autoComplete="username"
                     placeholder="seu@email.com"
                     aria-invalid={fieldState.invalid}
                   />
@@ -126,6 +147,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                     {...field}
                     id={field.name}
                     type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
                     placeholder="••••••••"
                     aria-invalid={fieldState.invalid}
                   />
@@ -166,9 +188,15 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                   <Checkbox
                     id="remember"
                     checked={field.value ?? false}
-                    onCheckedChange={(checked) =>
-                      field.onChange(checked === true)
-                    }
+                    onCheckedChange={(checked) => {
+                      field.onChange(checked === true);
+                      try {
+                        localStorage.setItem(
+                          REMEMBER_ME_KEY,
+                          String(checked === true),
+                        );
+                      } catch {}
+                    }}
                   />
                 )}
               />

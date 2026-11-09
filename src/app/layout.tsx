@@ -4,6 +4,7 @@ import { Inter, JetBrains_Mono, Merriweather } from "next/font/google";
 import { Html } from "@/components/html";
 import { LayoutBase } from "@/components/layout-base";
 import { QueryProvider } from "@/components/query-provider";
+import { SessionBootstrap } from "@/components/session-bootstrap";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -26,6 +27,8 @@ const jetBrainsMono = JetBrains_Mono({
   variable: "--font-mono",
 });
 
+const AUTH_REDIRECT_SCRIPT = `try{if(location.pathname==="/"){var s=JSON.parse(localStorage.getItem("blklight-auth")||"null");s=s&&s.state;if(s&&s.isAuthenticated&&s.user){document.documentElement.style.visibility="hidden";location.replace(s.user.onboardingComplete?"/dashboard":"/onboarding")}}}catch(e){}`;
+
 export const metadata: Metadata = {
   title: "Blklight",
   description: "Plataforma Blklight",
@@ -44,6 +47,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         GeistPixelCircle.variable,
       )}
     >
+      <head>
+        {/* "/" is static HTML: redirect a persisted session before first paint. */}
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: static inline script
+          dangerouslySetInnerHTML={{ __html: AUTH_REDIRECT_SCRIPT }}
+        />
+      </head>
       <body>
         <ThemeProvider
           attribute="class"
@@ -53,6 +63,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           disableTransitionOnChange
         >
           <QueryProvider>
+            <SessionBootstrap />
             <TooltipProvider>
               <LayoutBase>{children}</LayoutBase>
             </TooltipProvider>

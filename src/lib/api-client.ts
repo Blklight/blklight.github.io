@@ -23,6 +23,44 @@ let refreshPromise: Promise<string> | null = null;
 
 let isRedirecting = false;
 
+export function refreshAccessToken(): Promise<string> {
+  if (refreshPromise) return refreshPromise;
+
+  refreshPromise = (async () => {
+    const response = await refreshClient.post("/api/v1/auth/refresh");
+    const newAccessToken = response.data?.data?.accessToken as
+      | string
+      | undefined;
+
+    if (!newAccessToken) {
+      throw new Error("No access token in refresh response");
+    }
+
+    const { setSession, user } = useAuthStore.getState();
+    setSession(user ?? response.data?.data?.user ?? null, newAccessToken);
+
+    return newAccessToken;
+  })()
+    .catch((refreshError) => {
+      const status = refreshError.response?.status;
+
+      if (status === 401) {
+        endSessionLocal();
+        if (typeof window !== "undefined" && !isRedirecting) {
+          isRedirecting = true;
+          window.location.assign("/");
+        }
+      }
+
+      throw refreshError;
+    })
+    .finally(() => {
+      refreshPromise = null;
+    });
+
+  return refreshPromise;
+}
+
 apiClient.interceptors.request.use((config) => {
   const token = useAuthStore.getState().accessToken;
   if (token) {
@@ -54,54 +92,10 @@ apiClient.interceptors.response.use(
       originalRequest._retried !== true;
 
     if (shouldAttemptRefresh) {
-      if (refreshPromise) {
-        try {
-          const newToken = await refreshPromise;
-          originalRequest._retried = true;
-          originalRequest.headers = originalRequest.headers ?? {};
-          originalRequest.headers.Authorization = `Bearer ${newToken}`;
-          return apiClient.request(originalRequest);
-        } catch {
-          return Promise.reject(error);
-        }
-      }
-
       originalRequest._retried = true;
 
-      refreshPromise = (async () => {
-        const response = await refreshClient.post("/api/v1/auth/refresh");
-        const newAccessToken = response.data?.data?.accessToken as
-          | string
-          | undefined;
-
-        if (!newAccessToken) {
-          throw new Error("No access token in refresh response");
-        }
-
-        const { setSession, user } = useAuthStore.getState();
-        setSession(user ?? response.data?.data?.user ?? null, newAccessToken);
-
-        return newAccessToken;
-      })()
-        .catch((refreshError) => {
-          const status = refreshError.response?.status;
-
-          if (status === 401) {
-            endSessionLocal();
-            if (typeof window !== "undefined" && !isRedirecting) {
-              isRedirecting = true;
-              window.location.assign("/");
-            }
-          }
-
-          throw refreshError;
-        })
-        .finally(() => {
-          refreshPromise = null;
-        });
-
       try {
-        const newToken = await refreshPromise;
+        const newToken = await refreshAccessToken();
         originalRequest.headers = originalRequest.headers ?? {};
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return apiClient.request(originalRequest);
