@@ -1,4 +1,3 @@
-import React from "react";
 import { MediaView } from "@/components/media-view";
 
 export default function MaskTesterPage() {

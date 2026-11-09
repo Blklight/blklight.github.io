@@ -52,6 +52,7 @@ export const MediaView: React.FC<MediaViewProps> = ({
             className="w-full h-full object-cover"
           />
         ) : imageSrc ? (
+          // biome-ignore lint/performance/noImgElement: arbitrary external URL (user cover/avatar or demo asset); next/image would need remotePatterns for every host
           <img src={imageSrc} alt="" className="w-full h-full object-cover" />
         ) : null}
       </div>

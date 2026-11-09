@@ -69,6 +69,7 @@ export const DigitalSignature = ({
 }) => {
   const hasTheme = !!color;
 
+  // biome-ignore lint/correctness/noUnusedVariables: frame tint is disabled below (style={frameStyle} commented out) but kept for re-enabling
   const frameStyle = hasTheme
     ? {
         background: `color-mix(in srgb, ${color} 4%, ${background ?? "transparent"})`,
@@ -120,7 +121,7 @@ export const DigitalSignature = ({
             // Centered in any width: every line of the card (label, name,
             // code, date, organization) is centered and wraps when narrow.
             "py-1 px-2 mx-3 my-3 font-mono text-center max-w-[calc(100%-1.5rem)] break-words",
-            !hasTheme && "border border-[#252525] dark:border-[#eaeaea]",
+            !hasTheme && "border border-foreground",
           )}
           style={cardStyle}
         >

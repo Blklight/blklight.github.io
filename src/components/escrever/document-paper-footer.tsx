@@ -1,7 +1,6 @@
 "use client";
 
 import { Clock } from "lucide-react";
-import React from "react";
 import type { PaperColors } from "@/components/document/types";
 
 export interface DocumentPaperFooterProps {

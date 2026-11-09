@@ -287,6 +287,7 @@ export function CoverImageEditor({
               : "border-border hover:border-muted-foreground"
           }`}
         >
+          {/* biome-ignore lint/performance/noImgElement: arbitrary external URL (user cover/avatar or demo asset); next/image would need remotePatterns for every host */}
           <img
             src={coverImage}
             alt={f.label}
@@ -358,6 +359,7 @@ export function CoverImageEditor({
           onMouseEnter={() => setIsHoveringImage(true)}
           onMouseLeave={() => setIsHoveringImage(false)}
         >
+          {/* biome-ignore lint/performance/noImgElement: arbitrary external URL (user cover/avatar or demo asset); next/image would need remotePatterns for every host */}
           <img
             src={coverImage}
             alt="Capa do artigo"
@@ -433,6 +435,7 @@ export function CoverImageEditor({
               height: Math.min(settings.height, 260),
             }}
           >
+            {/* biome-ignore lint/performance/noImgElement: arbitrary external URL (user cover/avatar or demo asset); next/image would need remotePatterns for every host */}
             <img
               src={coverImage}
               alt="Preview da capa"

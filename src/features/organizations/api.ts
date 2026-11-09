@@ -1,4 +1,4 @@
-import { apiClient } from "@/lib/api-client";
+import { apiClient, unwrap } from "@/lib/api-client";
 import type {
   ApiResponse,
   FeedResult,
@@ -25,7 +25,7 @@ export interface OrganizationDocumentsQuery {
 export const getMyOrganizations = (): Promise<MyOrganization[]> =>
   apiClient
     .get<ApiResponse<MyOrganization[]>>("/api/v1/organizations/me")
-    .then((r) => r.data.data!);
+    .then(unwrap);
 
 /**
  * GET /api/v1/org/:orgname — one organization by its public handle.
@@ -39,7 +39,7 @@ export const getOrganization = (orgname: string): Promise<Organization> =>
     .get<ApiResponse<Organization>>(
       `/api/v1/org/${encodeURIComponent(orgname)}`,
     )
-    .then((r) => r.data.data!);
+    .then(unwrap);
 
 /**
  * GET /api/v1/org/:orgname/documents — documents published under an
@@ -58,4 +58,4 @@ export const getOrganizationDocuments = (
       `/api/v1/org/${encodeURIComponent(orgname)}/documents`,
       { params },
     )
-    .then((r) => r.data.data!);
+    .then(unwrap);

@@ -64,7 +64,7 @@ export const AppsStep = ({ apps, initial, onConfirm }: Props) => {
               cantinho inferior direito para virar.
             </p>
           </div>
-          {/** biome-ignore lint/a11y/useSemanticElements: <explanation> */}
+          {/* biome-ignore lint/a11y/useSemanticElements: live region around block content; <output> is meant for form results */}
           <div
             role="status"
             aria-live="polite"
@@ -135,8 +135,8 @@ export const AppsStep = ({ apps, initial, onConfirm }: Props) => {
             ? "// selecione ao menos um app para continuar"
             : `// ${count} ferramenta${count === 1 ? "" : "s"} no seu workspace`}
         </div>
-        {/** biome-ignore lint/a11y/useButtonType: <explanation> */}
         <button
+          type="button"
           disabled={count === 0}
           aria-disabled={count === 0}
           onClick={() => onConfirm(Array.from(selected))}

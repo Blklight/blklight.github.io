@@ -1,27 +1,13 @@
 "use client";
 
-import { ArrowRight, BookIcon, Layers, PenTool, Users } from "lucide-react";
+import { ArrowRight, Layers, PenTool, Users } from "lucide-react";
 import { motion } from "motion/react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { FeaturesSection } from "@/components/features-section";
 import { LandingNavbar } from "@/components/landing-navbar";
 import { AuroraText } from "@/components/ui/aurora-text";
-import Book, {
-  BookDescription,
-  BookHeader,
-  BookTitle,
-} from "@/components/ui/book";
 import { Button } from "@/components/ui/button";
-import DitherShader from "@/components/ui/dither-shader";
-import {
-  ExpandableScreen,
-  ExpandableScreenContent,
-  ExpandableScreenTrigger,
-} from "@/components/ui/expandable-screen";
-import { ProgressiveBlur } from "@/components/ui/progressive-blur";
 import { TextAnimate } from "@/components/ui/text-animate";
 import { TextureOverlay } from "@/components/ui/texture-overlay";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -129,7 +115,7 @@ export default function Home() {
                 { icon: PenTool, label: "Artigos & Blog" },
                 { icon: Layers, label: "Ferramentas" },
                 { icon: Users, label: "Comunidade" },
-              ].map((item, index) => (
+              ].map((item) => (
                 <span
                   key={item.label}
                   className="inline-flex items-center gap-2 px-4 py-2 border border-bluesky-500 text-bluesky-600 rounded-xs font-mono text-xs uppercase tracking-wider"

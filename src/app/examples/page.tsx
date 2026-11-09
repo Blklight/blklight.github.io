@@ -1,23 +1,12 @@
 "use client";
-import { motion } from "motion/react";
-import Image from "next/image";
 import { useState } from "react";
-import {
-  ActionCard,
-  ActionCardContent,
-  ActionCardFooter,
-  ActionCardHeader,
-  ActionCardProvider,
-  ActionCardWrapper,
-  gridVariants,
-} from "@/components/action-cards";
 import { DigitalSignature } from "@/components/digital-signature";
 import { DocumentFooter } from "@/components/document-related/document-footer";
 import { DocumentHeader } from "@/components/document-related/document-header";
 import { LoginForm } from "@/components/forms/auth/login-form";
 import { RegisterForm } from "@/components/forms/auth/register-form";
 import { MediaView } from "@/components/media-view";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { CornerFrame, CornerMarkers } from "@/components/ui/corner-frame";
 import { DirectionAwareTabs } from "@/components/ui/direction-aware-tabs";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
@@ -30,22 +19,17 @@ import {
   PopoverFormSeparator,
   PopoverFormSuccess,
 } from "@/components/ui/popover-form";
-import { Tabs } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { TextureOverlay } from "@/components/ui/texture-overlay";
-import { ContentTools, ManagementTools } from "@/data/tools";
 
 type FormState = "idle" | "loading" | "success";
 
 import {
-  FilmGrain,
-  Glitch,
   Halftone,
   ImageTexture,
   Paper,
   Shader,
   SolidColor,
-  VHS,
 } from "shaders/react";
 
 export default function ExamplesPage() {
@@ -619,6 +603,7 @@ export default function ExamplesPage() {
         <div className="">
           <MediaView pattern="noisy" className="flex w-full h-150 ">
             <div className="bg-blue-500 w-full h-full">
+              {/* biome-ignore lint/performance/noImgElement: arbitrary external URL (user cover/avatar or demo asset); next/image would need remotePatterns for every host */}
               <img
                 src="https://ultimatemercer.com/Ultimate/dist/ex-img/kiernan-eps.jpg"
                 className="w-full h-full object-cover"
@@ -640,6 +625,7 @@ export default function ExamplesPage() {
         <div className="pattern-noisy relative flex w-full h-162.5 overflow-hidden">
           {/* Lado Esquerdo - Imagem com fundo azul */}
           <div className="bg-blue-500 w-1/2 h-full">
+            {/* biome-ignore lint/performance/noImgElement: arbitrary external URL (user cover/avatar or demo asset); next/image would need remotePatterns for every host */}
             <img
               src="https://ultimatemercer.com/Ultimate/dist/ex-img/kiernan-eps.jpg"
               className="w-full h-full object-cover"
