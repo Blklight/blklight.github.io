@@ -4,6 +4,7 @@ import { Inter, JetBrains_Mono, Merriweather } from "next/font/google";
 import { Html } from "@/components/html";
 import { LayoutBase } from "@/components/layout-base";
 import { QueryProvider } from "@/components/query-provider";
+import { SessionBootstrap } from "@/components/session-bootstrap";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -62,6 +63,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           disableTransitionOnChange
         >
           <QueryProvider>
+            <SessionBootstrap />
             <TooltipProvider>
               <LayoutBase>{children}</LayoutBase>
             </TooltipProvider>
