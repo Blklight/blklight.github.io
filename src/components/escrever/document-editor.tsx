@@ -12,7 +12,7 @@ import StarterKit from "@tiptap/starter-kit";
 import { Palette, Send } from "lucide-react";
 import { motion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Controller } from "react-hook-form";
+import { Controller, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import {
   CoverImageEditor,
@@ -45,6 +45,7 @@ import { FloatingActionBar } from "@/components/escrever/floating-action-bar";
 import { JsonPreviewModal, LinkModal } from "@/components/escrever/modals";
 import { PublishPanel } from "@/components/escrever/publish-panel";
 import { TemplatePicker } from "@/components/escrever/template-picker";
+import { useAutosave } from "@/components/escrever/use-autosave";
 import { useCurrentAuthorContext } from "@/components/escrever/use-current-author-context";
 import { useDocumentForm } from "@/components/escrever/use-document-form";
 import { Navbar } from "@/components/navbar";
@@ -86,6 +87,19 @@ import type {
  * design store. Missing/null fields fall back to the module defaults; the
  * store's loadDesignSnapshot normalizes letterhead styles on the way in.
  */
+/** The form values autosave compares, with a fixed shape and key order. */
+function toSaveSnapshot(values: {
+  title?: string;
+  subtitle?: string;
+  content?: unknown;
+}) {
+  return {
+    title: values.title ?? "",
+    subtitle: values.subtitle ?? "",
+    content: values.content ?? null,
+  };
+}
+
 function documentToDesign(detail: MyDocumentDetail): DesignInput {
   const style = detail.style;
   const merge = <T,>(value: unknown, fallback: T): T =>
@@ -364,13 +378,27 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
     setDocumentId(id);
   }, []);
 
+  // --- Autosave (server) ---
+  // Debounced save against the last saved snapshot. Only runs once the document
+  // exists (documentId set) so it PATCHes instead of creating on every
+  // keystroke; the first server save is manual. The localStorage draft
+  // (use-document-form) still covers unsaved new documents.
+  const watchedValues = useWatch({ control: form.control });
+  const autosaveRef = useRef<() => Promise<boolean>>(async () => false);
+  const { hasUnsavedChanges, markSaved } = useAutosave({
+    values: toSaveSnapshot(watchedValues),
+    enabled: !!documentId,
+    onSave: () => autosaveRef.current(),
+  });
+
   const onSave = useCallback(
     async (data: {
       title?: string;
       subtitle?: string;
       content?: object | null;
-    }) => {
-      if (!data.title?.trim()) return;
+    }): Promise<boolean> => {
+      if (!data.title?.trim()) return false;
+      const snapshot = toSaveSnapshot(form.getValues());
       setIsSaving(true);
       try {
         const payload = buildSavePayload({
@@ -379,25 +407,30 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
         });
         const saved = await saveMutation.mutateAsync(payload);
         if (saved?.id) persistDocumentId(saved.id);
+        markSaved(snapshot);
         setLastSaved(new Date());
+        return true;
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Erro ao salvar documento:", error);
+        toast.error(
+          "Falha ao salvar o documento. Suas alterações ainda não foram salvas.",
+        );
+        return false;
       } finally {
         setIsSaving(false);
       }
     },
-    [buildSavePayload, editor, persistDocumentId, saveMutation],
+    [
+      buildSavePayload,
+      editor,
+      form,
+      markSaved,
+      persistDocumentId,
+      saveMutation,
+    ],
   );
-
-  // Keep the latest save handler in a ref so the autosave effect can depend on
-  // stable values only. Depending directly on `onSave` would re-create the
-  // debounce timer on every render (the mutation objects change identity each
-  // render) and trigger an endless save loop.
-  const onSaveRef = useRef(onSave);
-  useEffect(() => {
-    onSaveRef.current = onSave;
-  }, [onSave]);
+  autosaveRef.current = () => onSave(form.getValues());
 
   // Publish flow: save (with category + tags + organization) if needed, then
   // PATCH /publish. The overlay stays open while this runs; the PublishPanel
@@ -408,6 +441,7 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
       setIsPublishing(true);
       try {
         let targetId = documentIdRef.current;
+        const snapshot = toSaveSnapshot(form.getValues());
         const fullPayload = buildSavePayload(
           {
             ...form.getValues(),
@@ -420,8 +454,10 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
           const saved = await saveMutation.mutateAsync(fullPayload);
           targetId = saved.id;
           persistDocumentId(targetId);
-        } else if (form.formState.isDirty) {
+          markSaved(snapshot);
+        } else if (hasUnsavedChanges) {
           await saveMutation.mutateAsync(fullPayload);
+          markSaved(snapshot);
         } else {
           await saveMutation.mutateAsync({
             categoryId: metadata.categoryId,
@@ -457,6 +493,8 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
       documentStatus,
       editor,
       form,
+      hasUnsavedChanges,
+      markSaved,
       organizationId,
       persistDocumentId,
       publishMutation,
@@ -475,21 +513,6 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
     setJsonPreviewAction("save");
     setShowJsonPreview(true);
   }, [buildSavePayload, editor, form]);
-
-  // --- Autosave (server) ---
-  // Debounced save against the real API. Only fires once a document already
-  // exists (documentId set) so it PATCHes instead of creating on every
-  // keystroke. The first server save must be triggered manually (onSave).
-  // The local localStorage draft (use-document-form) continues to work as a
-  // fallback alongside this.
-  useEffect(() => {
-    if (!documentId || !form.formState.isDirty) return;
-    const timeout = setTimeout(() => {
-      const data = form.getValues();
-      void onSaveRef.current(data);
-    }, 1800);
-    return () => clearTimeout(timeout);
-  }, [documentId, form.formState.isDirty, form.getValues]);
 
   const handleCoverUpload = useCallback(() => {
     setShowCoverUrlInput(true);
@@ -751,7 +774,7 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
             <ExpandableScreenContent className="bg-background">
               <PublishPanel
                 status={documentStatus}
-                hasUnsavedChanges={form.formState.isDirty || !documentId}
+                hasUnsavedChanges={hasUnsavedChanges || !documentId}
                 isPublishing={isPublishing}
                 initialCategoryId={initialValues?.category?.id ?? null}
                 initialTags={
