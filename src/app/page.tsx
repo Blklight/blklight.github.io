@@ -4,6 +4,8 @@ import { ArrowRight, BookIcon, Layers, PenTool, Users } from "lucide-react";
 import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { FeaturesSection } from "@/components/features-section";
 import { LandingNavbar } from "@/components/landing-navbar";
 import { AuroraText } from "@/components/ui/aurora-text";
@@ -22,7 +24,28 @@ import {
 import { ProgressiveBlur } from "@/components/ui/progressive-blur";
 import { TextAnimate } from "@/components/ui/text-animate";
 import { TextureOverlay } from "@/components/ui/texture-overlay";
+import { useAuthStore } from "@/store/useAuthStore";
+
 export default function Home() {
+  const router = useRouter();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+
+  useEffect(() => {
+    const check = () => {
+      const { isAuthenticated, user } = useAuthStore.getState();
+      if (isAuthenticated && user) {
+        router.replace(user.onboardingComplete ? "/dashboard" : "/onboarding");
+      }
+    };
+    if (useAuthStore.persist.hasHydrated()) {
+      check();
+      return;
+    }
+    return useAuthStore.persist.onFinishHydration(check);
+  }, [router]);
+
+  if (isAuthenticated) return null;
+
   return (
     <div className="bg-light book:bg-sepia dark:bg-dark relative background-texture rounded-xs">
       <LandingNavbar />
