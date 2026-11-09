@@ -132,7 +132,6 @@ export function FooterBlklight({
             ];
           return (
             <EditableText
-              // biome-ignore lint/suspicious/noArrayIndexKey: linhas posicionais (editadas por indice), mesmo padrao dos outros presets
               key={index}
               value={line}
               onChange={(v) => updateLine(index, v)}

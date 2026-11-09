@@ -189,8 +189,8 @@ export interface AuthResponse {
 export interface RefreshResponse {
   accessToken: string;
   user?: User | null;
-  profile?: any | null;
-  apps?: any[] | null;
+  profile?: ProfileMe | null;
+  apps?: string[] | null;
 }
 
 /**

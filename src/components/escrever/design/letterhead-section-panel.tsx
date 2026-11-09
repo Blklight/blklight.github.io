@@ -76,7 +76,7 @@ export function LetterheadSectionPanel({
   const presetComponents = isFooter
     ? FOOTER_PRESET_COMPONENTS
     : HEADER_PRESET_COMPONENTS;
-  const defaultBold = isFooter ? false : true;
+  const defaultBold = !isFooter;
 
   const setSection = (updates: DocumentHeader | DocumentFooter) => {
     if (isFooter) {

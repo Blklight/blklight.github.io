@@ -72,7 +72,6 @@ export function TypographySelector({
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* biome-ignore lint/a11y/useKeyWithClickEvents: backdrop de clique-fora do dropdown */}
             <div
               aria-hidden="true"
               className="fixed inset-0 z-100"

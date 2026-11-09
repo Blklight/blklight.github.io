@@ -108,6 +108,7 @@ export function CoverPanel({ design }: DesignContext) {
                 onClick={() => handleSelectDefault(option.url)}
                 className="flex flex-col gap-1.5 border border-border rounded-xs overflow-hidden hover:border-muted-foreground transition-colors group"
               >
+                {/* biome-ignore lint/performance/noImgElement: arbitrary external URL (user cover/avatar or demo asset); next/image would need remotePatterns for every host */}
                 <img
                   src={option.url}
                   alt={option.name}

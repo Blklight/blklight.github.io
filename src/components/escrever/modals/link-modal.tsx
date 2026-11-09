@@ -25,7 +25,6 @@ export function LinkModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* biome-ignore lint/a11y/useKeyWithClickEvents: backdrop decorativo, fechar por teclado fica no modal */}
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-background/80 backdrop-blur-sm"

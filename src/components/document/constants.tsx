@@ -1,13 +1,7 @@
 import { CircleDot, FileText, Grid3X3 } from "lucide-react";
 import type React from "react";
 import { PAPER_THEMES } from "@/features/documents/design/paper";
-import type {
-  HeaderPreset,
-  LetterheadStyle,
-  LineFormat,
-  TextureType,
-} from "./types";
-import { DEFAULT_LINE_FORMAT } from "./types";
+import type { LetterheadStyle, TextureType } from "./types";
 
 // Derivado do registro em src/features/documents/design/paper (mesma ordem/valores)
 export const PAPER_THEME_PRESETS = PAPER_THEMES.map((theme) => ({
@@ -102,11 +96,6 @@ export const DEFAULT_LETTERHEAD_STYLE: LetterheadStyle = {
   paddingX: 24,
   paddingY: 16,
 };
-
-// Helper: create line format with overrides
-function fmt(overrides: Partial<LineFormat> = {}): LineFormat {
-  return { ...DEFAULT_LINE_FORMAT, ...overrides };
-}
 
 // Font options for combobox
 export const FONT_OPTIONS = [

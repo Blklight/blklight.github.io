@@ -37,73 +37,64 @@ export const Navbar = () => {
   };
 
   return (
-    <>
-      <div
-        className="background-header rounded-b-xs background-texture px-1"
-        style={editorOverlaysOpen ? { zIndex: 40 } : undefined}
-      >
-        <div></div>
-        <div className="flex items-center gap-4">
+    <div
+      className="background-header rounded-b-xs background-texture px-1"
+      style={editorOverlaysOpen ? { zIndex: 40 } : undefined}
+    >
+      <div></div>
+      <div className="flex items-center gap-4">
+        <Link
+          href="/feed"
+          className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2"
+        >
+          Feed
+        </Link>
+        {isAuthenticated && (
           <Link
-            href="/feed"
+            href="/escrever"
             className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2"
           >
-            Feed
+            Escrever
           </Link>
-          {isAuthenticated && (
-            <Link
-              href="/escrever"
-              className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2"
-            >
-              Escrever
-            </Link>
-          )}
-        </div>
-        <div className="flex items-center gap-2 justify-end">
-          <AnimatedThemeToggler />
-          {isAuthenticated ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                render={
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full"
-                  />
-                }
-              >
-                <Avatar>
-                  <AvatarImage src={avatarUrl} alt={displayName} />
-                  <AvatarFallback>{avatarInitial}</AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-40">
-                <DropdownMenuGroup>
-                  <div className="px-2 py-1.5 text-sm font-medium">
-                    {displayName}
-                  </div>
-                  {user?.role === "admin" && (
-                    <DropdownMenuItem onClick={() => router.push("/admin")}>
-                      Admin panel
-                    </DropdownMenuItem>
-                  )}
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem
-                    variant="destructive"
-                    onClick={handleLogout}
-                  >
-                    Log out
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <AuthScreen triggerClassName="h-12" />
-          )}
-        </div>
+        )}
       </div>
-    </>
+      <div className="flex items-center gap-2 justify-end">
+        <AnimatedThemeToggler />
+        {isAuthenticated ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <Button variant="ghost" size="icon" className="rounded-full" />
+              }
+            >
+              <Avatar>
+                <AvatarImage src={avatarUrl} alt={displayName} />
+                <AvatarFallback>{avatarInitial}</AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-40">
+              <DropdownMenuGroup>
+                <div className="px-2 py-1.5 text-sm font-medium">
+                  {displayName}
+                </div>
+                {user?.role === "admin" && (
+                  <DropdownMenuItem onClick={() => router.push("/admin")}>
+                    Admin panel
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem variant="destructive" onClick={handleLogout}>
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <AuthScreen triggerClassName="h-12" />
+        )}
+      </div>
+    </div>
   );
 };

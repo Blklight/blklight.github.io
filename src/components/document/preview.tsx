@@ -109,6 +109,7 @@ export function DocumentPreview(props: PreviewDesignProps) {
               height: coverSettings.height,
             }}
           >
+            {/* biome-ignore lint/performance/noImgElement: arbitrary external URL (user cover/avatar or demo asset); next/image would need remotePatterns for every host */}
             <img
               src={coverImage}
               alt="Capa"

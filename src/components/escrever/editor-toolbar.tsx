@@ -22,7 +22,7 @@ import {
   Strikethrough,
   Undo,
 } from "lucide-react";
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 import { ToolbarButton, ToolbarDivider } from "./toolbar";
 
 export interface EditorToolbarProps {

@@ -69,6 +69,7 @@ export const DigitalSignature = ({
 }) => {
   const hasTheme = !!color;
 
+  // biome-ignore lint/correctness/noUnusedVariables: frame tint is disabled below (style={frameStyle} commented out) but kept for re-enabling
   const frameStyle = hasTheme
     ? {
         background: `color-mix(in srgb, ${color} 4%, ${background ?? "transparent"})`,
