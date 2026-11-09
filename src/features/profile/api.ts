@@ -1,4 +1,4 @@
-import { apiClient } from "@/lib/api-client";
+import { apiClient, unwrap } from "@/lib/api-client";
 import type {
   ApiResponse,
   DocumentType,
@@ -32,7 +32,7 @@ export const getPublicProfile = (username: string): Promise<ProfilePublic> =>
     .get<ApiResponse<ProfilePublic>>(
       `/api/v1/profiles/${encodeURIComponent(username)}`,
     )
-    .then((r) => r.data.data!);
+    .then(unwrap);
 
 /**
  * GET /api/v1/profiles/:username/documents — the author's published documents.
@@ -50,9 +50,7 @@ export const getAuthorDocuments = (
       `/api/v1/profiles/${encodeURIComponent(username)}/documents`,
       { params },
     )
-    .then((r) => r.data.data!);
+    .then(unwrap);
 
 export const getCurrentProfile = (): Promise<ProfileMe> =>
-  apiClient
-    .get<ApiResponse<ProfileMe>>("/api/v1/profiles/me")
-    .then((r) => r.data.data!);
+  apiClient.get<ApiResponse<ProfileMe>>("/api/v1/profiles/me").then(unwrap);

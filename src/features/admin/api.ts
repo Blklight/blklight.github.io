@@ -1,4 +1,4 @@
-import { apiClient } from "@/lib/api-client";
+import { apiClient, unwrap } from "@/lib/api-client";
 import type {
   AdminChatServer,
   AdminOverview,
@@ -19,7 +19,7 @@ import type {
 export const getAdminOverview = (): Promise<AdminOverview> =>
   apiClient
     .get<ApiResponse<AdminOverview>>("/api/v1/admin/overview")
-    .then((r) => r.data.data!);
+    .then(unwrap);
 
 export const getAdminUsers = (
   params: AdminUsersQueryParams,
@@ -28,12 +28,12 @@ export const getAdminUsers = (
     .get<ApiResponse<AdminPaginatedResult<AdminUser>>>("/api/v1/admin/users", {
       params,
     })
-    .then((r) => r.data.data!);
+    .then(unwrap);
 
 export const getAdminUserDetail = (id: string): Promise<AdminUserDetail> =>
   apiClient
     .get<ApiResponse<AdminUserDetail>>(`/api/v1/admin/users/${id}`)
-    .then((r) => r.data.data!);
+    .then(unwrap);
 
 export const updateUserRole = (
   id: string,
@@ -46,19 +46,19 @@ export const updateUserRole = (
         role,
       },
     )
-    .then((r) => r.data.data!);
+    .then(unwrap);
 
 export const getAdminApps = (): Promise<PlatformApp[]> =>
   apiClient
     .get<ApiResponse<PlatformApp[]>>("/api/v1/admin/platform-apps")
-    .then((r) => r.data.data!);
+    .then(unwrap);
 
 export const createPlatformApp = (
   body: CreatePlatformAppPayload,
 ): Promise<PlatformApp> =>
   apiClient
     .post<ApiResponse<PlatformApp>>("/api/v1/platform-apps", body)
-    .then((r) => r.data.data!);
+    .then(unwrap);
 
 export const updatePlatformApp = (
   id: string,
@@ -66,7 +66,7 @@ export const updatePlatformApp = (
 ): Promise<PlatformApp> =>
   apiClient
     .patch<ApiResponse<PlatformApp>>(`/api/v1/platform-apps/${id}`, body)
-    .then((r) => r.data.data!);
+    .then(unwrap);
 
 export const createAppInvite = (
   appId: string,
@@ -77,16 +77,16 @@ export const createAppInvite = (
       `/api/v1/platform-apps/${appId}/invites`,
       body,
     )
-    .then((r) => r.data.data!);
+    .then(unwrap);
 
 export const getAppInvites = (appId: string): Promise<AppInviteWithProfile[]> =>
   apiClient
     .get<ApiResponse<AppInviteWithProfile[]>>(
       `/api/v1/platform-apps/${appId}/invites`,
     )
-    .then((r) => r.data.data!);
+    .then(unwrap);
 
 export const getAdminChatServers = (): Promise<AdminChatServer[]> =>
   apiClient
     .get<ApiResponse<AdminChatServer[]>>("/api/v1/chat/servers/all")
-    .then((r) => r.data.data!);
+    .then(unwrap);

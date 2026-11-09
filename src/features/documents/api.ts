@@ -1,4 +1,4 @@
-import { apiClient } from "@/lib/api-client";
+import { apiClient, unwrap } from "@/lib/api-client";
 import type {
   ApiResponse,
   Category,
@@ -28,26 +28,26 @@ export interface MyDocumentsQueryParams {
 export const getPublicFeed = (params: FeedQuery): Promise<FeedResult> =>
   apiClient
     .get<ApiResponse<FeedResult>>("/api/v1/documents", { params })
-    .then((r) => r.data.data!);
+    .then(unwrap);
 
 export const getMyDocuments = (
   params?: MyDocumentsQueryParams,
 ): Promise<DocumentSummary[]> =>
   apiClient
     .get<ApiResponse<DocumentSummary[]>>("/api/v1/documents/me", { params })
-    .then((r) => r.data.data!);
+    .then(unwrap);
 
 export const getMyDocumentById = (id: string): Promise<MyDocumentDetail> =>
   apiClient
     .get<ApiResponse<MyDocumentDetail>>(`/api/v1/documents/${id}`)
-    .then((r) => r.data.data!);
+    .then(unwrap);
 
 export const createDocument = (
   body: CreateDocumentRequest,
 ): Promise<DocumentWithStyle> =>
   apiClient
     .post<ApiResponse<DocumentWithStyle>>("/api/v1/documents", body)
-    .then((r) => r.data.data!);
+    .then(unwrap);
 
 export const updateDocument = (
   id: string,
@@ -55,21 +55,19 @@ export const updateDocument = (
 ): Promise<DocumentWithStyle> =>
   apiClient
     .patch<ApiResponse<DocumentWithStyle>>(`/api/v1/documents/${id}`, body)
-    .then((r) => r.data.data!);
+    .then(unwrap);
 
 export const publishDocument = (id: string): Promise<DocumentWithStyle> =>
   apiClient
     .patch<ApiResponse<DocumentWithStyle>>(`/api/v1/documents/${id}/publish`)
-    .then((r) => r.data.data!);
+    .then(unwrap);
 
 export const getCategories = (): Promise<Category[]> =>
-  apiClient
-    .get<ApiResponse<Category[]>>("/api/v1/categories")
-    .then((r) => r.data.data!);
+  apiClient.get<ApiResponse<Category[]>>("/api/v1/categories").then(unwrap);
 
 export const getPopularTags = (limit = 20): Promise<Tag[]> =>
   apiClient
     .get<ApiResponse<Tag[]>>("/api/v1/tags/popular", {
       params: { limit },
     })
-    .then((r) => r.data.data!);
+    .then(unwrap);

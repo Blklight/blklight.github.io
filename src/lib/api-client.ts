@@ -1,6 +1,7 @@
 import axios from "axios";
 import { endSessionLocal } from "@/lib/session";
 import { useAuthStore } from "@/store/useAuthStore";
+import type { ApiResponse } from "@/types/api.types";
 
 export const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -18,6 +19,18 @@ const refreshClient = axios.create({
   },
   withCredentials: true,
 });
+
+/**
+ * Extract `data` from the API envelope, failing loudly when it is missing so
+ * an empty response surfaces at the call instead of as `undefined` later.
+ */
+export function unwrap<T>(response: { data: ApiResponse<T> }): T {
+  const { data, message } = response.data;
+  if (data === null || data === undefined) {
+    throw new Error(message || "Empty API response");
+  }
+  return data;
+}
 
 let refreshPromise: Promise<string> | null = null;
 
