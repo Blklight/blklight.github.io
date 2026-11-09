@@ -77,7 +77,7 @@ export function AuthScreen({
         <button
           type="button"
           className={cn(
-            "flex gap-1 justify-center items-center px-4 hover:bg-primary dark:hover:bg-primary text-[#252525] hover:text-[#eaeaea] dark:text-[#eaeaea] dark:hover:text-[#252525] rounded-xs cursor-pointer outline-none font-mono",
+            "flex gap-1 justify-center items-center px-4 text-foreground hover:bg-primary hover:text-primary-foreground rounded-xs cursor-pointer outline-none font-mono",
             triggerClassName,
           )}
         >
