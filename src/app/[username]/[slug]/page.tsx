@@ -25,7 +25,8 @@ import { getPublicDocument } from "@/features/documents/public-api.server";
 import { cn } from "@/lib/utils";
 import type { DocumentFull } from "@/types/api.types";
 
-// SSR bloqueante: fetch no-store + notFound() precisam do status HTTP correto.
+// params e dados são aguardados fora de <Suspense>; sem isto o build falha na validação do shell.
+// O shell do layout já foi enviado, então notFound() responde 200 com noindex, não 404.
 export const instant = false;
 
 interface DocumentPageProps {
