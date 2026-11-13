@@ -15,6 +15,21 @@
  * Note on Dates: All date fields are ISO 8601 strings (e.g., "2024-01-15T10:30:00.000Z")
  */
 
+import type { paths } from "./api.generated";
+
+// Request shapes taken from the API's OpenAPI spec (`bun run gen:api`).
+type Op<P extends keyof paths, M extends keyof paths[P]> = NonNullable<
+  paths[P][M]
+>;
+type JsonBody<P extends keyof paths, M extends keyof paths[P]> =
+  Op<P, M> extends {
+    requestBody?: { content: { "application/json": infer B } };
+  }
+    ? B
+    : never;
+type Query<P extends keyof paths, M extends keyof paths[P]> =
+  Op<P, M> extends { parameters: { query?: infer Q } } ? NonNullable<Q> : never;
+
 // =============================================================================
 // SHARED BASE TYPES
 // =============================================================================
@@ -147,11 +162,7 @@ export type SupportedLanguage = "javascript" | "typescript";
  * });
  * ```
  */
-export interface RegisterRequest {
-  email: string;
-  username: string;
-  password: string;
-}
+export type RegisterRequest = JsonBody<"/api/v1/auth/register", "post">;
 
 /**
  * POST /api/v1/auth/login
@@ -168,19 +179,29 @@ export interface RegisterRequest {
  * });
  * ```
  */
-export interface LoginRequest {
-  identifier: string;
-  password: string;
-  /** "Lembrar de mim": longer refresh cookie/session TTL. Default false. */
-  rememberMe?: boolean;
-}
+export type LoginRequest = JsonBody<"/api/v1/auth/login", "post">;
 
 /**
  * Authentication response
  */
+export interface AuthSessionProfile {
+  id: string;
+  userId: string;
+  username: string;
+  displayName: string | null;
+  avatarUrl: string | null;
+  isPrivate: boolean;
+}
+
+/**
+ * Login/register response. Kept by hand: the spec's response schemas carry no
+ * `required`, so the generated shape makes every field optional.
+ */
 export interface AuthResponse {
   user: User;
   accessToken: string;
+  profile: AuthSessionProfile;
+  apps: string[];
 }
 
 /**
@@ -498,47 +519,12 @@ export interface DocumentStyleTemplate {
  * });
  * ```
  */
-export interface CreateDocumentRequest {
-  title: string;
-  abstract?: string | null;
-  content?: Record<string, unknown> | null;
-  coverImageUrl?: string | null;
-  type: DocumentType;
-  slug?: string;
-  categoryId?: string | null;
-  tags?: string[];
-  /**
-   * Organization the document belongs to. `null` (or omitted) keeps it
-   * personal; the backend accepts a change after publication too.
-   */
-  organizationId?: string | null;
-}
+export type CreateDocumentRequest = JsonBody<"/api/v1/documents/", "post">;
 
 /**
  * PATCH /api/v1/documents/:id
  */
-export interface UpdateDocumentRequest {
-  title?: string;
-  abstract?: string | null;
-  content?: Record<string, unknown> | null;
-  coverImageUrl?: string | null;
-  type?: DocumentType;
-  slug?: string;
-  typography?: Typography;
-  paperStyle?: Record<string, unknown> | null;
-  paperTexture?: Record<string, unknown> | null;
-  coverSettings?: Record<string, unknown> | null;
-  documentHeader?: Record<string, unknown> | null;
-  documentFooter?: Record<string, unknown> | null;
-  documentSignature?: Record<string, unknown> | null;
-  categoryId?: string | null;
-  tags?: string[];
-  /**
-   * Organization the document belongs to. Sending `null` removes the link
-   * (the document becomes personal again).
-   */
-  organizationId?: string | null;
-}
+export type UpdateDocumentRequest = JsonBody<"/api/v1/documents/{id}", "patch">;
 
 /**
  * Full document returned by POST /api/v1/documents (201),
@@ -580,16 +566,7 @@ export interface MyDocumentDetail extends DocumentWithStyle {
 /**
  * Feed query parameters
  */
-export interface FeedQuery {
-  cursor?: string;
-  limit?: number;
-  type?: DocumentType;
-  author?: string;
-  q?: string;
-  sort?: "recent" | "popular";
-  category?: string;
-  tag?: string;
-}
+export type FeedQuery = Query<"/api/v1/documents/", "get">;
 
 /**
  * One page of the public feed (GET /api/v1/documents).
