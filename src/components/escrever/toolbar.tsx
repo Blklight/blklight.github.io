@@ -2,7 +2,7 @@
 
 import { Check, ChevronDown, Type } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { FONT_OPTIONS } from "@/components/document/constants";
 
 // Toolbar Button Component
@@ -50,6 +50,13 @@ export function TypographySelector({
   onChange: (value: string) => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  // Activity (cacheComponents) hides the page instead of unmounting it: close on hide.
+  useLayoutEffect(() => {
+    return () => {
+      setIsOpen(false);
+    };
+  }, []);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const currentFont =
@@ -59,6 +66,7 @@ export function TypographySelector({
     <div ref={containerRef} className="relative">
       <button
         type="button"
+        aria-expanded={isOpen}
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-1.5 text-muted-foreground hover:text-background hover:bg-secondary transition-colors rounded-xs cursor-pointer"
       >

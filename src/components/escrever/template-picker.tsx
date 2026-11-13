@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useLayoutEffect, useMemo, useState } from "react";
 import type { StoreApi, UseBoundStore } from "zustand";
 import { useDocumentDesign } from "@/components/document/use-document-design";
 import {
@@ -41,6 +41,11 @@ export function TemplatePicker({ designStore, onClose }: TemplatePickerProps) {
   const [pendingTemplate, setPendingTemplate] = useState<DesignTemplate | null>(
     null,
   );
+
+  // Activity (cacheComponents) hides the page instead of unmounting it: close on hide.
+  useLayoutEffect(() => {
+    return () => setPendingTemplate(null);
+  }, []);
 
   const sorted = useMemo(
     () => [...templates].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)),

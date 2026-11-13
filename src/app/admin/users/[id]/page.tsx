@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,6 +38,13 @@ export default function AdminUserDetailPage() {
 
   const [pendingRole, setPendingRole] = useState<"user" | "admin" | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
+
+  // Activity (cacheComponents) hides the page instead of unmounting it: close on hide.
+  useLayoutEffect(() => {
+    return () => {
+      setConfirmOpen(false);
+    };
+  }, []);
 
   // ajuste 4: hook reativo, não getState()
   const currentUserId = useAuthStore((s) => s.user?.id);

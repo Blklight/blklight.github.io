@@ -11,7 +11,14 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Palette, Send } from "lucide-react";
 import { motion } from "motion/react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import {
@@ -334,6 +341,18 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
       useEditorOverlaysStore.getState().setOverlaysOpen(false);
     };
   }, [isTemplatesOpen, isDesignOpen, isPublishOpen]);
+
+  // Activity (cacheComponents) hides the page instead of unmounting it: close on hide.
+  useLayoutEffect(() => {
+    return () => {
+      setShowLinkModal(false);
+      setShowCoverUrlInput(false);
+      setShowJsonPreview(false);
+      setIsTemplatesOpen(false);
+      setIsDesignOpen(false);
+      setIsPublishOpen(false);
+    };
+  }, []);
 
   // --- Actions ---
   const buildSavePayload = useCallback(

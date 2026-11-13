@@ -62,6 +62,7 @@ Rode `bun run dev` na porta 3000 com o backend na porta 4000. O CORS do backend 
   - Switch "ativo".
   - Troca de role.
 - [ ] `/examples`, `/masks` e `/lab`.
+- [ ] Overlays e `<Activity>`: com cada overlay aberto (modais e Sheet de templates do editor, painéis de design e publicação, seletor de fonte, dialogs do admin, renomear/apagar template), navegar para outra rota e voltar. O overlay deve estar fechado e a página deve rolar normalmente.
 
 ### 2. Converter as rotas com `instant = false`
 

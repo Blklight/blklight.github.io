@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -53,6 +53,13 @@ export default function AdminAppsPage() {
   const [accessMode, setAccessMode] = useState<"open" | "beta" | "all">("all");
   const [isActive, setIsActive] = useState<"true" | "false" | "all">("all");
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
+
+  // Activity (cacheComponents) hides the page instead of unmounting it: close on hide.
+  useLayoutEffect(() => {
+    return () => {
+      setCreateDialogOpen(false);
+    };
+  }, []);
 
   const createForm = useForm<CreatePlatformAppFormData>({
     resolver: zodResolver(createPlatformAppSchema),

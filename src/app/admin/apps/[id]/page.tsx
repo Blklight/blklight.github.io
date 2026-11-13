@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -76,6 +76,13 @@ export default function AdminAppDetailPage() {
   const app = apps?.find((a) => a.id === id);
 
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+
+  // Activity (cacheComponents) hides the page instead of unmounting it: close on hide.
+  useLayoutEffect(() => {
+    return () => {
+      setInviteDialogOpen(false);
+    };
+  }, []);
 
   const editForm = useForm<UpdatePlatformAppFormData>({
     resolver: zodResolver(updatePlatformAppSchema),
