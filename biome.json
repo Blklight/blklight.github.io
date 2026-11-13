@@ -14,7 +14,8 @@
       "!dist",
       "!build",
       "!src/app/lab",
-      "!src/components/GrainVsPaperLab.tsx"
+      "!src/components/GrainVsPaperLab.tsx",
+      "!src/types/api.generated.ts"
     ]
   },
   "formatter": {

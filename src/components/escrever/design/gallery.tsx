@@ -2,7 +2,7 @@
 
 import { ArrowLeft, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useLayoutEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { DesignTemplate } from "@/store/useDesignTemplatesStore";
 import { DeleteTemplateDialog } from "./delete-template-dialog";
@@ -29,6 +29,14 @@ export function DesignGallery({
   const router = useRouter();
   const [renameTarget, setRenameTarget] = useState<DesignTemplate | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<DesignTemplate | null>(null);
+
+  // Activity (cacheComponents) hides the page instead of unmounting it: close on hide.
+  useLayoutEffect(() => {
+    return () => {
+      setRenameTarget(null);
+      setDeleteTarget(null);
+    };
+  }, []);
 
   const sorted = useMemo(
     () => [...templates].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)),

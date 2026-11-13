@@ -2,7 +2,7 @@
 
 import { ArrowLeft, Eye, Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import type { StoreApi, UseBoundStore } from "zustand";
 import { EditorStyles } from "@/components/document/editor-styles";
 import type { PreviewDesignProps } from "@/components/document/preview";
@@ -49,6 +49,14 @@ export function DesignLayout({
   const [activeTab, setActiveTab] = useState<DesignTab>("colors");
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isRenameOpen, setIsRenameOpen] = useState(false);
+
+  // Activity (cacheComponents) hides the page instead of unmounting it: close on hide.
+  useLayoutEffect(() => {
+    return () => {
+      setIsPreviewOpen(false);
+      setIsRenameOpen(false);
+    };
+  }, []);
 
   const design = useDocumentDesign(designStore);
   const presets = useSavedPresets();

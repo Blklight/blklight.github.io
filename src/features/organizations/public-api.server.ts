@@ -1,4 +1,4 @@
-import { cache } from "react";
+import { cacheLife, cacheTag } from "next/cache";
 import type { ApiResponse, Organization } from "@/types/api.types";
 
 /**
@@ -7,18 +7,21 @@ import type { ApiResponse, Organization } from "@/types/api.types";
  * Same server-safe rationale as `features/documents/public-api.server.ts`: this
  * intentionally does NOT use `apiClient` (that instance imports
  * `useAuthStore`, whose zustand `persist` needs `localStorage`), sends no
- * Authorization header (the session lives in the browser) and uses
- * `cache: "no-store"` so the page stays a live SSR render. The React `cache`
- * wrapper dedupes the request shared by `generateMetadata` and the page.
+ * Authorization header (the session lives in the browser) and caches the
+ * result with the same `"use cache"` `minutes` profile.
  */
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 async function fetchPublicOrganization(
   orgname: string,
 ): Promise<Organization | null> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag(`org:${orgname}`);
+
   const url = `${API_BASE_URL}/api/v1/org/${encodeURIComponent(orgname)}`;
 
-  const response = await fetch(url, { cache: "no-store" });
+  const response = await fetch(url);
 
   // A missing organization and a private one the viewer may not see both
   // collapse into 404, so the caller can only treat it as "not found".
@@ -34,4 +37,4 @@ async function fetchPublicOrganization(
   return body.data;
 }
 
-export const getPublicOrganization = cache(fetchPublicOrganization);
+export const getPublicOrganization = fetchPublicOrganization;

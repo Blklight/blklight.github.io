@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "gen:api": "bun scripts/gen-api.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
@@ -63,6 +64,7 @@
     "@vitejs/plugin-react": "^6.1.2",
     "@vitest/coverage-v8": "^4.1.1",
     "jsdom": "^25",
+    "openapi-typescript": "^7.13.0",
     "shadcn": "^4.22.1",
     "tailwindcss": "^4",
     "typescript": "^5",

@@ -1,4 +1,4 @@
-import { cache } from "react";
+import { cacheLife, cacheTag } from "next/cache";
 import type {
   ApiResponse,
   DocumentFull,
@@ -18,9 +18,9 @@ import type {
  * `likes.likedByMe: null` for anonymous readers, so no Authorization header is
  * sent (there is no session on the server to forward).
  *
- * `no-store` keeps the page a live SSR render on every request (documents are
- * editable), and the React `cache` wrapper dedupes the single network call
- * shared by `generateMetadata` and the page render.
+ * `"use cache"` with the `minutes` profile dedupes the call shared by
+ * `generateMetadata` and the page and keeps repeat reads fast; an edit shows up
+ * within about a minute. A 404 result (`null`) is cached too.
  */
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -28,9 +28,13 @@ async function fetchPublicDocument(
   username: string,
   slug: string,
 ): Promise<DocumentFull | null> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag(`doc:${username}/${slug}`);
+
   const url = `${API_BASE_URL}/api/v1/documents/${encodeURIComponent(username)}/${encodeURIComponent(slug)}`;
 
-  const response = await fetch(url, { cache: "no-store" });
+  const response = await fetch(url);
 
   // 404 covers: missing doc, non-published doc, and deleted user/doc — the
   // backend collapses all of them into "Document not found".
@@ -46,15 +50,14 @@ async function fetchPublicDocument(
   return body.data;
 }
 
-export const getPublicDocument = cache(fetchPublicDocument);
+export const getPublicDocument = fetchPublicDocument;
 
 // =============================================================================
 // PROFILE ROUTES
 //
 // Same server-safe rationale as the document fetch above: no apiClient, no
 // Authorization header (the session lives in localStorage, unreachable from a
-// Server Component), no-store for a live render, and React `cache` to dedupe
-// the call shared by generateMetadata and the page.
+// Server Component) and the same `"use cache"` profile.
 // =============================================================================
 
 /**
@@ -68,9 +71,13 @@ export const getPublicDocument = cache(fetchPublicDocument);
 async function fetchPublicProfile(
   username: string,
 ): Promise<ProfilePublic | null> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag(`profile:${username}`);
+
   const url = `${API_BASE_URL}/api/v1/profiles/${encodeURIComponent(username)}`;
 
-  const response = await fetch(url, { cache: "no-store" });
+  const response = await fetch(url);
 
   if (response.status === 404) return null;
 
@@ -84,4 +91,4 @@ async function fetchPublicProfile(
   return body.data;
 }
 
-export const getPublicProfile = cache(fetchPublicProfile);
+export const getPublicProfile = fetchPublicProfile;

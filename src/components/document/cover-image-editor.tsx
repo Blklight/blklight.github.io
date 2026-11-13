@@ -10,7 +10,7 @@ import {
   X,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -126,6 +126,13 @@ export function CoverImageEditor({
   const [isHovering, setIsHovering] = useState(false);
   const [isHoveringImage, setIsHoveringImage] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  // Activity (cacheComponents) hides the page instead of unmounting it: close on hide.
+  useLayoutEffect(() => {
+    return () => {
+      setDialogOpen(false);
+    };
+  }, []);
 
   // Compute current filter based on hover state and behavior
   const computedFilter = (() => {

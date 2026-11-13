@@ -23,6 +23,7 @@ Next.js 16 (App Router) + React 19 + TypeScript (strict, alias `@/*`) + Tailwind
 - `bun run typecheck` — `tsc --noEmit`
 - `bun run lint` — `biome check`
 - `bun run test` — Vitest (jsdom)
+- `bun run gen:api` — regenera `src/types/api.generated.ts` do OpenAPI da API local (`API_URL`, padrão `http://localhost:4000`, rota `/docs/openapi.json`, só fora de produção). Tipos de request em `api.types.ts` são aliases dele; os de response continuam manuais porque o spec não marca `required`.
 
 Sempre rode `bun run typecheck`, `bun run lint` e `bun run test` antes de finalizar uma tarefa.
 
