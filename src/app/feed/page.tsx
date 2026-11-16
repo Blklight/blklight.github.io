@@ -2,7 +2,16 @@
 
 import { FileSearch, Search } from "lucide-react";
 import { useDeferredValue, useMemo, useState } from "react";
-import { DocumentFeedCard } from "@/components/feed/document-feed-card";
+import { BentoGrid } from "@/components/bento/bento-grid";
+import { TYPE_THEME } from "@/components/feed/cards/card-theme";
+import { DuotoneDefs } from "@/components/feed/cards/duotone-defs";
+import { FeaturedCard } from "@/components/feed/cards/featured-card";
+import {
+  CoverCard,
+  MediaCard,
+  PaperCard,
+  TextCard,
+} from "@/components/feed/cards/feed-cards";
 import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,16 +31,38 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCategories, useFeed } from "@/features/documents/queries";
-import type { FeedQuery } from "@/types/api.types";
+import {
+  type FeedCardType,
+  toBentoItem,
+} from "@/features/documents/to-bento-item";
+import { cn } from "@/lib/utils";
+import type { DocumentType, FeedQuery } from "@/types/api.types";
 
 // Cursor pagination is only exercisable while the feed holds more documents
 // than one page, so this starts small and can be raised as the corpus grows.
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 12;
 const ANY_CATEGORY = "__any__";
+
+const CARDS = {
+  text: { component: TextCard },
+  paper: { component: PaperCard, sizes: { "1x1": 2, "1x2": 1 } },
+  cover: {
+    component: CoverCard,
+    sizes: { "2x1": 1, "1x2": 1 },
+    featuredSize: "2x2",
+  },
+  media: { component: MediaCard, sizes: { "1x1": 3, "1x2": 1 } },
+} as const satisfies Record<FeedCardType, unknown>;
+
+const TYPES = Object.entries(TYPE_THEME) as [
+  DocumentType,
+  (typeof TYPE_THEME)[DocumentType],
+][];
 
 export default function FeedPage() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState(ANY_CATEGORY);
+  const [type, setType] = useState<DocumentType | null>(null);
 
   // Keeps typing responsive: the input stays controlled by `search` while the
   // feed query follows the deferred value, matching the admin list pattern.
@@ -41,9 +72,10 @@ export default function FeedPage() {
     () => ({
       q: deferredSearch.trim() || undefined,
       category: category === ANY_CATEGORY ? undefined : category,
+      type: type ?? undefined,
       limit: PAGE_SIZE,
     }),
-    [deferredSearch, category],
+    [deferredSearch, category, type],
   );
 
   const {
@@ -84,27 +116,47 @@ export default function FeedPage() {
 
   const total = data?.pages[0]?.total ?? 0;
   const hasActiveFilter =
-    deferredSearch.trim().length > 0 || category !== ANY_CATEGORY;
+    deferredSearch.trim().length > 0 ||
+    category !== ANY_CATEGORY ||
+    type !== null;
+
+  const featured = hasActiveFilter ? null : (items[0] ?? null);
+  const bentoItems = useMemo(
+    () => (featured ? items.slice(1) : items).map(toBentoItem),
+    [items, featured],
+  );
 
   function clearFilters() {
     setSearch("");
     setCategory(ANY_CATEGORY);
+    setType(null);
   }
 
   return (
     <>
       <Navbar />
 
-      <main className="mx-auto w-full max-w-3xl px-4 py-12 md:px-6">
-        <header className="mb-8 flex flex-col gap-1">
-          <h1 className="text-3xl font-medium tracking-tight">Feed</h1>
-          <p className="text-sm text-muted-foreground">
-            Documentos publicados pela comunidade.
-          </p>
+      <DuotoneDefs />
+      <main className="mx-auto w-full max-w-7xl px-4 pb-16 md:px-6">
+        <header className="pt-12 pb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+          <div>
+            <h1 className="font-sans text-4xl md:text-5xl font-bold tracking-tight">
+              Feed
+            </h1>
+            <p className="mt-2 text-muted-foreground">
+              O que a comunidade publicou, do mais recente ao mais antigo.
+            </p>
+          </div>
+          {!isPending && !isError && total > 0 && (
+            <p className="font-mono text-xs text-muted-foreground">
+              {items.length} de {total}{" "}
+              {total === 1 ? "documento" : "documentos"}
+            </p>
+          )}
         </header>
 
-        <div className="mb-8 flex flex-col gap-3 sm:flex-row">
-          <div className="relative flex-1">
+        <div className="lg:sticky lg:top-[3.6rem] z-30 -mx-4 md:-mx-6 px-4 md:px-6 py-3 mb-8 bg-background/90 backdrop-blur-sm border-y border-border flex flex-col lg:flex-row gap-3 lg:items-center">
+          <div className="relative flex-1 lg:max-w-sm">
             <Search
               className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
               aria-hidden
@@ -115,9 +167,32 @@ export default function FeedPage() {
               placeholder="Buscar por título ou resumo"
               aria-label="Buscar documentos"
               data-testid="feed-search-input"
-              className="pl-9"
+              className="pl-9 rounded-xs"
             />
           </div>
+
+          <fieldset className="flex flex-wrap gap-1.5 border-0 p-0 m-0 min-w-0">
+            <legend className="sr-only">Filtrar por tipo</legend>
+            {TYPES.map(([id, theme]) => {
+              const active = type === id;
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => setType(active ? null : id)}
+                  className={cn(
+                    "h-8 px-3 rounded-xs border font-mono text-xs uppercase tracking-wider transition-colors outline-none focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2 cursor-pointer",
+                    active
+                      ? cn(theme.solid, "border-transparent")
+                      : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/50",
+                  )}
+                >
+                  {theme.label}
+                </button>
+              );
+            })}
+          </fieldset>
 
           <Select
             items={categoryItems}
@@ -125,7 +200,7 @@ export default function FeedPage() {
             onValueChange={(value) => setCategory(value ?? ANY_CATEGORY)}
           >
             <SelectTrigger
-              className="w-full sm:w-56"
+              className="w-full lg:w-56 lg:ml-auto rounded-xs"
               aria-label="Filtrar por categoria"
             >
               <SelectValue placeholder="Todas as categorias" />
@@ -179,23 +254,19 @@ export default function FeedPage() {
           </Empty>
         ) : (
           <>
-            <p className="mb-4 font-mono text-xs text-muted-foreground">
-              {items.length} de {total}{" "}
-              {total === 1 ? "documento" : "documentos"}
-            </p>
+            {featured && (
+              <section aria-label="Em destaque" className="mb-4">
+                <FeaturedCard doc={featured} />
+              </section>
+            )}
 
-            <ul className="flex flex-col gap-4">
-              {items.map((document) => (
-                <li key={document.id}>
-                  <DocumentFeedCard document={document} />
-                </li>
-              ))}
-            </ul>
+            <BentoGrid items={bentoItems} cards={CARDS} />
 
-            <div className="mt-8 flex flex-col items-center gap-2">
+            <div className="mt-10 flex flex-col items-center gap-2">
               {hasNextPage ? (
                 <Button
                   variant="outline"
+                  className="rounded-xs font-mono text-xs uppercase tracking-wider"
                   onClick={() => void fetchNextPage()}
                   disabled={isFetchingNextPage}
                 >
@@ -214,23 +285,27 @@ export default function FeedPage() {
   );
 }
 
-const SKELETON_KEYS = ["skeleton-1", "skeleton-2", "skeleton-3"] as const;
+const SKELETON_SPANS = [
+  "sm:col-span-2 sm:row-span-2",
+  "",
+  "sm:row-span-2",
+  "",
+  "sm:col-span-2",
+  "",
+  "",
+] as const;
 
 function FeedSkeleton() {
   return (
-    <div className="flex flex-col gap-4" aria-busy="true" aria-live="polite">
+    <div aria-busy="true" aria-live="polite">
       <span className="sr-only">Carregando documentos</span>
-      {SKELETON_KEYS.map((key) => (
-        <div
-          key={key}
-          className="flex flex-col gap-3 border border-border/60 p-6"
-        >
-          <Skeleton className="h-3 w-24" />
-          <Skeleton className="h-5 w-3/4" />
-          <Skeleton className="h-3 w-full" />
-          <Skeleton className="h-3 w-1/2" />
-        </div>
-      ))}
+      <Skeleton className="h-[26rem] w-full rounded-xs mb-4" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-flow-dense auto-rows-[15rem] gap-4">
+        {SKELETON_SPANS.map((span, i) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: static placeholder list
+          <Skeleton key={i} className={cn("rounded-xs", span)} />
+        ))}
+      </div>
     </div>
   );
 }

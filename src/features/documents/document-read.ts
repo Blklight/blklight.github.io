@@ -168,13 +168,14 @@ function toSignature(raw: unknown): DocumentSignature | null {
 }
 
 /**
- * Derive the read-view design tokens (paper colors, font, texture, letterhead,
- * signature, cover) from a DocumentFull's style. Mirrors the token math in
- * `use-document-design.ts` (paperColors / fontClass / textureStyle).
+ * Paper colors, font, and texture from the style fields shared by full
+ * documents and feed cards. Mirrors the token math in `use-document-design.ts`.
  */
-export function deriveReadDesign(document: DocumentFull): ReadDesign {
-  const style = document.style;
-
+export function derivePaperDesign(style: {
+  typography: string;
+  paperStyle: unknown;
+  paperTexture: unknown;
+}) {
   // Paper colors: same field precedence as the store's normalizePaperStyle
   // (bg, with legacy customBg fallback; text, with legacy customText fallback).
   const ps = asRecord(style.paperStyle);
@@ -220,6 +221,18 @@ export function deriveReadDesign(document: DocumentFull): ReadDesign {
       };
     }
   }
+
+  return { typography, fontClass, paperColors, paperTexture, textureStyle };
+}
+
+/**
+ * Derive the read-view design tokens (paper colors, font, texture, letterhead,
+ * signature, cover) from a DocumentFull's style.
+ */
+export function deriveReadDesign(document: DocumentFull): ReadDesign {
+  const style = document.style;
+  const { typography, fontClass, paperColors, paperTexture, textureStyle } =
+    derivePaperDesign(style);
 
   return {
     typography,
