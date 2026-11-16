@@ -1,8 +1,9 @@
 "use client";
 
 import type { ReactNode } from "react";
-import type { BentoCardProps } from "@/components/bento/bento-layout";
+import { type BentoCardProps, hash } from "@/components/bento/bento-layout";
 import { DitherSpotlight } from "@/components/onboarding/dither-spotlight";
+import type { Corner } from "@/components/ui/chamfer-utils";
 import { FilletCard } from "@/components/ui/fillet-card";
 import { PaperSurface } from "@/features/documents/design/paper-surface";
 import { derivePaperDesign } from "@/features/documents/document-read";
@@ -13,19 +14,39 @@ import { CardMeta, CardTags, CardTitle, TypeTab } from "./parts";
 
 type Props = BentoCardProps<DocumentCard>;
 
+// Each model has its own corner signature; the id picks one of its mirrored variants.
+const CORNERS = {
+  cover: [
+    ["tr", "bl"],
+    ["tl", "br"],
+  ],
+  paper: [["tr"], ["br"]],
+  media: [["bl"], ["tr", "bl"]],
+  text: [["br"], ["tl", "br"]],
+} satisfies Record<string, Corner[][]>;
+
+const pickCorners = (model: keyof typeof CORNERS, id: string): Corner[] => {
+  const variants = CORNERS[model];
+  return variants[(hash(id) >>> 8) % variants.length];
+};
+
 function Shell({
+  corners,
+  big,
   className,
   bordered = true,
   children,
 }: {
+  corners: Corner[];
+  big?: boolean;
   className?: string;
   bordered?: boolean;
   children: ReactNode;
 }) {
   return (
     <FilletCard
-      corners={["br"]}
-      size="md"
+      corners={corners}
+      size={big ? "lg" : "md"}
       radius={4}
       rounded={2}
       bordered={bordered}
@@ -43,12 +64,13 @@ function Shell({
 const tall = (size: Props["size"]) => size === "1x2" || size === "2x2";
 
 /** No cover, no paper: accent wash + ordered-dither on hover. */
-export function TextCard({ data }: Props) {
+export function TextCard({ data, size }: Props) {
   const theme = typeTheme(data.typeName);
+  const corners = pickCorners("text", data.id);
   return (
-    <Shell className={theme.wash}>
+    <Shell corners={corners} big={tall(size)} className={theme.wash}>
       <DitherSpotlight radius={130} className={theme.text} />
-      <TypeTab type={data.typeName} />
+      <TypeTab type={data.typeName} corners={corners} />
       <div className="relative h-full flex flex-col p-5 pt-12 pointer-events-none [&_a]:pointer-events-auto">
         <CardTitle
           doc={data}
@@ -75,8 +97,9 @@ export function PaperCard({ data, size }: Props) {
     data.style ?? { typography: "sans", paperStyle: null, paperTexture: null },
   );
   const ink = design.paperColors?.text;
+  const corners = pickCorners("paper", data.id);
   return (
-    <Shell>
+    <Shell corners={corners} big={tall(size)}>
       <PaperSurface
         paperColors={design.paperColors}
         paperTexture={design.paperTexture}
@@ -84,7 +107,7 @@ export function PaperCard({ data, size }: Props) {
         className="h-full border-0"
         contentClassName="h-full"
       >
-        <TypeTab type={data.typeName} />
+        <TypeTab type={data.typeName} corners={corners} />
         <div
           className="h-full flex flex-col p-5 pt-12"
           style={{ color: ink ?? undefined }}
@@ -126,8 +149,14 @@ export function PaperCard({ data, size }: Props) {
 /** Cover fills the cell in the type's duotone; the real colors come back on hover. */
 export function CoverCard({ data, size }: Props) {
   const cover = data.coverImageUrl ?? "";
+  const corners = pickCorners("cover", data.id);
   return (
-    <Shell bordered={false} className="bg-dark text-light">
+    <Shell
+      corners={corners}
+      big={size !== "1x1"}
+      bordered={false}
+      className="bg-dark text-light"
+    >
       {/* biome-ignore lint/performance/noImgElement: covers come from arbitrary hosts; next/image needs a domain allowlist */}
       <img
         src={cover}
@@ -142,7 +171,7 @@ export function CoverCard({ data, size }: Props) {
         className="absolute inset-0 size-full object-cover transition-[opacity,scale] duration-700 ease-out group-hover/card:opacity-0 group-hover/card:scale-105 motion-reduce:transition-none"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-dark/95 via-dark/40 to-transparent" />
-      <TypeTab type={data.typeName} />
+      <TypeTab type={data.typeName} corners={corners} />
       <div className="relative h-full flex flex-col justify-end p-5">
         <CardTitle
           doc={data}
@@ -167,11 +196,17 @@ export function CoverCard({ data, size }: Props) {
 }
 
 /** Solid type color, cover framed inside; side by side when the cell is wide. */
-export function MediaCard({ data }: Props) {
+export function MediaCard({ data, size }: Props) {
   const theme = typeTheme(data.typeName);
+  const corners = pickCorners("media", data.id);
   return (
-    <Shell bordered={false} className={theme.solid}>
-      <TypeTab type={data.typeName} />
+    <Shell
+      corners={corners}
+      big={tall(size)}
+      bordered={false}
+      className={theme.solid}
+    >
+      <TypeTab type={data.typeName} corners={corners} />
       <div className="h-full flex flex-col @md:flex-row gap-4 p-4 pt-10">
         <div className="relative min-h-0 flex-1 @md:flex-none @md:w-1/2 overflow-hidden rounded-xs border border-dark/80">
           {/* biome-ignore lint/performance/noImgElement: covers come from arbitrary hosts; next/image needs a domain allowlist */}

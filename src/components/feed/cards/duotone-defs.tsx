@@ -29,6 +29,18 @@ export function DuotoneDefs() {
             </feComponentTransfer>
           </filter>
         ))}
+        {/* Brand gradient map (ink -> ultravioleta -> azul céu -> paper), TCC "blklightBlueskyWhiteBlack". */}
+        <filter id="duo-brand" colorInterpolationFilters="sRGB">
+          <feColorMatrix
+            type="matrix"
+            values="0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0 0 0 1 0"
+          />
+          <feComponentTransfer>
+            <feFuncR type="table" tableValues="0.071 0.416 0.157 0.969" />
+            <feFuncG type="table" tableValues="0.071 0.302 0.675 0.969" />
+            <feFuncB type="table" tableValues="0.071 1 1 0.969" />
+          </feComponentTransfer>
+        </filter>
       </defs>
     </svg>
   );

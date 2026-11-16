@@ -6,7 +6,14 @@ const LABEL =
   "font-mono text-xs uppercase tracking-wider rounded-xs px-3 sm:px-4";
 
 /** Logged-out entry points: sign in and create account, both on /auth. */
-export function AuthLinks({ className }: { className?: string }) {
+export function AuthLinks({
+  className,
+  compact = false,
+}: {
+  className?: string;
+  /** Below sm, keep only "Entrar" (the /auth page has the sign-up tab). */
+  compact?: boolean;
+}) {
   return (
     <div className={cn("flex items-center gap-2", className)}>
       <Link
@@ -17,7 +24,11 @@ export function AuthLinks({ className }: { className?: string }) {
       </Link>
       <Link
         href="/auth?mode=register"
-        className={cn(buttonVariants({ size: "lg" }), LABEL)}
+        className={cn(
+          buttonVariants({ size: "lg" }),
+          LABEL,
+          compact && "hidden sm:inline-flex",
+        )}
       >
         Criar conta
       </Link>

@@ -168,7 +168,7 @@ export const Navbar = () => {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <AuthLinks />
+          <AuthLinks compact />
         )}
       </div>
     </div>

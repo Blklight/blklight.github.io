@@ -2,6 +2,7 @@ import { Heart } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import type { Corner } from "@/components/ui/chamfer-utils";
 import { cn } from "@/lib/utils";
 import type { DocumentCard } from "@/types/api.types";
 import { typeTheme } from "./card-theme";
@@ -20,13 +21,21 @@ export const formatDate = (value: string) => {
   return Number.isNaN(date.getTime()) ? value : DATE.format(date);
 };
 
-/** Type label flush with the card's top-left corner. */
-export function TypeTab({ type }: { type: string }) {
+/** Type label flush with a top corner; moves right when the top-left corner is cut. */
+export function TypeTab({
+  type,
+  corners = [],
+}: {
+  type: string;
+  corners?: Corner[];
+}) {
   const theme = typeTheme(type);
+  const right = corners.includes("tl");
   return (
     <span
       className={cn(
-        "absolute top-0 left-0 z-20 px-2.5 py-1 rounded-br-xs font-mono text-xs uppercase tracking-wider",
+        "absolute top-0 z-20 px-2.5 py-1 font-mono text-xs uppercase tracking-wider",
+        right ? "right-0 rounded-bl-xs" : "left-0 rounded-br-xs",
         theme.solid,
       )}
     >

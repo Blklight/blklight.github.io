@@ -29,7 +29,7 @@ export function BentoGrid<T extends string>({
     <MotionConfig reducedMotion="user">
       <div
         className={cn(
-          "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-flow-dense auto-rows-[var(--bento-row,15rem)] gap-4",
+          "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 grid-flow-dense auto-rows-[var(--bento-row,15rem)] gap-4",
           className,
         )}
       >
