@@ -10,28 +10,30 @@ export const LandingNavbar = () => {
 
   return (
     <header
-      className="relative z-10 px-6 py-4 flex items-center justify-between gap-4"
+      className="relative z-10 px-6 py-4"
       style={editorOverlaysOpen ? { zIndex: 40 } : undefined}
     >
-      <Link
-        href="/"
-        className="flex items-center gap-2 rounded-xs focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-foreground"
-      >
-        <Image
-          src="/blklight-black.svg"
-          alt=""
-          width={22}
-          height={22}
-          className="dark:invert"
-        />
-        <span className="hidden sm:inline font-sans text-lg font-bold tracking-tight">
-          Blklight
-        </span>
-        <span className="sr-only sm:hidden">Blklight</span>
-      </Link>
-      <div className="flex items-center gap-2">
-        <AnimatedThemeToggler />
-        <AuthLinks />
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+        <Link
+          href="/"
+          className="flex items-center gap-2 rounded-xs focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-foreground"
+        >
+          <Image
+            src="/blklight-black.svg"
+            alt=""
+            width={22}
+            height={22}
+            className="dark:invert"
+          />
+          <span className="hidden sm:inline font-sans text-lg font-bold tracking-tight">
+            Blklight
+          </span>
+          <span className="sr-only sm:hidden">Blklight</span>
+        </Link>
+        <div className="flex items-center gap-2">
+          <AnimatedThemeToggler />
+          <AuthLinks />
+        </div>
       </div>
     </header>
   );

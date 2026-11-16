@@ -86,7 +86,10 @@ const META: Record<string, Meta> = {
   },
 };
 
-export function appMeta(app: PlatformApp) {
+export function appMeta(
+  app: Pick<PlatformApp, "slug" | "description"> &
+    Partial<Pick<PlatformApp, "tagline" | "category">>,
+) {
   const meta = META[app.slug];
   return {
     icon: meta?.icon ?? null,
