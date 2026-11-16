@@ -3,32 +3,17 @@
 import { ArrowRight, Layers, PenTool, Users } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { LandingNavbar } from "@/components/landing-navbar";
 import { AuroraText } from "@/components/ui/aurora-text";
 import { Button } from "@/components/ui/button";
 import { TextAnimate } from "@/components/ui/text-animate";
 import { TextureOverlay } from "@/components/ui/texture-overlay";
+import { useRedirectIfAuthenticated } from "@/hooks/useRedirectIfAuthenticated";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function Home() {
-  const router = useRouter();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-
-  useEffect(() => {
-    const check = () => {
-      const { isAuthenticated, user } = useAuthStore.getState();
-      if (isAuthenticated && user) {
-        router.replace(user.onboardingComplete ? "/dashboard" : "/onboarding");
-      }
-    };
-    if (useAuthStore.persist.hasHydrated()) {
-      check();
-      return;
-    }
-    return useAuthStore.persist.onFinishHydration(check);
-  }, [router]);
+  useRedirectIfAuthenticated();
 
   if (isAuthenticated) return null;
 
@@ -99,7 +84,7 @@ export default function Home() {
               transition={{ delay: 0.5, duration: 0.5 }}
               className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-6 leading-relaxed font-mono"
             >
-              Um ecossistema criativo onde voce organiza suas ideias, escreve
+              Um ecossistema criativo onde você organiza suas ideias, escreve
               artigos e compartilha conhecimento. Ferramentas de produtividade,
               escrita e uma comunidade que valoriza criatividade.
             </motion.p>
@@ -133,12 +118,12 @@ export default function Home() {
               transition={{ delay: 0.6, duration: 0.5 }}
               className="flex flex-col sm:flex-row gap-4"
             >
-              <Link href="/dashboard">
+              <Link href="/auth?mode=register">
                 <Button
                   size="lg"
                   className="group font-mono text-xs uppercase tracking-wider rounded-xs"
                 >
-                  Comecar agora
+                  Começar agora
                   <ArrowRight className="ml-3 w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>

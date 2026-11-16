@@ -16,16 +16,18 @@ interface OgImageSectionProps {
   tabs: Tab[];
   className?: string;
   rounded?: string;
-  onChange?: () => void;
+  defaultTab?: number;
+  onChange?: (id: number) => void;
 }
 
 function DirectionAwareTabs({
   tabs,
   className,
   rounded,
+  defaultTab = 0,
   onChange,
 }: OgImageSectionProps) {
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(defaultTab);
   const [direction, setDirection] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [ref, bounds] = useMeasure();
@@ -40,7 +42,7 @@ function DirectionAwareTabs({
       const newDirection = newTabId > activeTab ? 1 : -1;
       setDirection(newDirection);
       setActiveTab(newTabId);
-      onChange ? onChange() : null;
+      onChange?.(newTabId);
     }
   };
 
@@ -75,6 +77,7 @@ function DirectionAwareTabs({
           <button
             type="button"
             key={tab.id}
+            aria-pressed={activeTab === tab.id}
             onClick={() => handleTabClick(tab.id)}
             className={cn(
               "relative rounded-xs px-3.5 py-2 text-xs sm:text-sm text-neutral-200 text-center transition focus-visible:outline-1 focus-visible:ring-1 flex-1 focus-visible:outline-none flex gap-2 items-center justify-center cursor-pointer",
@@ -107,6 +110,7 @@ function DirectionAwareTabs({
         >
           <div className="p-1" ref={ref}>
             <AnimatePresence
+              initial={false}
               custom={direction}
               mode="popLayout"
               onExitComplete={() => setIsAnimating(false)}

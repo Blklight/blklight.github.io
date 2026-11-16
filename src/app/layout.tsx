@@ -27,7 +27,7 @@ const jetBrainsMono = JetBrains_Mono({
   variable: "--font-mono",
 });
 
-const AUTH_REDIRECT_SCRIPT = `try{if(location.pathname==="/"){var s=JSON.parse(localStorage.getItem("blklight-auth")||"null");s=s&&s.state;if(s&&s.isAuthenticated&&s.user){document.documentElement.style.visibility="hidden";location.replace(s.user.onboardingComplete?"/dashboard":"/onboarding")}}}catch(e){}`;
+const AUTH_REDIRECT_SCRIPT = `try{if((location.pathname==="/"||location.pathname==="/auth")){var s=JSON.parse(localStorage.getItem("blklight-auth")||"null");s=s&&s.state;if(s&&s.isAuthenticated&&s.user){document.documentElement.style.visibility="hidden";location.replace(s.user.onboardingComplete?"/dashboard":"/onboarding")}}}catch(e){}`;
 
 export const metadata: Metadata = {
   title: "Blklight",
@@ -48,7 +48,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       )}
     >
       <head>
-        {/* "/" is static HTML: redirect a persisted session before first paint. */}
+        {/* "/" and "/auth" are static HTML: redirect a persisted session before first paint. */}
         <script
           // biome-ignore lint/security/noDangerouslySetInnerHtml: static inline script
           dangerouslySetInnerHTML={{ __html: AUTH_REDIRECT_SCRIPT }}

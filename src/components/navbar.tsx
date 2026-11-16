@@ -1,4 +1,5 @@
 "use client";
+import { LogIn } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
@@ -6,7 +7,6 @@ import { useCurrentProfile } from "@/features/profile/queries";
 import { logout } from "@/lib/session";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useEditorOverlaysStore } from "@/store/useEditorOverlaysStore";
-import { AuthScreen } from "./auth-screen";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import {
@@ -92,7 +92,13 @@ export const Navbar = () => {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <AuthScreen triggerClassName="h-12" />
+          <Link
+            href="/auth"
+            className="flex gap-1 justify-center items-center px-4 text-foreground hover:bg-primary hover:text-primary-foreground rounded-xs outline-none focus-visible:outline-2 focus-visible:outline-foreground font-mono h-12"
+          >
+            <LogIn className="mr-1 h-4 w-4" />
+            Entrar
+          </Link>
         )}
       </div>
     </div>

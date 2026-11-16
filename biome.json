@@ -14,6 +14,8 @@
       "!dist",
       "!build",
       "!src/app/lab",
+      "!.agents",
+      "!.claude",
       "!src/components/GrainVsPaperLab.tsx",
       "!src/types/api.generated.ts"
     ]

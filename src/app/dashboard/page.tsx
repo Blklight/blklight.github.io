@@ -17,7 +17,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const check = () => {
       if (!useAuthStore.getState().isAuthenticated) {
-        router.replace("/");
+        router.replace("/auth");
       }
     };
     if (useAuthStore.persist.hasHydrated()) {

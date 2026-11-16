@@ -19,7 +19,7 @@ export default function AdminLayout({
       const { isAuthenticated: authed, user: current } =
         useAuthStore.getState();
       if (!authed) {
-        router.replace("/");
+        router.replace("/auth");
         return;
       }
       // não-admin vai pro dashboard (não "/"), pra não parecer erro de login
