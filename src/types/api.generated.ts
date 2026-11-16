@@ -1216,6 +1216,15 @@ export interface paths {
                                         orgname?: string;
                                         name?: string;
                                     } | null;
+                                    style?: {
+                                        typography?: string;
+                                        paperStyle?: {
+                                            [key: string]: unknown;
+                                        } | null;
+                                        paperTexture?: {
+                                            [key: string]: unknown;
+                                        } | null;
+                                    } | null;
                                 }[];
                                 nextCursor?: string | null;
                                 total?: number;
@@ -6393,6 +6402,15 @@ export interface paths {
                                         id?: string;
                                         orgname?: string;
                                         name?: string;
+                                    } | null;
+                                    style?: {
+                                        typography?: string;
+                                        paperStyle?: {
+                                            [key: string]: unknown;
+                                        } | null;
+                                        paperTexture?: {
+                                            [key: string]: unknown;
+                                        } | null;
                                     } | null;
                                 }[];
                                 nextCursor?: string | null;

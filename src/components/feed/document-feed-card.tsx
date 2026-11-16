@@ -14,7 +14,7 @@ const TYPE_LABEL: Record<DocumentType, string> = {
   tutorial: "Tutorial",
   contract: "Contrato",
   project: "Projeto",
-  page: "Página",
+  note: "Nota",
 };
 
 function formatDate(value: string): string {

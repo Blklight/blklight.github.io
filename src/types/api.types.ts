@@ -110,7 +110,7 @@ export type DocumentType =
   | "tutorial"
   | "contract"
   | "project"
-  | "page";
+  | "note";
 
 /**
  * Note types
@@ -370,6 +370,15 @@ export interface DocumentCard {
   tags: TagSummary[];
   /** Organization the document is published under, null when it is personal. */
   organization: OrganizationRef | null;
+  /** Design preview; present on the public and organization feeds. */
+  style?: DocumentCardStyle | null;
+}
+
+/** Subset of DocumentStyle the feed returns for card previews. */
+export interface DocumentCardStyle {
+  typography: Typography;
+  paperStyle: Record<string, unknown> | null;
+  paperTexture: Record<string, unknown> | null;
 }
 
 /**
