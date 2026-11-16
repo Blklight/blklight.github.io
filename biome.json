@@ -16,6 +16,7 @@
       "!src/app/lab",
       "!.agents",
       "!.claude",
+      "!.impeccable",
       "!src/components/GrainVsPaperLab.tsx",
       "!src/types/api.generated.ts"
     ]

@@ -1,187 +1,213 @@
 "use client";
 
-import { ArrowRight, Layers, PenTool, Users } from "lucide-react";
-import { motion } from "motion/react";
+import { ArrowRight } from "lucide-react";
+import { MotionConfig, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
+import { CAPABILITIES } from "@/components/capabilities";
+import Grainient from "@/components/Grainient";
 import { LandingNavbar } from "@/components/landing-navbar";
+import { SiteFooter } from "@/components/site-footer";
 import { AuroraText } from "@/components/ui/aurora-text";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { TextAnimate } from "@/components/ui/text-animate";
 import { TextureOverlay } from "@/components/ui/texture-overlay";
 import { useRedirectIfAuthenticated } from "@/hooks/useRedirectIfAuthenticated";
+import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
+
+const EASE_OUT = [0.16, 1, 0.3, 1] as const;
+const CTA = "group font-mono text-xs uppercase tracking-wider rounded-xs px-5";
+
+function PaperMock() {
+  return (
+    <div className="relative w-full max-w-md rotate-[-2deg] rounded-xs bg-light text-dark shadow-[0_24px_60px_-20px_rgb(0_0_0/0.55)] p-8">
+      <div className="flex items-center justify-between border-b border-dark/15 pb-3 mb-6 text-[0.75rem] text-dark/60">
+        <span className="font-sans font-bold text-dark">Ateliê Norte</span>
+        <span>Ensaios · nº 12</span>
+      </div>
+      <p className="font-serif text-2xl font-bold leading-tight mb-2">
+        Sobre escrever devagar
+      </p>
+      <p className="text-xs text-dark/55 mb-5">por @marina · 4 min</p>
+      <div className="space-y-3 font-serif text-sm leading-relaxed text-dark/80">
+        <p>
+          Um texto pede tempo antes de pedir leitores. Primeiro o rascunho,
+          depois o papel, por fim o lugar onde ele vai morar.
+        </p>
+        <p className="hidden sm:block">
+          Escolher a fonte e a textura é parte da escrita, não um enfeite posto
+          no fim.
+        </p>
+      </div>
+      <div className="mt-8 pt-4 border-t border-dark/15 flex items-end justify-between">
+        <div>
+          <p className="font-serif italic text-lg leading-none">Marina A.</p>
+          <p className="text-[0.75rem] text-dark/55 mt-1">Assinatura digital</p>
+        </div>
+        <span className="text-[0.75rem] text-dark/55">blklight.dev/marina</span>
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const reduceMotion = useReducedMotion();
   useRedirectIfAuthenticated();
 
   if (isAuthenticated) return null;
 
   return (
-    <div className="bg-light book:bg-sepia dark:bg-dark relative background-texture rounded-xs">
-      <LandingNavbar />
-      <TextureOverlay texture={"grid"} className="mix-blend-overlay z-0" />
+    <MotionConfig reducedMotion="user">
+      <div className="bg-light book:bg-sepia dark:bg-dark relative background-texture rounded-xs">
+        <TextureOverlay texture="grid" className="mix-blend-overlay z-0" />
+        <LandingNavbar />
 
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Section indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="absolute left-6 top-1/2 -translate-y-1/2 hidden lg:flex flex-col items-center gap-3"
-        >
-          <span className="font-mono text-xs text-muted-foreground tracking-wider rotate-180 [writing-mode:vertical-lr]">
-            01 / INTRO
-          </span>
-          <div className="w-px h-16 bg-border" />
-        </motion.div>
+        <section className="relative z-1 px-6 pt-10 pb-20 lg:min-h-[calc(100dvh-5.5rem)] flex items-center">
+          <div className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-14 items-center">
+            <div>
+              <p className="font-sans text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-4">
+                <AuroraText>Blklight</AuroraText>
+              </p>
+              <h1 className="font-sans mb-8">
+                <TextAnimate
+                  text="Crie."
+                  type="fadeInUp"
+                  className="block text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
+                />
+                <TextAnimate
+                  text="Escreva."
+                  type="fadeInUp"
+                  delay={0.1}
+                  className="block text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
+                />
+                <TextAnimate
+                  text="Compartilhe."
+                  type="fadeInUp"
+                  delay={0.2}
+                  className="block text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-blklight-500 dark:text-blklight-400"
+                />
+              </h1>
 
-        {/* Main content */}
-        <div className="relative z-1 container mx-auto px-6 py-12">
-          <div className="max-w-7xl mx-auto">
-            {/* Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="mb-5"
-            >
-              <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                Ecossistema criativo digital
-              </span>
-            </motion.div>
-            <h1 className="text-4xl font-bold tracking-tighter md:text-5xl lg:text-8xl mb-5 font-sans">
-              All New <br className="block lg:hidden" />
-              <AuroraText className="lg:inline-block! block">
-                Blklight
-              </AuroraText>
-            </h1>
-            {/* Main heading */}
-            <h1 className="mb-8 font-sans">
-              <TextAnimate
-                text="Crie."
-                type="fadeInUp"
-                className="block text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
-              />
-              <TextAnimate
-                text="Escreva."
-                type="fadeInUp"
-                delay={0.1}
-                className="block text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
-              />
-              <TextAnimate
-                text="Compartilhe."
-                type="fadeInUp"
-                delay={0.2}
-                className="block text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-blklight-500 dark:text-blklight-400"
-              />
-            </h1>
-
-            {/* Description */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-              className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-6 leading-relaxed font-mono"
-            >
-              Um ecossistema criativo onde você organiza suas ideias, escreve
-              artigos e compartilha conhecimento. Ferramentas de produtividade,
-              escrita e uma comunidade que valoriza criatividade.
-            </motion.p>
-
-            {/* Feature pills */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.55, duration: 0.5 }}
-              className="flex flex-wrap gap-3 mb-12"
-            >
-              {[
-                { icon: PenTool, label: "Artigos & Blog" },
-                { icon: Layers, label: "Ferramentas" },
-                { icon: Users, label: "Comunidade" },
-              ].map((item) => (
-                <span
-                  key={item.label}
-                  className="inline-flex items-center gap-2 px-4 py-2 border border-bluesky-500 text-bluesky-600 rounded-xs font-mono text-xs uppercase tracking-wider"
-                >
-                  <item.icon className="w-3.5 h-3.5" />
-                  {item.label}
-                </span>
-              ))}
-            </motion.div>
-
-            {/* CTAs */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.5 }}
-              className="flex flex-col sm:flex-row gap-4"
-            >
-              <Link href="/auth?mode=register">
-                <Button
-                  size="lg"
-                  className="group font-mono text-xs uppercase tracking-wider rounded-xs"
-                >
-                  Começar agora
-                  <ArrowRight className="ml-3 w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </Button>
-              </Link>
-              <Button
-                size="lg"
-                variant="outline"
-                className="font-mono text-xs uppercase tracking-wider bg-transparent rounded-xs"
-                onClick={() =>
-                  document
-                    .getElementById("ferramentas")
-                    ?.scrollIntoView({ behavior: "smooth" })
-                }
+              <motion.p
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.6, ease: EASE_OUT }}
+                className="text-base md:text-lg text-muted-foreground max-w-xl mb-10 leading-relaxed"
               >
-                Explorar
-              </Button>
+                Um editor de documentos com identidade própria: escolha fonte,
+                papel e timbre, assine e publique no seu perfil.
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.6, ease: EASE_OUT }}
+                className="flex flex-col sm:flex-row gap-3"
+              >
+                <Link
+                  href="/auth?mode=register"
+                  className={cn(buttonVariants({ size: "lg" }), CTA)}
+                >
+                  Criar conta grátis
+                  <ArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+                <Link
+                  href="/feed"
+                  className={cn(
+                    buttonVariants({ variant: "outline", size: "lg" }),
+                    CTA,
+                    "bg-transparent",
+                  )}
+                >
+                  Ler o feed
+                </Link>
+              </motion.div>
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 24, filter: "blur(8px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              transition={{ delay: 0.3, duration: 0.8, ease: EASE_OUT }}
+              className="relative overflow-hidden rounded-xs min-h-[28rem] lg:min-h-[34rem] flex items-center justify-center p-8"
+            >
+              <div className="absolute inset-0">
+                <Grainient
+                  color1="#9c40f7"
+                  color2="#2969ff"
+                  color3="#252525"
+                  timeSpeed={reduceMotion ? 0 : 0.25}
+                  warpAmplitude={50}
+                  grainAmount={0.1}
+                  contrast={1.5}
+                  zoom={0.9}
+                />
+              </div>
+              <PaperMock />
             </motion.div>
           </div>
-        </div>
+        </section>
 
-        {/* Right side decoration */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.8, duration: 0.6 }}
-          className="absolute right-6 top-1/2 -translate-y-1/2 hidden lg:flex flex-col items-center gap-4"
+        <section
+          aria-labelledby="recursos"
+          className="relative z-1 px-6 py-20 border-t border-border"
         >
-          <div className="w-px h-20 bg-blklight-500/50" />
-          <div className="w-3 h-3 rounded-full border-2 border-blklight-500 dark:border-blklight-400" />
-          <span className="font-mono text-xs text-blklight-500 dark:text-blklight-400 tracking-wider rotate-180 [writing-mode:vertical-lr]">
-            scroll
-          </span>
-        </motion.div>
-      </section>
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12">
+            <h2
+              id="recursos"
+              className="font-sans text-3xl md:text-4xl font-bold tracking-tight max-w-sm"
+            >
+              Do rascunho ao seu perfil público.
+            </h2>
+            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-10">
+              {CAPABILITIES.map((item) => (
+                <div key={item.title} className="border-t border-border pt-5">
+                  <dt className="font-sans text-xl font-bold mb-2">
+                    {item.title}
+                  </dt>
+                  <dd className="text-muted-foreground leading-relaxed">
+                    {item.text}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
 
-      {/* <div className="flex flex-col items-center gap-6 p-8">
-        <DitherShader
-          src="https://i.imgur.com/BCY3uY6.jpg"
-          gridSize={1}
-          ditherMode="bayer"
-          colorMode="duotone"
-          primaryColor="#252525"
-          secondaryColor="#eaeaea"
-          threshold={0.35}
-          className="h-96 w-full max-w-7xl object-cover "
-        />
+        <section className="relative z-1 px-6 pb-20">
+          <div className="max-w-7xl mx-auto rounded-xs bg-dark text-light px-8 py-14 md:px-14 flex flex-col md:flex-row md:items-center justify-between gap-8">
+            <div>
+              <h2 className="font-sans text-3xl md:text-4xl font-bold tracking-tight mb-3">
+                Seu primeiro texto começa aqui.
+              </h2>
+              <p className="text-light/70">
+                Crie a conta, escolha seus apps e abra o editor.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-4">
+              <Link
+                href="/auth?mode=register"
+                className={cn(
+                  buttonVariants({ size: "lg" }),
+                  CTA,
+                  "bg-light text-dark hover:bg-light/90",
+                )}
+              >
+                Criar conta
+                <ArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+              <Link
+                href="/auth"
+                className="text-sm text-light/80 hover:text-light underline underline-offset-4 rounded-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-light"
+              >
+                Já tenho conta
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <SiteFooter />
       </div>
-
-      <FeaturesSection />
-
-      <div className="container mx-auto py-5 no-overlay">
-        <Book>
-          <BookHeader>
-            <BookIcon size={20} />
-          </BookHeader>
-          <BookTitle>Book</BookTitle>
-          <BookDescription>Tap me to animate!</BookDescription>
-        </Book>
-      </div> */}
-    </div>
+    </MotionConfig>
   );
 }

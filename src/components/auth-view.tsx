@@ -7,30 +7,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { useRedirectIfAuthenticated } from "@/hooks/useRedirectIfAuthenticated";
 import { useAuthStore } from "@/store/useAuthStore";
+import { CAPABILITIES } from "./capabilities";
 import { LoginForm } from "./forms/auth/login-form";
+import { OAuthButtons } from "./forms/auth/oauth-buttons";
 import { RegisterForm } from "./forms/auth/register-form";
 import Grainient from "./Grainient";
 import { DirectionAwareTabs } from "./ui/direction-aware-tabs";
 import { TextureOverlay } from "./ui/texture-overlay";
-
-const CAPABILITIES = [
-  {
-    title: "Editor",
-    text: "Tipografia, capa e textura de papel escolhidas por você.",
-  },
-  {
-    title: "Papel timbrado",
-    text: "Cabeçalho, rodapé e assinatura digital em cada documento.",
-  },
-  {
-    title: "Publicação",
-    text: "Seus textos no feed e no seu perfil público.",
-  },
-  {
-    title: "Organizações",
-    text: "Um espaço para publicar em nome de um grupo.",
-  },
-];
 
 const MODES = ["login", "register"] as const;
 
@@ -163,27 +146,34 @@ export function AuthView() {
       <div className="min-h-dvh lg:min-h-0 lg:h-[calc(100dvh-1.125rem)] flex flex-col lg:flex-row gap-2.25">
         <BrandPanel />
 
-        <div className="flex-1 flex items-start lg:items-center justify-center p-6 lg:p-12 overflow-y-auto">
-          <div className="w-full max-w-sm py-4">
-            <Link
-              href="/"
-              className="lg:hidden flex items-center gap-2 mb-10 self-start rounded-xs focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-foreground"
-            >
-              <Image
-                src="/blklight-black.svg"
-                alt=""
-                width={22}
-                height={22}
-                className="dark:invert"
-              />
-              <span className="font-sans text-lg font-bold tracking-tight">
-                Blklight
-              </span>
-            </Link>
+        <div className="flex-1 flex flex-col p-6 lg:px-12 lg:py-10">
+          <Link
+            href="/"
+            className="lg:hidden flex items-center gap-2 mb-8 self-start rounded-xs focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-foreground"
+          >
+            <Image
+              src="/blklight-black.svg"
+              alt=""
+              width={22}
+              height={22}
+              className="dark:invert"
+            />
+            <span className="font-sans text-lg font-bold tracking-tight">
+              Blklight
+            </span>
+          </Link>
 
-            <Suspense fallback={<div className="h-12 w-full" />}>
-              <AuthTabs />
-            </Suspense>
+          <div className="flex-1 flex flex-col justify-center">
+            {/* Fixed-height slot: switching to the taller sign-up form must not move the tabs. */}
+            <div className="w-full max-w-md mx-auto lg:min-h-[34rem]">
+              <Suspense fallback={<div className="h-12 w-full" />}>
+                <AuthTabs />
+              </Suspense>
+            </div>
+          </div>
+
+          <div className="w-full max-w-md mx-auto mt-8">
+            <OAuthButtons />
           </div>
         </div>
       </div>
