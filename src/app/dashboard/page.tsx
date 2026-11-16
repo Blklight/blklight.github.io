@@ -8,6 +8,7 @@ import { appMeta } from "@/components/onboarding/app-meta";
 import { DitherSpotlight } from "@/components/onboarding/dither-spotlight";
 import { RequireAuth } from "@/components/require-auth";
 import { buttonVariants } from "@/components/ui/button";
+import { FilletCard } from "@/components/ui/fillet-card";
 import { TextureOverlay } from "@/components/ui/texture-overlay";
 import { useMyDocuments } from "@/features/documents/queries";
 import { useCurrentProfile } from "@/features/profile/queries";
@@ -193,23 +194,27 @@ function Dashboard() {
                     </div>
                   </>
                 );
-                const box =
-                  "relative block aspect-square rounded-xs border border-border bg-card overflow-hidden";
                 return (
-                  <li key={app.id}>
-                    {app.slug === "publisher" ? (
-                      <Link
-                        href="/escrever"
-                        className={cn(
-                          box,
-                          "hover:border-foreground/60 transition-colors outline-none focus-visible:outline-2 focus-visible:outline-foreground",
-                        )}
-                      >
-                        {body}
-                      </Link>
-                    ) : (
-                      <div className={box}>{body}</div>
-                    )}
+                  <li key={app.id} className="aspect-square">
+                    <FilletCard
+                      corners={["br"]}
+                      size="md"
+                      radius={4}
+                      rounded={2}
+                      style={{ height: "100%" }}
+                      className="relative overflow-hidden"
+                    >
+                      {app.slug === "publisher" ? (
+                        <Link
+                          href="/escrever"
+                          className="absolute inset-0 hover:bg-muted/40 transition-colors outline-none focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-foreground"
+                        >
+                          {body}
+                        </Link>
+                      ) : (
+                        body
+                      )}
+                    </FilletCard>
                   </li>
                 );
               })}

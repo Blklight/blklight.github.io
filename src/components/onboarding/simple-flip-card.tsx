@@ -2,6 +2,8 @@
 
 import { Check, RotateCw } from "lucide-react";
 import { useState } from "react";
+import type { Corner } from "@/components/ui/chamfer-utils";
+import { useFillet } from "@/components/ui/fillet-card";
 import { cn } from "@/lib/utils";
 import type { PlatformApp } from "@/types/api.types";
 import { appMeta } from "./app-meta";
@@ -38,12 +40,6 @@ export const SimpleFlipCard = ({
     }
   };
 
-  const face = cn(
-    "absolute inset-0 backface-hidden rounded-xs border overflow-hidden transition-colors duration-200",
-    selected
-      ? "bg-foreground text-background border-foreground"
-      : "bg-card text-foreground border-border group-hover:border-foreground/60",
-  );
   const muted = selected ? "text-background/65" : "text-muted-foreground";
   const rule = selected ? "border-background/25" : "border-border";
   const statusLabel = selected ? "Selecionado" : "Clique para selecionar";
@@ -62,7 +58,7 @@ export const SimpleFlipCard = ({
           className="relative w-full h-full preserve-3d transition-transform duration-500 ease-out cursor-pointer rounded-xs outline-none focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2 motion-reduce:transition-none"
           style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
         >
-          <div className={face}>
+          <Face corner="br" selected={selected}>
             {hoverDither && (
               <DitherSpotlight
                 className={selected ? meta.accent.inverted : meta.accent.text}
@@ -130,9 +126,9 @@ export const SimpleFlipCard = ({
               onClick={handleFlip}
               label={`Ver detalhes de ${app.name}`}
             />
-          </div>
+          </Face>
 
-          <div className={cn(face, "rotate-y-180")}>
+          <Face corner="bl" selected={selected} back>
             <div className="relative z-10 p-6 flex flex-col h-full pointer-events-none">
               <div className="flex items-center gap-2 mb-4">
                 {Icon && (
@@ -192,8 +188,45 @@ export const SimpleFlipCard = ({
               </div>
             </div>
             <FlipButton onClick={handleFlip} label="Voltar à frente do card" />
-          </div>
+          </Face>
         </div>
+      </div>
+    </div>
+  );
+};
+
+interface FaceProps {
+  corner: Corner;
+  selected: boolean;
+  back?: boolean;
+  children: React.ReactNode;
+}
+
+// Back face cut is mirrored (bl): flipped around Y, the physical card's br corner lands bottom-left.
+const Face = ({ corner, selected, back, children }: FaceProps) => {
+  const [outerRef, outerClip] = useFillet([corner], "lg", 6, 0, 2);
+  const [innerRef, innerClip] = useFillet([corner], "lg", 6, 1, 2);
+  return (
+    <div
+      ref={outerRef}
+      style={{ clipPath: outerClip }}
+      className={cn(
+        "absolute inset-0 backface-hidden p-px transition-colors duration-200",
+        back && "rotate-y-180",
+        selected ? "bg-foreground" : "bg-border group-hover:bg-foreground/60",
+      )}
+    >
+      <div
+        ref={innerRef}
+        style={{ clipPath: innerClip }}
+        className={cn(
+          "relative h-full overflow-hidden transition-colors duration-200",
+          selected
+            ? "bg-foreground text-background"
+            : "bg-card text-foreground",
+        )}
+      >
+        {children}
       </div>
     </div>
   );
@@ -211,7 +244,7 @@ const FlipButton = ({ onClick, label }: FlipButtonProps) => (
     onKeyDown={(e) => e.stopPropagation()}
     aria-label={label}
     title={label}
-    className="absolute bottom-3 right-3 z-30 size-9 rounded-full flex items-center justify-center text-current/60 hover:text-current hover:bg-current/10 transition-colors cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-current"
+    className="absolute bottom-5 right-5 z-30 size-9 rounded-full flex items-center justify-center text-current/60 hover:text-current hover:bg-current/10 transition-colors cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-current"
   >
     <RotateCw className="size-4" />
   </button>

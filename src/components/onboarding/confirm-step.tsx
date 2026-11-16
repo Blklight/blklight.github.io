@@ -6,6 +6,7 @@ import { ArrowRight, Check, PenLine } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { FilletCard } from "@/components/ui/fillet-card";
 import { apiClient } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -81,40 +82,46 @@ export const ConfirmStep = ({ username, apps, onBack }: Props) => {
           {apps.map((app) => {
             const { icon: Icon, tagline, accent } = appMeta(app);
             return (
-              <li
-                key={app.id}
-                className="relative aspect-square rounded-xs border border-border bg-card overflow-hidden"
-              >
-                <DitherSpotlight radius={120} className={accent.text} />
-                <div className="relative z-10 h-full p-4 md:p-5 flex flex-col pointer-events-none">
-                  <div className="flex items-start justify-between">
-                    {Icon ? (
-                      <Icon
-                        className={cn("size-8", accent.text)}
-                        strokeWidth={1.5}
-                      />
-                    ) : (
-                      <span className="font-sans text-3xl font-bold">
-                        {app.name.charAt(0).toUpperCase()}
-                      </span>
-                    )}
-                    <span
-                      className={cn(
-                        "size-5 rounded-full flex items-center justify-center text-dark",
-                        accent.badge,
+              <li key={app.id} className="aspect-square">
+                <FilletCard
+                  corners={["br"]}
+                  size="md"
+                  radius={4}
+                  rounded={2}
+                  style={{ height: "100%" }}
+                  className="relative overflow-hidden"
+                >
+                  <DitherSpotlight radius={120} className={accent.text} />
+                  <div className="relative z-10 h-full p-4 md:p-5 flex flex-col pointer-events-none">
+                    <div className="flex items-start justify-between">
+                      {Icon ? (
+                        <Icon
+                          className={cn("size-8", accent.text)}
+                          strokeWidth={1.5}
+                        />
+                      ) : (
+                        <span className="font-sans text-3xl font-bold">
+                          {app.name.charAt(0).toUpperCase()}
+                        </span>
                       )}
-                    >
-                      <Check className="size-3" strokeWidth={3} />
-                      <span className="sr-only">ativo</span>
-                    </span>
+                      <span
+                        className={cn(
+                          "size-5 rounded-full flex items-center justify-center text-dark",
+                          accent.badge,
+                        )}
+                      >
+                        <Check className="size-3" strokeWidth={3} />
+                        <span className="sr-only">ativo</span>
+                      </span>
+                    </div>
+                    <p className="mt-auto font-sans text-xl font-bold tracking-tight">
+                      {app.name}
+                    </p>
+                    {tagline && (
+                      <p className="text-xs text-muted-foreground">{tagline}</p>
+                    )}
                   </div>
-                  <p className="mt-auto font-sans text-xl font-bold tracking-tight">
-                    {app.name}
-                  </p>
-                  {tagline && (
-                    <p className="text-xs text-muted-foreground">{tagline}</p>
-                  )}
-                </div>
+                </FilletCard>
               </li>
             );
           })}
