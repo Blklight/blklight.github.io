@@ -1,10 +1,12 @@
+import Image from "next/image";
+import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Step } from "@/app/onboarding/page";
 
 const STEPS: { id: Step; label: string }[] = [
-  { id: "welcome", label: "BOAS-VINDAS" },
-  { id: "apps", label: "ESCOLHER APPS" },
-  { id: "done", label: "PRONTO" },
+  { id: "welcome", label: "Boas-vindas" },
+  { id: "apps", label: "Escolher apps" },
+  { id: "done", label: "Pronto" },
 ];
 
 interface Props {
@@ -17,45 +19,58 @@ export const OnboardingShell = ({ step, children }: Props) => {
   const total = STEPS.length;
 
   return (
-    <div className="text-foreground flex flex-col">
-      {/* skip link p/ acessibilidade */}
+    <div className="relative z-10 text-foreground flex flex-col min-h-[calc(100dvh-1.125rem)]">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-ink focus:text-background focus:px-3 focus:py-2 focus:text-xs focus:uppercase focus:tracking-widest"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-foreground focus:text-background focus:px-3 focus:py-2 focus:text-xs focus:rounded-xs"
       >
-        pular para o conteúdo
+        Pular para o conteúdo
       </a>
 
-      {/* progress bar */}
-      <div className="h-1 w-full bg-surface" aria-hidden="true">
-        <div
-          className="h-full bg-ink transition-all duration-500 ease-out"
-          style={{ width: `${((idx + 1) / total) * 100}%` }}
-        />
-      </div>
-
-      {/* header */}
-      <header className="px-6 md:px-10 py-6 flex items-center justify-between gap-4 border-b hairline">
-        <div className="text-xs md:text-sm tracking-tight">
-          <span className="font-bold">BLKLIGHT</span>
-        </div>
-        <div className="text-[10px] md:text-xs tracking-widest uppercase text-muted-foreground">
-          [ {String(idx + 1).padStart(2, "0")} /{" "}
-          {String(total).padStart(2, "0")} ]
-          <span className="hidden md:inline"> · {STEPS[idx].label}</span>
-        </div>
+      <header className="px-6 md:px-10 pt-6 pb-5 flex items-center justify-between gap-4">
+        <Link
+          href="/"
+          className="flex items-center gap-2 rounded-xs focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-foreground"
+        >
+          <Image
+            src="/blklight-black.svg"
+            alt=""
+            width={22}
+            height={22}
+            className="dark:invert"
+          />
+          <span className="font-sans text-lg font-bold tracking-tight">
+            Blklight
+          </span>
+        </Link>
+        <p className="text-xs text-muted-foreground">
+          Etapa {idx + 1} de {total}
+          <span className="hidden sm:inline"> · {STEPS[idx].label}</span>
+        </p>
       </header>
 
-      {/* main */}
+      <div
+        className="mx-6 md:mx-10 grid gap-1.5"
+        style={{ gridTemplateColumns: `repeat(${total}, minmax(0, 1fr))` }}
+        role="progressbar"
+        aria-label="Progresso do onboarding"
+        aria-valuemin={1}
+        aria-valuemax={total}
+        aria-valuenow={idx + 1}
+      >
+        {STEPS.map((s, i) => (
+          <div
+            key={s.id}
+            className={`h-1 rounded-full transition-colors duration-500 ${
+              i <= idx ? "bg-blklight-500 dark:bg-blklight-400" : "bg-border"
+            }`}
+          />
+        ))}
+      </div>
+
       <main id="main" className="flex-1 flex flex-col">
         {children}
       </main>
-
-      {/* footer */}
-      {/* <footer className="px-6 md:px-10 py-4 border-t hairline text-[10px] md:text-xs uppercase tracking-widest text-muted-foreground flex justify-between">
-        <span>{"> conceito demonstrativo"}</span>
-        <span>v0.1 — paper &amp; ink</span>
-      </footer> */}
     </div>
   );
 };

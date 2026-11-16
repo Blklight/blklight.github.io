@@ -1,8 +1,10 @@
 "use client";
 
-import { Check } from "lucide-react";
+import { Check, RotateCw } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 import type { PlatformApp } from "@/types/api.types";
+import { appMeta } from "./app-meta";
 
 interface Props {
   app: PlatformApp;
@@ -20,6 +22,7 @@ export const SimpleFlipCard = ({
   const [flipped, setFlipped] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const rafPending = useRef(false);
+  const { icon: Icon, tagline, description } = appMeta(app);
 
   const updateMousePos = useCallback((clientX: number, clientY: number) => {
     const el = containerRef.current;
@@ -34,176 +37,123 @@ export const SimpleFlipCard = ({
     });
   }, []);
 
-  const handleMouseEnter = (e: React.MouseEvent) => {
+  const handlePointer = (e: React.MouseEvent) => {
     if (!hoverDither) return;
     updateMousePos(e.clientX, e.clientY);
-    const el = containerRef.current;
-    if (el) el.style.setProperty("--fx-opacity", "1");
-  };
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!hoverDither) return;
-    updateMousePos(e.clientX, e.clientY);
-    const el = containerRef.current;
-    if (el) el.style.setProperty("--fx-opacity", "1");
+    containerRef.current?.style.setProperty("--fx-opacity", "1");
   };
   const handleMouseLeave = () => {
     if (!hoverDither) return;
-    const el = containerRef.current;
-    if (el) el.style.setProperty("--fx-opacity", "0");
+    containerRef.current?.style.setProperty("--fx-opacity", "0");
   };
 
-  const handleFlip = (e: React.MouseEvent | React.KeyboardEvent) => {
+  const handleFlip = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if ("preventDefault" in e) e.preventDefault();
+    e.preventDefault();
     setFlipped((f) => !f);
   };
 
   const handleKey = (e: React.KeyboardEvent) => {
+    if (e.target !== e.currentTarget) return;
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       onToggle();
     }
   };
 
-  const invertedClass = selected ? "is-inverted" : "";
+  const face = cn(
+    "absolute inset-0 backface-hidden rounded-xs border overflow-hidden transition-colors duration-200",
+    selected
+      ? "bg-foreground text-background border-foreground"
+      : "bg-card text-foreground border-border group-hover:border-foreground/50",
+  );
+  const muted = selected ? "text-background/70" : "text-muted-foreground";
 
   return (
     <div
-      onMouseEnter={handleMouseEnter}
-      onMouseMove={handleMouseMove}
+      onMouseEnter={handlePointer}
+      onMouseMove={handlePointer}
       onMouseLeave={handleMouseLeave}
-      className={`${hoverDither ? "fx-card simple-dither" : ""} group relative text-ink ${
-        selected ? "is-selected shadow-pop-bl" : "hover:shadow-pop-bl"
-      }`}
+      className={cn(
+        "group relative",
+        hoverDither && "fx-card simple-dither",
+        selected && "is-selected",
+      )}
     >
-      <div ref={containerRef} className="perspective-1000 h-115 relative">
-        {/* biome-ignore lint/a11y/useSemanticElements: card 3D com conteúdo em bloco não cabe em <button> */}
+      <div ref={containerRef} className="perspective-1000 h-80 relative">
+        {/* biome-ignore lint/a11y/useSemanticElements: card 3D com conteúdo em bloco e botão interno não cabe em <button> */}
         <div
           role="button"
           tabIndex={0}
           aria-pressed={selected}
-          aria-label={`${selected ? "desmarcar" : "selecionar"} app ${app.name}`}
+          aria-label={app.name}
           onClick={onToggle}
           onKeyDown={handleKey}
-          className="relative w-full h-full preserve-3d transition-transform duration-500 ease-out cursor-pointer focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2 motion-reduce:transition-none"
+          className="relative w-full h-full preserve-3d transition-transform duration-500 ease-out cursor-pointer rounded-xs outline-none focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2 motion-reduce:transition-none"
           style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
         >
-          {/* FRENTE */}
-          <div
-            className={`absolute inset-0 backface-hidden border border-ink overflow-hidden flex flex-col justify-between transition-colors duration-200 ${
-              selected
-                ? "bg-ink text-background"
-                : "bg-background text-foreground"
-            }`}
-          >
+          <div className={face}>
             {hoverDither && (
               <div
-                className={`dither-layer ${invertedClass}`}
+                className={cn("dither-layer", selected && "is-inverted")}
                 aria-hidden="true"
               />
             )}
-
-            <div className="relative z-10 p-6 flex flex-col justify-between h-full pointer-events-none">
+            <div className="relative z-10 p-6 flex flex-col h-full pointer-events-none">
               <div className="flex items-start justify-between">
-                <div
-                  className={`text-[10px] uppercase tracking-widest ${selected ? "text-background/60" : "text-muted-foreground"}`}
-                >
-                  {app.category}
-                </div>
+                <span className="text-xs text-current/70">{tagline}</span>
                 <span
-                  aria-hidden={!selected}
-                  className={`border w-5 h-5 flex items-center justify-center transition-opacity ${
+                  aria-hidden="true"
+                  className={cn(
+                    "size-6 rounded-full border flex items-center justify-center transition-colors",
                     selected
-                      ? "border-background opacity-100"
-                      : "border-transparent opacity-0"
-                  }`}
+                      ? "bg-blklight-400 border-blklight-400 text-dark"
+                      : "border-border",
+                  )}
                 >
-                  <Check size={12} strokeWidth={3} />
+                  {selected && <Check className="size-3.5" strokeWidth={3} />}
                 </span>
               </div>
 
-              <div className="text-6xl font-bold leading-none my-6 select-none">
+              <div className="flex-1 flex items-center">
                 {app.iconUrl ? (
                   // biome-ignore lint/performance/noImgElement: iconUrl pode vir de host arbitrário da API; next/image exigiria allowlist de domínios
                   <img
                     src={app.iconUrl}
                     alt=""
-                    className="h-14 w-14 object-contain"
+                    className="size-12 object-contain"
                   />
+                ) : Icon ? (
+                  <Icon className="size-10" strokeWidth={1.5} />
                 ) : (
-                  app.name.charAt(0).toUpperCase()
+                  <span className="font-sans text-5xl font-bold">
+                    {app.name.charAt(0).toUpperCase()}
+                  </span>
                 )}
               </div>
 
-              <div className="space-y-2">
-                <div className="text-xl font-bold uppercase tracking-tight">
-                  {app.name}
-                </div>
-                <div
-                  className={`text-xs ${selected ? "text-background/70" : "text-muted-foreground"}`}
-                >
-                  {app.tagline}
-                </div>
-              </div>
-
-              <div
-                className={`flex items-center justify-between gap-2 border-t pt-3 mt-4 ${selected ? "border-background/40" : "border-ink/30"}`}
-              >
-                <div
-                  className={`text-[10px] uppercase tracking-widest ${selected ? "text-background/60" : "text-muted-foreground"}`}
-                >
-                  {selected ? "[ selecionado ]" : "[ clique para selecionar ]"}
-                </div>
-                <span
-                  className={`text-[10px] uppercase tracking-widest ${selected ? "text-background/50" : "text-muted-foreground/70"}`}
-                >
-                  {app.accessMode}
-                </span>
-              </div>
+              <h3 className="font-sans text-2xl font-bold tracking-tight">
+                {app.name}
+              </h3>
+              <p className={cn("text-xs mt-2 pr-10", muted)}>
+                {selected ? "Selecionado" : "Clique para selecionar"}
+              </p>
             </div>
-
-            <FlipCorner onClick={handleFlip} inverted={selected} side="front" />
+            <FlipButton
+              onClick={handleFlip}
+              label={`Ver detalhes de ${app.name}`}
+            />
           </div>
 
-          {/* VERSO */}
-          <div
-            className={`absolute inset-0 backface-hidden rotate-y-180 border border-ink overflow-hidden flex flex-col justify-between transition-colors duration-200 ${
-              selected ? "bg-ink text-background" : "bg-surface text-foreground"
-            }`}
-          >
-            {hoverDither && (
-              <div
-                className={`dither-layer ${invertedClass}`}
-                aria-hidden="true"
-              />
-            )}
-
-            <div className="relative z-10 p-6 flex flex-col justify-between h-full pointer-events-none">
-              <div>
-                <div
-                  className={`text-[10px] uppercase tracking-widest mb-4 ${selected ? "text-background/60" : "text-muted-foreground"}`}
-                >
-                  {app.name.toLowerCase()}
-                </div>
-                <p className="text-sm leading-relaxed mb-5">
-                  {app.description}
-                </p>
-              </div>
-
-              <div
-                className={`flex items-center justify-between gap-2 border-t pt-3 ${selected ? "border-background/40" : "border-ink/30"}`}
-              >
-                <div
-                  className={`text-[10px] uppercase tracking-widest ${selected ? "text-background/60" : "text-muted-foreground"}`}
-                >
-                  <span>{app.accessMode}</span>
-                  <span className="mx-2">·</span>
-                  <span>{selected ? "[✓ ativo]" : "[ clique p/ ativar ]"}</span>
-                </div>
-              </div>
+          <div className={cn(face, "rotate-y-180")}>
+            <div className="relative z-10 p-6 flex flex-col h-full pointer-events-none">
+              <span className={cn("text-xs mb-4", muted)}>{app.name}</span>
+              <p className="text-sm leading-relaxed">{description}</p>
+              <p className={cn("text-xs mt-auto pr-10", muted)}>
+                {selected ? "Selecionado" : "Clique para selecionar"}
+              </p>
             </div>
-
-            <FlipCorner onClick={handleFlip} inverted={selected} side="back" />
+            <FlipButton onClick={handleFlip} label="Voltar à frente do card" />
           </div>
         </div>
       </div>
@@ -211,47 +161,20 @@ export const SimpleFlipCard = ({
   );
 };
 
-interface FlipCornerProps {
+interface FlipButtonProps {
   onClick: (e: React.MouseEvent) => void;
-  inverted: boolean;
-  side: "front" | "back";
+  label: string;
 }
 
-const FlipCorner = ({ onClick, inverted, side }: FlipCornerProps) => {
-  const positionClass =
-    side === "back" ? "bottom-0 left-0" : "bottom-0 right-0";
-  const justifyClass =
-    side === "back" ? "items-end justify-start" : "items-end justify-end";
-  const svgFlipClass = side === "back" ? "scale-x-[-1]" : "";
-
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      onMouseDown={(e) => e.stopPropagation()}
-      aria-label="virar card"
-      title="virar"
-      className={`absolute ${positionClass} w-9 h-9 flex ${justifyClass} p-1.5 z-30 group/corner focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] cursor-pointer ${
-        inverted
-          ? "focus-visible:outline-background"
-          : "focus-visible:outline-ink"
-      }`}
-      style={{ pointerEvents: "auto" }}
-    >
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 12 12"
-        fill="none"
-        aria-hidden="true"
-        className={`transition-opacity ${svgFlipClass} ${
-          inverted
-            ? "text-background/50 group-hover/corner:text-background"
-            : "text-ink/40 group-hover/corner:text-ink"
-        }`}
-      >
-        <path d="M12 0 L12 12 L0 12 Z" fill="currentColor" />
-      </svg>
-    </button>
-  );
-};
+const FlipButton = ({ onClick, label }: FlipButtonProps) => (
+  <button
+    type="button"
+    onClick={onClick}
+    onKeyDown={(e) => e.stopPropagation()}
+    aria-label={label}
+    title={label}
+    className="absolute bottom-3 right-3 z-30 size-9 rounded-full flex items-center justify-center text-current/60 hover:text-current hover:bg-current/10 transition-colors cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-current"
+  >
+    <RotateCw className="size-4" />
+  </button>
+);

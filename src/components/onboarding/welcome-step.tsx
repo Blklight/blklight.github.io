@@ -3,14 +3,19 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { ArrowRight } from "lucide-react";
+import { useReducedMotion } from "motion/react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import Grainient from "@/components/Grainient";
+import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { Kbd } from "@/components/ui/kbd";
 import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/store/useAuthStore";
 import type { ApiResponse } from "@/types/api.types";
@@ -18,37 +23,38 @@ import {
   type OnboardingFormData,
   onboardingSchema,
 } from "@/types/form.schemas";
-import { Kbd } from "../ui/kbd";
 
 interface Props {
   username: string;
-  totalApps: number;
   onNext: () => void;
   needsUsername?: boolean;
 }
 
 const errorMessages: Record<string, string> = {
   required: "Campo obrigatório",
-  too_short: "Muito curto",
-  too_long: "Muito longo",
+  too_short: "Use pelo menos 3 caracteres",
+  too_long: "Use no máximo 30 caracteres",
   invalid_format: "Apenas letras, números e underscore",
 };
 
 const t = (key: string) => errorMessages[key] ?? key;
 
+const CTA_CLASS = "group font-mono text-xs uppercase tracking-wider rounded-xs";
+
 export const WelcomeStep = ({
   username,
-  totalApps,
   onNext,
   needsUsername = false,
 }: Props) => {
-  const [cursor, setCursor] = useState(true);
   const setUser = useAuthStore((state) => state.setUser);
+  const reduceMotion = useReducedMotion();
 
   const form = useForm<OnboardingFormData>({
     resolver: zodResolver(onboardingSchema),
     defaultValues: { username: "" },
   });
+  const typed = form.watch("username");
+  const handle = needsUsername ? typed || "seu_usuario" : username;
 
   const mutation = useMutation({
     mutationFn: async (data: OnboardingFormData) => {
@@ -75,215 +81,132 @@ export const WelcomeStep = ({
         return;
       }
       form.setError("root", {
-        message: body?.message ?? "Erro ao definir username",
+        message: body?.message ?? "Não foi possível salvar o username.",
       });
     },
   });
 
   useEffect(() => {
+    if (needsUsername) return;
     const onKey = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement)?.tagName;
-      if (tag === "INPUT" || tag === "TEXTAREA") return;
-      if (needsUsername) return;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "BUTTON") return;
       if (e.key === "Enter") {
         e.preventDefault();
         onNext();
       }
     };
     window.addEventListener("keydown", onKey);
-    const blink = setInterval(() => setCursor((c) => !c), 600);
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      clearInterval(blink);
-    };
+    return () => window.removeEventListener("keydown", onKey);
   }, [onNext, needsUsername]);
 
-  const meta: Array<[string, string]> = [
-    ["user", `@${username}`],
-    ["workspace", "vazio"],
-    ["apps", `0 / ${totalApps}`],
-    ["status", "pronto"],
-    ["sessão", "init"],
-  ];
-
   return (
-    <div className="flex-1 flex items-center justify-center px-6 md:px-12 py-8">
-      <div className="w-full animate-fade-in">
-        {/* topo */}
-        <div className="flex items-center justify-between mb-10">
-          <div className="text-[10px] md:text-xs uppercase tracking-[0.3em] text-muted-foreground">
-            Boas-vindas
-          </div>
-        </div>
+    <div className="flex-1 flex items-center px-6 md:px-10 py-12">
+      <div className="w-full grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-12 lg:gap-16 items-center animate-fade-in">
+        <div>
+          <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.02] mb-6 wrap-anywhere">
+            {needsUsername ? "Boas-vindas ao " : "Olá, "}
+            <span className="text-blklight-500 dark:text-blklight-400">
+              {needsUsername ? "Blklight" : username}
+            </span>
+            .
+          </h1>
 
-        {/* grid split */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-8 lg:gap-12 items-start">
-          {/* coluna esquerda */}
-          <div>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight uppercase leading-[0.95] mb-8">
-              Olá,
-              <br />
-              <span className="inline-block border-b-2 border-ink pb-1">
-                {username}.
-              </span>
-            </h1>
+          <p className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-xl mb-10">
+            {needsUsername
+              ? "Antes de começar, escolha o username que vai aparecer no seu perfil e nos seus textos publicados."
+              : "Em dois passos você escolhe as ferramentas que quer por perto e já pode começar a escrever."}
+          </p>
 
-            <p className="text-base md:text-lg text-foreground/80 leading-relaxed max-w-xl mb-10">
-              este é o{" "}
-              <span className="bg-ink text-background px-1">Blklight</span> — um
-              espaço modular onde você escolhe quais ferramentas e
-              funcionalidades quer ter por perto. Nada vem ativado por padrão.
-              Você monta o seu próprio canivete suíço.
-            </p>
-
-            {needsUsername ? (
-              <form
-                onSubmit={form.handleSubmit((data) => mutation.mutate(data))}
-                className="max-w-md"
+          {needsUsername ? (
+            <form
+              onSubmit={form.handleSubmit((data) => mutation.mutate(data))}
+              className="max-w-md"
+            >
+              <Field
+                data-invalid={form.formState.errors.username ? true : undefined}
               >
-                <Field
-                  data-invalid={
-                    form.formState.errors.username ? true : undefined
-                  }
-                >
-                  <FieldLabel
-                    htmlFor="username"
-                    className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground"
-                  >
-                    escolha seu username
-                  </FieldLabel>
-                  <InputGroup className="mt-2">
-                    <InputGroupInput
-                      {...form.register("username")}
-                      id="username"
-                      placeholder="seu_usuario"
-                      autoComplete="username"
-                      aria-invalid={!!form.formState.errors.username}
-                      className="border hairline bg-transparent"
-                    />
-                    <InputGroupAddon align="inline-start">
-                      {"@"}
-                    </InputGroupAddon>
-                  </InputGroup>
-                  {form.formState.errors.username && (
-                    <FieldError
-                      errors={[
-                        {
-                          message: t(
-                            form.formState.errors.username.message ?? "",
-                          ),
-                        },
-                      ]}
-                    />
-                  )}
-                </Field>
-
-                {form.formState.errors.root && (
-                  <p className="mt-3 text-xs uppercase tracking-widest text-destructive">
-                    {"// "}
-                    {form.formState.errors.root.message}
-                  </p>
+                <FieldLabel htmlFor="username">Username</FieldLabel>
+                <InputGroup>
+                  <InputGroupInput
+                    {...form.register("username")}
+                    id="username"
+                    placeholder="seu_usuario"
+                    autoComplete="username"
+                    aria-invalid={!!form.formState.errors.username}
+                  />
+                  <InputGroupAddon align="inline-start">@</InputGroupAddon>
+                </InputGroup>
+                {form.formState.errors.username && (
+                  <FieldError
+                    errors={[
+                      {
+                        message: t(
+                          form.formState.errors.username.message ?? "",
+                        ),
+                      },
+                    ]}
+                  />
                 )}
+              </Field>
 
-                <button
-                  type="submit"
-                  disabled={mutation.isPending}
-                  className="mt-6 bg-ink text-background px-8 py-3 text-xs uppercase tracking-widest font-bold border hairline hover:shadow-pop-br [--shadow-pop-color:hsl(var(--ink))] focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2 group disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <span className="inline-flex items-center gap-3">
-                    {mutation.isPending ? (
-                      "[ definindo... ]"
-                    ) : (
-                      <>
-                        [ definir e começar
-                        <span className="transition-transform group-hover:translate-x-1">
-                          →
-                        </span>
-                        ]
-                      </>
-                    )}
-                  </span>
-                </button>
-              </form>
-            ) : (
-              <div className="flex flex-col sm:flex-row gap-3">
-                <button
-                  type="button"
-                  onClick={onNext}
-                  className="bg-ink text-background px-8 py-3 text-xs uppercase tracking-widest font-bold border hairline hover:shadow-pop-br [--shadow-pop-color:hsl(var(--ink))] focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2 group"
-                >
-                  <span className="inline-flex items-center gap-3">
-                    [ começar
-                    <span className="transition-transform group-hover:translate-x-1">
-                      →
-                    </span>
-                    ]
-                  </span>
-                </button>
-                <a
-                  href="#dica"
-                  className="px-8 py-3 text-xs uppercase tracking-widest font-bold border hairline hover:shadow-pop-bl focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2"
-                >
-                  [ saber mais ]
-                </a>
-              </div>
-            )}
-          </div>
+              {form.formState.errors.root && (
+                <p role="alert" className="mt-3 text-sm text-destructive">
+                  {form.formState.errors.root.message}
+                </p>
+              )}
 
-          {/* coluna direita — sys-info */}
-          <aside
-            className="border border-ink bg-surface p-6 shadow-pop-bl"
-            style={{ animationDelay: "200ms" }}
-            aria-label="painel de sistema"
-          >
-            <div className="text-[14px] uppercase tracking-[0.3em] text-muted-foreground mb-4 font-bold">
-              perfil
+              <Button
+                type="submit"
+                size="lg"
+                disabled={mutation.isPending}
+                className={`${CTA_CLASS} mt-6`}
+              >
+                {mutation.isPending ? "Salvando…" : "Salvar e continuar"}
+                <ArrowRight className="ml-3 size-4 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </form>
+          ) : (
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              <Button size="lg" onClick={onNext} className={CTA_CLASS}>
+                Começar
+                <ArrowRight className="ml-3 size-4 transition-transform group-hover:translate-x-1" />
+              </Button>
+              <p className="hidden sm:flex items-center gap-2 text-xs text-muted-foreground">
+                ou pressione <Kbd className="border">Enter</Kbd>
+              </p>
             </div>
-            <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 text-xs mb-5">
-              {meta.map(([k, v]) => (
-                <div key={k} className="contents">
-                  <dt className="text-muted-foreground uppercase tracking-widest text-[10px]">
-                    {k}
-                  </dt>
-                  <dd className="font-bold uppercase truncate">{v}</dd>
-                </div>
-              ))}
-            </dl>
-
-            <div className="border-t hairline p-4 mb-4">
-              <div className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-3">
-                próximas etapas
-              </div>
-              <ul className="space-y-1.5 text-xs">
-                <li>{"> "}escolher ferramentas</li>
-                <li>{"> "}montar workspace</li>
-                <li>{"> "}começar a usar</li>
-              </ul>
-            </div>
-
-            <div className="text-[10px] uppercase tracking-widest text-muted-foreground/70">
-              build v0.1
-            </div>
-          </aside>
+          )}
         </div>
 
-        {/* dica */}
-        <div
-          id="dica"
-          className="mt-12 pt-6 border-t hairline text-[12px] uppercase tracking-[0.25em] text-muted-foreground flex items-center gap-2 p-2"
+        <aside
+          aria-label="Prévia do seu endereço público"
+          className="relative overflow-hidden rounded-xs min-h-72 text-light"
         >
-          <span>dica</span>
-          <span className="text-foreground/80">
-            pressione{" "}
-            <Kbd data-icon="inline-end" className="translate-x-0.5 border">
-              ⏎
-            </Kbd>{" "}
-            para avançar
-          </span>
-          <span aria-hidden className="ml-1 text-foreground/70">
-            {cursor ? "_" : " "}
-          </span>
-        </div>
+          <div className="absolute inset-0">
+            <Grainient
+              color1="#9c40f7"
+              color2="#2969ff"
+              color3="#252525"
+              timeSpeed={reduceMotion ? 0 : 0.25}
+              warpAmplitude={50}
+              grainAmount={0.1}
+              contrast={1.5}
+              zoom={0.9}
+            />
+          </div>
+          <div className="relative z-10 h-full min-h-72 flex flex-col justify-end p-8">
+            <p className="text-sm text-light/75 mb-2">
+              Seu perfil público fica em
+            </p>
+            <p className="font-sans text-2xl md:text-3xl font-bold tracking-tight wrap-anywhere">
+              blklight.dev/{handle}
+            </p>
+            <p className="text-sm text-light/75 mt-4 max-w-xs">
+              É onde seus textos publicados aparecem para quem te segue.
+            </p>
+          </div>
+        </aside>
       </div>
     </div>
   );
