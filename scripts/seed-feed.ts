@@ -30,6 +30,22 @@ const AUTHORS: { username: string; displayName: string; docs: Doc[] }[] = [
     displayName: "Ana Ribeiro",
     docs: [
       {
+        title: "Guia de bolso de perspectiva",
+        type: "tutorial",
+        abstract:
+          "Um, dois e três pontos de fuga explicados com exemplos de rua.",
+        category: "digital-illustration",
+        tags: ["desenho"],
+      },
+      {
+        title: "Linhas de metrô redesenhadas",
+        type: "project",
+        abstract:
+          "Mapa esquemático das linhas de São Paulo em uma única folha.",
+        cover: cover("metromap"),
+        category: "graphic-design",
+      },
+      {
         title: "Cadernos de campo: o que aprendi desenhando todo dia",
         type: "article",
         abstract:
@@ -79,6 +95,21 @@ const AUTHORS: { username: string; displayName: string; docs: Doc[] }[] = [
     username: "feed_bruno",
     displayName: "Bruno Matos",
     docs: [
+      {
+        title: "Testes que valem a pena escrever",
+        type: "article",
+        abstract:
+          "Onde um teste paga o próprio custo e onde ele só atrasa a equipe.",
+        category: "software-architecture",
+      },
+      {
+        title: "Teclado mecânico do zero",
+        type: "project",
+        abstract: "PCB própria, firmware QMK e um case impresso em 3D.",
+        cover: cover("keyboard"),
+        category: "embedded-systems-iot",
+        tags: ["hardware"],
+      },
       {
         title: "Arquitetura de um editor de texto em React",
         type: "tutorial",
@@ -140,6 +171,24 @@ const AUTHORS: { username: string; displayName: string; docs: Doc[] }[] = [
     username: "feed_carla",
     displayName: "Carla Nunes",
     docs: [
+      {
+        title: "Café coado: proporções que funcionam",
+        type: "tutorial",
+        abstract: "Moagem, água a 92 °C e a regra de 1 para 15.",
+        cover: cover("coffee"),
+        category: "recipes",
+      },
+      {
+        title: "Por que ainda imprimo minhas fotos",
+        type: "article",
+        category: "photography",
+      },
+      {
+        title: "Cartografia afetiva do bairro",
+        type: "project",
+        abstract: "Um mapa feito de histórias contadas pelos vizinhos.",
+        category: "photography",
+      },
       {
         title: "Fotografar a cidade às seis da manhã",
         type: "article",

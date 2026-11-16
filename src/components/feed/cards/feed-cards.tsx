@@ -12,7 +12,8 @@ import type { DocumentCard } from "@/types/api.types";
 import { typeTheme } from "./card-theme";
 import { CardMeta, CardTags, CardTitle, TypeTab } from "./parts";
 
-type Props = BentoCardProps<DocumentCard>;
+export type CardProps = BentoCardProps<DocumentCard>;
+type Props = CardProps;
 
 // Each model has its own corner signature; the id picks one of its mirrored variants.
 const CORNERS = {
@@ -23,20 +24,30 @@ const CORNERS = {
   paper: [["tr"], ["br"]],
   media: [["bl"], ["tr", "bl"]],
   text: [["br"], ["tl", "br"]],
+  polaroid: [["tr"], ["bl"]],
+  stamp: [["br"], ["tl"]],
+  headline: [["tr", "bl"], ["br"]],
+  catalog: [["tr"], ["br"]],
 } satisfies Record<string, Corner[][]>;
 
-const pickCorners = (model: keyof typeof CORNERS, id: string): Corner[] => {
+export const pickCorners = (
+  model: keyof typeof CORNERS,
+  id: string,
+): Corner[] => {
   const variants = CORNERS[model];
   return variants[(hash(id) >>> 8) % variants.length];
 };
 
-function Shell({
+export function Shell({
+  card,
   corners,
   big,
   className,
   bordered = true,
   children,
 }: {
+  /** Model name, exposed as data-card for styling hooks and tests. */
+  card?: string;
   corners: Corner[];
   big?: boolean;
   className?: string;
@@ -45,6 +56,7 @@ function Shell({
 }) {
   return (
     <FilletCard
+      data-card={card}
       corners={corners}
       size={big ? "lg" : "md"}
       radius={4}
@@ -61,14 +73,20 @@ function Shell({
   );
 }
 
-const tall = (size: Props["size"]) => size === "1x2" || size === "2x2";
+export const tall = (size: Props["size"]) => size === "1x2" || size === "2x2";
 
 /** No cover, no paper: accent wash + ordered-dither on hover. */
 export function TextCard({ data, size }: Props) {
   const theme = typeTheme(data.typeName);
   const corners = pickCorners("text", data.id);
+  const card = "text";
   return (
-    <Shell corners={corners} big={tall(size)} className={theme.wash}>
+    <Shell
+      card={card}
+      corners={corners}
+      big={tall(size)}
+      className={theme.wash}
+    >
       <DitherSpotlight radius={130} className={theme.text} />
       <TypeTab type={data.typeName} corners={corners} />
       <div className="relative h-full flex flex-col p-5 pt-12 pointer-events-none [&_a]:pointer-events-auto">
@@ -98,8 +116,9 @@ export function PaperCard({ data, size }: Props) {
   );
   const ink = design.paperColors?.text;
   const corners = pickCorners("paper", data.id);
+  const card = "paper";
   return (
-    <Shell corners={corners} big={tall(size)}>
+    <Shell card={card} corners={corners} big={tall(size)}>
       <PaperSurface
         paperColors={design.paperColors}
         paperTexture={design.paperTexture}
@@ -150,8 +169,10 @@ export function PaperCard({ data, size }: Props) {
 export function CoverCard({ data, size }: Props) {
   const cover = data.coverImageUrl ?? "";
   const corners = pickCorners("cover", data.id);
+  const card = "cover";
   return (
     <Shell
+      card={card}
       corners={corners}
       big={size !== "1x1"}
       bordered={false}
@@ -199,8 +220,10 @@ export function CoverCard({ data, size }: Props) {
 export function MediaCard({ data, size }: Props) {
   const theme = typeTheme(data.typeName);
   const corners = pickCorners("media", data.id);
+  const card = "media";
   return (
     <Shell
+      card={card}
       corners={corners}
       big={tall(size)}
       bordered={false}

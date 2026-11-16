@@ -1,7 +1,8 @@
 "use client";
 
 import { FileSearch, Search } from "lucide-react";
-import { useDeferredValue, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { BentoGrid } from "@/components/bento/bento-grid";
 import { FEED_TYPES, TYPE_THEME } from "@/components/feed/cards/card-theme";
 import { DuotoneDefs } from "@/components/feed/cards/duotone-defs";
@@ -12,6 +13,12 @@ import {
   PaperCard,
   TextCard,
 } from "@/components/feed/cards/feed-cards";
+import {
+  CatalogCard,
+  HeadlineCard,
+  PolaroidCard,
+  StampCard,
+} from "@/components/feed/cards/feed-cards-extra";
 import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,7 +40,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useCategories, useFeed } from "@/features/documents/queries";
 import {
   type FeedCardType,
-  toBentoItem,
+  toBentoItems,
 } from "@/features/documents/to-bento-item";
 import { cn } from "@/lib/utils";
 import type { DocumentType, FeedQuery } from "@/types/api.types";
@@ -52,6 +59,10 @@ const CARDS = {
     featuredSize: "2x2",
   },
   media: { component: MediaCard, sizes: { "1x1": 3, "1x2": 1 } },
+  polaroid: { component: PolaroidCard, sizes: { "1x2": 2, "1x1": 1 } },
+  stamp: { component: StampCard, sizes: { "2x1": 1, "1x2": 1 } },
+  headline: { component: HeadlineCard, sizes: { "1x1": 1, "2x1": 1 } },
+  catalog: { component: CatalogCard },
 } as const satisfies Record<FeedCardType, unknown>;
 
 const TYPES = FEED_TYPES.map((id) => [id, TYPE_THEME[id]] as const);
@@ -59,7 +70,16 @@ const TYPES = FEED_TYPES.map((id) => [id, TYPE_THEME[id]] as const);
 export default function FeedPage() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState(ANY_CATEGORY);
+  const typeParam = useSearchParams().get("type");
   const [type, setType] = useState<DocumentType | null>(null);
+  // The command menu links to /feed?type=…; follow it whenever it changes.
+  useEffect(() => {
+    setType(
+      (FEED_TYPES as readonly string[]).includes(typeParam ?? "")
+        ? (typeParam as DocumentType)
+        : null,
+    );
+  }, [typeParam]);
 
   // Keeps typing responsive: the input stays controlled by `search` while the
   // feed query follows the deferred value, matching the admin list pattern.
@@ -122,7 +142,7 @@ export default function FeedPage() {
     ? null
     : (items.find((item) => item.coverImageUrl) ?? items[0] ?? null);
   const bentoItems = useMemo(
-    () => items.filter((item) => item !== featured).map(toBentoItem),
+    () => toBentoItems(items.filter((item) => item !== featured)),
     [items, featured],
   );
 

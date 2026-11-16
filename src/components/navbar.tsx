@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useEditorOverlaysStore } from "@/store/useEditorOverlaysStore";
 import { AuthLinks } from "./auth-links";
+import { CommandMenuTrigger } from "./command-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   DropdownMenu,
@@ -99,6 +100,7 @@ export const Navbar = () => {
               </Link>
             );
           })}
+        <CommandMenuTrigger className="hidden md:flex ml-auto mr-4" />
       </nav>
 
       <div className="relative z-2 flex items-center gap-1 justify-end pr-1">

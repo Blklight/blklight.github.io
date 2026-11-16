@@ -4,6 +4,7 @@ import Link from "next/link";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { useEditorOverlaysStore } from "@/store/useEditorOverlaysStore";
 import { AuthLinks } from "./auth-links";
+import { CommandMenuTrigger } from "./command-menu";
 
 export const LandingNavbar = () => {
   const editorOverlaysOpen = useEditorOverlaysStore((s) => s.overlaysOpen);
@@ -31,6 +32,7 @@ export const LandingNavbar = () => {
           <span className="sr-only sm:hidden">Blklight</span>
         </Link>
         <div className="flex items-center gap-2">
+          <CommandMenuTrigger className="hidden md:flex mr-2" />
           <AnimatedThemeToggler />
           <AuthLinks />
         </div>
