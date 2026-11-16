@@ -9,90 +9,88 @@ import { PaperSurface } from "@/features/documents/design/paper-surface";
 import { derivePaperDesign } from "@/features/documents/document-read";
 import { cn } from "@/lib/utils";
 import type { DocumentCard } from "@/types/api.types";
-import { typeTheme } from "./card-theme";
-import { CardMeta, CardTags, CardTitle, TypeTab } from "./parts";
+import { surfaceFor } from "./card-theme";
+import { CardMeta, CardTags, CardTitle, formatDate, TypeTab } from "./parts";
 
 export type CardProps = BentoCardProps<DocumentCard>;
-type Props = CardProps;
 
-// Each model has its own corner signature; the id picks one of its mirrored variants.
-const CORNERS = {
-  cover: [
-    ["tr", "bl"],
-    ["tl", "br"],
-  ],
-  paper: [["tr"], ["br"]],
-  media: [["bl"], ["tr", "bl"]],
-  text: [["br"], ["tl", "br"]],
-  polaroid: [["tr"], ["bl"]],
-  stamp: [["br"], ["tl"]],
-  headline: [["tr", "bl"], ["br"]],
-  catalog: [["tr"], ["br"]],
-} satisfies Record<string, Corner[][]>;
+const tall = (size: CardProps["size"]) => size === "1x2" || size === "2x2";
+const wide = (size: CardProps["size"]) => size === "2x1" || size === "2x2";
 
-export const pickCorners = (
-  model: keyof typeof CORNERS,
-  id: string,
-): Corner[] => {
-  const variants = CORNERS[model];
-  return variants[(hash(id) >>> 8) % variants.length];
-};
+// Separate bit ranges of the id: size, model rotation, surface, corners.
+const surfaceOf = (id: string) => surfaceFor(hash(id) >>> 12);
+const pick = <T,>(id: string, options: T[]) =>
+  options[(hash(id) >>> 8) % options.length];
 
-export function Shell({
+type Shape =
+  | { kind: "fillet"; corners: Corner[]; big?: boolean; bordered?: boolean }
+  | { kind: "round" }
+  | { kind: "pill" }
+  | { kind: "flat" };
+
+/**
+ * Card frame. Models pick different shapes on purpose: chamfered (fillet),
+ * rounded, very rounded, or flat with a brutalist 2px rule.
+ */
+function Shell({
   card,
-  corners,
-  big,
+  shape,
   className,
-  bordered = true,
   children,
 }: {
-  /** Model name, exposed as data-card for styling hooks and tests. */
-  card?: string;
-  corners: Corner[];
-  big?: boolean;
+  card: string;
+  shape: Shape;
   className?: string;
-  bordered?: boolean;
   children: ReactNode;
 }) {
+  const base = "group/card relative h-full overflow-hidden @container";
+  if (shape.kind === "fillet") {
+    return (
+      <FilletCard
+        data-card={card}
+        corners={shape.corners}
+        size={shape.big ? "lg" : "md"}
+        radius={4}
+        rounded={2}
+        bordered={shape.bordered ?? true}
+        style={{ height: "100%" }}
+        className={cn(base, className)}
+      >
+        {children}
+      </FilletCard>
+    );
+  }
   return (
-    <FilletCard
+    <div
       data-card={card}
-      corners={corners}
-      size={big ? "lg" : "md"}
-      radius={4}
-      rounded={2}
-      bordered={bordered}
-      style={{ height: "100%" }}
       className={cn(
-        "group/card relative h-full overflow-hidden @container",
+        base,
+        shape.kind === "round" && "rounded-lg",
+        shape.kind === "pill" && "rounded-[1.75rem]",
+        shape.kind === "flat" && "rounded-none border-2 border-foreground",
         className,
       )}
     >
       {children}
-    </FilletCard>
+    </div>
   );
 }
 
-export const tall = (size: Props["size"]) => size === "1x2" || size === "2x2";
+/** Tab side follows the shape: away from a cut top-left corner. */
+const tabCorners = (shape: Shape): Corner[] =>
+  shape.kind === "fillet" ? shape.corners : [];
 
-/** No cover, no paper: accent wash + ordered-dither on hover. */
-export function TextCard({ data, size }: Props) {
-  const theme = typeTheme(data.typeName);
-  const corners = pickCorners("text", data.id);
-  const card = "text";
+/** Flat and plain: a pale surface, a heavy rule, the dither on hover. */
+export function TextCard({ data }: CardProps) {
+  const surface = surfaceOf(data.id);
   return (
-    <Shell
-      card={card}
-      corners={corners}
-      big={tall(size)}
-      className={theme.wash}
-    >
-      <DitherSpotlight radius={130} className={theme.text} />
-      <TypeTab type={data.typeName} corners={corners} />
+    <Shell card="text" shape={{ kind: "flat" }} className={surface.wash}>
+      <DitherSpotlight radius={130} className={surface.text} />
+      <TypeTab type={data.typeName} />
       <div className="relative h-full flex flex-col p-5 pt-12 pointer-events-none [&_a]:pointer-events-auto">
         <CardTitle
           doc={data}
-          className="font-sans text-xl @xs:text-2xl leading-tight"
+          className="font-sans text-xl @xs:text-2xl leading-tight line-clamp-3"
         />
         {data.abstract && (
           <p className="mt-2 text-sm text-muted-foreground line-clamp-3">
@@ -110,15 +108,17 @@ export function TextCard({ data, size }: Props) {
 }
 
 /** The author's paper: color, texture, and typeface carried into the feed. */
-export function PaperCard({ data, size }: Props) {
+export function PaperCard({ data, size }: CardProps) {
   const design = derivePaperDesign(
     data.style ?? { typography: "sans", paperStyle: null, paperTexture: null },
   );
-  const ink = design.paperColors?.text;
-  const corners = pickCorners("paper", data.id);
-  const card = "paper";
+  const shape: Shape = {
+    kind: "fillet",
+    corners: pick(data.id, [["tr"], ["br"]] as Corner[][]),
+    big: tall(size),
+  };
   return (
-    <Shell card={card} corners={corners} big={tall(size)}>
+    <Shell card="paper" shape={shape}>
       <PaperSurface
         paperColors={design.paperColors}
         paperTexture={design.paperTexture}
@@ -126,10 +126,10 @@ export function PaperCard({ data, size }: Props) {
         className="h-full border-0"
         contentClassName="h-full"
       >
-        <TypeTab type={data.typeName} corners={corners} />
+        <TypeTab type={data.typeName} corners={tabCorners(shape)} />
         <div
           className="h-full flex flex-col p-5 pt-12"
-          style={{ color: ink ?? undefined }}
+          style={{ color: design.paperColors?.text ?? undefined }}
         >
           <CardTitle
             doc={data}
@@ -143,9 +143,8 @@ export function PaperCard({ data, size }: Props) {
           {data.abstract && (
             <p
               className={cn(
-                "mt-3 text-sm leading-relaxed",
+                "mt-3 text-sm leading-relaxed opacity-80",
                 tall(size) ? "line-clamp-8" : "line-clamp-2",
-                "opacity-80",
                 design.fontClass,
               )}
             >
@@ -165,17 +164,14 @@ export function PaperCard({ data, size }: Props) {
   );
 }
 
-/** Cover fills the cell in the type's duotone; the real colors come back on hover. */
-export function CoverCard({ data, size }: Props) {
+/** Rounded poster: the cover in a duotone, real colors on hover. */
+export function CoverCard({ data, size }: CardProps) {
+  const surface = surfaceOf(data.id);
   const cover = data.coverImageUrl ?? "";
-  const corners = pickCorners("cover", data.id);
-  const card = "cover";
   return (
     <Shell
-      card={card}
-      corners={corners}
-      big={size !== "1x1"}
-      bordered={false}
+      card="cover"
+      shape={{ kind: "round" }}
       className="bg-dark text-light"
     >
       {/* biome-ignore lint/performance/noImgElement: covers come from arbitrary hosts; next/image needs a domain allowlist */}
@@ -188,11 +184,11 @@ export function CoverCard({ data, size }: Props) {
       <img
         src={cover}
         alt=""
-        style={{ filter: `url(#duo-${data.typeName})` }}
+        style={{ filter: `url(#duo-${surface.id})` }}
         className="absolute inset-0 size-full object-cover transition-[opacity,scale] duration-700 ease-out group-hover/card:opacity-0 group-hover/card:scale-105 motion-reduce:transition-none"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-dark/95 via-dark/40 to-transparent" />
-      <TypeTab type={data.typeName} corners={corners} />
+      <TypeTab type={data.typeName} />
       <div className="relative h-full flex flex-col justify-end p-5">
         <CardTitle
           doc={data}
@@ -216,42 +212,201 @@ export function CoverCard({ data, size }: Props) {
   );
 }
 
-/** Solid type color, cover framed inside; side by side when the cell is wide. */
-export function MediaCard({ data, size }: Props) {
-  const theme = typeTheme(data.typeName);
-  const corners = pickCorners("media", data.id);
-  const card = "media";
+/**
+ * The allnew article card: solid surface, title, a large cover, description.
+ * Tall cells stack; wide cells put the cover beside the text.
+ */
+export function MediaCard({ data, size }: CardProps) {
+  const surface = surfaceOf(data.id);
+  const shape: Shape = {
+    kind: "fillet",
+    corners: pick(data.id, [["bl"], ["tr", "bl"]] as Corner[][]),
+    big: true,
+    bordered: false,
+  };
+  const side = wide(size);
   return (
-    <Shell
-      card={card}
-      corners={corners}
-      big={tall(size)}
-      bordered={false}
-      className={theme.solid}
-    >
-      <TypeTab type={data.typeName} corners={corners} />
-      <div className="h-full flex flex-col @md:flex-row gap-4 p-4 pt-10">
-        <div className="relative min-h-0 flex-1 @md:flex-none @md:w-1/2 overflow-hidden rounded-xs border border-dark/80">
+    <Shell card="media" shape={shape} className={surface.solid}>
+      <TypeTab type={data.typeName} corners={tabCorners(shape)} />
+      <div
+        className={cn(
+          "h-full flex gap-4 p-4 pt-11",
+          side ? "flex-row" : "flex-col",
+        )}
+      >
+        <div
+          className={cn(
+            "relative overflow-hidden rounded-md border-2 border-dark",
+            side ? "w-1/2 shrink-0" : "order-2 flex-1 min-h-40",
+          )}
+        >
           {/* biome-ignore lint/performance/noImgElement: covers come from arbitrary hosts; next/image needs a domain allowlist */}
           <img
             src={data.coverImageUrl ?? ""}
             alt=""
-            className="absolute inset-0 size-full object-cover grayscale contrast-125 transition-[filter] duration-500 group-hover/card:grayscale-0 motion-reduce:transition-none"
+            className="absolute inset-0 size-full object-cover transition-transform duration-700 ease-out group-hover/card:scale-105 motion-reduce:transition-none"
           />
         </div>
-        <div className="flex flex-col min-w-0 @md:flex-1">
-          <CardTitle doc={data} className="font-sans text-xl leading-tight" />
+        <div
+          className={cn(
+            "flex flex-col gap-3 min-w-0",
+            side ? "flex-1" : "contents",
+          )}
+        >
+          <CardTitle
+            doc={data}
+            className={cn(
+              "order-1 font-sans leading-tight",
+              side ? "text-xl line-clamp-2" : "text-2xl line-clamp-3",
+            )}
+          />
           {data.abstract && (
-            <p className="hidden @md:block mt-2 text-sm text-dark/75 line-clamp-4">
+            <p
+              className={cn(
+                "order-3 text-sm text-dark/80",
+                side ? "line-clamp-2" : "line-clamp-3",
+              )}
+            >
               {data.abstract}
             </p>
           )}
           <CardMeta
             doc={data}
-            className="mt-3 @md:mt-auto"
+            className={cn("order-4", side && "mt-auto")}
             muted="text-dark/70"
           />
         </div>
+      </div>
+    </Shell>
+  );
+}
+
+// Perforated edge: solid content box plus a ring of holes in the padding.
+const STAMP_MASK =
+  "conic-gradient(#000 0 0) content-box, radial-gradient(5px, #0000 98%, #000) -6px -6px / 12px 12px round";
+
+/** A postage stamp on a flat envelope. */
+export function StampCard({ data, size }: CardProps) {
+  const surface = surfaceOf(data.id);
+  const side = wide(size);
+  return (
+    <Shell card="stamp" shape={{ kind: "flat" }} className={surface.solid}>
+      <TypeTab type={data.typeName} />
+      <div
+        className={cn(
+          "h-full flex gap-5 p-5 pt-11",
+          side ? "flex-row items-stretch" : "flex-col",
+        )}
+      >
+        <div
+          style={{ mask: STAMP_MASK, WebkitMask: STAMP_MASK }}
+          className={cn(
+            "relative shrink-0 bg-light p-3 transition-transform duration-500 ease-out group-hover/card:-rotate-2 motion-reduce:transition-none",
+            side ? "w-2/5" : "min-h-0 flex-1",
+          )}
+        >
+          <div className="relative size-full overflow-hidden">
+            {/* biome-ignore lint/performance/noImgElement: covers come from arbitrary hosts; next/image needs a domain allowlist */}
+            <img
+              src={data.coverImageUrl ?? ""}
+              alt=""
+              style={{ filter: `url(#duo-${surface.id})` }}
+              className="absolute inset-0 size-full object-cover"
+            />
+            <span className="absolute bottom-1 right-1.5 font-mono text-[0.7rem] font-bold text-light mix-blend-difference">
+              {formatDate(data.publishedAt)}
+            </span>
+          </div>
+        </div>
+        <div className="flex flex-col min-w-0 flex-1">
+          <CardTitle
+            doc={data}
+            className="font-sans text-xl @xs:text-2xl leading-tight line-clamp-3"
+          />
+          {side && data.abstract && (
+            <p className="mt-2 text-sm text-dark/80 line-clamp-3">
+              {data.abstract}
+            </p>
+          )}
+          <CardMeta doc={data} className="mt-auto pt-3" muted="text-dark/70" />
+        </div>
+      </div>
+    </Shell>
+  );
+}
+
+/** Newspaper headline: ink surface, very round corners, the title set huge. */
+export function HeadlineCard({ data, size }: CardProps) {
+  const surface = surfaceOf(data.id);
+  return (
+    <Shell
+      card="headline"
+      shape={{ kind: "pill" }}
+      className="bg-dark text-light"
+    >
+      <TypeTab type={data.typeName} />
+      <div className="h-full flex flex-col p-6 pt-12">
+        <CardTitle
+          doc={data}
+          className={cn(
+            "font-sans font-black tracking-tight leading-[0.95] line-clamp-4",
+            size === "1x1" ? "text-3xl" : "text-4xl @md:text-5xl",
+            surface.onDark,
+          )}
+        />
+        {data.abstract && size !== "1x1" && (
+          <p className="mt-4 text-sm text-light/70 line-clamp-3 max-w-prose">
+            {data.abstract}
+          </p>
+        )}
+        <CardMeta doc={data} className="mt-auto pt-4" muted="text-light/60" />
+      </div>
+    </Shell>
+  );
+}
+
+// One ruled line per 1.6rem: every text line on the card uses this leading.
+const RULE = "1.6rem";
+
+/** Library catalog card: ruled sepia stock, fields typed in mono. */
+export function CatalogCard({ data }: CardProps) {
+  const shape: Shape = { kind: "fillet", corners: ["tr"] };
+  const number = String(hash(data.id) % 10000).padStart(4, "0");
+  const author = data.author.displayName || data.author.username;
+  return (
+    <Shell card="catalog" shape={shape} className="bg-sepia text-dark">
+      <div
+        aria-hidden
+        className="absolute inset-y-0 left-10 w-px bg-crimson-500/50"
+      />
+      <TypeTab type={data.typeName} corners={tabCorners(shape)} />
+      <div
+        className="relative h-full pl-14 pr-5 pt-9 font-mono text-xs"
+        style={{
+          lineHeight: RULE,
+          backgroundImage: `linear-gradient(to bottom, transparent calc(${RULE} - 1px), rgb(40 172 255 / 0.35) calc(${RULE} - 1px))`,
+          backgroundSize: `100% ${RULE}`,
+          backgroundPosition: "0 2.25rem",
+        }}
+      >
+        <p className="text-dark/60 uppercase tracking-wider">
+          Ficha nº {number}
+        </p>
+        <dl className="grid grid-cols-[4.5rem_1fr] gap-x-2">
+          <dt className="text-dark/55 uppercase">Título</dt>
+          <dd className="min-w-0">
+            <CardTitle
+              doc={data}
+              className="font-serif text-sm leading-[inherit] line-clamp-2"
+            />
+          </dd>
+          <dt className="text-dark/55 uppercase">Autor</dt>
+          <dd className="truncate">{author}</dd>
+          <dt className="text-dark/55 uppercase">Data</dt>
+          <dd>{formatDate(data.publishedAt)}</dd>
+          <dt className="text-dark/55 uppercase">Assunto</dt>
+          <dd className="truncate font-bold">{data.category?.name ?? "—"}</dd>
+        </dl>
       </div>
     </Shell>
   );

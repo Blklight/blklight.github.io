@@ -1,4 +1,4 @@
-import { TYPE_THEME } from "./card-theme";
+import { SURFACES, TYPE_THEME } from "./card-theme";
 
 const DARK = 0.145;
 
@@ -12,7 +12,10 @@ export function DuotoneDefs() {
       className="absolute pointer-events-none"
     >
       <defs>
-        {Object.entries(TYPE_THEME).map(([type, theme]) => (
+        {[
+          ...Object.entries(TYPE_THEME),
+          ...SURFACES.map((surface) => [surface.id, surface] as const),
+        ].map(([type, theme]) => (
           <filter
             key={type}
             id={`duo-${type}`}

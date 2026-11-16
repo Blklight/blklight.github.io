@@ -29,7 +29,7 @@ const style = (paperStyle: unknown, paperTexture: unknown) =>
 
 describe("feed card type", () => {
   it("uses an image model when there is a cover", () => {
-    expect(["cover", "media", "polaroid", "stamp"]).toContain(
+    expect(["cover", "media", "stamp"]).toContain(
       feedCardType(doc({ coverImageUrl: "https://x/y.jpg" })),
     );
   });

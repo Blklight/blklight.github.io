@@ -8,17 +8,14 @@ import { FEED_TYPES, TYPE_THEME } from "@/components/feed/cards/card-theme";
 import { DuotoneDefs } from "@/components/feed/cards/duotone-defs";
 import { FeaturedCard } from "@/components/feed/cards/featured-card";
 import {
+  CatalogCard,
   CoverCard,
+  HeadlineCard,
   MediaCard,
   PaperCard,
+  StampCard,
   TextCard,
 } from "@/components/feed/cards/feed-cards";
-import {
-  CatalogCard,
-  HeadlineCard,
-  PolaroidCard,
-  StampCard,
-} from "@/components/feed/cards/feed-cards-extra";
 import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import {
@@ -58,8 +55,7 @@ const CARDS = {
     sizes: { "2x1": 1, "1x2": 1 },
     featuredSize: "2x2",
   },
-  media: { component: MediaCard, sizes: { "1x1": 3, "1x2": 1 } },
-  polaroid: { component: PolaroidCard, sizes: { "1x2": 2, "1x1": 1 } },
+  media: { component: MediaCard, sizes: { "1x2": 2, "2x1": 1 } },
   stamp: { component: StampCard, sizes: { "2x1": 1, "1x2": 1 } },
   headline: { component: HeadlineCard, sizes: { "1x1": 1, "2x1": 1 } },
   catalog: { component: CatalogCard },

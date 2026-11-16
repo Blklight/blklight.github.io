@@ -6,19 +6,12 @@ export type FeedCardType =
   | "paper"
   | "cover"
   | "media"
-  | "polaroid"
   | "stamp"
   | "headline"
   | "catalog";
 
 // Model pools, walked in turn by toBentoItems; "cover" appears twice to weigh it.
-const WITH_COVER: FeedCardType[] = [
-  "cover",
-  "polaroid",
-  "media",
-  "cover",
-  "stamp",
-];
+const WITH_COVER: FeedCardType[] = ["cover", "media", "cover", "stamp"];
 const PLAIN: FeedCardType[] = ["text", "headline", "catalog"];
 
 const asRecord = (value: unknown): Record<string, unknown> =>
