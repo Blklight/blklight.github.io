@@ -1,10 +1,11 @@
 "use client";
 
 import { Check, RotateCw } from "lucide-react";
-import { useCallback, useRef, useState } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { PlatformApp } from "@/types/api.types";
 import { appMeta } from "./app-meta";
+import { DitherSpotlight } from "./dither-spotlight";
 
 interface Props {
   app: PlatformApp;
@@ -20,32 +21,8 @@ export const SimpleFlipCard = ({
   hoverDither = true,
 }: Props) => {
   const [flipped, setFlipped] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const rafPending = useRef(false);
-  const { icon: Icon, tagline, description } = appMeta(app);
-
-  const updateMousePos = useCallback((clientX: number, clientY: number) => {
-    const el = containerRef.current;
-    if (!el) return;
-    if (rafPending.current) return;
-    rafPending.current = true;
-    requestAnimationFrame(() => {
-      rafPending.current = false;
-      const rect = el.getBoundingClientRect();
-      el.style.setProperty("--mx", `${clientX - rect.left}px`);
-      el.style.setProperty("--my", `${clientY - rect.top}px`);
-    });
-  }, []);
-
-  const handlePointer = (e: React.MouseEvent) => {
-    if (!hoverDither) return;
-    updateMousePos(e.clientX, e.clientY);
-    containerRef.current?.style.setProperty("--fx-opacity", "1");
-  };
-  const handleMouseLeave = () => {
-    if (!hoverDither) return;
-    containerRef.current?.style.setProperty("--fx-opacity", "0");
-  };
+  const meta = appMeta(app);
+  const Icon = meta.icon;
 
   const handleFlip = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -65,22 +42,15 @@ export const SimpleFlipCard = ({
     "absolute inset-0 backface-hidden rounded-xs border overflow-hidden transition-colors duration-200",
     selected
       ? "bg-foreground text-background border-foreground"
-      : "bg-card text-foreground border-border group-hover:border-foreground/50",
+      : "bg-card text-foreground border-border group-hover:border-foreground/60",
   );
-  const muted = selected ? "text-background/70" : "text-muted-foreground";
+  const muted = selected ? "text-background/65" : "text-muted-foreground";
+  const rule = selected ? "border-background/25" : "border-border";
+  const statusLabel = selected ? "Selecionado" : "Clique para selecionar";
 
   return (
-    <div
-      onMouseEnter={handlePointer}
-      onMouseMove={handlePointer}
-      onMouseLeave={handleMouseLeave}
-      className={cn(
-        "group relative",
-        hoverDither && "fx-card simple-dither",
-        selected && "is-selected",
-      )}
-    >
-      <div ref={containerRef} className="perspective-1000 h-80 relative">
+    <div className="group relative transition-transform duration-300 ease-out hover:-translate-y-1 motion-reduce:hover:translate-y-0">
+      <div className="perspective-1000 h-88 relative">
         {/* biome-ignore lint/a11y/useSemanticElements: card 3D com conteúdo em bloco e botão interno não cabe em <button> */}
         <div
           role="button"
@@ -93,15 +63,13 @@ export const SimpleFlipCard = ({
           style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
         >
           <div className={face}>
-            {hoverDither && (
-              <div
-                className={cn("dither-layer", selected && "is-inverted")}
-                aria-hidden="true"
-              />
-            )}
+            {hoverDither && <DitherSpotlight />}
             <div className="relative z-10 p-6 flex flex-col h-full pointer-events-none">
               <div className="flex items-start justify-between">
-                <span className="text-xs text-current/70">{tagline}</span>
+                <span className={cn("text-xs", muted)}>
+                  {meta.tagline}
+                  {!meta.available && " · Em breve"}
+                </span>
                 <span
                   aria-hidden="true"
                   className={cn(
@@ -135,9 +103,18 @@ export const SimpleFlipCard = ({
               <h3 className="font-sans text-2xl font-bold tracking-tight">
                 {app.name}
               </h3>
-              <p className={cn("text-xs mt-2 pr-10", muted)}>
-                {selected ? "Selecionado" : "Clique para selecionar"}
+              <p className={cn("text-sm mt-1 line-clamp-2", muted)}>
+                {meta.description}
               </p>
+              <div
+                className={cn(
+                  "flex items-center justify-between border-t pt-3 mt-5 pr-10 text-xs",
+                  rule,
+                  muted,
+                )}
+              >
+                {statusLabel}
+              </div>
             </div>
             <FlipButton
               onClick={handleFlip}
@@ -147,11 +124,51 @@ export const SimpleFlipCard = ({
 
           <div className={cn(face, "rotate-y-180")}>
             <div className="relative z-10 p-6 flex flex-col h-full pointer-events-none">
-              <span className={cn("text-xs mb-4", muted)}>{app.name}</span>
-              <p className="text-sm leading-relaxed">{description}</p>
-              <p className={cn("text-xs mt-auto pr-10", muted)}>
-                {selected ? "Selecionado" : "Clique para selecionar"}
-              </p>
+              <div className="flex items-center gap-2 mb-4">
+                {Icon && <Icon className="size-4" strokeWidth={1.75} />}
+                <span className="font-sans font-bold">{app.name}</span>
+                <span className={cn("ml-auto text-xs", muted)}>
+                  {meta.available ? "Disponível" : "Em breve"}
+                </span>
+              </div>
+              <p className="text-sm leading-relaxed">{meta.description}</p>
+
+              {meta.features.length > 0 && (
+                <>
+                  <p className={cn("text-xs mt-5 mb-2", muted)}>Recursos</p>
+                  <ul className="space-y-1.5 text-sm">
+                    {meta.features.map((feature) => (
+                      <li key={feature} className="flex items-start gap-2">
+                        <span
+                          aria-hidden="true"
+                          className="mt-[0.55em] size-1 shrink-0 bg-current"
+                        />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+
+              {meta.idealFor && (
+                <p className={cn("text-xs mt-auto pt-4 border-t", rule, muted)}>
+                  Ideal para{" "}
+                  <span
+                    className={selected ? "text-background" : "text-foreground"}
+                  >
+                    {meta.idealFor}
+                  </span>
+                </p>
+              )}
+              <div
+                className={cn(
+                  "flex items-center justify-between pt-3 pr-10 text-xs",
+                  !meta.idealFor && "mt-auto",
+                  muted,
+                )}
+              >
+                {statusLabel}
+              </div>
             </div>
             <FlipButton onClick={handleFlip} label="Voltar à frente do card" />
           </div>
