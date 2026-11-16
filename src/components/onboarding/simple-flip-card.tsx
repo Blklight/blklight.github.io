@@ -50,7 +50,7 @@ export const SimpleFlipCard = ({
 
   return (
     <div className="group relative transition-transform duration-300 ease-out hover:-translate-y-1 motion-reduce:hover:translate-y-0">
-      <div className="perspective-1000 h-88 relative">
+      <div className="perspective-1000 h-115 relative">
         {/* biome-ignore lint/a11y/useSemanticElements: card 3D com conteúdo em bloco e botão interno não cabe em <button> */}
         <div
           role="button"
@@ -63,7 +63,11 @@ export const SimpleFlipCard = ({
           style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
         >
           <div className={face}>
-            {hoverDither && <DitherSpotlight />}
+            {hoverDither && (
+              <DitherSpotlight
+                className={selected ? meta.accent.inverted : meta.accent.text}
+              />
+            )}
             <div className="relative z-10 p-6 flex flex-col h-full pointer-events-none">
               <div className="flex items-start justify-between">
                 <span className={cn("text-xs", muted)}>
@@ -75,7 +79,7 @@ export const SimpleFlipCard = ({
                   className={cn(
                     "size-6 rounded-full border flex items-center justify-center transition-colors",
                     selected
-                      ? "bg-blklight-400 border-blklight-400 text-dark"
+                      ? cn(meta.accent.badge, "text-dark")
                       : "border-border",
                   )}
                 >
@@ -92,7 +96,13 @@ export const SimpleFlipCard = ({
                     className="size-12 object-contain"
                   />
                 ) : Icon ? (
-                  <Icon className="size-10" strokeWidth={1.5} />
+                  <Icon
+                    className={cn(
+                      "size-14",
+                      selected ? meta.accent.inverted : meta.accent.text,
+                    )}
+                    strokeWidth={1.25}
+                  />
                 ) : (
                   <span className="font-sans text-5xl font-bold">
                     {app.name.charAt(0).toUpperCase()}
@@ -100,10 +110,10 @@ export const SimpleFlipCard = ({
                 )}
               </div>
 
-              <h3 className="font-sans text-2xl font-bold tracking-tight">
+              <h3 className="font-sans text-3xl font-bold tracking-tight">
                 {app.name}
               </h3>
-              <p className={cn("text-sm mt-1 line-clamp-2", muted)}>
+              <p className={cn("text-sm mt-2 line-clamp-3", muted)}>
                 {meta.description}
               </p>
               <div
@@ -125,13 +135,21 @@ export const SimpleFlipCard = ({
           <div className={cn(face, "rotate-y-180")}>
             <div className="relative z-10 p-6 flex flex-col h-full pointer-events-none">
               <div className="flex items-center gap-2 mb-4">
-                {Icon && <Icon className="size-4" strokeWidth={1.75} />}
+                {Icon && (
+                  <Icon
+                    className={cn(
+                      "size-4",
+                      selected ? meta.accent.inverted : meta.accent.text,
+                    )}
+                    strokeWidth={1.75}
+                  />
+                )}
                 <span className="font-sans font-bold">{app.name}</span>
                 <span className={cn("ml-auto text-xs", muted)}>
                   {meta.available ? "Disponível" : "Em breve"}
                 </span>
               </div>
-              <p className="text-sm leading-relaxed">{meta.description}</p>
+              <p className="text-base leading-relaxed">{meta.description}</p>
 
               {meta.features.length > 0 && (
                 <>
@@ -141,7 +159,10 @@ export const SimpleFlipCard = ({
                       <li key={feature} className="flex items-start gap-2">
                         <span
                           aria-hidden="true"
-                          className="mt-[0.55em] size-1 shrink-0 bg-current"
+                          className={cn(
+                            "mt-[0.55em] size-1 shrink-0 bg-current",
+                            selected ? meta.accent.inverted : meta.accent.text,
+                          )}
                         />
                         {feature}
                       </li>

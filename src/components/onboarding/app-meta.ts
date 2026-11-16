@@ -15,7 +15,32 @@ interface Meta {
   idealFor: string;
   /** Whether the app already has screens in this front-end. */
   available: boolean;
+  /** Per-app accent: text color on light cards and on the inverted (selected) card. */
+  accent: { text: string; inverted: string; badge: string };
 }
+
+const ACCENTS = {
+  blklight: {
+    text: "text-blklight-500 dark:text-blklight-400",
+    inverted: "text-blklight-400 dark:text-blklight-500",
+    badge: "bg-blklight-400 border-blklight-400",
+  },
+  bluesky: {
+    text: "text-bluesky-500 dark:text-bluesky-400",
+    inverted: "text-bluesky-400 dark:text-bluesky-500",
+    badge: "bg-bluesky-400 border-bluesky-400",
+  },
+  orange: {
+    text: "text-orange-500 dark:text-orange-400",
+    inverted: "text-orange-400 dark:text-orange-500",
+    badge: "bg-orange-400 border-orange-400",
+  },
+  magenta: {
+    text: "text-magenta-500 dark:text-magenta-400",
+    inverted: "text-magenta-400 dark:text-magenta-500",
+    badge: "bg-magenta-400 border-magenta-400",
+  },
+};
 
 // shortcut: Portuguese copy lives here until the API seed carries tagline, category and PT descriptions.
 const META: Record<string, Meta> = {
@@ -30,6 +55,7 @@ const META: Record<string, Meta> = {
     ],
     idealFor: "ensaios, artigos e tutoriais com cara própria",
     available: true,
+    accent: ACCENTS.blklight,
   },
   reader: {
     icon: BookOpen,
@@ -38,6 +64,7 @@ const META: Record<string, Meta> = {
     features: ["Destaques no texto", "Anotações", "Listas de leitura"],
     idealFor: "estudar e guardar o que vale reler",
     available: false,
+    accent: ACCENTS.bluesky,
   },
   "dev-tools": {
     icon: Code,
@@ -46,6 +73,7 @@ const META: Record<string, Meta> = {
     features: ["Notas de código", "Exercícios isolados", "Tutoriais técnicos"],
     idealFor: "quem escreve e aprende programação",
     available: false,
+    accent: ACCENTS.orange,
   },
   canvas: {
     icon: StickyNote,
@@ -54,6 +82,7 @@ const META: Record<string, Meta> = {
     features: ["Post-its livres", "Conexões entre ideias", "Quadros por tema"],
     idealFor: "rascunhar antes de escrever",
     available: false,
+    accent: ACCENTS.magenta,
   },
 };
 
@@ -66,5 +95,6 @@ export function appMeta(app: PlatformApp) {
     features: meta?.features ?? [],
     idealFor: meta?.idealFor ?? "",
     available: meta?.available ?? false,
+    accent: meta?.accent ?? ACCENTS.blklight,
   };
 }
