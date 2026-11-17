@@ -369,7 +369,8 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
         v == null ? null : (v as Record<string, unknown>);
       return {
         title: data.title || "",
-        type: "article",
+        // No type picker yet: set it on create only, so saving never turns a tutorial into an article.
+        ...(documentIdRef.current ? {} : { type: "article" }),
         abstract: data.subtitle || null,
         content: (data.content as Record<string, unknown> | null) ?? null,
         coverImageUrl: design.coverImage || undefined,

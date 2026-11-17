@@ -47,7 +47,7 @@ import { cn } from "@/lib/utils";
 export const DigitalSignature = ({
   signature = "Ultimate Mercer",
   registry = "@ultimatemercer",
-  timestamp = Date.now(),
+  timestamp,
   color,
   background,
   dateText,
@@ -144,7 +144,7 @@ export const DigitalSignature = ({
             className="text-xs uppercase"
             style={hasTheme ? { color } : undefined}
           >
-            {dateText ?? formatSignatureDate(timestamp)}
+            {dateText ?? formatSignatureDate(timestamp ?? Date.now())}
           </p>
           {organization && (
             <p
