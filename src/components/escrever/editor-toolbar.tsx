@@ -257,8 +257,14 @@ export function EditorBlockMenu({ editor }: { editor: Editor }) {
       setTop(coords.top - box.top + (coords.bottom - coords.top) / 2);
     };
     place();
+    // Layout can shift without a transaction (fonts, images, design changes).
+    const observer = new ResizeObserver(place);
+    observer.observe(editor.view.dom);
     window.addEventListener("resize", place);
-    return () => window.removeEventListener("resize", place);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", place);
+    };
   }, [editor, line]);
 
   useEffect(() => {
