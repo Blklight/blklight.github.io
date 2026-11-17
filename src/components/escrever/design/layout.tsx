@@ -128,7 +128,7 @@ export function DesignLayout({
               type="button"
               title="Renomear template"
               onClick={() => setIsRenameOpen(true)}
-              className="p-1 text-foreground/40 hover:text-foreground transition-colors"
+              className="p-1 text-foreground/60 hover:text-foreground transition-colors"
             >
               <Pencil className="w-3.5 h-3.5" />
             </button>
@@ -166,15 +166,15 @@ export function DesignLayout({
 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Eye className="w-3.5 h-3.5 text-foreground/40" />
-              <span className="text-[10px] font-mono uppercase tracking-wider text-foreground/40">
+              <Eye className="w-3.5 h-3.5 text-foreground/60" />
+              <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
                 Documento completo
               </span>
             </div>
             <button
               type="button"
               onClick={() => setIsPreviewOpen(true)}
-              className="text-[9px] font-mono uppercase tracking-wider text-foreground/40 hover:text-foreground transition-colors underline underline-offset-2"
+              className="text-xs font-mono uppercase tracking-wider text-foreground/60 hover:text-foreground transition-colors underline underline-offset-2"
             >
               Ver preview
             </button>

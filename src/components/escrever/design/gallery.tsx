@@ -68,7 +68,7 @@ export function DesignGallery({
       <main className="max-w-7xl mx-auto px-4 py-6">
         {sorted.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-4 py-24 text-center">
-            <p className="text-sm font-mono uppercase tracking-wider text-foreground/40">
+            <p className="text-sm font-mono uppercase tracking-wider text-foreground/60">
               Nenhum template ainda
             </p>
             <Button size="sm" onClick={onCreate}>

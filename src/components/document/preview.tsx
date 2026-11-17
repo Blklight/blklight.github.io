@@ -42,7 +42,7 @@ export interface PreviewDesignProps {
   signatureContext?: SignatureContext | null;
 }
 
-const SAMPLE_TITLE = "Título do Documento";
+const SAMPLE_TITLE = "Título do documento";
 
 function getStaticCoverFilter(settings: CoverImageSettings): string {
   switch (settings.filter) {
@@ -134,12 +134,12 @@ export function DocumentPreview(props: PreviewDesignProps) {
         style={getPaperProseStyle(paperColors)}
       >
         <p>
-          Este e o conteudo do seu documento. A formatacao do texto, a
-          tipografia e o estilo visual aparecerao conforme configurados.
+          Este é o conteúdo do seu documento. A formatação do texto, a
+          tipografia e o estilo visual aparecem conforme configurados.
         </p>
         <p>
-          O design escolhido aqui sera aplicado automaticamente quando voce
-          comecar a escrever no Editor.
+          O design escolhido aqui é aplicado ao documento assim que você voltar
+          ao editor.
         </p>
       </div>
       {isSignatureVisible(sigContext) && (

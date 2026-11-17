@@ -11,13 +11,13 @@ export function FontPanel({ design }: DesignContext) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2">
-        <Type className="w-4 h-4 text-foreground/40" />
-        <span className="text-xs font-mono uppercase tracking-wider text-foreground/40">
+        <Type className="w-4 h-4 text-foreground/60" />
+        <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
           Tipografia
         </span>
       </div>
 
-      <p className="text-[10px] font-mono text-foreground/30 leading-relaxed">
+      <p className="text-xs font-mono text-foreground/60 leading-relaxed">
         Escolha a fonte principal do documento. A alteracao afeta titulos,
         paragrafos e elementos de texto.
       </p>
@@ -38,10 +38,10 @@ export function FontPanel({ design }: DesignContext) {
             <span className={cn("text-sm", font.family)}>{font.name}</span>
             <span
               className={cn(
-                "text-[10px] font-mono uppercase tracking-wider",
+                "text-xs font-mono uppercase tracking-wider",
                 typography === font.id
                   ? "text-foreground"
-                  : "text-foreground/30",
+                  : "text-foreground/60",
               )}
             >
               {font.family.replace("font-", "")}

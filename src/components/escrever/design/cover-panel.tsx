@@ -83,21 +83,21 @@ export function CoverPanel({ design }: DesignContext) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2">
-        <Image className="w-4 h-4 text-foreground/40" />
-        <span className="text-xs font-mono uppercase tracking-wider text-foreground/40">
+        <Image className="w-4 h-4 text-foreground/60" />
+        <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
           Imagem de Capa
         </span>
       </div>
 
-      <p className="text-[10px] font-mono text-foreground/30 leading-relaxed">
-        Adicione uma imagem de capa ao documento. Escolha entre imagens padrao
+      <p className="text-xs font-mono text-foreground/60 leading-relaxed">
+        Adicione uma imagem de capa ao documento. Escolha entre imagens padrão
         ou insira uma URL personalizada.
       </p>
 
       {/* Cover selector (shown when no cover) */}
       {showSelector && !coverImage && (
         <div className="flex flex-col gap-3">
-          <span className="text-[10px] font-mono uppercase tracking-wider text-foreground/40">
+          <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
             Escolha uma capa
           </span>
           <div className="grid grid-cols-3 gap-2">
@@ -114,7 +114,7 @@ export function CoverPanel({ design }: DesignContext) {
                   alt={option.name}
                   className="w-full h-24 object-cover transition-transform duration-300 group-hover:scale-105"
                 />
-                <span className="text-[9px] font-mono uppercase tracking-wider text-foreground/50 px-2 pb-2">
+                <span className="text-xs font-mono uppercase tracking-wider text-foreground/50 px-2 pb-2">
                   {option.name}
                 </span>
               </button>
@@ -124,7 +124,7 @@ export function CoverPanel({ design }: DesignContext) {
           <button
             type="button"
             onClick={() => setShowUrlInput(true)}
-            className="flex items-center justify-center gap-1.5 px-3 py-2 border border-dashed border-border rounded-xs text-[10px] font-mono uppercase tracking-wider text-foreground/40 hover:text-foreground hover:border-muted-foreground transition-colors"
+            className="flex items-center justify-center gap-1.5 px-3 py-2 border border-dashed border-border rounded-xs text-xs font-mono uppercase tracking-wider text-foreground/60 hover:text-foreground hover:border-muted-foreground transition-colors"
           >
             <Plus className="w-3 h-3" />
             URL personalizada
@@ -147,9 +147,9 @@ export function CoverPanel({ design }: DesignContext) {
           <button
             type="button"
             onClick={() => setShowSelector(true)}
-            className="self-start px-2 py-1 text-[9px] font-mono uppercase tracking-wider text-foreground/40 hover:text-foreground transition-colors"
+            className="self-start px-2 py-1 text-xs font-mono uppercase tracking-wider text-foreground/60 hover:text-foreground transition-colors"
           >
-            Trocar imagem padrao
+            Trocar imagem padrão
           </button>
         </div>
       )}

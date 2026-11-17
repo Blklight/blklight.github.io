@@ -22,10 +22,10 @@ export function SliderField({
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-center justify-between">
-        <span className="text-[10px] font-mono uppercase tracking-wider text-foreground/40">
+        <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
           {label}
         </span>
-        <span className="text-[10px] font-mono text-foreground/40">
+        <span className="text-xs font-mono text-foreground/60">
           {value}
           {unit}
         </span>

@@ -9,7 +9,7 @@ type ColorFieldProps = {
 export function ColorField({ label, value, onChange }: ColorFieldProps) {
   return (
     <div className="flex flex-col gap-1">
-      <span className="text-[10px] font-mono uppercase tracking-wider text-foreground/40">
+      <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
         {label}
       </span>
       <div className="flex items-center gap-2">
@@ -23,7 +23,7 @@ export function ColorField({ label, value, onChange }: ColorFieldProps) {
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="flex-1 px-2 py-1 text-[10px] font-mono bg-secondary border border-border rounded-xs"
+          className="flex-1 px-2 py-1 text-xs font-mono bg-secondary border border-border rounded-xs"
         />
       </div>
     </div>

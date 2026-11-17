@@ -110,7 +110,7 @@ export function LetterheadStyleEditor({
               key={t}
               type="button"
               onClick={() => onChange({ ...style, bgType: t })}
-              className={`flex-1 px-2 py-1.5 text-[10px] font-mono uppercase tracking-wider border rounded-xs transition-colors ${
+              className={`flex-1 px-2 py-1.5 text-xs font-mono uppercase tracking-wider border rounded-xs transition-colors ${
                 style.bgType === t
                   ? "border-foreground bg-secondary text-foreground"
                   : "border-border text-foreground/50 hover:border-muted-foreground"
@@ -142,7 +142,7 @@ export function LetterheadStyleEditor({
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-foreground/40">
+              <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
                 Direcao
               </span>
               <div className="grid grid-cols-4 gap-1">
@@ -166,7 +166,7 @@ export function LetterheadStyleEditor({
               </div>
             </div>
             <div className="flex flex-col gap-1.5">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-foreground/40">
+              <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
                 Presets
               </span>
               <div className="grid grid-cols-4 gap-1.5">
@@ -207,7 +207,7 @@ export function LetterheadStyleEditor({
           onChange={(v) => onChange({ ...style, text: v })}
         />
         <div className="flex flex-col gap-1.5">
-          <span className="text-[10px] font-mono uppercase tracking-wider text-foreground/40">
+          <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
             Alinhamento
           </span>
           <div className="flex gap-1">
@@ -216,7 +216,7 @@ export function LetterheadStyleEditor({
                 key={a.id}
                 type="button"
                 onClick={() => onChange({ ...style, textAlign: a.id })}
-                className={`flex-1 px-2 py-1 text-[10px] font-mono border rounded-xs transition-colors ${
+                className={`flex-1 px-2 py-1 text-xs font-mono border rounded-xs transition-colors ${
                   style.textAlign === a.id
                     ? "border-foreground bg-secondary text-foreground"
                     : "border-border text-foreground/50 hover:border-muted-foreground"
@@ -241,7 +241,7 @@ export function LetterheadStyleEditor({
               key={t.id}
               type="button"
               onClick={() => onChange({ ...style, textureType: t.id })}
-              className={`flex-1 px-2 py-1.5 text-[10px] font-mono uppercase tracking-wider border rounded-xs transition-colors ${
+              className={`flex-1 px-2 py-1.5 text-xs font-mono uppercase tracking-wider border rounded-xs transition-colors ${
                 style.textureType === t.id
                   ? "border-foreground bg-secondary text-foreground"
                   : "border-border text-foreground/50 hover:border-muted-foreground"
@@ -275,7 +275,7 @@ export function LetterheadStyleEditor({
               key={b.id}
               type="button"
               onClick={() => onChange({ ...style, borderStyle: b.id })}
-              className={`px-2 py-1 text-[10px] font-mono border rounded-xs transition-colors ${
+              className={`px-2 py-1 text-xs font-mono border rounded-xs transition-colors ${
                 style.borderStyle === b.id
                   ? "border-foreground bg-secondary text-foreground"
                   : "border-border text-foreground/50 hover:border-muted-foreground"

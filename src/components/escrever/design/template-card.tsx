@@ -35,7 +35,7 @@ function CardAction({
       type="button"
       title={title}
       onClick={onClick}
-      className="p-1.5 text-foreground/30 hover:text-foreground hover:bg-secondary/50 rounded-xs transition-colors"
+      className="p-1.5 text-foreground/60 hover:text-foreground hover:bg-secondary/50 rounded-xs transition-colors"
     >
       {children}
     </button>
@@ -60,7 +60,7 @@ export function TemplateCard({
           <p className="text-xs font-mono uppercase tracking-wider truncate text-foreground">
             {template.name}
           </p>
-          <p className="text-[10px] font-mono text-foreground/40 mt-1">
+          <p className="text-xs font-mono text-foreground/60 mt-1">
             Editado em {formatDate(template.updatedAt)}
           </p>
         </div>

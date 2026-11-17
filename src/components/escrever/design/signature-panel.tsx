@@ -10,8 +10,8 @@ export function SignaturePanel({ design, signatureContext }: DesignContext) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2">
-        <PenTool className="w-4 h-4 text-foreground/40" />
-        <span className="text-xs font-mono uppercase tracking-wider text-foreground/40">
+        <PenTool className="w-4 h-4 text-foreground/60" />
+        <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
           Assinatura digital
         </span>
       </div>
@@ -22,7 +22,7 @@ export function SignaturePanel({ design, signatureContext }: DesignContext) {
       </p>
 
       <div className="p-3 border border-border rounded-xs bg-secondary/20">
-        <span className="text-xs font-mono uppercase tracking-wider text-foreground/40 block mb-2">
+        <span className="text-xs font-mono uppercase tracking-wider text-foreground/60 block mb-2">
           Prévia
         </span>
         <SignatureBlock
