@@ -182,7 +182,6 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
     paperTexture,
     documentHeader,
     documentFooter,
-    documentSignature,
     typography,
     coverImage,
     coverSettings,
@@ -779,7 +778,7 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
                 </div>
 
                 {/* Signature */}
-                {isSignatureVisible(documentSignature, signatureContext) && (
+                {isSignatureVisible(signatureContext) && (
                   <SignatureBlock
                     context={signatureContext}
                     color={paperColors?.text}

@@ -93,15 +93,12 @@ export default async function PublicDocumentPage({
     author: document.author,
     organization: document.organization,
   };
-  // Signature: always automatic; only `enabled` is read from the saved data.
-  const signature = design.signature;
   const signatureContext: SignatureContext = {
     ...letterheadContext,
     authorship: document.authorship,
     publishedAt: document.publishedAt,
   };
-  const showSignature =
-    signature !== null && isSignatureVisible(signature, signatureContext);
+  const showSignature = isSignatureVisible(signatureContext);
   // The signature already shows the public identifier: don't repeat it below
   // the paper.
   const signatureShowsIdentifier =

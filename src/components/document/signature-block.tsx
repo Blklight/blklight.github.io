@@ -9,12 +9,10 @@ export interface SignatureBlockSignature {
   enabled: boolean;
 }
 
-/** Shown when enabled and the resolved name is not empty. */
-export function isSignatureVisible(
-  signature: SignatureBlockSignature | null | undefined,
-  context: SignatureContext,
-): boolean {
-  return !!signature?.enabled && resolveSignature(context).name !== "";
+/** Shown whenever the resolved name is not empty. */
+export function isSignatureVisible(context: SignatureContext): boolean {
+  // Always on: the signature is the authorship stamp of every document.
+  return resolveSignature(context).name !== "";
 }
 
 /**
@@ -37,7 +35,6 @@ export function SignatureBlock({
       signature={resolved.name}
       registry={resolved.identifier}
       dateText={resolved.date}
-      organization={resolved.organization}
       color={color}
       background={background}
     />

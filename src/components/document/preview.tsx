@@ -64,7 +64,6 @@ export function DocumentPreview(props: PreviewDesignProps) {
     paperTexture,
     documentHeader,
     documentFooter,
-    documentSignature,
     paperColors,
     fontClass,
     textureStyle,
@@ -143,7 +142,7 @@ export function DocumentPreview(props: PreviewDesignProps) {
           comecar a escrever no Editor.
         </p>
       </div>
-      {isSignatureVisible(documentSignature, sigContext) && (
+      {isSignatureVisible(sigContext) && (
         <SignatureBlock
           context={sigContext}
           color={paperColors?.text}
