@@ -1,6 +1,4 @@
-import { Heart } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   DocumentFooterRenderer,
@@ -13,7 +11,6 @@ import {
 } from "@/components/document/signature-block";
 import type { PaperStyle } from "@/components/document/types";
 import { Navbar } from "@/components/navbar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { LetterheadTextContext } from "@/features/documents/design/letterhead-text";
 import { PaperSurface } from "@/features/documents/design/paper-surface";
 import type { SignatureContext } from "@/features/documents/design/signature";
@@ -33,16 +30,6 @@ export const instant = false;
 
 interface DocumentPageProps {
   params: Promise<{ username: string; slug: string }>;
-}
-
-const DATE_FORMAT = new Intl.DateTimeFormat("pt-BR", {
-  dateStyle: "long",
-  timeZone: "UTC",
-});
-
-function formatDate(value: string): string {
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? value : DATE_FORMAT.format(date);
 }
 
 function authorLabel(document: DocumentFull): string {
@@ -101,10 +88,6 @@ export default async function PublicDocumentPage({
     publishedAt: document.publishedAt,
   };
   const showSignature = isSignatureVisible(signatureContext);
-  // The signature already shows the public identifier: don't repeat it below
-  // the paper.
-  const signatureShowsIdentifier =
-    showSignature && !!document.authorship?.publicIdentifier;
   const paperStyle = document.style?.paperStyle as
     | PaperStyle
     | null
@@ -115,76 +98,6 @@ export default async function PublicDocumentPage({
       <Navbar />
       <div className="min-h-screen bg-background py-12">
         <div className="max-w-3xl mx-auto px-4 md:px-6">
-          {/* Byline / meta bar (above the paper, in the page background) */}
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mb-6 text-sm text-muted-foreground">
-            <Avatar className="h-7 w-7" aria-hidden>
-              <AvatarImage
-                src={document.author.avatarUrl ?? undefined}
-                alt=""
-              />
-              <AvatarFallback>
-                {authorLabel(document).charAt(0).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <span className="font-medium text-foreground">
-              {authorLabel(document)}
-            </span>
-            <span className="font-mono text-xs">
-              @{document.author.username}
-            </span>
-            <span aria-hidden>·</span>
-            <time dateTime={document.publishedAt} className="text-xs">
-              {formatDate(document.publishedAt)}
-            </time>
-            {document.organization ? (
-              <>
-                <span aria-hidden>·</span>
-                <Link
-                  href={`/org/${document.organization.orgname}`}
-                  data-testid="document-org-link"
-                  className="text-xs hover:underline"
-                >
-                  em {document.organization.name}
-                </Link>
-              </>
-            ) : null}
-            <span
-              className="ml-auto flex items-center gap-1.5"
-              data-testid="likes"
-            >
-              <Heart
-                className={cn(
-                  "w-4 h-4",
-                  document.likes.likedByMe
-                    ? "fill-accent text-accent"
-                    : "text-muted-foreground",
-                )}
-                aria-hidden
-              />
-              <span className="font-mono text-xs">
-                {document.likes.likesCount}
-              </span>
-            </span>
-          </div>
-
-          {(document.category || document.tags.length > 0) && (
-            <div className="flex flex-wrap items-center gap-2 mb-6">
-              {document.category && (
-                <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 border border-foreground/20">
-                  {document.category.name}
-                </span>
-              )}
-              {document.tags.map((tag) => (
-                <span
-                  key={tag.id}
-                  className="font-mono text-[10px] uppercase tracking-widest px-2 py-1 border border-foreground/20"
-                >
-                  {tag.name}
-                </span>
-              ))}
-            </div>
-          )}
-
           {/* Paper — mirrors the editor's document container */}
           <PaperSurface
             as="article"
@@ -279,14 +192,6 @@ export default async function PublicDocumentPage({
               />
             )}
           </PaperSurface>
-
-          {/* Authorship — public identifier, discreet */}
-          {document.authorship?.publicIdentifier &&
-            !signatureShowsIdentifier && (
-              <p className="mt-4 text-center font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                Public identifier · {document.authorship.publicIdentifier}
-              </p>
-            )}
         </div>
       </div>
     </>
