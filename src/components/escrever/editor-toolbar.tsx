@@ -1,12 +1,15 @@
 "use client";
 
 import type { Editor } from "@tiptap/react";
+import { useEditorState } from "@tiptap/react";
+import { BubbleMenu, FloatingMenu } from "@tiptap/react/menus";
 import {
   AlignCenter,
   AlignLeft,
   AlignRight,
   Bold,
   Code,
+  FileCode2,
   Heading1,
   Heading2,
   Heading3,
@@ -17,198 +20,241 @@ import {
   List,
   ListOrdered,
   Minus,
+  Plus,
   Quote,
-  Redo,
   Strikethrough,
-  Undo,
 } from "lucide-react";
-import { useCallback } from "react";
-import { ToolbarButton, ToolbarDivider } from "./toolbar";
+import { type ReactNode, useState } from "react";
+import { cn } from "@/lib/utils";
 
-export interface EditorToolbarProps {
-  editor: Editor | null;
-  onShowLinkModal: () => void;
+const PANEL =
+  "flex items-center gap-0.5 rounded-md border-2 border-foreground bg-popover text-popover-foreground p-1 shadow-[0_8px_24px_-12px_rgb(0_0_0/0.45)]";
+
+function MenuButton({
+  label,
+  active,
+  onClick,
+  children,
+}: {
+  label: string;
+  active?: boolean;
+  onClick: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      title={label}
+      aria-label={label}
+      aria-pressed={active}
+      // Keep the text selection: a mousedown on the button would blur the editor.
+      onMouseDown={(event) => event.preventDefault()}
+      onClick={onClick}
+      className={cn(
+        "size-8 inline-flex items-center justify-center rounded-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-foreground [&_svg]:size-4",
+        active
+          ? "bg-foreground text-background"
+          : "text-muted-foreground hover:text-foreground hover:bg-secondary",
+      )}
+    >
+      {children}
+    </button>
+  );
 }
 
-export function EditorToolbar({ editor, onShowLinkModal }: EditorToolbarProps) {
-  const addImage = useCallback(() => {
-    const url = window.prompt("URL da imagem:");
-    if (url && editor) {
-      editor.chain().focus().setImage({ src: url }).run();
-    }
-  }, [editor]);
+const Divider = () => (
+  <span aria-hidden className="mx-0.5 h-5 w-px bg-border" />
+);
+
+/** Appears over selected text: inline formatting, link, and alignment. */
+export function EditorBubbleMenu({
+  editor,
+  onShowLinkModal,
+}: {
+  editor: Editor;
+  onShowLinkModal: () => void;
+}) {
+  const state = useEditorState({
+    editor,
+    selector: ({ editor: e }) => ({
+      bold: e.isActive("bold"),
+      italic: e.isActive("italic"),
+      strike: e.isActive("strike"),
+      highlight: e.isActive("highlight"),
+      code: e.isActive("code"),
+      link: e.isActive("link"),
+      left: e.isActive({ textAlign: "left" }),
+      center: e.isActive({ textAlign: "center" }),
+      right: e.isActive({ textAlign: "right" }),
+    }),
+  });
+  const run = () => editor.chain().focus();
 
   return (
-    <div className="editor-toolbar background-texture">
-      <div className="container mx-auto px-6 max-w-full overflow-hidden">
-        <div className="flex items-center justify-start md:justify-center py-2 w-full overflow-x-auto">
-          <div className="flex items-center gap-1 flex-nowrap shrink-0">
-            {/* Undo/Redo */}
-            <ToolbarButton
-              onClick={() => editor?.chain().focus().undo().run()}
-              disabled={!editor?.can().undo()}
-              title="Desfazer"
-            >
-              <Undo className="w-4 h-4" />
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() => editor?.chain().focus().redo().run()}
-              disabled={!editor?.can().redo()}
-              title="Refazer"
-            >
-              <Redo className="w-4 h-4" />
-            </ToolbarButton>
+    <BubbleMenu editor={editor} className={PANEL}>
+      <MenuButton
+        label="Negrito"
+        active={state.bold}
+        onClick={() => run().toggleBold().run()}
+      >
+        <Bold />
+      </MenuButton>
+      <MenuButton
+        label="Itálico"
+        active={state.italic}
+        onClick={() => run().toggleItalic().run()}
+      >
+        <Italic />
+      </MenuButton>
+      <MenuButton
+        label="Riscado"
+        active={state.strike}
+        onClick={() => run().toggleStrike().run()}
+      >
+        <Strikethrough />
+      </MenuButton>
+      <MenuButton
+        label="Destacar"
+        active={state.highlight}
+        onClick={() => run().toggleHighlight().run()}
+      >
+        <Highlighter />
+      </MenuButton>
+      <MenuButton
+        label="Código"
+        active={state.code}
+        onClick={() => run().toggleCode().run()}
+      >
+        <Code />
+      </MenuButton>
+      <MenuButton label="Link" active={state.link} onClick={onShowLinkModal}>
+        <LinkIcon />
+      </MenuButton>
+      <Divider />
+      <MenuButton
+        label="Alinhar à esquerda"
+        active={state.left}
+        onClick={() => run().setTextAlign("left").run()}
+      >
+        <AlignLeft />
+      </MenuButton>
+      <MenuButton
+        label="Centralizar"
+        active={state.center}
+        onClick={() => run().setTextAlign("center").run()}
+      >
+        <AlignCenter />
+      </MenuButton>
+      <MenuButton
+        label="Alinhar à direita"
+        active={state.right}
+        onClick={() => run().setTextAlign("right").run()}
+      >
+        <AlignRight />
+      </MenuButton>
+    </BubbleMenu>
+  );
+}
 
-            <ToolbarDivider />
+interface Block {
+  label: string;
+  icon: ReactNode;
+  run: (editor: Editor) => void;
+}
 
-            {/* Headings */}
-            <ToolbarButton
-              onClick={() =>
-                editor?.chain().focus().toggleHeading({ level: 1 }).run()
-              }
-              isActive={editor?.isActive("heading", { level: 1 }) ?? false}
-              title="Titulo 1"
-            >
-              <Heading1 className="w-4 h-4" />
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() =>
-                editor?.chain().focus().toggleHeading({ level: 2 }).run()
-              }
-              isActive={editor?.isActive("heading", { level: 2 }) ?? false}
-              title="Titulo 2"
-            >
-              <Heading2 className="w-4 h-4" />
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() =>
-                editor?.chain().focus().toggleHeading({ level: 3 }).run()
-              }
-              isActive={editor?.isActive("heading", { level: 3 }) ?? false}
-              title="Titulo 3"
-            >
-              <Heading3 className="w-4 h-4" />
-            </ToolbarButton>
+const BLOCKS: Block[] = [
+  {
+    label: "Título 1",
+    icon: <Heading1 />,
+    run: (e) => e.chain().focus().toggleHeading({ level: 1 }).run(),
+  },
+  {
+    label: "Título 2",
+    icon: <Heading2 />,
+    run: (e) => e.chain().focus().toggleHeading({ level: 2 }).run(),
+  },
+  {
+    label: "Título 3",
+    icon: <Heading3 />,
+    run: (e) => e.chain().focus().toggleHeading({ level: 3 }).run(),
+  },
+  {
+    label: "Lista",
+    icon: <List />,
+    run: (e) => e.chain().focus().toggleBulletList().run(),
+  },
+  {
+    label: "Lista numerada",
+    icon: <ListOrdered />,
+    run: (e) => e.chain().focus().toggleOrderedList().run(),
+  },
+  {
+    label: "Citação",
+    icon: <Quote />,
+    run: (e) => e.chain().focus().toggleBlockquote().run(),
+  },
+  {
+    label: "Bloco de código",
+    icon: <FileCode2 />,
+    run: (e) => e.chain().focus().toggleCodeBlock().run(),
+  },
+  {
+    label: "Imagem",
+    icon: <ImageIcon />,
+    run: (e) => {
+      const url = window.prompt("URL da imagem:");
+      if (url) e.chain().focus().setImage({ src: url }).run();
+    },
+  },
+  {
+    label: "Linha",
+    icon: <Minus />,
+    run: (e) => e.chain().focus().setHorizontalRule().run(),
+  },
+];
 
-            <ToolbarDivider />
+/** "+" on an empty line: inserts a block, Notion-style. */
+export function EditorBlockMenu({ editor }: { editor: Editor }) {
+  const [open, setOpen] = useState(false);
 
-            {/* Text Formatting */}
-            <ToolbarButton
-              onClick={() => editor?.chain().focus().toggleBold().run()}
-              isActive={editor?.isActive("bold") ?? false}
-              title="Negrito"
+  return (
+    <FloatingMenu
+      editor={editor}
+      options={{ placement: "left-start", offset: 8 }}
+      className="flex items-start gap-2"
+    >
+      <button
+        type="button"
+        aria-label="Inserir bloco"
+        aria-expanded={open}
+        onMouseDown={(event) => event.preventDefault()}
+        onClick={() => setOpen((value) => !value)}
+        className={cn(
+          "size-7 inline-flex items-center justify-center rounded-full border border-border bg-popover text-muted-foreground transition-[color,rotate,border-color] hover:text-foreground hover:border-foreground outline-none focus-visible:ring-2 focus-visible:ring-foreground",
+          open && "rotate-45 text-foreground border-foreground",
+        )}
+      >
+        <Plus className="size-4" />
+      </button>
+      {open && (
+        <div className={cn(PANEL, "flex-col items-stretch w-52 p-1.5 gap-0")}>
+          {BLOCKS.map((block) => (
+            <button
+              key={block.label}
+              type="button"
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => {
+                block.run(editor);
+                setOpen(false);
+              }}
+              className="flex items-center gap-3 rounded-sm px-2 py-1.5 text-sm text-left hover:bg-secondary outline-none focus-visible:bg-secondary [&_svg]:size-4 [&_svg]:text-muted-foreground"
             >
-              <Bold className="w-4 h-4" />
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() => editor?.chain().focus().toggleItalic().run()}
-              isActive={editor?.isActive("italic") ?? false}
-              title="Italico"
-            >
-              <Italic className="w-4 h-4" />
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() => editor?.chain().focus().toggleStrike().run()}
-              isActive={editor?.isActive("strike") ?? false}
-              title="Riscado"
-            >
-              <Strikethrough className="w-4 h-4" />
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() => editor?.chain().focus().toggleHighlight().run()}
-              isActive={editor?.isActive("highlight") ?? false}
-              title="Destacar"
-            >
-              <Highlighter className="w-4 h-4" />
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() => editor?.chain().focus().toggleCode().run()}
-              isActive={editor?.isActive("code") ?? false}
-              title="Codigo"
-            >
-              <Code className="w-4 h-4" />
-            </ToolbarButton>
-
-            <ToolbarDivider />
-
-            {/* Alignment */}
-            <ToolbarButton
-              onClick={() => editor?.chain().focus().setTextAlign("left").run()}
-              isActive={editor?.isActive({ textAlign: "left" }) ?? false}
-              title="Alinhar a esquerda"
-            >
-              <AlignLeft className="w-4 h-4" />
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() =>
-                editor?.chain().focus().setTextAlign("center").run()
-              }
-              isActive={editor?.isActive({ textAlign: "center" }) ?? false}
-              title="Centralizar"
-            >
-              <AlignCenter className="w-4 h-4" />
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() =>
-                editor?.chain().focus().setTextAlign("right").run()
-              }
-              isActive={editor?.isActive({ textAlign: "right" }) ?? false}
-              title="Alinhar a direita"
-            >
-              <AlignRight className="w-4 h-4" />
-            </ToolbarButton>
-
-            <ToolbarDivider />
-
-            {/* Lists */}
-            <ToolbarButton
-              onClick={() => editor?.chain().focus().toggleBulletList().run()}
-              isActive={editor?.isActive("bulletList") ?? false}
-              title="Lista"
-            >
-              <List className="w-4 h-4" />
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() => editor?.chain().focus().toggleOrderedList().run()}
-              isActive={editor?.isActive("orderedList") ?? false}
-              title="Lista numerada"
-            >
-              <ListOrdered className="w-4 h-4" />
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() => editor?.chain().focus().toggleBlockquote().run()}
-              isActive={editor?.isActive("blockquote") ?? false}
-              title="Citacao"
-            >
-              <Quote className="w-4 h-4" />
-            </ToolbarButton>
-
-            <ToolbarDivider />
-
-            {/* Media */}
-            <ToolbarButton
-              onClick={onShowLinkModal}
-              isActive={editor?.isActive("link") ?? false}
-              title="Link"
-            >
-              <LinkIcon className="w-4 h-4" />
-            </ToolbarButton>
-            <ToolbarButton onClick={addImage} title="Imagem">
-              <ImageIcon className="w-4 h-4" />
-            </ToolbarButton>
-
-            <ToolbarDivider />
-
-            {/* Horizontal Rule */}
-            <ToolbarButton
-              onClick={() => editor?.chain().focus().setHorizontalRule().run()}
-              title="Linha horizontal"
-            >
-              <Minus className="w-4 h-4" />
-            </ToolbarButton>
-          </div>
+              {block.icon}
+              {block.label}
+            </button>
+          ))}
         </div>
-      </div>
-    </div>
+      )}
+    </FloatingMenu>
   );
 }

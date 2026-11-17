@@ -36,9 +36,7 @@ export function BentoGrid<T extends string>({
         {items.map((item, index) => {
           const def = cards[item.type];
           if (!def) {
-            if (process.env.NODE_ENV !== "production") {
-              console.warn(`BentoGrid: no card registered for "${item.type}"`);
-            }
+            console.warn(`BentoGrid: no card registered for "${item.type}"`);
             return null;
           }
           const size = resolveSize(item, def);

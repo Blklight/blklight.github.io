@@ -668,21 +668,6 @@
   z-index: 1;
 }
 
-.editor-toolbar {
-  @apply sticky top-14.25 z-30 border-b rounded-xs bg-background border-foreground;
-}
-
-.editor-toolbar::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--background-paper-header);
-  mix-blend-mode: overlay;
-  transform: translateZ(0);
-  pointer-events: none;
-  z-index: 1;
-}
-
 .background-frame {
   @apply bg-transparent border-[8px] border-[#252525] dark:border-[#eaeaea];
 }

@@ -47,7 +47,10 @@ import type { DesignTab } from "@/components/escrever/design/sidebar";
 import { DesignOverlay } from "@/components/escrever/design-overlay";
 import { DocumentPaperFooter } from "@/components/escrever/document-paper-footer";
 import { DocumentPaperHeader } from "@/components/escrever/document-paper-header";
-import { EditorToolbar } from "@/components/escrever/editor-toolbar";
+import {
+  EditorBlockMenu,
+  EditorBubbleMenu,
+} from "@/components/escrever/editor-toolbar";
 import { FloatingActionBar } from "@/components/escrever/floating-action-bar";
 import { JsonPreviewModal, LinkModal } from "@/components/escrever/modals";
 import { PublishPanel } from "@/components/escrever/publish-panel";
@@ -562,12 +565,10 @@ export function DocumentEditor({
     <ExpandableScreenTrigger>
       <button
         type="button"
-        className="flex items-center gap-1.5 px-2 py-1.5 text-muted-foreground hover:text-foreground transition-colors rounded-xs hover:bg-black/5"
+        className="flex items-center gap-1.5 h-8 px-2 rounded-xs text-xs font-mono uppercase tracking-wider transition-colors hover:bg-black/5 dark:hover:bg-white/10 outline-none focus-visible:ring-2 focus-visible:ring-current"
       >
-        <Palette className="w-3.5 h-3.5" />
-        <span className="text-[10px] font-mono uppercase tracking-wider">
-          Editar design
-        </span>
+        <Palette className="size-3.5" />
+        Editar design
       </button>
     </ExpandableScreenTrigger>
   );
@@ -617,11 +618,6 @@ export function DocumentEditor({
           {/* Editor Styles */}
           <EditorStyles />
 
-          {/* Toolbar */}
-          <EditorToolbar
-            editor={editor}
-            onShowLinkModal={() => setShowLinkModal(true)}
-          />
           <main className="relative z-10 py-12 bg-background rounded-xs">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -630,6 +626,10 @@ export function DocumentEditor({
               className="max-w-3xl mx-auto px-4 md:px-6"
             >
               <DocumentPaperHeader
+                editor={editor}
+                status={documentStatus}
+                type={kind.type}
+                typeLabel={kind.label}
                 paperColors={paperColors}
                 onOpenTemplates={() => setIsTemplatesOpen(true)}
                 designTrigger={designTrigger}
@@ -754,6 +754,11 @@ export function DocumentEditor({
                   }}
                 >
                   <EditorContent editor={editor} />
+                  <EditorBubbleMenu
+                    editor={editor}
+                    onShowLinkModal={() => setShowLinkModal(true)}
+                  />
+                  <EditorBlockMenu editor={editor} />
                 </div>
 
                 {/* Signature */}
