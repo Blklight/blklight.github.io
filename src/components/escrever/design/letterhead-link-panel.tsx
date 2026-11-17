@@ -27,9 +27,9 @@ export function LetterheadLinkPanel({
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           {linked ? (
-            <Link2 className="w-4 h-4 text-foreground/40" />
+            <Link2 className="w-4 h-4 text-foreground/60" />
           ) : (
-            <Link2Off className="w-4 h-4 text-foreground/40" />
+            <Link2Off className="w-4 h-4 text-foreground/60" />
           )}
           <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
             {toggleLabel}

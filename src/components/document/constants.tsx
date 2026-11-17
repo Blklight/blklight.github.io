@@ -101,5 +101,5 @@ export const DEFAULT_LETTERHEAD_STYLE: LetterheadStyle = {
 export const FONT_OPTIONS = [
   { id: "sans", name: "Inter", family: "font-sans" },
   { id: "mono", name: "JetBrains Mono", family: "font-mono" },
-  { id: "serif", name: "Merriweather", family: "font-serif" },
+  { id: "serif", name: "EB Garamond", family: "font-serif" },
 ];

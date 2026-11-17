@@ -1,8 +1,13 @@
 "use client";
 
-import { Check } from "lucide-react";
-import { useCallback, useRef, useState } from "react";
+import { Check, RotateCw } from "lucide-react";
+import { useState } from "react";
+import type { Corner } from "@/components/ui/chamfer-utils";
+import { useFillet } from "@/components/ui/fillet-card";
+import { cn } from "@/lib/utils";
 import type { PlatformApp } from "@/types/api.types";
+import { appMeta } from "./app-meta";
+import { DitherSpotlight } from "./dither-spotlight";
 
 interface Props {
   app: PlatformApp;
@@ -18,240 +23,229 @@ export const SimpleFlipCard = ({
   hoverDither = true,
 }: Props) => {
   const [flipped, setFlipped] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const rafPending = useRef(false);
+  const meta = appMeta(app);
+  const Icon = meta.icon;
 
-  const updateMousePos = useCallback((clientX: number, clientY: number) => {
-    const el = containerRef.current;
-    if (!el) return;
-    if (rafPending.current) return;
-    rafPending.current = true;
-    requestAnimationFrame(() => {
-      rafPending.current = false;
-      const rect = el.getBoundingClientRect();
-      el.style.setProperty("--mx", `${clientX - rect.left}px`);
-      el.style.setProperty("--my", `${clientY - rect.top}px`);
-    });
-  }, []);
-
-  const handleMouseEnter = (e: React.MouseEvent) => {
-    if (!hoverDither) return;
-    updateMousePos(e.clientX, e.clientY);
-    const el = containerRef.current;
-    if (el) el.style.setProperty("--fx-opacity", "1");
-  };
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!hoverDither) return;
-    updateMousePos(e.clientX, e.clientY);
-    const el = containerRef.current;
-    if (el) el.style.setProperty("--fx-opacity", "1");
-  };
-  const handleMouseLeave = () => {
-    if (!hoverDither) return;
-    const el = containerRef.current;
-    if (el) el.style.setProperty("--fx-opacity", "0");
-  };
-
-  const handleFlip = (e: React.MouseEvent | React.KeyboardEvent) => {
+  const handleFlip = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if ("preventDefault" in e) e.preventDefault();
+    e.preventDefault();
     setFlipped((f) => !f);
   };
 
   const handleKey = (e: React.KeyboardEvent) => {
+    if (e.target !== e.currentTarget) return;
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       onToggle();
     }
   };
 
-  const invertedClass = selected ? "is-inverted" : "";
+  const muted = selected ? "text-background/65" : "text-muted-foreground";
+  const rule = selected ? "border-background/25" : "border-border";
+  const statusLabel = selected ? "Selecionado" : "Clique para selecionar";
 
   return (
-    <div
-      onMouseEnter={handleMouseEnter}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className={`${hoverDither ? "fx-card simple-dither" : ""} group relative text-ink ${
-        selected ? "is-selected shadow-pop-bl" : "hover:shadow-pop-bl"
-      }`}
-    >
-      <div ref={containerRef} className="perspective-1000 h-115 relative">
-        {/* biome-ignore lint/a11y/useSemanticElements: card 3D com conteúdo em bloco não cabe em <button> */}
+    <div className="group relative transition-transform duration-300 ease-out hover:-translate-y-1 motion-reduce:hover:translate-y-0">
+      <div className="perspective-1000 h-115 relative">
+        {/* biome-ignore lint/a11y/useSemanticElements: card 3D com conteúdo em bloco e botão interno não cabe em <button> */}
         <div
           role="button"
           tabIndex={0}
           aria-pressed={selected}
-          aria-label={`${selected ? "desmarcar" : "selecionar"} app ${app.name}`}
+          aria-label={app.name}
           onClick={onToggle}
           onKeyDown={handleKey}
-          className="relative w-full h-full preserve-3d transition-transform duration-500 ease-out cursor-pointer focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2 motion-reduce:transition-none"
+          className="relative w-full h-full preserve-3d transition-transform duration-500 ease-out cursor-pointer rounded-xs outline-none focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2 motion-reduce:transition-none"
           style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
         >
-          {/* FRENTE */}
-          <div
-            className={`absolute inset-0 backface-hidden border border-ink overflow-hidden flex flex-col justify-between transition-colors duration-200 ${
-              selected
-                ? "bg-ink text-background"
-                : "bg-background text-foreground"
-            }`}
-          >
+          <Face corner="br" selected={selected}>
             {hoverDither && (
-              <div
-                className={`dither-layer ${invertedClass}`}
-                aria-hidden="true"
+              <DitherSpotlight
+                className={selected ? meta.accent.inverted : meta.accent.text}
               />
             )}
-
-            <div className="relative z-10 p-6 flex flex-col justify-between h-full pointer-events-none">
+            <div className="relative z-10 p-6 flex flex-col h-full pointer-events-none">
               <div className="flex items-start justify-between">
-                <div
-                  className={`text-[10px] uppercase tracking-widest ${selected ? "text-background/60" : "text-muted-foreground"}`}
-                >
-                  {app.category}
-                </div>
+                <span className={cn("text-xs", muted)}>
+                  {meta.tagline}
+                  {!meta.available && " · Em breve"}
+                </span>
                 <span
-                  aria-hidden={!selected}
-                  className={`border w-5 h-5 flex items-center justify-center transition-opacity ${
+                  aria-hidden="true"
+                  className={cn(
+                    "size-6 rounded-full border flex items-center justify-center transition-colors",
                     selected
-                      ? "border-background opacity-100"
-                      : "border-transparent opacity-0"
-                  }`}
+                      ? cn(meta.accent.badge, "text-dark")
+                      : "border-border",
+                  )}
                 >
-                  <Check size={12} strokeWidth={3} />
+                  {selected && <Check className="size-3.5" strokeWidth={3} />}
                 </span>
               </div>
 
-              <div className="text-6xl font-bold leading-none my-6 select-none">
+              <div className="flex-1 flex items-center">
                 {app.iconUrl ? (
                   // biome-ignore lint/performance/noImgElement: iconUrl pode vir de host arbitrário da API; next/image exigiria allowlist de domínios
                   <img
                     src={app.iconUrl}
                     alt=""
-                    className="h-14 w-14 object-contain"
+                    className="size-12 object-contain"
+                  />
+                ) : Icon ? (
+                  <Icon
+                    className={cn(
+                      "size-14",
+                      selected ? meta.accent.inverted : meta.accent.text,
+                    )}
+                    strokeWidth={1.25}
                   />
                 ) : (
-                  app.name.charAt(0).toUpperCase()
+                  <span className="font-sans text-5xl font-bold">
+                    {app.name.charAt(0).toUpperCase()}
+                  </span>
                 )}
               </div>
 
-              <div className="space-y-2">
-                <div className="text-xl font-bold uppercase tracking-tight">
-                  {app.name}
-                </div>
-                <div
-                  className={`text-xs ${selected ? "text-background/70" : "text-muted-foreground"}`}
-                >
-                  {app.tagline}
-                </div>
-              </div>
-
+              <h3 className="font-sans text-3xl font-bold tracking-tight">
+                {app.name}
+              </h3>
+              <p className={cn("text-sm mt-2 line-clamp-3", muted)}>
+                {meta.description}
+              </p>
               <div
-                className={`flex items-center justify-between gap-2 border-t pt-3 mt-4 ${selected ? "border-background/40" : "border-ink/30"}`}
+                className={cn(
+                  "flex items-center justify-between border-t pt-3 mt-5 pr-10 text-xs",
+                  rule,
+                  muted,
+                )}
               >
-                <div
-                  className={`text-[10px] uppercase tracking-widest ${selected ? "text-background/60" : "text-muted-foreground"}`}
-                >
-                  {selected ? "[ selecionado ]" : "[ clique para selecionar ]"}
-                </div>
-                <span
-                  className={`text-[10px] uppercase tracking-widest ${selected ? "text-background/50" : "text-muted-foreground/70"}`}
-                >
-                  {app.accessMode}
+                {statusLabel}
+              </div>
+            </div>
+            <FlipButton
+              onClick={handleFlip}
+              label={`Ver detalhes de ${app.name}`}
+            />
+          </Face>
+
+          <Face corner="bl" selected={selected} back>
+            <div className="relative z-10 p-6 flex flex-col h-full pointer-events-none">
+              <div className="flex items-center gap-2 mb-4">
+                {Icon && (
+                  <Icon
+                    className={cn(
+                      "size-4",
+                      selected ? meta.accent.inverted : meta.accent.text,
+                    )}
+                    strokeWidth={1.75}
+                  />
+                )}
+                <span className="font-sans font-bold">{app.name}</span>
+                <span className={cn("ml-auto text-xs", muted)}>
+                  {meta.available ? "Disponível" : "Em breve"}
                 </span>
               </div>
-            </div>
+              <p className="text-base leading-relaxed">{meta.description}</p>
 
-            <FlipCorner onClick={handleFlip} inverted={selected} side="front" />
-          </div>
+              {meta.features.length > 0 && (
+                <>
+                  <p className={cn("text-xs mt-5 mb-2", muted)}>Recursos</p>
+                  <ul className="space-y-1.5 text-sm">
+                    {meta.features.map((feature) => (
+                      <li key={feature} className="flex items-start gap-2">
+                        <span
+                          aria-hidden="true"
+                          className={cn(
+                            "mt-[0.55em] size-1 shrink-0 bg-current",
+                            selected ? meta.accent.inverted : meta.accent.text,
+                          )}
+                        />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
 
-          {/* VERSO */}
-          <div
-            className={`absolute inset-0 backface-hidden rotate-y-180 border border-ink overflow-hidden flex flex-col justify-between transition-colors duration-200 ${
-              selected ? "bg-ink text-background" : "bg-surface text-foreground"
-            }`}
-          >
-            {hoverDither && (
-              <div
-                className={`dither-layer ${invertedClass}`}
-                aria-hidden="true"
-              />
-            )}
-
-            <div className="relative z-10 p-6 flex flex-col justify-between h-full pointer-events-none">
-              <div>
-                <div
-                  className={`text-[10px] uppercase tracking-widest mb-4 ${selected ? "text-background/60" : "text-muted-foreground"}`}
-                >
-                  {app.name.toLowerCase()}
-                </div>
-                <p className="text-sm leading-relaxed mb-5">
-                  {app.description}
+              {meta.idealFor && (
+                <p className={cn("text-xs mt-auto pt-4 border-t", rule, muted)}>
+                  Ideal para{" "}
+                  <span
+                    className={selected ? "text-background" : "text-foreground"}
+                  >
+                    {meta.idealFor}
+                  </span>
                 </p>
-              </div>
-
+              )}
               <div
-                className={`flex items-center justify-between gap-2 border-t pt-3 ${selected ? "border-background/40" : "border-ink/30"}`}
+                className={cn(
+                  "flex items-center justify-between pt-3 pr-10 text-xs",
+                  !meta.idealFor && "mt-auto",
+                  muted,
+                )}
               >
-                <div
-                  className={`text-[10px] uppercase tracking-widest ${selected ? "text-background/60" : "text-muted-foreground"}`}
-                >
-                  <span>{app.accessMode}</span>
-                  <span className="mx-2">·</span>
-                  <span>{selected ? "[✓ ativo]" : "[ clique p/ ativar ]"}</span>
-                </div>
+                {statusLabel}
               </div>
             </div>
-
-            <FlipCorner onClick={handleFlip} inverted={selected} side="back" />
-          </div>
+            <FlipButton onClick={handleFlip} label="Voltar à frente do card" />
+          </Face>
         </div>
       </div>
     </div>
   );
 };
 
-interface FlipCornerProps {
-  onClick: (e: React.MouseEvent) => void;
-  inverted: boolean;
-  side: "front" | "back";
+interface FaceProps {
+  corner: Corner;
+  selected: boolean;
+  back?: boolean;
+  children: React.ReactNode;
 }
 
-const FlipCorner = ({ onClick, inverted, side }: FlipCornerProps) => {
-  const positionClass =
-    side === "back" ? "bottom-0 left-0" : "bottom-0 right-0";
-  const justifyClass =
-    side === "back" ? "items-end justify-start" : "items-end justify-end";
-  const svgFlipClass = side === "back" ? "scale-x-[-1]" : "";
-
+// Back face cut is mirrored (bl): flipped around Y, the physical card's br corner lands bottom-left.
+const Face = ({ corner, selected, back, children }: FaceProps) => {
+  const [outerRef, outerClip] = useFillet([corner], "lg", 6, 0, 2);
+  const [innerRef, innerClip] = useFillet([corner], "lg", 6, 1, 2);
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      onMouseDown={(e) => e.stopPropagation()}
-      aria-label="virar card"
-      title="virar"
-      className={`absolute ${positionClass} w-9 h-9 flex ${justifyClass} p-1.5 z-30 group/corner focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] cursor-pointer ${
-        inverted
-          ? "focus-visible:outline-background"
-          : "focus-visible:outline-ink"
-      }`}
-      style={{ pointerEvents: "auto" }}
+    <div
+      ref={outerRef}
+      style={{ clipPath: outerClip }}
+      className={cn(
+        "absolute inset-0 backface-hidden p-px transition-colors duration-200",
+        back && "rotate-y-180",
+        selected ? "bg-foreground" : "bg-border group-hover:bg-foreground/60",
+      )}
     >
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 12 12"
-        fill="none"
-        aria-hidden="true"
-        className={`transition-opacity ${svgFlipClass} ${
-          inverted
-            ? "text-background/50 group-hover/corner:text-background"
-            : "text-ink/40 group-hover/corner:text-ink"
-        }`}
+      <div
+        ref={innerRef}
+        style={{ clipPath: innerClip }}
+        className={cn(
+          "relative h-full overflow-hidden transition-colors duration-200",
+          selected
+            ? "bg-foreground text-background"
+            : "bg-card text-foreground",
+        )}
       >
-        <path d="M12 0 L12 12 L0 12 Z" fill="currentColor" />
-      </svg>
-    </button>
+        {children}
+      </div>
+    </div>
   );
 };
+
+interface FlipButtonProps {
+  onClick: (e: React.MouseEvent) => void;
+  label: string;
+}
+
+const FlipButton = ({ onClick, label }: FlipButtonProps) => (
+  <button
+    type="button"
+    onClick={onClick}
+    onKeyDown={(e) => e.stopPropagation()}
+    aria-label={label}
+    title={label}
+    className="absolute bottom-5 right-5 z-30 size-9 rounded-full flex items-center justify-center text-current/60 hover:text-current hover:bg-current/10 transition-colors cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-current"
+  >
+    <RotateCw className="size-4" />
+  </button>
+);

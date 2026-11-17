@@ -12,7 +12,7 @@ interface RequireAuthProps {
  * Client-side guard for authenticated-only routes.
  *
  * Mirrors the /dashboard pattern: wait for the persisted session to hydrate
- * before deciding, and send anonymous visitors to "/" with a replace (no
+ * before deciding, and send anonymous visitors to "/auth" with a replace (no
  * history entry for the protected page).
  *
  * Nothing is rendered while the session is unknown or missing, so protected
@@ -26,7 +26,7 @@ export function RequireAuth({ children }: RequireAuthProps) {
   useEffect(() => {
     const check = () => {
       if (!useAuthStore.getState().isAuthenticated) {
-        router.replace("/");
+        router.replace("/auth");
       }
     };
     if (useAuthStore.persist.hasHydrated()) {

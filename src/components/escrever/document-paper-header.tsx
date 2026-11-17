@@ -1,75 +1,117 @@
 "use client";
 
-import { Palette } from "lucide-react";
-import type React from "react";
+import type { Editor } from "@tiptap/react";
+import { useEditorState } from "@tiptap/react";
+import { Palette, Redo, Undo } from "lucide-react";
+import type { ReactNode } from "react";
 import type { PaperColors } from "@/components/document/types";
+import { typeTheme } from "@/components/feed/cards/card-theme";
+import { cn } from "@/lib/utils";
+import type { DocumentStatus } from "@/types/api.types";
+import { TypographySelector } from "./toolbar";
+
+const STATUS_LABEL: Record<DocumentStatus, string> = {
+  draft: "Rascunho",
+  published: "Publicado",
+  archived: "Arquivado",
+};
 
 export interface DocumentPaperHeaderProps {
+  editor: Editor;
+  typography: "sans" | "serif" | "mono";
+  onTypographyChange: (typography: "sans" | "serif" | "mono") => void;
   paperColors: PaperColors | null;
+  status: DocumentStatus;
+  type: string;
+  typeLabel: string;
   onOpenTemplates?: () => void;
-  designTrigger?: React.ReactNode;
+  designTrigger?: ReactNode;
 }
 
+const ACTION =
+  "flex items-center gap-1.5 h-8 px-2 rounded-xs text-xs font-mono uppercase tracking-wider transition-colors hover:bg-black/5 dark:hover:bg-white/10 disabled:opacity-30 disabled:pointer-events-none outline-none focus-visible:ring-2 focus-visible:ring-current [&_svg]:size-3.5";
+
+/** Bar glued to the top of the paper; it sticks under the navbar while writing. */
 export function DocumentPaperHeader({
+  editor,
+  typography,
+  onTypographyChange,
   paperColors,
+  status,
+  type,
+  typeLabel,
   onOpenTemplates,
   designTrigger,
 }: DocumentPaperHeaderProps) {
+  const history = useEditorState({
+    editor,
+    selector: ({ editor: e }) => ({
+      undo: e.can().undo(),
+      redo: e.can().redo(),
+    }),
+  });
+  const border = paperColors?.border || "hsl(var(--border))";
+
   return (
     <div
-      className="px-4 py-2 flex items-center justify-between transition-colors duration-300 relative z-10"
+      className="sticky top-12 lg:top-[3.6rem] z-30 flex items-center gap-2 px-3 py-1.5 border-x border-t bg-background shadow-[0_6px_16px_-10px_rgb(0_0_0/0.35)] transition-colors duration-300"
       style={{
-        borderTop: `1px solid ${paperColors?.border || "hsl(var(--border) / 0.5)"}`,
-        borderLeft: `1px solid ${paperColors?.border || "hsl(var(--border) / 0.5)"}`,
-        borderRight: `1px solid ${paperColors?.border || "hsl(var(--border) / 0.5)"}`,
-        backgroundColor: paperColors ? `${paperColors.bg}` : undefined,
+        borderColor: border,
+        backgroundColor: paperColors?.bg || undefined,
+        color: paperColors?.text || undefined,
       }}
     >
-      {/* Left: dots + label */}
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-1.5">
-          <div
-            className="w-2 h-2 rounded-full transition-colors duration-300"
-            style={{
-              backgroundColor:
-                paperColors?.muted || "hsl(var(--foreground) / 0.75)",
-            }}
-          />
-          <div
-            className="w-2 h-2 rounded-full transition-colors duration-300"
-            style={{
-              backgroundColor:
-                paperColors?.muted || "hsl(var(--foreground) / 0.75)",
-            }}
-          />
-          <div
-            className="w-2 h-2 rounded-full transition-colors duration-300"
-            style={{
-              backgroundColor:
-                paperColors?.muted || "hsl(var(--foreground) / 0.75)",
-            }}
-          />
-        </div>
-        <span
-          className="font-mono text-[10px] uppercase tracking-wider transition-colors duration-300"
-          style={{ color: paperColors?.muted || undefined }}
-        >
-          Rascunho
-        </span>
-      </div>
+      <span
+        className={cn(
+          "px-2 py-0.5 rounded-xs font-mono text-xs uppercase tracking-wider",
+          typeTheme(type).solid,
+        )}
+      >
+        {typeLabel}
+      </span>
+      <span
+        className={cn(
+          "font-mono text-xs uppercase tracking-wider",
+          status === "published" ? "font-bold" : "opacity-60",
+        )}
+      >
+        {STATUS_LABEL[status]}
+      </span>
 
-      {/* Right: theme picker + design overlay triggers */}
-      <div className="flex items-center gap-1">
+      <span aria-hidden className="mx-1 h-4 w-px bg-current opacity-20" />
+      <TypographySelector
+        value={typography}
+        onChange={(value) =>
+          onTypographyChange(value as "sans" | "serif" | "mono")
+        }
+      />
+      <span aria-hidden className="mx-1 h-4 w-px bg-current opacity-20" />
+      <button
+        type="button"
+        aria-label="Desfazer"
+        title="Desfazer"
+        disabled={!history.undo}
+        onClick={() => editor.chain().focus().undo().run()}
+        className={ACTION}
+      >
+        <Undo />
+      </button>
+      <button
+        type="button"
+        aria-label="Refazer"
+        title="Refazer"
+        disabled={!history.redo}
+        onClick={() => editor.chain().focus().redo().run()}
+        className={ACTION}
+      >
+        <Redo />
+      </button>
+
+      <div className="ml-auto flex items-center gap-1">
         {onOpenTemplates && (
-          <button
-            type="button"
-            onClick={onOpenTemplates}
-            className="flex items-center gap-1.5 px-2 py-1.5 text-muted-foreground hover:text-foreground transition-colors rounded-xs hover:bg-black/5"
-          >
-            <Palette className="w-3.5 h-3.5" />
-            <span className="text-[10px] font-mono uppercase tracking-wider">
-              Temas
-            </span>
+          <button type="button" onClick={onOpenTemplates} className={ACTION}>
+            <Palette />
+            Temas
           </button>
         )}
         {designTrigger}

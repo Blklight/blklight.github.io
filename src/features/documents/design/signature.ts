@@ -1,10 +1,11 @@
 /**
  * Document signature (assinatura), ALWAYS automatic.
  *
- * Name, code, date and organization are resolved on display from the
- * author/document data; nothing is typed or saved. The legacy saved fields of
- * `documentSignature` (authorName, authorId, locationCode, organization) are
- * never read. `enabled` is the only switch.
+ * Name, code and date are resolved on display from the author/document data;
+ * nothing is typed or saved, and every document carries it (the saved
+ * `documentSignature`, including `enabled`, is legacy and never read). The
+ * organization is left out on purpose: an organization signature will be its
+ * own block.
  *
  * Pure and isomorphic (no "use client"), like letterhead-text.ts: used by the
  * public reading page (Server Component), the design preview and the editor.
@@ -41,7 +42,6 @@ export interface ResolvedSignature {
   identifier: string;
   /** dd/mm/aaaa (pt-BR, America/Sao_Paulo). */
   date: string;
-  organization: string | null;
 }
 
 const DATE_FORMAT = new Intl.DateTimeFormat("pt-BR", {
@@ -77,6 +77,5 @@ export function resolveSignature(context: SignatureContext): ResolvedSignature {
     date: formatSignatureDate(
       context.publishedAt || (context.now ?? Date.now()),
     ),
-    organization: clean(context.organization?.name) || null,
   };
 }

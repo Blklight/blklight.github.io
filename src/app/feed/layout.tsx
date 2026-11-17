@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Feed",
@@ -10,5 +11,6 @@ export default function FeedLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return children;
+  // The page reads ?type= with useSearchParams, which needs a Suspense boundary.
+  return <Suspense>{children}</Suspense>;
 }

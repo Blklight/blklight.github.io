@@ -79,7 +79,7 @@ export function LineFormatEditor({
             key={s.id}
             type="button"
             onClick={() => onChange({ ...format, size: s.id })}
-            className={`px-1.5 py-1 text-[9px] font-mono border rounded-xs transition-colors ${
+            className={`px-1.5 py-1 text-xs font-mono border rounded-xs transition-colors ${
               format.size === s.id
                 ? "border-foreground bg-secondary text-foreground"
                 : "border-border text-muted-foreground hover:border-muted-foreground"
@@ -112,7 +112,7 @@ export function LineFormatEditor({
             onChange={(v) => onChange({ ...format, opacity: v })}
           />
           <div className="flex flex-col gap-1">
-            <span className="text-[9px] font-mono uppercase tracking-wider text-muted-foreground">
+            <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
               Espacamento
             </span>
             <div className="flex gap-1">
@@ -121,7 +121,7 @@ export function LineFormatEditor({
                   key={s.id}
                   type="button"
                   onClick={() => onChange({ ...format, letterSpacing: s.id })}
-                  className={`flex-1 px-1 py-1 text-[9px] font-mono border rounded-xs transition-colors ${
+                  className={`flex-1 px-1 py-1 text-xs font-mono border rounded-xs transition-colors ${
                     format.letterSpacing === s.id
                       ? "border-foreground bg-secondary text-foreground"
                       : "border-border text-muted-foreground hover:border-muted-foreground"

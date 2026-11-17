@@ -206,7 +206,7 @@ export const createDocumentSchema = z.object({
   title: z.string().min(1, "required").max(200, "too_long"),
   abstract: z.string().max(500, "too_long").nullable().optional(),
   type: z.enum(
-    ["article", "tutorial", "contract", "project", "page"],
+    ["article", "tutorial", "contract", "project", "note"],
     "required",
   ),
   slug: z
@@ -229,7 +229,7 @@ export const updateDocumentSchema = z.object({
   title: z.string().min(1, "required").max(200, "too_long").optional(),
   abstract: z.string().max(500, "too_long").nullable().optional(),
   type: z
-    .enum(["article", "tutorial", "contract", "project", "page"])
+    .enum(["article", "tutorial", "contract", "project", "note"])
     .optional(),
   slug: z
     .string()

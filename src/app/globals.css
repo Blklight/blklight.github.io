@@ -20,8 +20,7 @@
 @theme {
   /* --- Fonts --- */
   --font-sans: var(--font-inter), "Inter", sans-serif;
-  --font-serif:
-    var(--font-merriweather), "Merriweather", ui-serif, Georgia, serif;
+  --font-serif: var(--font-garamond), "EB Garamond", ui-serif, Georgia, serif;
   --font-mono: var(--font-mono), "JetBrains Mono", monospace;
   --font-pixel: var(--font-geist-pixel-square), "Geist Pixel Square", monospace;
   --font-pixel-circle:
@@ -310,8 +309,7 @@
   /* --- Fonts --- */
   --font-heading: var(--font-mono);
   --font-sans: var(--font-inter), "Inter", sans-serif;
-  --font-serif:
-    var(--font-merriweather), "Merriweather", ui-serif, Georgia, serif;
+  --font-serif: var(--font-garamond), "EB Garamond", ui-serif, Georgia, serif;
   --font-mono: var(--font-mono), "JetBrains Mono", monospace;
   --font-pixel: var(--font-geist-pixel-square), "Geist Pixel Square", monospace;
   --font-pixel-circle:
@@ -658,21 +656,6 @@
 }
 
 .background-header::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--background-paper-header);
-  mix-blend-mode: overlay;
-  transform: translateZ(0);
-  pointer-events: none;
-  z-index: 1;
-}
-
-.editor-toolbar {
-  @apply sticky top-14.25 z-30 border-b rounded-xs bg-background border-foreground;
-}
-
-.editor-toolbar::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -1076,60 +1059,6 @@
     position: relative;
     z-index: 20;
   } */
-}
-
-@layer components {
-  .fx-card {
-    --mx: 50%;
-    --my: 50%;
-    --fx-opacity: 0;
-  }
-
-  .dither-layer {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: calc(var(--fx-opacity, 0) * 0.95);
-    transition: opacity 320ms ease-out;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4'><circle cx='0.5' cy='0.5' r='0.55' fill='%230d0d0d'/><circle cx='2.5' cy='2.5' r='0.4' fill='%230d0d0d'/><circle cx='3.2' cy='1' r='0.25' fill='%230d0d0d'/></svg>");
-    background-size: 4px 4px;
-    -webkit-mask-image: radial-gradient(
-      circle 180px at var(--mx) var(--my),
-      rgba(0, 0, 0, 0.9),
-      rgba(0, 0, 0, 0.3) 50%,
-      transparent 78%
-    );
-    mask-image: radial-gradient(
-      circle 180px at var(--mx) var(--my),
-      rgba(0, 0, 0, 0.9),
-      rgba(0, 0, 0, 0.3) 50%,
-      transparent 78%
-    );
-    mix-blend-mode: multiply;
-  }
-
-  .dither-layer.is-inverted {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='4'><circle cx='0.5' cy='0.5' r='0.55' fill='%23f5f3ee'/><circle cx='2.5' cy='2.5' r='0.4' fill='%23f5f3ee'/><circle cx='3.2' cy='1' r='0.25' fill='%23f5f3ee'/></svg>");
-    mix-blend-mode: screen;
-  }
-
-  /* Variante leve usada pelo SimpleFlipCard — preserva legibilidade do texto */
-  .simple-dither .dither-layer {
-    opacity: calc(var(--fx-opacity, 0) * 0.45);
-    background-size: 5px 5px;
-    -webkit-mask-image: radial-gradient(
-      circle 130px at var(--mx) var(--my),
-      rgba(0, 0, 0, 0.6),
-      rgba(0, 0, 0, 0.2) 45%,
-      transparent 65%
-    );
-    mask-image: radial-gradient(
-      circle 130px at var(--mx) var(--my),
-      rgba(0, 0, 0, 0.6),
-      rgba(0, 0, 0, 0.2) 45%,
-      transparent 65%
-    );
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -37,3 +37,11 @@ if (!("PointerEvent" in window)) {
   // @ts-expect-error jsdom does not implement PointerEvent
   window.PointerEvent = TestingPointerEvent;
 }
+
+if (!("ResizeObserver" in globalThis)) {
+  globalThis.ResizeObserver = class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
+}

@@ -21,6 +21,7 @@ import {
 import { SignaturePanel } from "@/components/escrever/design/signature-panel";
 import { TexturePanel } from "@/components/escrever/design/texture-panel";
 import { useExpandableScreen } from "@/components/ui/expandable-screen";
+import { Kbd } from "@/components/ui/kbd";
 import type { LetterheadTextContext } from "@/features/documents/design/letterhead-text";
 import type { SignatureContext } from "@/features/documents/design/signature";
 import { cn } from "@/lib/utils";
@@ -106,13 +107,20 @@ export function DesignOverlay({
     >
       <EditorStyles />
 
-      <header className="shrink-0 border-b border-foreground/10 bg-background/80 backdrop-blur-sm">
-        <div className="max-w-[1600px] mx-auto flex items-center justify-between px-4 py-3 pr-16">
-          <h1 className="text-sm font-semibold uppercase tracking-widest">
-            Editar design
-          </h1>
-          <span className="text-[9px] font-mono uppercase tracking-wider text-foreground/40">
-            Esc para fechar
+      <header className="shrink-0 border-b-2 border-foreground bg-background">
+        {/* 5.5rem tall so the ExpandableScreen close button (top-6, h-10) sits centered in it. */}
+        <div className="max-w-[1600px] mx-auto h-[5.5rem] flex items-center justify-between gap-6 px-6 pr-20">
+          <div>
+            <h1 className="font-sans text-2xl font-bold tracking-tight">
+              Editar design
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Papel, fonte, capa, timbre e assinatura. A prévia acompanha cada
+              mudança.
+            </p>
+          </div>
+          <span className="hidden sm:flex items-center gap-2 text-xs text-muted-foreground">
+            <Kbd className="border">esc</Kbd> fechar
           </span>
         </div>
       </header>
@@ -129,10 +137,10 @@ export function DesignOverlay({
                   type="button"
                   onClick={() => onActiveTabChange(tab.id)}
                   className={cn(
-                    "flex items-center gap-2 px-3 py-2 text-xs font-mono uppercase tracking-wider rounded-xs whitespace-nowrap transition-colors",
+                    "flex items-center gap-2 px-3 py-2 text-sm rounded-md whitespace-nowrap transition-colors",
                     activeTab === tab.id
-                      ? "bg-secondary text-foreground border border-foreground/20"
-                      : "text-foreground/50 hover:text-foreground border border-transparent",
+                      ? "bg-foreground text-background"
+                      : "text-foreground/70 hover:text-foreground hover:bg-secondary",
                   )}
                 >
                   {tab.icon}
@@ -149,13 +157,7 @@ export function DesignOverlay({
                 />
               </div>
 
-              <div
-                className="flex-1 min-w-0 border border-foreground/10 p-6 relative overflow-hidden rounded-xs"
-                style={{
-                  backgroundImage:
-                    "repeating-linear-gradient(0deg, transparent, transparent 14px, rgba(0,0,0,0.015) 14px, rgba(0,0,0,0.015) 15px), repeating-linear-gradient(90deg, transparent, transparent 14px, rgba(0,0,0,0.015) 14px, rgba(0,0,0,0.015) 15px)",
-                }}
-              >
+              <div className="flex-1 min-w-0 rounded-lg border border-border bg-card p-6 relative overflow-hidden">
                 <div className="relative z-10">{renderPanel()}</div>
               </div>
             </div>
@@ -164,9 +166,9 @@ export function DesignOverlay({
           {/* Live preview (below the panels on mobile) */}
           <div className="w-full lg:w-[45%] lg:max-w-[640px] shrink-0">
             <div className="lg:sticky lg:top-4">
-              <div className="text-[10px] font-mono uppercase tracking-wider text-foreground/40 mb-2">
+              <p className="mb-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
                 Prévia ao vivo
-              </div>
+              </p>
               <DocumentPreview
                 {...previewDesign}
                 grains={design.paperStyle.grains}

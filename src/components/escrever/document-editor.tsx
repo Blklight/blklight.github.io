@@ -47,7 +47,10 @@ import type { DesignTab } from "@/components/escrever/design/sidebar";
 import { DesignOverlay } from "@/components/escrever/design-overlay";
 import { DocumentPaperFooter } from "@/components/escrever/document-paper-footer";
 import { DocumentPaperHeader } from "@/components/escrever/document-paper-header";
-import { EditorToolbar } from "@/components/escrever/editor-toolbar";
+import {
+  EditorBlockMenu,
+  EditorBubbleMenu,
+} from "@/components/escrever/editor-toolbar";
 import { FloatingActionBar } from "@/components/escrever/floating-action-bar";
 import { JsonPreviewModal, LinkModal } from "@/components/escrever/modals";
 import { PublishPanel } from "@/components/escrever/publish-panel";
@@ -66,12 +69,14 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import type { LetterheadTextContext } from "@/features/documents/design/letterhead-text";
 import { PaperSurface } from "@/features/documents/design/paper-surface";
 import type { SignatureContext } from "@/features/documents/design/signature";
-
+import {
+  type DocumentKind,
+  kindByType,
+} from "@/features/documents/document-kinds";
 import {
   usePublishDocument,
   useSaveDocument,
 } from "@/features/documents/queries";
-
 import { useMyOrganizations } from "@/features/organizations/queries";
 import { documentDesignKey } from "@/lib/user-storage";
 import {
@@ -149,9 +154,18 @@ interface DocumentEditorProps {
    * absent, behavior is identical to the legacy /escrever create flow.
    */
   initialValues?: MyDocumentDetail;
+  /** Type of a new document, from its /escrever/<tipo> page. */
+  kind?: DocumentKind;
 }
 
-export function DocumentEditor({ initialValues }: DocumentEditorProps) {
+export function DocumentEditor({
+  initialValues,
+  kind: newKind,
+}: DocumentEditorProps) {
+  const kind = initialValues
+    ? kindByType(initialValues.typeName)
+    : (newKind ?? kindByType("article"));
+  const docType = kind.type;
   const [mounted, setMounted] = useState(false);
 
   // --- Form (RHF — content only) ---
@@ -181,8 +195,8 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
     paperTexture,
     documentHeader,
     documentFooter,
-    documentSignature,
     typography,
+    setTypography,
     coverImage,
     coverSettings,
     setCoverImage,
@@ -229,8 +243,10 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
     return {
       author: currentAuthor,
       organization: organizationName ? { name: organizationName } : null,
+      typeLabel: kind.label,
     };
   }, [
+    kind.label,
     organizationId,
     myOrganizations,
     initialValues?.organization,
@@ -279,7 +295,7 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
       (initialValues?.content as Content | null | undefined) ?? undefined,
     extensions: [
       StarterKit.configure({ heading: { levels: [1, 2, 3] }, link: false }),
-      Placeholder.configure({ placeholder: "Comece a escrever seu artigo..." }),
+      Placeholder.configure({ placeholder: kind.contentPlaceholder }),
       ImageExtension.configure({
         HTMLAttributes: { class: "max-w-full h-auto my-6" },
       }),
@@ -369,7 +385,7 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
         v == null ? null : (v as Record<string, unknown>);
       return {
         title: data.title || "",
-        type: "article",
+        type: docType,
         abstract: data.subtitle || null,
         content: (data.content as Record<string, unknown> | null) ?? null,
         coverImageUrl: design.coverImage || undefined,
@@ -389,7 +405,7 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
         documentSignature: asRecord(design.documentSignature),
       };
     },
-    [designStore, organizationId],
+    [designStore, organizationId, docType],
   );
 
   const persistDocumentId = useCallback((id: string | undefined) => {
@@ -550,12 +566,10 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
     <ExpandableScreenTrigger>
       <button
         type="button"
-        className="flex items-center gap-1.5 px-2 py-1.5 text-muted-foreground hover:text-foreground transition-colors rounded-xs hover:bg-black/5"
+        className="flex items-center gap-1.5 h-8 px-2 rounded-xs text-xs font-mono uppercase tracking-wider transition-colors hover:bg-black/5 dark:hover:bg-white/10 outline-none focus-visible:ring-2 focus-visible:ring-current"
       >
-        <Palette className="w-3.5 h-3.5" />
-        <span className="text-[10px] font-mono uppercase tracking-wider">
-          Editar design
-        </span>
+        <Palette className="size-3.5" />
+        Editar design
       </button>
     </ExpandableScreenTrigger>
   );
@@ -605,11 +619,6 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
           {/* Editor Styles */}
           <EditorStyles />
 
-          {/* Toolbar */}
-          <EditorToolbar
-            editor={editor}
-            onShowLinkModal={() => setShowLinkModal(true)}
-          />
           <main className="relative z-10 py-12 bg-background rounded-xs">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -618,6 +627,12 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
               className="max-w-3xl mx-auto px-4 md:px-6"
             >
               <DocumentPaperHeader
+                editor={editor}
+                status={documentStatus}
+                typography={typography}
+                onTypographyChange={setTypography}
+                type={kind.type}
+                typeLabel={kind.label}
                 paperColors={paperColors}
                 onOpenTemplates={() => setIsTemplatesOpen(true)}
                 designTrigger={designTrigger}
@@ -647,7 +662,7 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
                     <input
                       {...field}
                       type="text"
-                      placeholder="Titulo do artigo"
+                      placeholder={kind.titlePlaceholder}
                       data-testid="editor-title-input"
                       className={`w-full text-4xl md:text-5xl font-bold tracking-tight bg-transparent border-none outline-none mb-4 transition-colors duration-300 ${fontClass}`}
                       style={{ color: paperColors?.text || undefined }}
@@ -655,7 +670,7 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
                   )}
                 />
                 <style>{`
-            input[placeholder="Titulo do artigo"]::placeholder {
+            input[placeholder={kind.titlePlaceholder}]::placeholder {
               color: ${paperColors?.muted || "hsl(var(--muted-foreground) / 0.5)"};
             }
           `}</style>
@@ -674,7 +689,7 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
                       {...field}
                       value={field.value || ""}
                       type="text"
-                      placeholder="Uma breve descricao do seu artigo..."
+                      placeholder={kind.abstractPlaceholder}
                       data-testid="editor-subtitle-input"
                       className={`w-full text-xl bg-transparent border-none outline-none mb-8 transition-colors duration-300 ${fontClass}`}
                       style={{ color: paperColors?.muted || undefined }}
@@ -682,7 +697,7 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
                   )}
                 />
                 <style>{`
-            input[placeholder="Uma breve descricao do seu artigo..."]::placeholder {
+            input[placeholder={kind.abstractPlaceholder}]::placeholder {
               color: ${paperColors?.muted || "hsl(var(--muted-foreground) / 0.5)"};
             }
           `}</style>
@@ -702,50 +717,25 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
                   />
                 </div>
 
-                {/* Divider */}
-                <div className="flex items-center gap-6 mb-10">
-                  <div
-                    className="h-px flex-1 transition-colors duration-300"
-                    style={{
-                      backgroundColor: paperColors
-                        ? `${paperColors.text}33`
-                        : "hsl(var(--foreground) / 0.2)",
-                    }}
-                  />
-                  <div className="flex items-center gap-3">
-                    <div className="w-1.5 h-1.5 bg-accent" />
-                    <span
-                      className="font-mono text-[10px] uppercase tracking-[0.2em] transition-colors duration-300"
-                      style={{ color: paperColors?.muted || undefined }}
-                    >
-                      Conteudo
-                    </span>
-                    <div className="w-1.5 h-1.5 bg-accent" />
-                  </div>
-                  <div
-                    className="h-px flex-1 transition-colors duration-300"
-                    style={{
-                      backgroundColor: paperColors
-                        ? `${paperColors.text}33`
-                        : "hsl(var(--foreground) / 0.2)",
-                    }}
-                  />
-                </div>
-
                 {/* Editor */}
                 <div
                   data-testid="editor-content"
-                  className={`editor-wrapper editor-${typography} ${paperColors ? "custom-paper" : ""}`}
+                  className={`relative editor-wrapper editor-${typography} ${paperColors ? "custom-paper" : ""}`}
                   style={{
                     ["--custom-text-color" as string]: paperColors?.text,
                     ["--custom-muted-color" as string]: paperColors?.muted,
                   }}
                 >
                   <EditorContent editor={editor} />
+                  <EditorBubbleMenu
+                    editor={editor}
+                    onShowLinkModal={() => setShowLinkModal(true)}
+                  />
+                  <EditorBlockMenu editor={editor} />
                 </div>
 
                 {/* Signature */}
-                {isSignatureVisible(documentSignature, signatureContext) && (
+                {isSignatureVisible(signatureContext) && (
                   <SignatureBlock
                     context={signatureContext}
                     color={paperColors?.text}

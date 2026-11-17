@@ -9,7 +9,7 @@ import type { LineFormat } from "@/components/document/types";
  */
 export const BLKLIGHT_PRESET_ID = "blklight";
 
-export const BLKLIGHT_HEADER_LINES = ["Blklight", "Artigo de {{publicador}}"];
+export const BLKLIGHT_HEADER_LINES = ["Blklight", "{{tipo}} de {{publicador}}"];
 
 export const BLKLIGHT_HEADER_LINE_FORMATS: LineFormat[] = [
   {

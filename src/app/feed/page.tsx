@@ -1,8 +1,21 @@
 "use client";
 
 import { FileSearch, Search } from "lucide-react";
-import { useDeferredValue, useMemo, useState } from "react";
-import { DocumentFeedCard } from "@/components/feed/document-feed-card";
+import { useSearchParams } from "next/navigation";
+import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import { BentoGrid } from "@/components/bento/bento-grid";
+import { FEED_TYPES, TYPE_THEME } from "@/components/feed/cards/card-theme";
+import { DuotoneDefs } from "@/components/feed/cards/duotone-defs";
+import { FeaturedCard } from "@/components/feed/cards/featured-card";
+import {
+  CatalogCard,
+  CoverCard,
+  HeadlineCard,
+  MediaCard,
+  PaperCard,
+  StampCard,
+  TextCard,
+} from "@/components/feed/cards/feed-cards";
 import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,16 +35,47 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCategories, useFeed } from "@/features/documents/queries";
-import type { FeedQuery } from "@/types/api.types";
+import {
+  type FeedCardType,
+  toBentoItems,
+} from "@/features/documents/to-bento-item";
+import { cn } from "@/lib/utils";
+import type { DocumentType, FeedQuery } from "@/types/api.types";
 
 // Cursor pagination is only exercisable while the feed holds more documents
 // than one page, so this starts small and can be raised as the corpus grows.
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 12;
 const ANY_CATEGORY = "__any__";
+
+const CARDS = {
+  text: { component: TextCard },
+  paper: { component: PaperCard, sizes: { "1x1": 2, "1x2": 1 } },
+  cover: {
+    component: CoverCard,
+    sizes: { "2x1": 1, "1x2": 1 },
+    featuredSize: "2x2",
+  },
+  media: { component: MediaCard, sizes: { "1x2": 2, "2x1": 1 } },
+  stamp: { component: StampCard, sizes: { "2x1": 1, "1x2": 1 } },
+  headline: { component: HeadlineCard, sizes: { "1x1": 1, "2x1": 1 } },
+  catalog: { component: CatalogCard },
+} as const satisfies Record<FeedCardType, unknown>;
+
+const TYPES = FEED_TYPES.map((id) => [id, TYPE_THEME[id]] as const);
 
 export default function FeedPage() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState(ANY_CATEGORY);
+  const typeParam = useSearchParams().get("type");
+  const [type, setType] = useState<DocumentType | null>(null);
+  // The command menu links to /feed?type=…; follow it whenever it changes.
+  useEffect(() => {
+    setType(
+      (FEED_TYPES as readonly string[]).includes(typeParam ?? "")
+        ? (typeParam as DocumentType)
+        : null,
+    );
+  }, [typeParam]);
 
   // Keeps typing responsive: the input stays controlled by `search` while the
   // feed query follows the deferred value, matching the admin list pattern.
@@ -41,9 +85,10 @@ export default function FeedPage() {
     () => ({
       q: deferredSearch.trim() || undefined,
       category: category === ANY_CATEGORY ? undefined : category,
+      type: type ?? undefined,
       limit: PAGE_SIZE,
     }),
-    [deferredSearch, category],
+    [deferredSearch, category, type],
   );
 
   const {
@@ -84,29 +129,44 @@ export default function FeedPage() {
 
   const total = data?.pages[0]?.total ?? 0;
   const hasActiveFilter =
-    deferredSearch.trim().length > 0 || category !== ANY_CATEGORY;
+    deferredSearch.trim().length > 0 ||
+    category !== ANY_CATEGORY ||
+    type !== null;
+
+  // The banner wants an image: first document with a cover, else the newest.
+  const featured = hasActiveFilter
+    ? null
+    : (items.find((item) => item.coverImageUrl) ?? items[0] ?? null);
+  const bentoItems = useMemo(
+    () => toBentoItems(items.filter((item) => item !== featured)),
+    [items, featured],
+  );
 
   function clearFilters() {
     setSearch("");
     setCategory(ANY_CATEGORY);
+    setType(null);
   }
 
   return (
     <>
       <Navbar />
 
-      <main className="mx-auto w-full max-w-3xl px-4 py-12 md:px-6">
-        <header className="mb-8 flex flex-col gap-1">
-          <h1 className="text-3xl font-medium tracking-tight">Feed</h1>
-          <p className="text-sm text-muted-foreground">
-            Documentos publicados pela comunidade.
-          </p>
-        </header>
-
-        <div className="mb-8 flex flex-col gap-3 sm:flex-row">
-          <div className="relative flex-1">
+      <DuotoneDefs />
+      <main className="w-full px-4 pb-16 md:px-8">
+        <header className="pt-10 pb-8 grid gap-6 lg:grid-cols-[1fr_minmax(0,28rem)] lg:items-end">
+          <div>
+            <h1 className="font-sans text-6xl md:text-8xl font-bold tracking-tighter leading-[0.9]">
+              Feed
+            </h1>
+            <p className="mt-4 max-w-xl text-muted-foreground">
+              Artigos, tutoriais e projetos da comunidade, cada um com o papel e
+              a tipografia que o autor escolheu.
+            </p>
+          </div>
+          <div className="relative">
             <Search
-              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+              className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground"
               aria-hidden
             />
             <Input
@@ -115,9 +175,56 @@ export default function FeedPage() {
               placeholder="Buscar por título ou resumo"
               aria-label="Buscar documentos"
               data-testid="feed-search-input"
-              className="pl-9"
+              className="h-12 pl-12 rounded-xs border-2 border-foreground bg-card text-base"
             />
           </div>
+        </header>
+
+        {featured && !isPending && !isError && (
+          <section aria-label="Em destaque" className="mb-10">
+            <FeaturedCard doc={featured} />
+          </section>
+        )}
+
+        <div className="lg:sticky lg:top-[3.6rem] z-30 -mx-4 md:-mx-8 px-4 md:px-8 py-3 mb-6 bg-background/90 backdrop-blur-sm border-y-2 border-foreground flex flex-col lg:flex-row gap-3 lg:items-center">
+          <h2 className="font-sans text-2xl font-bold tracking-tight lg:mr-4">
+            {hasActiveFilter ? "Resultados" : "Mais recentes"}
+            {!isPending && !isError && total > 0 && (
+              <span className="ml-3 align-middle font-mono text-xs font-normal text-muted-foreground">
+                {items.length}/{total}
+              </span>
+            )}
+          </h2>
+
+          <fieldset className="flex flex-wrap gap-1.5 border-0 p-0 m-0 min-w-0">
+            <legend className="sr-only">Filtrar por tipo</legend>
+            {TYPES.map(([id, theme]) => {
+              const active = type === id;
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => setType(active ? null : id)}
+                  className={cn(
+                    "h-9 pl-2 pr-3 inline-flex items-center gap-2 rounded-xs border font-mono text-xs uppercase tracking-wider transition-colors outline-none focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2 cursor-pointer",
+                    active
+                      ? cn(theme.solid, "border-foreground")
+                      : "border-border hover:border-foreground",
+                  )}
+                >
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "size-3 rounded-[1px] border border-dark/40",
+                      theme.solid,
+                    )}
+                  />
+                  {theme.label}
+                </button>
+              );
+            })}
+          </fieldset>
 
           <Select
             items={categoryItems}
@@ -125,7 +232,7 @@ export default function FeedPage() {
             onValueChange={(value) => setCategory(value ?? ANY_CATEGORY)}
           >
             <SelectTrigger
-              className="w-full sm:w-56"
+              className="w-full lg:w-60 lg:ml-auto h-9 rounded-xs"
               aria-label="Filtrar por categoria"
             >
               <SelectValue placeholder="Todas as categorias" />
@@ -179,23 +286,13 @@ export default function FeedPage() {
           </Empty>
         ) : (
           <>
-            <p className="mb-4 font-mono text-xs text-muted-foreground">
-              {items.length} de {total}{" "}
-              {total === 1 ? "documento" : "documentos"}
-            </p>
+            <BentoGrid items={bentoItems} cards={CARDS} />
 
-            <ul className="flex flex-col gap-4">
-              {items.map((document) => (
-                <li key={document.id}>
-                  <DocumentFeedCard document={document} />
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-8 flex flex-col items-center gap-2">
+            <div className="mt-10 flex flex-col items-center gap-2">
               {hasNextPage ? (
                 <Button
                   variant="outline"
+                  className="rounded-xs font-mono text-xs uppercase tracking-wider"
                   onClick={() => void fetchNextPage()}
                   disabled={isFetchingNextPage}
                 >
@@ -214,23 +311,27 @@ export default function FeedPage() {
   );
 }
 
-const SKELETON_KEYS = ["skeleton-1", "skeleton-2", "skeleton-3"] as const;
+const SKELETON_SPANS = [
+  "sm:col-span-2 sm:row-span-2",
+  "",
+  "sm:row-span-2",
+  "",
+  "sm:col-span-2",
+  "",
+  "",
+] as const;
 
 function FeedSkeleton() {
   return (
-    <div className="flex flex-col gap-4" aria-busy="true" aria-live="polite">
+    <div aria-busy="true" aria-live="polite">
       <span className="sr-only">Carregando documentos</span>
-      {SKELETON_KEYS.map((key) => (
-        <div
-          key={key}
-          className="flex flex-col gap-3 border border-border/60 p-6"
-        >
-          <Skeleton className="h-3 w-24" />
-          <Skeleton className="h-5 w-3/4" />
-          <Skeleton className="h-3 w-full" />
-          <Skeleton className="h-3 w-1/2" />
-        </div>
-      ))}
+      <Skeleton className="h-[26rem] w-full rounded-xs mb-4" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 grid-flow-dense auto-rows-[15rem] gap-4">
+        {SKELETON_SPANS.map((span, i) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: static placeholder list
+          <Skeleton key={i} className={cn("rounded-xs", span)} />
+        ))}
+      </div>
     </div>
   );
 }

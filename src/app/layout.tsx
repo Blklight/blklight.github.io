@@ -1,6 +1,7 @@
 import { GeistPixelCircle, GeistPixelSquare } from "geist/font/pixel";
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Merriweather } from "next/font/google";
+import { EB_Garamond, Inter, JetBrains_Mono } from "next/font/google";
+import { CommandMenu } from "@/components/command-menu";
 import { Html } from "@/components/html";
 import { LayoutBase } from "@/components/layout-base";
 import { QueryProvider } from "@/components/query-provider";
@@ -16,10 +17,9 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const merriweather = Merriweather({
+const ebGaramond = EB_Garamond({
   subsets: ["latin"],
-  variable: "--font-merriweather",
-  weight: ["300", "400", "700", "900"],
+  variable: "--font-garamond",
 });
 
 const jetBrainsMono = JetBrains_Mono({
@@ -27,7 +27,7 @@ const jetBrainsMono = JetBrains_Mono({
   variable: "--font-mono",
 });
 
-const AUTH_REDIRECT_SCRIPT = `try{if(location.pathname==="/"){var s=JSON.parse(localStorage.getItem("blklight-auth")||"null");s=s&&s.state;if(s&&s.isAuthenticated&&s.user){document.documentElement.style.visibility="hidden";location.replace(s.user.onboardingComplete?"/dashboard":"/onboarding")}}}catch(e){}`;
+const AUTH_REDIRECT_SCRIPT = `try{if((location.pathname==="/"||location.pathname==="/auth")){var s=JSON.parse(localStorage.getItem("blklight-auth")||"null");s=s&&s.state;if(s&&s.isAuthenticated&&s.user){document.documentElement.style.visibility="hidden";location.replace(s.user.onboardingComplete?"/dashboard":"/onboarding")}}}catch(e){}`;
 
 export const metadata: Metadata = {
   title: "Blklight",
@@ -42,13 +42,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         inter.variable,
         "font-mono",
         jetBrainsMono.variable,
-        merriweather.variable,
+        ebGaramond.variable,
         GeistPixelSquare.variable,
         GeistPixelCircle.variable,
       )}
     >
       <head>
-        {/* "/" is static HTML: redirect a persisted session before first paint. */}
+        {/* "/" and "/auth" are static HTML: redirect a persisted session before first paint. */}
         <script
           // biome-ignore lint/security/noDangerouslySetInnerHtml: static inline script
           dangerouslySetInnerHTML={{ __html: AUTH_REDIRECT_SCRIPT }}
@@ -68,6 +68,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               <LayoutBase>{children}</LayoutBase>
             </TooltipProvider>
             <Toaster />
+            <CommandMenu />
           </QueryProvider>
         </ThemeProvider>
       </body>

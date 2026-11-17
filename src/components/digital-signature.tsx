@@ -47,11 +47,10 @@ import { cn } from "@/lib/utils";
 export const DigitalSignature = ({
   signature = "Ultimate Mercer",
   registry = "@ultimatemercer",
-  timestamp = Date.now(),
+  timestamp,
   color,
   background,
   dateText,
-  organization,
 }: {
   signature: string;
   registry: string;
@@ -64,8 +63,6 @@ export const DigitalSignature = ({
   background?: string;
   /** Already formatted date (dd/mm/aaaa), from resolveSignature. */
   dateText?: string;
-  /** Organization line; absent/empty = no line. */
-  organization?: string | null;
 }) => {
   const hasTheme = !!color;
 
@@ -119,7 +116,7 @@ export const DigitalSignature = ({
         <div
           className={cn(
             // Centered in any width: every line of the card (label, name,
-            // code, date, organization) is centered and wraps when narrow.
+            // code, date) is centered and wraps when narrow.
             "py-1 px-2 mx-3 my-3 font-mono text-center max-w-[calc(100%-1.5rem)] break-words",
             !hasTheme && "border border-foreground",
           )}
@@ -144,16 +141,8 @@ export const DigitalSignature = ({
             className="text-xs uppercase"
             style={hasTheme ? { color } : undefined}
           >
-            {dateText ?? formatSignatureDate(timestamp)}
+            {dateText ?? formatSignatureDate(timestamp ?? Date.now())}
           </p>
-          {organization && (
-            <p
-              className="text-xs uppercase"
-              style={hasTheme ? { color } : undefined}
-            >
-              {organization}
-            </p>
-          )}
           <p
             className="text-[9px] uppercase text-center mt-1"
             style={hasTheme ? { color, opacity: 0.6 } : undefined}

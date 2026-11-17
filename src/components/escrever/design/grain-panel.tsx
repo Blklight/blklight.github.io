@@ -71,13 +71,13 @@ export function GrainPanel({ design }: DesignContext) {
     return (
       <div className="flex flex-col gap-3 p-2 border border-border rounded-xs">
         <div className="flex items-center justify-between">
-          <span className="text-[10px] font-mono uppercase tracking-wider text-foreground/40">
+          <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
             Avançado — {grain.name}
           </span>
           <button
             type="button"
             onClick={() => resetGrain(grain.id)}
-            className="text-[9px] font-mono uppercase tracking-wider text-foreground/40 hover:text-foreground transition-colors underline underline-offset-2"
+            className="text-xs font-mono uppercase tracking-wider text-foreground/60 hover:text-foreground transition-colors underline underline-offset-2"
           >
             Restaurar padrões
           </button>
@@ -87,11 +87,11 @@ export function GrainPanel({ design }: DesignContext) {
           const opacity = overrides?.[tone]?.opacity ?? variants[tone].opacity;
           return (
             <div key={tone} className="flex flex-col gap-2">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-foreground/60">
+              <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
                 {TONE_LABELS[tone]}
               </span>
               <div className="flex flex-col gap-1">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-foreground/40">
+                <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
                   Blend
                 </span>
                 <Select
@@ -102,7 +102,7 @@ export function GrainPanel({ design }: DesignContext) {
                     }
                   }}
                 >
-                  <SelectTrigger className="h-8 text-[10px] font-mono">
+                  <SelectTrigger className="h-8 text-xs font-mono">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -110,7 +110,7 @@ export function GrainPanel({ design }: DesignContext) {
                       <SelectItem
                         key={mode}
                         value={mode}
-                        className="text-[10px] font-mono"
+                        className="text-xs font-mono"
                       >
                         {mode}
                       </SelectItem>
@@ -139,13 +139,13 @@ export function GrainPanel({ design }: DesignContext) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2">
-        <Sparkles className="w-4 h-4 text-foreground/40" />
-        <span className="text-xs font-mono uppercase tracking-wider text-foreground/40">
+        <Sparkles className="w-4 h-4 text-foreground/60" />
+        <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
           Granulação do Papel
         </span>
       </div>
 
-      <p className="text-[10px] font-mono text-foreground/30 leading-relaxed">
+      <p className="text-xs font-mono text-foreground/60 leading-relaxed">
         Efeitos de grão aplicados ao fundo do papel, por baixo do conteúdo.
         Podem ser combinados.
       </p>
@@ -155,10 +155,10 @@ export function GrainPanel({ design }: DesignContext) {
           <div key={grain.id} className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between p-2 border border-border rounded-xs">
               <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-foreground/60">
+                <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
                   {grain.name}
                 </span>
-                <span className="text-[9px] font-mono text-foreground/30">
+                <span className="text-xs font-mono text-foreground/60">
                   {grain.description}
                 </span>
               </div>

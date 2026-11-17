@@ -11,20 +11,20 @@ export function TexturePanel({ design }: DesignContext) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2">
-        <Grid3X3 className="w-4 h-4 text-foreground/40" />
-        <span className="text-xs font-mono uppercase tracking-wider text-foreground/40">
+        <Grid3X3 className="w-4 h-4 text-foreground/60" />
+        <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
           Textura do Papel
         </span>
       </div>
 
-      <p className="text-[10px] font-mono text-foreground/30 leading-relaxed">
+      <p className="text-xs font-mono text-foreground/60 leading-relaxed">
         Adicione uma textura sutil ao fundo do documento. Disponivel nos tipos
         Bullet Journal (pontilhado) ou Quadriculado.
       </p>
 
       {/* Type selector */}
       <div className="flex flex-col gap-1.5">
-        <span className="text-[10px] font-mono uppercase tracking-wider text-foreground/40">
+        <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
           Tipo de Textura
         </span>
         <div className="grid grid-cols-3 gap-1.5">
@@ -46,7 +46,7 @@ export function TexturePanel({ design }: DesignContext) {
               )}
             >
               {preset.icon}
-              <span className="text-[10px] font-mono uppercase tracking-wider">
+              <span className="text-xs font-mono uppercase tracking-wider">
                 {preset.name}
               </span>
             </button>
@@ -60,10 +60,10 @@ export function TexturePanel({ design }: DesignContext) {
           {/* Size */}
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-foreground/40">
+              <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
                 Tamanho
               </span>
-              <span className="text-[10px] font-mono text-foreground/40">
+              <span className="text-xs font-mono text-foreground/60">
                 {paperTexture.size}px
               </span>
             </div>
@@ -86,10 +86,10 @@ export function TexturePanel({ design }: DesignContext) {
           {/* Opacity */}
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-foreground/40">
+              <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
                 Opacidade
               </span>
-              <span className="text-[10px] font-mono text-foreground/40">
+              <span className="text-xs font-mono text-foreground/60">
                 {Math.round(paperTexture.opacity * 100)}%
               </span>
             </div>
@@ -111,7 +111,7 @@ export function TexturePanel({ design }: DesignContext) {
 
           {/* Color */}
           <div className="flex flex-col gap-1.5">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-foreground/40">
+            <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
               Cor da Textura
             </span>
             <div className="flex items-center gap-2">
@@ -121,7 +121,7 @@ export function TexturePanel({ design }: DesignContext) {
                   setPaperTexture({ ...paperTexture, color: null })
                 }
                 className={cn(
-                  "px-2 py-1 text-[10px] font-mono border rounded-xs transition-colors uppercase tracking-wider",
+                  "px-2 py-1 text-xs font-mono border rounded-xs transition-colors uppercase tracking-wider",
                   paperTexture.color === null
                     ? "border-foreground bg-secondary text-foreground"
                     : "border-border text-foreground/50 hover:border-muted-foreground",
@@ -151,7 +151,7 @@ export function TexturePanel({ design }: DesignContext) {
                     })
                   }
                   placeholder={paperColors?.text || "#000000"}
-                  className="flex-1 px-2 py-1 text-[10px] font-mono border border-border rounded-xs bg-transparent outline-none focus:border-foreground transition-colors"
+                  className="flex-1 px-2 py-1 text-xs font-mono border border-border rounded-xs bg-transparent outline-none focus:border-foreground transition-colors"
                 />
               </div>
             </div>
@@ -174,7 +174,7 @@ export function TexturePanel({ design }: DesignContext) {
               />
               <div className="absolute inset-0 flex items-center justify-center">
                 <span
-                  className="text-[10px] font-mono uppercase tracking-wider"
+                  className="text-xs font-mono uppercase tracking-wider"
                   style={{ color: paperColors?.text || undefined }}
                 >
                   Textura:{" "}

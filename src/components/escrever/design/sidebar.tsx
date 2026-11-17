@@ -40,12 +40,12 @@ export const DESIGN_TABS: TabItem[] = [
   { id: "cover", label: "Capa", icon: <Image className="w-4 h-4" /> },
   {
     id: "letterhead",
-    label: "Cabecalho",
+    label: "Cabeçalho",
     icon: <FileText className="w-4 h-4" />,
   },
   {
     id: "footer",
-    label: "Rodape",
+    label: "Rodapé",
     icon: <SeparatorHorizontal className="w-4 h-4" />,
   },
   {
@@ -63,17 +63,21 @@ export function DesignSidebar({
   onTabChange: (tab: DesignTab) => void;
 }) {
   return (
-    <nav className="w-48 shrink-0 flex flex-col gap-1">
+    <nav
+      aria-label="Seções do design"
+      className="w-48 shrink-0 flex flex-col gap-1"
+    >
       {DESIGN_TABS.map((tab) => (
         <button
           key={tab.id}
           type="button"
           onClick={() => onTabChange(tab.id)}
+          aria-current={activeTab === tab.id ? "page" : undefined}
           className={cn(
-            "flex items-center gap-3 px-3 py-2.5 text-xs font-mono tracking-wider uppercase rounded-xs transition-colors text-left",
+            "flex items-center gap-3 px-3 py-2.5 text-sm rounded-md transition-colors text-left outline-none focus-visible:ring-2 focus-visible:ring-foreground",
             activeTab === tab.id
-              ? "bg-secondary text-foreground border border-foreground/20"
-              : "text-foreground/50 hover:text-foreground hover:bg-secondary/50 border border-transparent",
+              ? "bg-foreground text-background"
+              : "text-foreground/70 hover:text-foreground hover:bg-secondary",
           )}
         >
           {tab.icon}
