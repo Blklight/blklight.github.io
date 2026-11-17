@@ -20,8 +20,7 @@
 @theme {
   /* --- Fonts --- */
   --font-sans: var(--font-inter), "Inter", sans-serif;
-  --font-serif:
-    var(--font-merriweather), "Merriweather", ui-serif, Georgia, serif;
+  --font-serif: var(--font-garamond), "EB Garamond", ui-serif, Georgia, serif;
   --font-mono: var(--font-mono), "JetBrains Mono", monospace;
   --font-pixel: var(--font-geist-pixel-square), "Geist Pixel Square", monospace;
   --font-pixel-circle:
@@ -310,8 +309,7 @@
   /* --- Fonts --- */
   --font-heading: var(--font-mono);
   --font-sans: var(--font-inter), "Inter", sans-serif;
-  --font-serif:
-    var(--font-merriweather), "Merriweather", ui-serif, Georgia, serif;
+  --font-serif: var(--font-garamond), "EB Garamond", ui-serif, Georgia, serif;
   --font-mono: var(--font-mono), "JetBrains Mono", monospace;
   --font-pixel: var(--font-geist-pixel-square), "Geist Pixel Square", monospace;
   --font-pixel-circle:

@@ -1,6 +1,6 @@
 import { GeistPixelCircle, GeistPixelSquare } from "geist/font/pixel";
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Merriweather } from "next/font/google";
+import { EB_Garamond, Inter, JetBrains_Mono } from "next/font/google";
 import { CommandMenu } from "@/components/command-menu";
 import { Html } from "@/components/html";
 import { LayoutBase } from "@/components/layout-base";
@@ -17,10 +17,9 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const merriweather = Merriweather({
+const ebGaramond = EB_Garamond({
   subsets: ["latin"],
-  variable: "--font-merriweather",
-  weight: ["300", "400", "700", "900"],
+  variable: "--font-garamond",
 });
 
 const jetBrainsMono = JetBrains_Mono({
@@ -43,7 +42,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         inter.variable,
         "font-mono",
         jetBrainsMono.variable,
-        merriweather.variable,
+        ebGaramond.variable,
         GeistPixelSquare.variable,
         GeistPixelCircle.variable,
       )}

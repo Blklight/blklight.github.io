@@ -93,8 +93,9 @@ export function EditorBubbleMenu({
   return (
     <BubbleMenu
       editor={editor}
+      appendTo={() => document.body}
       options={{ strategy: "fixed" }}
-      className={PANEL}
+      className={cn(PANEL, "z-[60]")}
     >
       <MenuButton
         label="Negrito"
@@ -224,8 +225,10 @@ export function EditorBlockMenu({ editor }: { editor: Editor }) {
   return (
     <FloatingMenu
       editor={editor}
+      // In <body>: a transformed ancestor would turn "fixed" into an offset box.
+      appendTo={() => document.body}
       options={{ placement: "left-start", offset: 8, strategy: "fixed" }}
-      className="flex items-start gap-2"
+      className="z-[60] flex items-start gap-2"
     >
       <button
         type="button"
