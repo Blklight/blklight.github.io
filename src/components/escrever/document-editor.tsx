@@ -196,6 +196,7 @@ export function DocumentEditor({
     documentHeader,
     documentFooter,
     typography,
+    setTypography,
     coverImage,
     coverSettings,
     setCoverImage,
@@ -628,6 +629,8 @@ export function DocumentEditor({
               <DocumentPaperHeader
                 editor={editor}
                 status={documentStatus}
+                typography={typography}
+                onTypographyChange={setTypography}
                 type={kind.type}
                 typeLabel={kind.label}
                 paperColors={paperColors}
@@ -711,36 +714,6 @@ export function DocumentEditor({
                     settings={coverSettings}
                     onSettingsChange={setCoverSettings}
                     paperColors={paperColors}
-                  />
-                </div>
-
-                {/* Divider */}
-                <div className="flex items-center gap-6 mb-10">
-                  <div
-                    className="h-px flex-1 transition-colors duration-300"
-                    style={{
-                      backgroundColor: paperColors
-                        ? `${paperColors.text}33`
-                        : "hsl(var(--foreground) / 0.2)",
-                    }}
-                  />
-                  <div className="flex items-center gap-3">
-                    <div className="w-1.5 h-1.5 bg-accent" />
-                    <span
-                      className="font-mono text-[10px] uppercase tracking-[0.2em] transition-colors duration-300"
-                      style={{ color: paperColors?.muted || undefined }}
-                    >
-                      Conteudo
-                    </span>
-                    <div className="w-1.5 h-1.5 bg-accent" />
-                  </div>
-                  <div
-                    className="h-px flex-1 transition-colors duration-300"
-                    style={{
-                      backgroundColor: paperColors
-                        ? `${paperColors.text}33`
-                        : "hsl(var(--foreground) / 0.2)",
-                    }}
                   />
                 </div>
 

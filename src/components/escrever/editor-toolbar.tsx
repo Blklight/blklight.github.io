@@ -91,7 +91,11 @@ export function EditorBubbleMenu({
   const run = () => editor.chain().focus();
 
   return (
-    <BubbleMenu editor={editor} className={PANEL}>
+    <BubbleMenu
+      editor={editor}
+      options={{ strategy: "fixed" }}
+      className={PANEL}
+    >
       <MenuButton
         label="Negrito"
         active={state.bold}
@@ -220,7 +224,7 @@ export function EditorBlockMenu({ editor }: { editor: Editor }) {
   return (
     <FloatingMenu
       editor={editor}
-      options={{ placement: "left-start", offset: 8 }}
+      options={{ placement: "left-start", offset: 8, strategy: "fixed" }}
       className="flex items-start gap-2"
     >
       <button

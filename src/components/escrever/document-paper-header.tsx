@@ -8,6 +8,7 @@ import type { PaperColors } from "@/components/document/types";
 import { typeTheme } from "@/components/feed/cards/card-theme";
 import { cn } from "@/lib/utils";
 import type { DocumentStatus } from "@/types/api.types";
+import { TypographySelector } from "./toolbar";
 
 const STATUS_LABEL: Record<DocumentStatus, string> = {
   draft: "Rascunho",
@@ -17,6 +18,8 @@ const STATUS_LABEL: Record<DocumentStatus, string> = {
 
 export interface DocumentPaperHeaderProps {
   editor: Editor;
+  typography: "sans" | "serif" | "mono";
+  onTypographyChange: (typography: "sans" | "serif" | "mono") => void;
   paperColors: PaperColors | null;
   status: DocumentStatus;
   type: string;
@@ -31,6 +34,8 @@ const ACTION =
 /** Bar glued to the top of the paper; it sticks under the navbar while writing. */
 export function DocumentPaperHeader({
   editor,
+  typography,
+  onTypographyChange,
   paperColors,
   status,
   type,
@@ -49,7 +54,7 @@ export function DocumentPaperHeader({
 
   return (
     <div
-      className="sticky top-12 lg:top-[3.6rem] z-30 flex items-center gap-2 px-3 py-1.5 border-x border-t bg-background transition-colors duration-300"
+      className="sticky top-12 lg:top-[3.6rem] z-30 flex items-center gap-2 px-3 py-1.5 border-x border-t bg-background shadow-[0_6px_16px_-10px_rgb(0_0_0/0.35)] transition-colors duration-300"
       style={{
         borderColor: border,
         backgroundColor: paperColors?.bg || undefined,
@@ -73,6 +78,13 @@ export function DocumentPaperHeader({
         {STATUS_LABEL[status]}
       </span>
 
+      <span aria-hidden className="mx-1 h-4 w-px bg-current opacity-20" />
+      <TypographySelector
+        value={typography}
+        onChange={(value) =>
+          onTypographyChange(value as "sans" | "serif" | "mono")
+        }
+      />
       <span aria-hidden className="mx-1 h-4 w-px bg-current opacity-20" />
       <button
         type="button"
