@@ -28,6 +28,7 @@ import { typeTheme } from "@/components/feed/cards/card-theme";
 import { useFillet } from "@/components/ui/fillet-card";
 import { Kbd } from "@/components/ui/kbd";
 import { getPublicFeed } from "@/features/documents/api";
+import { kindByType } from "@/features/documents/document-kinds";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useCommandMenuStore } from "@/store/useCommandMenuStore";
@@ -161,12 +162,24 @@ export function CommandMenu() {
           {
             id: "write",
             title: "Escrever",
-            hint: "Novo texto no editor",
+            hint: "Escolher o tipo de texto",
             icon: <PenLine />,
             tile: "bg-blklight-400 text-dark",
             keywords: ["novo", "editor", "criar"],
             run: go("/escrever"),
           },
+          ...(["article", "tutorial", "project"] as const).map((type) => {
+            const kind = kindByType(type);
+            return {
+              id: `new-${kind.slug}`,
+              title: kind.newLabel,
+              hint: kind.description,
+              icon: <PenLine />,
+              tile: typeTheme(type).solid,
+              keywords: ["novo", "criar", "escrever"],
+              run: go(`/escrever/${kind.slug}`),
+            };
+          }),
           {
             id: "dashboard",
             title: "Dashboard",

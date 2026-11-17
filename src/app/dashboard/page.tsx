@@ -92,7 +92,7 @@ function ContinueCard({ doc }: { doc: DocumentSummary }) {
         </p>
         <h3 className="mt-3 font-sans text-3xl md:text-4xl font-bold tracking-tight leading-[1.05] text-balance">
           <Link
-            href={`/escrever/${doc.id}`}
+            href={`/editar/${doc.id}`}
             className="pointer-events-auto outline-none after:absolute after:inset-0 focus-visible:after:ring-2 focus-visible:after:ring-inset focus-visible:after:ring-current hover:underline underline-offset-4 decoration-2"
           >
             {doc.title || "Sem título"}
@@ -239,7 +239,7 @@ function Dashboard() {
                 {rest.map((doc) => (
                   <li key={doc.id}>
                     <Link
-                      href={`/escrever/${doc.id}`}
+                      href={`/editar/${doc.id}`}
                       className="group flex items-center gap-4 py-3.5 rounded-xs outline-none focus-visible:outline-2 focus-visible:outline-foreground"
                     >
                       <span

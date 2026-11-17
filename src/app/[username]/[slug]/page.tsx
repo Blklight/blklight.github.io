@@ -17,6 +17,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { LetterheadTextContext } from "@/features/documents/design/letterhead-text";
 import { PaperSurface } from "@/features/documents/design/paper-surface";
 import type { SignatureContext } from "@/features/documents/design/signature";
+import { kindByType } from "@/features/documents/document-kinds";
 import {
   coverFilterCss,
   deriveReadDesign,
@@ -92,6 +93,7 @@ export default async function PublicDocumentPage({
   const letterheadContext: LetterheadTextContext = {
     author: document.author,
     organization: document.organization,
+    typeLabel: kindByType(document.typeName).label,
   };
   const signatureContext: SignatureContext = {
     ...letterheadContext,

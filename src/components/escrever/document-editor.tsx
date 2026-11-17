@@ -55,7 +55,6 @@ import { TemplatePicker } from "@/components/escrever/template-picker";
 import { useAutosave } from "@/components/escrever/use-autosave";
 import { useCurrentAuthorContext } from "@/components/escrever/use-current-author-context";
 import { useDocumentForm } from "@/components/escrever/use-document-form";
-import { TYPE_THEME } from "@/components/feed/cards/card-theme";
 import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import {
@@ -68,12 +67,15 @@ import type { LetterheadTextContext } from "@/features/documents/design/letterhe
 import { PaperSurface } from "@/features/documents/design/paper-surface";
 import type { SignatureContext } from "@/features/documents/design/signature";
 import {
+  type DocumentKind,
+  kindByType,
+} from "@/features/documents/document-kinds";
+import {
   usePublishDocument,
   useSaveDocument,
 } from "@/features/documents/queries";
 import { useMyOrganizations } from "@/features/organizations/queries";
 import { documentDesignKey } from "@/lib/user-storage";
-import { cn } from "@/lib/utils";
 import {
   createDocumentDesignStore,
   type DesignInput,
@@ -85,7 +87,6 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useEditorOverlaysStore } from "@/store/useEditorOverlaysStore";
 import type {
   DocumentStatus,
-  DocumentType,
   MyDocumentDetail,
   UpdateDocumentRequest,
 } from "@/types/api.types";
@@ -150,9 +151,18 @@ interface DocumentEditorProps {
    * absent, behavior is identical to the legacy /escrever create flow.
    */
   initialValues?: MyDocumentDetail;
+  /** Type of a new document, from its /escrever/<tipo> page. */
+  kind?: DocumentKind;
 }
 
-export function DocumentEditor({ initialValues }: DocumentEditorProps) {
+export function DocumentEditor({
+  initialValues,
+  kind: newKind,
+}: DocumentEditorProps) {
+  const kind = initialValues
+    ? kindByType(initialValues.typeName)
+    : (newKind ?? kindByType("article"));
+  const docType = kind.type;
   const [mounted, setMounted] = useState(false);
 
   // --- Form (RHF — content only) ---
@@ -205,9 +215,6 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
     initialValues?.id,
   );
   const documentIdRef = useRef<string | undefined>(initialValues?.id);
-  const [docType, setDocType] = useState<DocumentType>(
-    (initialValues?.typeName as DocumentType | undefined) ?? "article",
-  );
   // Organization the document is published under (null = "Pessoal"). The
   // selection lives here so it travels with every save/autosave/publish and
   // can be changed from an already published document.
@@ -232,8 +239,10 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
     return {
       author: currentAuthor,
       organization: organizationName ? { name: organizationName } : null,
+      typeLabel: kind.label,
     };
   }, [
+    kind.label,
     organizationId,
     myOrganizations,
     initialValues?.organization,
@@ -282,7 +291,7 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
       (initialValues?.content as Content | null | undefined) ?? undefined,
     extensions: [
       StarterKit.configure({ heading: { levels: [1, 2, 3] }, link: false }),
-      Placeholder.configure({ placeholder: "Comece a escrever seu artigo..." }),
+      Placeholder.configure({ placeholder: kind.contentPlaceholder }),
       ImageExtension.configure({
         HTMLAttributes: { class: "max-w-full h-auto my-6" },
       }),
@@ -625,36 +634,6 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
                 onOpenTemplates={() => setIsTemplatesOpen(true)}
                 designTrigger={designTrigger}
               />
-              <fieldset className="mb-4 flex flex-wrap gap-1.5 border-0 p-0 m-0 min-w-0">
-                <legend className="sr-only">Tipo do documento</legend>
-                {(Object.keys(TYPE_THEME) as DocumentType[]).map((id) => {
-                  const theme = TYPE_THEME[id];
-                  const active = docType === id;
-                  return (
-                    <button
-                      key={id}
-                      type="button"
-                      aria-pressed={active}
-                      onClick={() => setDocType(id)}
-                      className={cn(
-                        "h-8 pl-2 pr-3 inline-flex items-center gap-2 rounded-xs border font-mono text-xs uppercase tracking-wider transition-colors outline-none focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2 cursor-pointer",
-                        active
-                          ? cn(theme.solid, "border-foreground")
-                          : "border-border text-muted-foreground hover:text-foreground hover:border-foreground",
-                      )}
-                    >
-                      <span
-                        aria-hidden
-                        className={cn(
-                          "size-2.5 rounded-[1px] border border-dark/40",
-                          theme.solid,
-                        )}
-                      />
-                      {theme.label}
-                    </button>
-                  );
-                })}
-              </fieldset>
               {/* Document Container */}
               <PaperSurface
                 paperColors={paperColors}
@@ -680,7 +659,7 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
                     <input
                       {...field}
                       type="text"
-                      placeholder="Título"
+                      placeholder={kind.titlePlaceholder}
                       data-testid="editor-title-input"
                       className={`w-full text-4xl md:text-5xl font-bold tracking-tight bg-transparent border-none outline-none mb-4 transition-colors duration-300 ${fontClass}`}
                       style={{ color: paperColors?.text || undefined }}
@@ -688,7 +667,7 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
                   )}
                 />
                 <style>{`
-            input[placeholder="Título"]::placeholder {
+            input[placeholder={kind.titlePlaceholder}]::placeholder {
               color: ${paperColors?.muted || "hsl(var(--muted-foreground) / 0.5)"};
             }
           `}</style>
@@ -707,7 +686,7 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
                       {...field}
                       value={field.value || ""}
                       type="text"
-                      placeholder="Resumo em uma frase"
+                      placeholder={kind.abstractPlaceholder}
                       data-testid="editor-subtitle-input"
                       className={`w-full text-xl bg-transparent border-none outline-none mb-8 transition-colors duration-300 ${fontClass}`}
                       style={{ color: paperColors?.muted || undefined }}
@@ -715,7 +694,7 @@ export function DocumentEditor({ initialValues }: DocumentEditorProps) {
                   )}
                 />
                 <style>{`
-            input[placeholder="Resumo em uma frase"]::placeholder {
+            input[placeholder={kind.abstractPlaceholder}]::placeholder {
               color: ${paperColors?.muted || "hsl(var(--muted-foreground) / 0.5)"};
             }
           `}</style>

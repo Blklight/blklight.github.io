@@ -11,6 +11,7 @@
  *                    name, else the username
  *   {{autor}}      — author's display name, else the username
  *   {{org}}        — organization name
+ *   {{tipo}}       — document type label ("Artigo", "Tutorial", …)
  * Unknown markers are kept as typed. Missing data resolves to "" (never
  * "undefined"/"null").
  */
@@ -20,6 +21,8 @@ export interface LetterheadTextContext {
     username?: string | null;
   } | null;
   organization?: { name?: string | null } | null;
+  /** Label of the document type, for {{tipo}}. */
+  typeLabel?: string | null;
 }
 
 const MARKER = /\{\{\s*(\w+)\s*\}\}/g;
@@ -46,6 +49,8 @@ export function resolveLetterheadText(
         return author;
       case "org":
         return org;
+      case "tipo":
+        return clean(context.typeLabel);
       default:
         return match;
     }
