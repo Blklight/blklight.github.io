@@ -231,7 +231,9 @@ const BLOCKS: Block[] = [
  */
 export function EditorBlockMenu({ editor }: { editor: Editor }) {
   const [open, setOpen] = useState(false);
-  const [top, setTop] = useState<number | null>(null);
+  // Open upward when the line is too close to the bottom of the screen.
+  const [upward, setUpward] = useState(false);
+  const [spot, setSpot] = useState<{ top: number; left: number } | null>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
   const line = useEditorState({
     editor,
@@ -250,11 +252,14 @@ export function EditorBlockMenu({ editor }: { editor: Editor }) {
     const place = () => {
       const box = anchorRef.current?.offsetParent?.getBoundingClientRect();
       if (line === null || !box) {
-        setTop(null);
+        setSpot(null);
         return;
       }
       const coords = editor.view.coordsAtPos(line);
-      setTop(coords.top - box.top + (coords.bottom - coords.top) / 2);
+      setSpot({
+        top: coords.top - box.top + (coords.bottom - coords.top) / 2,
+        left: coords.left - box.left,
+      });
     };
     place();
     // Layout can shift without a transaction (fonts, images, design changes).
@@ -272,13 +277,14 @@ export function EditorBlockMenu({ editor }: { editor: Editor }) {
   }, [line]);
 
   return (
+    // Zero-size anchor on the line's start: opening the panel never moves the "+".
     <div
       ref={anchorRef}
-      className="absolute -left-10 z-20 flex items-start gap-2"
+      className="absolute z-20 size-0"
       style={{
-        top: top ?? 0,
-        transform: "translateY(-50%)",
-        visibility: top === null ? "hidden" : "visible",
+        top: spot?.top ?? 0,
+        left: spot?.left ?? 0,
+        visibility: spot === null ? "hidden" : "visible",
       }}
     >
       <button
@@ -286,16 +292,26 @@ export function EditorBlockMenu({ editor }: { editor: Editor }) {
         aria-label="Inserir bloco"
         aria-expanded={open}
         onMouseDown={(event) => event.preventDefault()}
-        onClick={() => setOpen((value) => !value)}
+        onClick={(event) => {
+          const rect = event.currentTarget.getBoundingClientRect();
+          setUpward(window.innerHeight - rect.bottom < 360);
+          setOpen((value) => !value);
+        }}
         className={cn(
-          "size-7 inline-flex items-center justify-center rounded-full border border-border bg-popover text-muted-foreground transition-[color,rotate,border-color] hover:text-foreground hover:border-foreground outline-none focus-visible:ring-2 focus-visible:ring-foreground",
+          "absolute right-2 top-0 -translate-y-1/2 size-7 inline-flex items-center justify-center rounded-full border border-border bg-popover text-muted-foreground transition-[color,rotate,border-color] hover:text-foreground hover:border-foreground outline-none focus-visible:ring-2 focus-visible:ring-foreground",
           open && "rotate-45 text-foreground border-foreground",
         )}
       >
         <Plus className="size-4" />
       </button>
       {open && (
-        <div className={cn(PANEL, "flex-col items-stretch w-52 p-1.5 gap-0")}>
+        <div
+          className={cn(
+            PANEL,
+            "absolute -left-9 flex-col items-stretch w-52 p-1.5 gap-0",
+            upward ? "bottom-5" : "top-5",
+          )}
+        >
           {BLOCKS.map((block) => (
             <button
               key={block.label}
