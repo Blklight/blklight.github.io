@@ -720,7 +720,7 @@ export function DocumentEditor({
                 {/* Editor */}
                 <div
                   data-testid="editor-content"
-                  className={`editor-wrapper editor-${typography} ${paperColors ? "custom-paper" : ""}`}
+                  className={`relative editor-wrapper editor-${typography} ${paperColors ? "custom-paper" : ""}`}
                   style={{
                     ["--custom-text-color" as string]: paperColors?.text,
                     ["--custom-muted-color" as string]: paperColors?.muted,

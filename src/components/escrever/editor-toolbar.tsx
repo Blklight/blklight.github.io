@@ -2,7 +2,7 @@
 
 import type { Editor } from "@tiptap/react";
 import { useEditorState } from "@tiptap/react";
-import { BubbleMenu, FloatingMenu } from "@tiptap/react/menus";
+import { BubbleMenu } from "@tiptap/react/menus";
 import {
   AlignCenter,
   AlignLeft,
@@ -24,7 +24,13 @@ import {
   Quote,
   Strikethrough,
 } from "lucide-react";
-import { type ReactNode, useState } from "react";
+import {
+  type ReactNode,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { cn } from "@/lib/utils";
 
 const PANEL =
@@ -218,17 +224,56 @@ const BLOCKS: Block[] = [
   },
 ];
 
-/** "+" on an empty line: inserts a block, Notion-style. */
+/**
+ * "+" on an empty line: inserts a block, Notion-style. Rendered inside the
+ * editor wrapper (position: relative) and placed from the line's coordinates,
+ * so it scrolls with the text instead of floating over the viewport.
+ */
 export function EditorBlockMenu({ editor }: { editor: Editor }) {
   const [open, setOpen] = useState(false);
+  const [top, setTop] = useState<number | null>(null);
+  const anchorRef = useRef<HTMLDivElement>(null);
+  const line = useEditorState({
+    editor,
+    selector: ({ editor: e }) => {
+      const { empty, $from } = e.state.selection;
+      const blank =
+        e.isEditable &&
+        empty &&
+        $from.parent.type.name === "paragraph" &&
+        $from.parent.content.size === 0;
+      return blank ? $from.pos : null;
+    },
+  });
+
+  useLayoutEffect(() => {
+    const place = () => {
+      const box = anchorRef.current?.offsetParent?.getBoundingClientRect();
+      if (line === null || !box) {
+        setTop(null);
+        return;
+      }
+      const coords = editor.view.coordsAtPos(line);
+      setTop(coords.top - box.top + (coords.bottom - coords.top) / 2);
+    };
+    place();
+    window.addEventListener("resize", place);
+    return () => window.removeEventListener("resize", place);
+  }, [editor, line]);
+
+  useEffect(() => {
+    if (line === null) setOpen(false);
+  }, [line]);
 
   return (
-    <FloatingMenu
-      editor={editor}
-      // In <body>: a transformed ancestor would turn "fixed" into an offset box.
-      appendTo={() => document.body}
-      options={{ placement: "left-start", offset: 8, strategy: "fixed" }}
-      className="z-[60] flex items-start gap-2"
+    <div
+      ref={anchorRef}
+      className="absolute -left-10 z-20 flex items-start gap-2"
+      style={{
+        top: top ?? 0,
+        transform: "translateY(-50%)",
+        visibility: top === null ? "hidden" : "visible",
+      }}
     >
       <button
         type="button"
@@ -262,6 +307,6 @@ export function EditorBlockMenu({ editor }: { editor: Editor }) {
           ))}
         </div>
       )}
-    </FloatingMenu>
+    </div>
   );
 }
