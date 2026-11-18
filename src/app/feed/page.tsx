@@ -8,7 +8,6 @@ import { FEED_TYPES, TYPE_THEME } from "@/components/feed/cards/card-theme";
 import { DuotoneDefs } from "@/components/feed/cards/duotone-defs";
 import { FeaturedCard } from "@/components/feed/cards/featured-card";
 import {
-  CatalogCard,
   CoverCard,
   HeadlineCard,
   MediaCard,
@@ -59,7 +58,6 @@ const CARDS = {
   media: { component: MediaCard, sizes: { "1x2": 2, "2x1": 1 } },
   stamp: { component: StampCard, sizes: { "2x1": 1, "1x2": 1 } },
   headline: { component: HeadlineCard, sizes: { "1x1": 1, "2x1": 1 } },
-  catalog: { component: CatalogCard },
 } as const satisfies Record<FeedCardType, unknown>;
 
 const TYPES = FEED_TYPES.map((id) => [id, TYPE_THEME[id]] as const);

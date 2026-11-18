@@ -47,7 +47,7 @@ describe("feed card type", () => {
     expect(
       hasCustomPaper(style({ mode: "default", bg: null }, { type: "none" })),
     ).toBe(false);
-    expect(["text", "headline", "catalog"]).toContain(feedCardType(doc()));
+    expect(["text", "headline"]).toContain(feedCardType(doc()));
   });
 
   it("never gives two neighbours of the same pool the same model", () => {

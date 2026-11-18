@@ -236,7 +236,8 @@ Near-square everywhere: the base radius is 2px (`--radius: 0.125rem`), and most 
 - **Border:** 1px ink or none, per model.
 - **Focus:** a 3px foreground outline 4px outside the card's cell, so chamfered and pill silhouettes never clip it.
 - **Themes:** in dark, the ink Manchete gets a 2px foreground border; in book, sepia surfaces step to sepia-medium and pale washes multiply into the page.
-- **Models:** Cover, Media, Selo, Paper, Texto, Manchete, Ficha, rotated per page and stable per item; images may take an SVG duotone in the surface ink.
+- **Models:** Cover, Media, Selo, Paper, Texto, Manchete, chosen from the item's id; images may take an SVG duotone in the surface ink. The Ficha (library catalog card) was removed on 2026-11-18 for clashing with the rest; models for documents without a cover are still open.
+- **Type tab placement:** no single fixed spot. Each model ships a default (flush on the flat Texto card); a per-document choice of position is planned.
 
 ### Inputs / Fields
 - **Style:** 1px rule border, transparent background, 36px tall, near-square.

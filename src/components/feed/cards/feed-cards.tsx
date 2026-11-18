@@ -10,14 +10,7 @@ import { derivePaperDesign } from "@/features/documents/document-read";
 import { cn } from "@/lib/utils";
 import type { DocumentCard } from "@/types/api.types";
 import { surfaceFor } from "./card-theme";
-import {
-  AuthorLink,
-  CardMeta,
-  CardTags,
-  CardTitle,
-  formatDate,
-  TypeTab,
-} from "./parts";
+import { CardMeta, CardTags, CardTitle, formatDate, TypeTab } from "./parts";
 
 export type CardProps = BentoCardProps<DocumentCard>;
 
@@ -396,59 +389,6 @@ export function HeadlineCard({ data, size }: CardProps) {
           </p>
         )}
         <CardMeta doc={data} className="mt-auto pt-4" muted="text-light/60" />
-      </div>
-    </Shell>
-  );
-}
-
-// One ruled line per 1.6rem: every text line on the card uses this leading.
-const RULE = "1.6rem";
-
-/** Library catalog card: ruled sepia stock, fields typed in mono. */
-export function CatalogCard({ data }: CardProps) {
-  const shape: Shape = { kind: "fillet", corners: ["tr"] };
-  const number = String(hash(data.id) % 10000).padStart(4, "0");
-  const author = data.author.displayName || data.author.username;
-  return (
-    <Shell
-      card="catalog"
-      shape={shape}
-      className="bg-sepia text-dark book:bg-sepia-medium"
-    >
-      <div
-        aria-hidden
-        className="absolute inset-y-0 left-10 w-px bg-crimson-500/50"
-      />
-      <TypeTab type={data.typeName} corners={tabCorners(shape)} />
-      <div
-        className="relative h-full pl-14 pr-5 pt-9 font-mono text-xs"
-        style={{
-          lineHeight: RULE,
-          backgroundImage: `linear-gradient(to bottom, transparent calc(${RULE} - 1px), color-mix(in oklch, var(--color-bluesky-400) 35%, transparent) calc(${RULE} - 1px))`,
-          backgroundSize: `100% ${RULE}`,
-          backgroundPosition: "0 2.25rem",
-        }}
-      >
-        <p className="text-dark/75 uppercase tracking-wider">
-          Ficha nº {number}
-        </p>
-        <dl className="grid grid-cols-[4.5rem_1fr] gap-x-2">
-          <dt className="text-dark/75 uppercase">Título</dt>
-          <dd className="min-w-0">
-            <CardTitle
-              doc={data}
-              className="font-serif text-lg @xs:text-xl leading-[inherit] line-clamp-2"
-            />
-          </dd>
-          <dt className="text-dark/75 uppercase">Autor</dt>
-          <dd className="truncate">
-            <AuthorLink doc={data}>{author}</AuthorLink>
-          </dd>
-          <dt className="text-dark/75 uppercase">Data</dt>
-          <dd>{formatDate(data.publishedAt)}</dd>
-          <dt className="text-dark/75 uppercase">Assunto</dt>
-          <dd className="truncate font-bold">{data.category?.name ?? "—"}</dd>
-        </dl>
       </div>
     </Shell>
   );

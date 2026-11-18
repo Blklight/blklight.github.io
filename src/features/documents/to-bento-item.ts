@@ -7,12 +7,11 @@ export type FeedCardType =
   | "cover"
   | "media"
   | "stamp"
-  | "headline"
-  | "catalog";
+  | "headline";
 
 // Model pools: a document's model comes from its id (see feedCardType).
 const WITH_COVER: FeedCardType[] = ["cover", "media", "stamp"];
-const PLAIN: FeedCardType[] = ["text", "headline", "catalog"];
+const PLAIN: FeedCardType[] = ["text", "headline"];
 
 const asRecord = (value: unknown): Record<string, unknown> =>
   value && typeof value === "object" ? (value as Record<string, unknown>) : {};
