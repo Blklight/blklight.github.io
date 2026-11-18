@@ -73,9 +73,22 @@ const DIMS: Record<BentoSize, [number, number]> = {
 };
 
 /**
+ * Size a card actually gets with `cols` columns. In a single column a wide
+ * size can't fit, so the card falls back to its own narrow size: tall (1x2)
+ * when it has one, else 1x1. Cards then lay out for the cell they really get.
+ */
+export function fitSize(
+  size: BentoSize,
+  def: Pick<BentoCardDef, "sizes">,
+  cols: number,
+): BentoSize {
+  if (cols !== 1 || DIMS[size][0] === 1) return size;
+  return (def.sizes?.["1x2"] ?? 0) > 0 ? "1x2" : "1x1";
+}
+
+/**
  * Same result as CSS `grid-auto-flow: dense`, computed up front so the caller
  * can render cells in visual order (DOM order = reading and focus order).
- * One column drops every span, matching SPAN below.
  */
 export function packBento(sizes: BentoSize[], cols: number): BentoPlacement[] {
   const taken: boolean[][] = [];
@@ -85,7 +98,7 @@ export function packBento(sizes: BentoSize[], cols: number): BentoPlacement[] {
     return true;
   };
   return sizes.map((size) => {
-    const [dw, dh] = cols === 1 ? [1, 1] : DIMS[size];
+    const [dw, dh] = DIMS[size];
     const w = Math.min(dw, cols);
     for (let row = 0; ; row++)
       for (let col = 0; col + w <= cols; col++)

@@ -7,6 +7,7 @@ import { BentoCell } from "./bento-cell";
 import {
   type BentoCardDef,
   type BentoItem,
+  fitSize,
   packBento,
   resolveSize,
   SPAN,
@@ -60,7 +61,8 @@ export function BentoGrid<T extends string>({
       console.warn(`BentoGrid: no card registered for "${item.type}"`);
       return [];
     }
-    return [{ item, def, size: resolveSize(item, def) }];
+    const size = resolveSize(item, def);
+    return [{ item, def, size: cols ? fitSize(size, def, cols) : size }];
   });
   const placed = cols
     ? packBento(

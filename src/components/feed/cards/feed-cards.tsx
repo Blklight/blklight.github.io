@@ -302,7 +302,7 @@ export function StampCard({ data, size }: CardProps) {
           style={{ mask: STAMP_MASK, WebkitMask: STAMP_MASK }}
           className={cn(
             "relative shrink-0 bg-light p-3 transition-transform duration-500 ease-out group-hover/card:-rotate-2 motion-reduce:transition-none",
-            side ? "w-2/5" : "min-h-0 flex-1",
+            side ? "w-2/5" : "aspect-[4/3] w-full",
           )}
         >
           <div className="relative size-full overflow-hidden">
@@ -324,10 +324,18 @@ export function StampCard({ data, size }: CardProps) {
         <div className="flex flex-col min-w-0 flex-1">
           <CardTitle
             doc={data}
-            className="font-sans text-xl @xs:text-2xl leading-tight line-clamp-3"
+            className={cn(
+              "font-sans text-xl @xs:text-2xl leading-tight",
+              side ? "line-clamp-3" : "line-clamp-2",
+            )}
           />
-          {side && data.abstract && (
-            <p className="mt-2 text-sm text-dark line-clamp-3">
+          {data.abstract && (
+            <p
+              className={cn(
+                "mt-2 text-sm text-dark",
+                side ? "line-clamp-3" : "line-clamp-2",
+              )}
+            >
               {data.abstract}
             </p>
           )}

@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { hash, packBento, resolveSize } from "@/components/bento/bento-layout";
+import {
+  fitSize,
+  hash,
+  packBento,
+  resolveSize,
+} from "@/components/bento/bento-layout";
 
 describe("resolveSize", () => {
   const def = { sizes: { "1x1": 3, "1x2": 1 } };
@@ -76,10 +81,26 @@ describe("packBento", () => {
     }
   });
 
-  it("drops spans in a single column", () => {
-    expect(packBento(["2x2", "1x2"], 1)).toEqual([
-      { row: 0, col: 0, w: 1, h: 1 },
-      { row: 1, col: 0, w: 1, h: 1 },
+  it("clamps width to a single column", () => {
+    expect(packBento(["1x2", "1x1"], 1)).toEqual([
+      { row: 0, col: 0, w: 1, h: 2 },
+      { row: 2, col: 0, w: 1, h: 1 },
     ]);
+  });
+});
+
+describe("fitSize", () => {
+  const tall = { sizes: { "2x1": 1, "1x2": 1 } };
+  const flat = { sizes: { "1x1": 1, "2x1": 1 } };
+
+  it("keeps the size when it fits", () => {
+    expect(fitSize("2x1", tall, 3)).toBe("2x1");
+    expect(fitSize("1x2", tall, 1)).toBe("1x2");
+  });
+
+  it("turns wide sizes into the card's narrow size in one column", () => {
+    expect(fitSize("2x1", tall, 1)).toBe("1x2");
+    expect(fitSize("2x2", tall, 1)).toBe("1x2");
+    expect(fitSize("2x1", flat, 1)).toBe("1x1");
   });
 });
