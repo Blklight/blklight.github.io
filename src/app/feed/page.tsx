@@ -316,25 +316,27 @@ export default function FeedPage() {
   );
 }
 
-const SKELETON_SPANS = [
-  "sm:col-span-2 sm:row-span-2",
-  "",
-  "sm:row-span-2",
-  "",
-  "sm:col-span-2",
-  "",
-  "",
+// Spans plus the card silhouettes (chamfer, pill, round, flat), so loading
+// already looks like the feed it turns into.
+const SKELETON_CELLS = [
+  "sm:col-span-2 sm:row-span-2 chamfer chamfer-tr chamfer-lg",
+  "rounded-[1.75rem]",
+  "sm:row-span-2 chamfer chamfer-bl chamfer-lg",
+  "rounded-none",
+  "sm:col-span-2 rounded-lg",
+  "chamfer chamfer-tr",
+  "rounded-none",
 ] as const;
 
 function FeedSkeleton() {
   return (
     <div aria-busy="true" aria-live="polite">
       <span className="sr-only">Carregando documentos</span>
-      <Skeleton className="h-[26rem] w-full rounded-xs mb-4" />
+      <Skeleton className="h-[26rem] w-full mb-4 chamfer chamfer-tl chamfer-br chamfer-xl" />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 grid-flow-dense auto-rows-[15rem] gap-4">
-        {SKELETON_SPANS.map((span, i) => (
+        {SKELETON_CELLS.map((cell, i) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: static placeholder list
-          <Skeleton key={i} className={cn("rounded-xs", span)} />
+          <Skeleton key={i} className={cell} />
         ))}
       </div>
     </div>

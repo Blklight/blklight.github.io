@@ -421,7 +421,7 @@ export function CatalogCard({ data }: CardProps) {
         className="relative h-full pl-14 pr-5 pt-9 font-mono text-xs"
         style={{
           lineHeight: RULE,
-          backgroundImage: `linear-gradient(to bottom, transparent calc(${RULE} - 1px), rgb(40 172 255 / 0.35) calc(${RULE} - 1px))`,
+          backgroundImage: `linear-gradient(to bottom, transparent calc(${RULE} - 1px), color-mix(in oklch, var(--color-bluesky-400) 35%, transparent) calc(${RULE} - 1px))`,
           backgroundSize: `100% ${RULE}`,
           backgroundPosition: "0 2.25rem",
         }}
