@@ -58,6 +58,47 @@ export function resolveSize(
   return entries[entries.length - 1][0];
 }
 
+export interface BentoPlacement {
+  row: number;
+  col: number;
+  w: number;
+  h: number;
+}
+
+const DIMS: Record<BentoSize, [number, number]> = {
+  "1x1": [1, 1],
+  "2x1": [2, 1],
+  "1x2": [1, 2],
+  "2x2": [2, 2],
+};
+
+/**
+ * Same result as CSS `grid-auto-flow: dense`, computed up front so the caller
+ * can render cells in visual order (DOM order = reading and focus order).
+ * One column drops every span, matching SPAN below.
+ */
+export function packBento(sizes: BentoSize[], cols: number): BentoPlacement[] {
+  const taken: boolean[][] = [];
+  const free = (r: number, c: number, w: number, h: number) => {
+    for (let y = r; y < r + h; y++)
+      for (let x = c; x < c + w; x++) if (taken[y]?.[x]) return false;
+    return true;
+  };
+  return sizes.map((size) => {
+    const [dw, dh] = cols === 1 ? [1, 1] : DIMS[size];
+    const w = Math.min(dw, cols);
+    for (let row = 0; ; row++)
+      for (let col = 0; col + w <= cols; col++)
+        if (free(row, col, w, dh)) {
+          for (let y = row; y < row + dh; y++) {
+            taken[y] ??= [];
+            for (let x = col; x < col + w; x++) taken[y][x] = true;
+          }
+          return { row, col, w, h: dh };
+        }
+  });
+}
+
 // Spans start at sm: so a single mobile column never overflows.
 export const SPAN: Record<BentoSize, string> = {
   "1x1": "",

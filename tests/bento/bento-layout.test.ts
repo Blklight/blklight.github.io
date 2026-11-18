@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { hash, resolveSize } from "@/components/bento/bento-layout";
+import { hash, packBento, resolveSize } from "@/components/bento/bento-layout";
 
 describe("resolveSize", () => {
   const def = { sizes: { "1x1": 3, "1x2": 1 } };
@@ -41,5 +41,45 @@ describe("resolveSize", () => {
     expect(Number.isInteger(h)).toBe(true);
     expect(h).toBeGreaterThanOrEqual(0);
     expect(h).toBeLessThan(2 ** 32);
+  });
+});
+
+describe("packBento", () => {
+  it("fills holes like grid-auto-flow: dense", () => {
+    // 3 columns: a 2x1 leaves a hole that the later 1x1 backfills.
+    expect(packBento(["1x1", "2x1", "1x1"], 3)).toEqual([
+      { row: 0, col: 0, w: 1, h: 1 },
+      { row: 0, col: 1, w: 2, h: 1 },
+      { row: 1, col: 0, w: 1, h: 1 },
+    ]);
+    expect(packBento(["2x1", "2x1", "1x1"], 3)).toEqual([
+      { row: 0, col: 0, w: 2, h: 1 },
+      { row: 1, col: 0, w: 2, h: 1 },
+      { row: 0, col: 2, w: 1, h: 1 },
+    ]);
+  });
+
+  it("never overlaps cells", () => {
+    const sizes = Array.from(
+      { length: 60 },
+      (_, i) => (["1x1", "2x1", "1x2", "2x2"] as const)[hash(`s${i}`) % 4],
+    );
+    for (const cols of [2, 3, 4, 5]) {
+      const seen = new Set<string>();
+      for (const p of packBento(sizes, cols))
+        for (let y = p.row; y < p.row + p.h; y++)
+          for (let x = p.col; x < p.col + p.w; x++) {
+            expect(x).toBeLessThan(cols);
+            expect(seen.has(`${y},${x}`)).toBe(false);
+            seen.add(`${y},${x}`);
+          }
+    }
+  });
+
+  it("drops spans in a single column", () => {
+    expect(packBento(["2x2", "1x2"], 1)).toEqual([
+      { row: 0, col: 0, w: 1, h: 1 },
+      { row: 1, col: 0, w: 1, h: 1 },
+    ]);
   });
 });
