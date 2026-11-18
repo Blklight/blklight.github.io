@@ -185,19 +185,26 @@ export function CoverCard({ data, size }: CardProps) {
       shape={{ kind: "round" }}
       className="bg-dark text-light"
     >
-      {/* biome-ignore lint/performance/noImgElement: covers come from arbitrary hosts; next/image needs a domain allowlist */}
-      <img
-        src={cover}
-        alt=""
-        className="absolute inset-0 size-full object-cover transition-transform duration-700 ease-out group-hover/card:scale-105 motion-reduce:transition-none"
-      />
-      {/* biome-ignore lint/performance/noImgElement: same cover, duotone layer */}
-      <img
-        src={cover}
-        alt=""
-        style={{ filter: `url(#duo-${surface.id})` }}
-        className="absolute inset-0 size-full object-cover transition-[opacity,scale] duration-700 ease-out group-hover/card:opacity-0 group-hover/card:scale-105 motion-reduce:transition-none"
-      />
+      {/* One scaling wrapper: the duotone filter rasterizes once, the GPU scales the layer. */}
+      <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover/card:scale-105 motion-reduce:transition-none">
+        {/* biome-ignore lint/performance/noImgElement: covers come from arbitrary hosts; next/image needs a domain allowlist */}
+        <img
+          src={cover}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 size-full object-cover"
+        />
+        {/* biome-ignore lint/performance/noImgElement: same cover, duotone layer */}
+        <img
+          src={cover}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          style={{ filter: `url(#duo-${surface.id})` }}
+          className="absolute inset-0 size-full object-cover transition-opacity duration-700 ease-out group-hover/card:opacity-0 motion-reduce:transition-none"
+        />
+      </div>
       <div className="absolute inset-0 bg-gradient-to-t from-dark/95 via-dark/40 to-transparent" />
       <TypeTab type={data.typeName} tone="paper" />
       <div className="relative h-full flex flex-col justify-end p-5">
@@ -255,6 +262,8 @@ export function MediaCard({ data, size }: CardProps) {
           <img
             src={data.coverImageUrl ?? ""}
             alt=""
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 size-full object-cover transition-transform duration-700 ease-out group-hover/card:scale-105 motion-reduce:transition-none"
           />
         </div>
@@ -321,6 +330,8 @@ export function StampCard({ data, size }: CardProps) {
             <img
               src={data.coverImageUrl ?? ""}
               alt=""
+              loading="lazy"
+              decoding="async"
               style={{ filter: `url(#duo-${surface.id})` }}
               className="absolute inset-0 size-full object-cover"
             />

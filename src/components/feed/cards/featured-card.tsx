@@ -34,19 +34,24 @@ function CoverBanner({ doc }: { doc: DocumentCard }) {
       bordered={false}
       className="group/card relative overflow-hidden min-h-[28rem] md:min-h-[32rem] bg-dark text-light"
     >
-      {/* biome-ignore lint/performance/noImgElement: covers come from arbitrary hosts; next/image needs a domain allowlist */}
-      <img
-        src={cover}
-        alt=""
-        className="absolute inset-0 size-full object-cover transition-transform duration-1000 ease-out group-hover/card:scale-105 motion-reduce:transition-none"
-      />
-      {/* biome-ignore lint/performance/noImgElement: same cover, brand duotone layer */}
-      <img
-        src={cover}
-        alt=""
-        style={{ filter: "url(#duo-brand)" }}
-        className="absolute inset-0 size-full object-cover transition-[opacity,scale] duration-1000 ease-out group-hover/card:opacity-0 group-hover/card:scale-105 motion-reduce:transition-none"
-      />
+      {/* One scaling wrapper: the duotone filter rasterizes once, the GPU scales the layer. */}
+      <div className="absolute inset-0 transition-transform duration-1000 ease-out group-hover/card:scale-105 motion-reduce:transition-none">
+        {/* biome-ignore lint/performance/noImgElement: covers come from arbitrary hosts; next/image needs a domain allowlist */}
+        <img
+          src={cover}
+          alt=""
+          fetchPriority="high"
+          className="absolute inset-0 size-full object-cover"
+        />
+        {/* biome-ignore lint/performance/noImgElement: same cover, brand duotone layer */}
+        <img
+          src={cover}
+          alt=""
+          fetchPriority="high"
+          style={{ filter: "url(#duo-brand)" }}
+          className="absolute inset-0 size-full object-cover transition-opacity duration-1000 ease-out group-hover/card:opacity-0 motion-reduce:transition-none"
+        />
+      </div>
       <div className="absolute inset-0 bg-gradient-to-r from-dark/90 via-dark/45 to-transparent" />
       <TypeTab type={doc.typeName} corners={["tl"]} tone="paper" />
 
