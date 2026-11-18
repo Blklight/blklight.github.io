@@ -1,0 +1,444 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-18T17:30:58.973682+00:00",
+  "title": "Design System: Blklight",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "tonalRamp": [
+          "oklch(0.2645 0 0)",
+          "oklch(0.36 0 0)",
+          "oklch(0.47 0 0)",
+          "oklch(52.153% 0 0)",
+          "oklch(76.555% 0 0)",
+          "oklch(79.837% 0 0)",
+          "oklch(0.937 0 0)",
+          "oklch(0.9761 0 0)"
+        ]
+      },
+      "paper-white": {
+        "role": "neutral",
+        "displayName": "Paper White",
+        "tonalRamp": [
+          "oklch(0.2645 0 0)",
+          "oklch(0.36 0 0)",
+          "oklch(0.47 0 0)",
+          "oklch(52.153% 0 0)",
+          "oklch(76.555% 0 0)",
+          "oklch(79.837% 0 0)",
+          "oklch(0.937 0 0)",
+          "oklch(0.9761 0 0)"
+        ]
+      },
+      "grey-wash": {
+        "role": "neutral",
+        "displayName": "Grey Wash",
+        "tonalRamp": [
+          "oklch(0.2645 0 0)",
+          "oklch(0.36 0 0)",
+          "oklch(0.47 0 0)",
+          "oklch(52.153% 0 0)",
+          "oklch(76.555% 0 0)",
+          "oklch(79.837% 0 0)",
+          "oklch(0.937 0 0)",
+          "oklch(0.9761 0 0)"
+        ]
+      },
+      "grey-medium": {
+        "role": "neutral",
+        "displayName": "Grey Medium",
+        "tonalRamp": [
+          "oklch(0.2645 0 0)",
+          "oklch(0.36 0 0)",
+          "oklch(0.47 0 0)",
+          "oklch(52.153% 0 0)",
+          "oklch(76.555% 0 0)",
+          "oklch(79.837% 0 0)",
+          "oklch(0.937 0 0)",
+          "oklch(0.9761 0 0)"
+        ]
+      },
+      "grey-rule": {
+        "role": "neutral",
+        "displayName": "Grey Rule",
+        "tonalRamp": [
+          "oklch(0.2645 0 0)",
+          "oklch(0.36 0 0)",
+          "oklch(0.47 0 0)",
+          "oklch(52.153% 0 0)",
+          "oklch(76.555% 0 0)",
+          "oklch(79.837% 0 0)",
+          "oklch(0.937 0 0)",
+          "oklch(0.9761 0 0)"
+        ]
+      },
+      "grey-muted-text": {
+        "role": "neutral",
+        "displayName": "Grey Muted Text",
+        "tonalRamp": [
+          "oklch(0.2645 0 0)",
+          "oklch(0.36 0 0)",
+          "oklch(0.47 0 0)",
+          "oklch(52.153% 0 0)",
+          "oklch(76.555% 0 0)",
+          "oklch(79.837% 0 0)",
+          "oklch(0.937 0 0)",
+          "oklch(0.9761 0 0)"
+        ]
+      },
+      "sepia-page": {
+        "role": "neutral",
+        "displayName": "Sepia Page",
+        "tonalRamp": [
+          "oklch(40% 0.03 84)",
+          "oklch(55% 0.03 84)",
+          "oklch(74.5% 0.012 84.567)",
+          "oklch(85% 0.02 84)",
+          "oklch(90.409% 0.00583 84.567)",
+          "oklch(92.557% 0.04465 80.23)",
+          "oklch(95.774% 0.03248 85.48)",
+          "oklch(98% 0.015 85)"
+        ]
+      },
+      "sepia-medium": {
+        "role": "neutral",
+        "displayName": "Sepia Medium",
+        "tonalRamp": [
+          "oklch(40% 0.03 84)",
+          "oklch(55% 0.03 84)",
+          "oklch(74.5% 0.012 84.567)",
+          "oklch(85% 0.02 84)",
+          "oklch(90.409% 0.00583 84.567)",
+          "oklch(92.557% 0.04465 80.23)",
+          "oklch(95.774% 0.03248 85.48)",
+          "oklch(98% 0.015 85)"
+        ]
+      },
+      "sepia-grey": {
+        "role": "neutral",
+        "displayName": "Sepia Grey",
+        "tonalRamp": [
+          "oklch(40% 0.03 84)",
+          "oklch(55% 0.03 84)",
+          "oklch(74.5% 0.012 84.567)",
+          "oklch(85% 0.02 84)",
+          "oklch(90.409% 0.00583 84.567)",
+          "oklch(92.557% 0.04465 80.23)",
+          "oklch(95.774% 0.03248 85.48)",
+          "oklch(98% 0.015 85)"
+        ]
+      },
+      "ultravioleta": {
+        "role": "primary",
+        "displayName": "Ultravioleta",
+        "tonalRamp": [
+          "oklch(24.939% 0.16069 271.97)",
+          "oklch(33.415% 0.21898 270.01)",
+          "oklch(48.228% 0.29639 275.93)",
+          "oklch(47.801% 0.29684 272.37)",
+          "oklch(56.344% 0.24855 282.35)",
+          "oklch(65.318% 0.19568 287.05)",
+          "oklch(85.566% 0.07764 292.04)",
+          "oklch(98.727% 0.00667 295.45)"
+        ]
+      },
+      "ultravioleta-light": {
+        "role": "primary",
+        "displayName": "Ultravioleta Light",
+        "tonalRamp": [
+          "oklch(24.939% 0.16069 271.97)",
+          "oklch(33.415% 0.21898 270.01)",
+          "oklch(48.228% 0.29639 275.93)",
+          "oklch(47.801% 0.29684 272.37)",
+          "oklch(56.344% 0.24855 282.35)",
+          "oklch(65.318% 0.19568 287.05)",
+          "oklch(85.566% 0.07764 292.04)",
+          "oklch(98.727% 0.00667 295.45)"
+        ]
+      },
+      "sky": {
+        "role": "secondary",
+        "displayName": "Sky Blue",
+        "tonalRamp": [
+          "oklch(27.817% 0.06805 243.6)",
+          "oklch(41.042% 0.10464 245.6)",
+          "oklch(53.024% 0.13929 246.95)",
+          "oklch(64.587% 0.17095 247.28)",
+          "oklch(71.539% 0.16143 243.05)",
+          "oklch(76.107% 0.13706 239.7)",
+          "oklch(86.478% 0.07696 236.55)",
+          "oklch(95.372% 0.02582 235.35)"
+        ]
+      },
+      "sky-deep": {
+        "role": "secondary",
+        "displayName": "Sky Deep",
+        "tonalRamp": [
+          "oklch(27.817% 0.06805 243.6)",
+          "oklch(41.042% 0.10464 245.6)",
+          "oklch(53.024% 0.13929 246.95)",
+          "oklch(64.587% 0.17095 247.28)",
+          "oklch(71.539% 0.16143 243.05)",
+          "oklch(76.107% 0.13706 239.7)",
+          "oklch(86.478% 0.07696 236.55)",
+          "oklch(95.372% 0.02582 235.35)"
+        ]
+      },
+      "cyber-yellow": {
+        "role": "tertiary",
+        "displayName": "Cyber Yellow (artigo)",
+        "tonalRamp": [
+          "oklch(45.459% 0.09816 108.24)",
+          "oklch(57.361% 0.12372 108.05)",
+          "oklch(70.146% 0.15164 108.44)",
+          "oklch(88.478% 0.19089 108.11)",
+          "oklch(95.186% 0.20555 108.25)",
+          "oklch(96.038% 0.20105 108.44)",
+          "oklch(96.798% 0.15344 107.76)",
+          "oklch(98.115% 0.09078 107.29)"
+        ]
+      },
+      "cyber-yellow-ink": {
+        "role": "tertiary",
+        "displayName": "Cyber Yellow Ink",
+        "tonalRamp": [
+          "oklch(45.459% 0.09816 108.24)",
+          "oklch(57.361% 0.12372 108.05)",
+          "oklch(70.146% 0.15164 108.44)",
+          "oklch(88.478% 0.19089 108.11)",
+          "oklch(95.186% 0.20555 108.25)",
+          "oklch(96.038% 0.20105 108.44)",
+          "oklch(96.798% 0.15344 107.76)",
+          "oklch(98.115% 0.09078 107.29)"
+        ]
+      },
+      "signal-orange": {
+        "role": "tertiary",
+        "displayName": "Signal Orange (tutorial)",
+        "tonalRamp": [
+          "oklch(36.784% 0.0973 49.963)",
+          "oklch(47.424% 0.13021 47.472)",
+          "oklch(57.65% 0.16047 46.613)",
+          "oklch(65.256% 0.18368 45.93)",
+          "oklch(70.488% 0.19894 45.767)",
+          "oklch(73.926% 0.1769 51.335)",
+          "oklch(82.689% 0.11495 57.216)",
+          "oklch(90.344% 0.0609 58.067)"
+        ]
+      },
+      "hot-magenta": {
+        "role": "tertiary",
+        "displayName": "Hot Magenta (projeto)",
+        "tonalRamp": [
+          "oklch(32.051% 0.14731 328.36)",
+          "oklch(45.612% 0.20963 328.36)",
+          "oklch(58.216% 0.26756 328.36)",
+          "oklch(70.167% 0.32249 328.36)",
+          "oklch(71.146% 0.30926 328.24)",
+          "oklch(73.752% 0.27514 327.93)",
+          "oklch(83.691% 0.15793 326.87)",
+          "oklch(94.127% 0.0528 325.99)"
+        ]
+      },
+      "crimson": {
+        "role": "tertiary",
+        "displayName": "Crimson (contrato, destrutivo)",
+        "tonalRamp": [
+          "oklch(26.8% 0.09781 22.967)",
+          "oklch(34.148% 0.12907 24.033)",
+          "oklch(40.891% 0.15791 24.392)",
+          "oklch(51.41% 0.20114 25.117)",
+          "oklch(60.147% 0.23101 24.347)",
+          "oklch(63.67% 0.20637 20.055)",
+          "oklch(75.846% 0.12502 14.266)",
+          "oklch(87.578% 0.05841 11.737)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Page titles and section openers; uppercase, tight."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Card titles, panel headings."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Uppercase section labels."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Interface text."
+      },
+      "reading": {
+        "displayName": "Reading",
+        "purpose": "Document bodies and editor; indented paragraphs."
+      },
+      "wordmark": {
+        "displayName": "Wordmark",
+        "purpose": "Blklight logotype only."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Metadata, tabs, chips, buttons."
+      },
+      "pixel": {
+        "displayName": "Pixel",
+        "purpose": "Stamp-like display numerals and accents, sparingly."
+      }
+    },
+    "shadows": [
+      {
+        "name": "shadow-pop",
+        "value": "-1px 1px currentColor, -2px 2px currentColor, -3px 3px currentColor, -4px 4px currentColor, -5px 5px currentColor, -6px 6px currentColor, -7px 7px currentColor, -8px 8px currentColor",
+        "purpose": "Hover lift on interactive cards, with translate(8px,-8px); variants bl/br/tl/tr."
+      },
+      {
+        "name": "overlay",
+        "value": "0 0 0 1px color-mix(in oklch, var(--foreground) 10%, transparent), 0 10px 15px -3px rgb(0 0 0 / 0.1)",
+        "purpose": "Popovers, menus, dialogs floating above the page."
+      }
+    ],
+    "motion": [
+      {
+        "name": "shadow-pop",
+        "value": "0.3s cubic-bezier(0.47, 0, 0.745, 0.715)",
+        "purpose": "Card hover lift."
+      },
+      {
+        "name": "accordion",
+        "value": "0.2s ease-out",
+        "purpose": "Accordion open/close."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ink fill, paper text; default action.",
+      "html": "<button class=\"ds-btn-primary\">Publicar</button>",
+      "css": ".ds-btn-primary{background:var(--primary);color:var(--primary-foreground);height:36px;padding:0 10px;border:1px solid transparent;border-radius:0.125rem;font-family:var(--font-mono),'JetBrains Mono',monospace;font-size:14px;font-weight:500;cursor:pointer;transition:background .15s,transform .1s}.ds-btn-primary:hover{background:color-mix(in oklch,var(--primary) 80%,transparent)}.ds-btn-primary:focus-visible{outline:none;border-color:var(--ring);box-shadow:0 0 0 3px color-mix(in oklch,var(--ring) 50%,transparent)}.ds-btn-primary:active{transform:translateY(1px)}"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Paper with rule border; secondary action.",
+      "html": "<button class=\"ds-btn-outline\">Cancelar</button>",
+      "css": ".ds-btn-outline{background:var(--background);color:var(--foreground);height:36px;padding:0 10px;border:1px solid var(--border);border-radius:0.125rem;font-family:var(--font-mono),'JetBrains Mono',monospace;font-size:14px;font-weight:500;cursor:pointer;transition:background .15s}.ds-btn-outline:hover{background:var(--muted)}.ds-btn-outline:focus-visible{outline:none;border-color:var(--ring);box-shadow:0 0 0 3px color-mix(in oklch,var(--ring) 50%,transparent)}"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Rule border, transparent fill, near-square.",
+      "html": "<input class=\"ds-input\" placeholder=\"Buscar textos\" />",
+      "css": ".ds-input{height:36px;width:240px;padding:4px 10px;background:transparent;color:var(--foreground);border:1px solid var(--input);border-radius:0.125rem;font-family:var(--font-mono),'JetBrains Mono',monospace;font-size:14px;transition:border-color .15s,box-shadow .15s}.ds-input::placeholder{color:var(--muted-foreground)}.ds-input:focus-visible{outline:none;border-color:var(--ring);box-shadow:0 0 0 3px color-mix(in oklch,var(--ring) 50%,transparent)}"
+    },
+    {
+      "name": "Navbar",
+      "kind": "nav",
+      "refersTo": "navbar",
+      "description": "48px sticky bar, ink bottom rule, Inter wordmark, mono links.",
+      "html": "<nav class=\"ds-nav\"><span class=\"ds-nav-mark\">Blklight</span><a class=\"ds-nav-link ds-nav-active\" href=\"#\">Feed</a><a class=\"ds-nav-link\" href=\"#\">Escrever</a><a class=\"ds-nav-link\" href=\"#\">Dashboard</a></nav>",
+      "css": ".ds-nav{display:flex;align-items:center;gap:20px;height:48px;padding:0 12px;background:var(--background);color:var(--foreground);border-bottom:1px solid var(--foreground);font-family:var(--font-mono),'JetBrains Mono',monospace;font-size:14px}.ds-nav-mark{font-family:'Inter',sans-serif;font-weight:700;letter-spacing:-0.025em;margin-right:12px}.ds-nav-link{color:var(--muted-foreground);text-decoration:none;padding:4px 0;border-bottom:2px solid transparent}.ds-nav-link:hover{color:var(--foreground)}.ds-nav-active{color:var(--foreground);border-bottom-color:var(--foreground)}.ds-nav-link:focus-visible{outline:2px solid var(--foreground);outline-offset:2px}"
+    },
+    {
+      "name": "Type Tab",
+      "kind": "chip",
+      "refersTo": "type-tab-article",
+      "description": "Square tab in the content type's ink with ink text.",
+      "html": "<span class=\"ds-tab ds-tab-article\">Artigo</span> <span class=\"ds-tab ds-tab-tutorial\">Tutorial</span> <span class=\"ds-tab ds-tab-project\">Projeto</span>",
+      "css": ".ds-tab{display:inline-block;padding:4px 8px;color:var(--color-dark);font-family:var(--font-mono),'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase}.ds-tab-article{background:var(--color-cyber-yellow-400)}.ds-tab-tutorial{background:var(--color-orange-400)}.ds-tab-project{background:var(--color-magenta-400)}"
+    },
+    {
+      "name": "Chamfer Card",
+      "kind": "card",
+      "refersTo": "",
+      "description": "One card model: chamfered corner, surface wash, type tab, stepped shadow pop on hover.",
+      "html": "<a class=\"ds-card\" href=\"#\"><span class=\"ds-tab ds-tab-tutorial\">Tutorial</span><h3 class=\"ds-card-title\">Grid modular com CSS</h3><p class=\"ds-card-meta\">feed_ana · 12 nov</p></a>",
+      "css": ".ds-card{display:flex;flex-direction:column;gap:12px;width:280px;padding:16px;background:var(--color-blklight-50);color:var(--color-dark);text-decoration:none;border:1px solid var(--foreground);clip-path:polygon(16px 0,100% 0,100% 100%,0 100%,0 16px);font-family:var(--font-mono),'JetBrains Mono',monospace;transition:transform .3s}.ds-card .ds-tab{align-self:flex-start;padding:4px 8px;font-size:12px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;background:var(--color-orange-400)}.ds-card-title{margin:0;font-size:20px;font-weight:700;letter-spacing:-0.025em}.ds-card-meta{margin:0;font-size:12px;color:var(--color-grey-darker)}.ds-card:hover{transform:translate(8px,-8px);box-shadow:-1px 1px var(--foreground), -2px 2px var(--foreground), -3px 3px var(--foreground), -4px 4px var(--foreground), -5px 5px var(--foreground), -6px 6px var(--foreground), -7px 7px var(--foreground), -8px 8px var(--foreground)}.ds-card:focus-visible{outline:2px solid var(--foreground);outline-offset:2px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Open Press",
+    "overview": "Blklight is a print shop with the doors open. Everything borrows from the physical world of print: paper with grain, ink rules, letterheads, signatures, stamps, cut corners, a modular grid you could lay out on a light table. The platform builds the press and sets the paper; the user is the one who designs what gets printed. That is why the chrome stays blunt and monochrome while documents, covers and cards carry the color, the typefaces and the variety.\n\nThe system sits between web standardization and web brutalism. It is loud where identity lives (type colors, varied card models, the pixel and mono type) and conventional where usability lives (navigation, forms, focus, labels). Layouts run full width on a 1px ink grid rather than in a centered column. Three themes share one structure: light (white paper, ink), dark (ink paper, white), and book (sepia paper).",
+    "keyCharacteristics": [
+      "Monospace by default; serif only for long reading; sans only for the wordmark.",
+      "Ink-on-paper monochrome chrome; saturated color reserved for content type and user-chosen surfaces.",
+      "Near-square corners everywhere; chamfered (cut) corners as the signature silhouette.",
+      "Analog texture (noise grain, paper tones) layered over a digital grid.",
+      "Variety with stability: every card model differs, but the same item always renders the same way."
+    ],
+    "rules": [
+      {
+        "name": "The Type Ink Rule",
+        "body": "Article is yellow, tutorial is orange, project is magenta, everywhere. A content type never borrows another type's ink, and the type ink lives on the tab or label, not necessarily on the whole card.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink-On-Ink Rule",
+        "body": "Saturated solids (yellow, orange, magenta, sky, ultravioleta) take ink text, never white. Yellow as text on light paper uses the 700 step.",
+        "section": "colors"
+      },
+      {
+        "name": "The Chrome Stays Monochrome Rule",
+        "body": "Navigation, forms, menus and dialogs use only the neutral semantic tokens. Color enters through content.",
+        "section": "colors"
+      },
+      {
+        "name": "The Mono Default Rule",
+        "body": "If no role is specified, text is monospace. Serif is for reading, sans is for the wordmark.",
+        "section": "typography"
+      },
+      {
+        "name": "The Uppercase Is Small Rule",
+        "body": "Uppercase with wide tracking is for short labels and display titles, never for sentences or body copy.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-At-Rest Rule",
+        "body": "Nothing on the page casts a shadow at rest. Hard shadows answer hover; soft shadows belong only to layers floating above the page.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Varied Silhouette Rule",
+        "body": "Card models each wear their own shape (chamfered, rounded, square). Never give every card the same corner treatment; variety among models is the point, stability for a given item is required.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "**Do** default to monospace and switch to EB Garamond only for long reading.",
+      "**Do** mark content type with its ink: article yellow, tutorial orange, project magenta.",
+      "**Do** put ink text on saturated solids and use the 700 yellow step for yellow text on light paper.",
+      "**Do** run pages full width on 1px ink rules.",
+      "**Do** vary card models and shapes, deterministically by item id.",
+      "**Do** keep every surface correct in light, dark and book themes.",
+      "**Do** keep focus visible on every interactive element (outline or ring)."
+    ],
+    "donts": [
+      "**Don't** give every card the same corner or chamfer; the user rejected uniform chamfers as \"too standardized\".",
+      "**Don't** cast shadows on resting surfaces or use soft shadows on in-page cards.",
+      "**Don't** put white text on yellow, orange, magenta or sky solids.",
+      "**Don't** color the chrome (navbar, forms, menus) with brand or type inks.",
+      "**Don't** center pages in a narrow max-width column outside of reading text.",
+      "**Don't** go below 12px for text that people must read; 8–10px uppercase labels are a known debt, not a pattern to repeat."
+    ]
+  }
+}
