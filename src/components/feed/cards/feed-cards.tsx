@@ -10,7 +10,14 @@ import { derivePaperDesign } from "@/features/documents/document-read";
 import { cn } from "@/lib/utils";
 import type { DocumentCard } from "@/types/api.types";
 import { surfaceFor } from "./card-theme";
-import { CardMeta, CardTags, CardTitle, formatDate, TypeTab } from "./parts";
+import {
+  AuthorLink,
+  CardMeta,
+  CardTags,
+  CardTitle,
+  formatDate,
+  TypeTab,
+} from "./parts";
 
 export type CardProps = BentoCardProps<DocumentCard>;
 
@@ -319,7 +326,7 @@ export function StampCard({ data, size }: CardProps) {
             />
             <span
               aria-hidden
-              className="absolute bottom-1 right-1.5 font-mono text-[0.7rem] font-bold text-light mix-blend-difference"
+              className="absolute bottom-0 right-0 bg-dark px-1.5 py-0.5 font-mono text-xs font-bold text-light"
             >
               {formatDate(data.publishedAt)}
             </span>
@@ -416,11 +423,13 @@ export function CatalogCard({ data }: CardProps) {
           <dd className="min-w-0">
             <CardTitle
               doc={data}
-              className="font-serif text-sm leading-[inherit] line-clamp-2"
+              className="font-serif text-lg @xs:text-xl leading-[inherit] line-clamp-2"
             />
           </dd>
           <dt className="text-dark/75 uppercase">Autor</dt>
-          <dd className="truncate">{author}</dd>
+          <dd className="truncate">
+            <AuthorLink doc={data}>{author}</AuthorLink>
+          </dd>
           <dt className="text-dark/75 uppercase">Data</dt>
           <dd>{formatDate(data.publishedAt)}</dd>
           <dt className="text-dark/75 uppercase">Assunto</dt>

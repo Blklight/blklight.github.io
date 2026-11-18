@@ -89,6 +89,29 @@ export function CardTitle({
   );
 }
 
+/** Link to the author's profile, above the card's stretched title link. */
+export function AuthorLink({
+  doc,
+  className,
+  children,
+}: {
+  doc: DocumentCard;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <Link
+      href={`/${doc.author.username}`}
+      className={cn(
+        "relative z-20 rounded-xs hover:underline underline-offset-4 outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current",
+        className,
+      )}
+    >
+      {children}
+    </Link>
+  );
+}
+
 export function CardMeta({
   doc,
   className,
@@ -101,18 +124,15 @@ export function CardMeta({
   const name = doc.author.displayName || doc.author.username;
   return (
     <div className={cn("flex items-center gap-2 text-xs", className)}>
-      <Link
-        href={`/${doc.author.username}`}
-        className="relative z-20 flex items-center gap-2 min-w-0 rounded-xs hover:underline underline-offset-4 outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
-      >
+      <AuthorLink doc={doc} className="flex items-center gap-2 min-w-0">
         <Avatar aria-hidden className="size-6 rounded-xs after:rounded-xs">
           <AvatarImage src={doc.author.avatarUrl ?? undefined} alt="" />
-          <AvatarFallback className="rounded-xs bg-foreground text-background font-sans text-[0.7rem] font-bold">
+          <AvatarFallback className="rounded-xs bg-foreground text-background font-sans text-xs font-bold">
             {name.charAt(0).toUpperCase()}
           </AvatarFallback>
         </Avatar>
         <span className="truncate font-medium">{name}</span>
-      </Link>
+      </AuthorLink>
       <span aria-hidden className={muted}>
         ·
       </span>
