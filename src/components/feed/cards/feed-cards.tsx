@@ -96,7 +96,10 @@ export function TextCard({ data }: CardProps) {
       shape={{ kind: "flat" }}
       className={cn(surface.wash, "book:mix-blend-multiply")}
     >
-      <DitherSpotlight radius={130} className={surface.text} />
+      <DitherSpotlight
+        radius={130}
+        className={cn(surface.dot, "opacity-100 dark:opacity-30")}
+      />
       <TypeTab type={data.typeName} tone="auto" />
       <div className="relative h-full flex flex-col p-5 pt-12 pointer-events-none [&_a]:pointer-events-auto">
         <CardTitle

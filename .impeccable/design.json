@@ -294,8 +294,8 @@
     "shadows": [
       {
         "name": "shadow-pop",
-        "value": "drop-shadow(-2px 2px 0 var(--foreground)) ×3 + translate(6px,-6px)",
-        "purpose": "Hover lift on feed cards; on an inner layer of the bento cell so it follows chamfer and pill silhouettes."
+        "value": "-1px 1px … -8px 8px currentColor (8 stacked) + translate(8px,-8px)",
+        "purpose": "Hover lift for rectangular interactive elements; not on feed cards."
       },
       {
         "name": "overlay",

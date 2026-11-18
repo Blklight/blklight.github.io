@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
 
 // 8×8 Bayer matrix: ordered-dither thresholds 0..63.
 const BAYER8 = [
@@ -162,7 +163,10 @@ export function DitherSpotlight({
   return (
     <canvas
       ref={ref}
-      className={`absolute inset-0 size-full pointer-events-none opacity-55 [image-rendering:pixelated] ${className ?? ""}`}
+      className={cn(
+        "absolute inset-0 size-full pointer-events-none opacity-55 [image-rendering:pixelated]",
+        className,
+      )}
     />
   );
 }

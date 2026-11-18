@@ -199,10 +199,10 @@ Full-width pages on a modular grid, not a centered max-width column. The feed is
 
 ## Elevation & Depth
 
-Flat by default. Structure comes from ink borders, 1px rules and paper tone changes, not from shadows. Two depth moves exist. On hover, interactive cards may lift with the stepped "shadow pop": eight stacked 1px hard shadows in the current color plus an 8px translate, like a block lifted off the page. Floating layers (popovers, dropdowns, dialogs, command menu) may use a soft blurred shadow plus a faint ink ring so they read as above the page.
+Flat by default. Structure comes from ink borders, 1px rules and paper tone changes, not from shadows. Two depth moves exist. On hover, rectangular interactive elements may lift with the stepped "shadow pop": eight stacked 1px hard shadows in the current color plus an 8px translate, like a block lifted off the page. Feed cards don't use it: on chamfered and pill silhouettes the extrusion pixelates and, on translucent dark washes, shadows every glyph. Floating layers (popovers, dropdowns, dialogs, command menu) may use a soft blurred shadow plus a faint ink ring so they read as above the page.
 
 ### Shadow Vocabulary
-- **Shadow pop** (stepped hard shadow toward bottom-left in `--foreground`, 0.3s): hover lift on interactive cards. Feed cards get it on the bento cell as three chained `drop-shadow(-2px 2px 0)` plus `translate: 6px -6px` on an inner layer (the cell itself stays put and owns `:hover`), so the extrusion follows chamfered and pill silhouettes; reduced motion keeps the shadow and drops the lift. The `.shadow-pop-*` utilities (`bl`, `br`, `tl`, `tr`) cover rectangular elements.
+- **Shadow pop** (`.shadow-pop-bl/br/tl/tr`: eight stacked 1px hard shadows in `currentColor` plus an 8px translate, 0.3s): hover lift for rectangular interactive elements only.
 - **Overlay ring** (`ring-1 ring-foreground/10` with `shadow-md`/`shadow-lg`): popovers, menus, dialogs.
 
 ### Named Rules
@@ -232,7 +232,7 @@ Near-square everywhere: the base radius is 2px (`--radius: 0.125rem`), and most 
 ### Cards / Containers
 - **Corner Style:** per model: chamfer, 2px, or square.
 - **Background:** one of nine surfaces (ultravioleta, sky, yellow, orange, magenta, …) as solid or pale wash, independent of the content type.
-- **Shadow Strategy:** flat at rest; every feed card shares the shadow pop on hover, on top of its own flourish (zoom, duotone fade, dither, tilt).
+- **Shadow Strategy:** flat at rest and on hover; each model has its own hover flourish (zoom, duotone fade, dither, tilt, title underline). The Texto dither is drawn in the surface's solid step (full in light, 30% in dark), so ink text over a dot keeps the solid's contrast.
 - **Border:** 1px ink or none, per model.
 - **Focus:** a 3px foreground outline 4px outside the card's cell, so chamfered and pill silhouettes never clip it.
 - **Themes:** in dark, the ink Manchete gets a 2px foreground border; in book, sepia surfaces step to sepia-medium and pale washes multiply into the page.

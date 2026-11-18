@@ -1125,31 +1125,6 @@
   outline-offset: 4px;
 }
 
-/* Shared card hover: the DESIGN.md shadow pop, lifting the card off the page.
-   Chained drop-shadows follow the card's real silhouette (chamfer, pill),
-   which a box-shadow on a clipped card can't. Whole-pixel steps keep both
-   edges of the extrusion the same width. The cell (static) takes :hover and
-   the inner layer moves, so leaving the card never flickers. No filter at
-   rest: it would isolate every cell and cost a layer each. */
-@media (hover: hover) {
-  [data-bento-lift] {
-    transition:
-      translate 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-      filter 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  [data-bento-cell]:hover > [data-bento-lift] {
-    translate: 6px -6px;
-    filter: drop-shadow(-2px 2px 0 var(--foreground))
-      drop-shadow(-2px 2px 0 var(--foreground))
-      drop-shadow(-2px 2px 0 var(--foreground));
-  }
-}
-@media (hover: hover) and (prefers-reduced-motion: reduce) {
-  [data-bento-cell]:hover > [data-bento-lift] {
-    translate: none;
-  }
-}
-
 /* --- Chamfer Kit --- */
 @utility chamfer {
   --c: 16px;

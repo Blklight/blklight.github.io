@@ -12,14 +12,6 @@ interface Props {
   children: ReactNode;
 }
 
-// The cell stays put and owns :hover; this inner layer is what lifts, so the
-// card never slides out from under the pointer.
-const lift = (children: ReactNode) => (
-  <div data-bento-lift className="h-full">
-    {children}
-  </div>
-);
-
 export function BentoCell({
   index,
   className,
@@ -30,7 +22,7 @@ export function BentoCell({
   if (!animate)
     return (
       <div data-bento-cell className={cn("min-w-0", className)} style={style}>
-        {lift(children)}
+        {children}
       </div>
     );
   return (
@@ -47,7 +39,7 @@ export function BentoCell({
         delay: Math.min(index, 8) * 0.06,
       }}
     >
-      {lift(children)}
+      {children}
     </motion.div>
   );
 }
