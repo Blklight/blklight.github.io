@@ -208,7 +208,7 @@ export default function FeedPage() {
                   aria-pressed={active}
                   onClick={() => setType(active ? null : id)}
                   className={cn(
-                    "h-9 pl-2 pr-3 inline-flex items-center gap-2 rounded-xs border font-mono text-xs uppercase tracking-wider transition-colors outline-none focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2 cursor-pointer",
+                    "h-9 pl-2 pr-3 inline-flex items-center gap-2 rounded-xs border font-mono text-xs uppercase tracking-wider transition-colors outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2 cursor-pointer",
                     active
                       ? cn(theme.solid, "border-foreground")
                       : "border-border hover:border-foreground",

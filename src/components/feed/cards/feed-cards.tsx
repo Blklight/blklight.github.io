@@ -313,7 +313,10 @@ export function StampCard({ data, size }: CardProps) {
               style={{ filter: `url(#duo-${surface.id})` }}
               className="absolute inset-0 size-full object-cover"
             />
-            <span className="absolute bottom-1 right-1.5 font-mono text-[0.7rem] font-bold text-light mix-blend-difference">
+            <span
+              aria-hidden
+              className="absolute bottom-1 right-1.5 font-mono text-[0.7rem] font-bold text-light mix-blend-difference"
+            >
               {formatDate(data.publishedAt)}
             </span>
           </div>

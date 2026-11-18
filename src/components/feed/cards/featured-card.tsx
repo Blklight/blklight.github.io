@@ -50,9 +50,11 @@ function CoverBanner({ doc }: { doc: DocumentCard }) {
       <div className="absolute inset-0 bg-gradient-to-r from-dark/90 via-dark/45 to-transparent" />
       <TypeTab type={doc.typeName} corners={["tl"]} tone="paper" />
 
-      <div className="relative h-full min-h-[inherit] flex flex-col justify-end gap-4 p-6 md:p-10 max-w-3xl">
+      {/* Full width so the stretched title link covers the whole banner. */}
+      <div className="relative h-full min-h-[inherit] flex flex-col justify-end gap-4 p-6 md:p-10 *:max-w-3xl">
         <CardTitle
           doc={doc}
+          as="h2"
           className="font-sans text-4xl md:text-6xl leading-[1.02] tracking-tighter"
         >
           <span className="box-decoration-clone bg-dark px-2">{doc.title}</span>
@@ -113,12 +115,14 @@ function PaperSpread({ doc }: { doc: DocumentCard }) {
         <TypeTab type={doc.typeName} />
       </div>
 
-      <div className="relative flex flex-col p-6 md:p-8 bg-card">
+      {/* Not positioned: the stretched title link anchors to the whole card. */}
+      <div className="flex flex-col p-6 md:p-8 bg-card">
         <p className="text-sm font-medium mb-3 text-muted-foreground">
           Em destaque
         </p>
         <CardTitle
           doc={doc}
+          as="h2"
           className="font-sans text-3xl lg:text-4xl leading-[1.08]"
         />
         <CardTags doc={doc} className="mt-4 text-muted-foreground" />

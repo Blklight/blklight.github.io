@@ -69,20 +69,22 @@ export function CardTitle({
   doc,
   className,
   children,
+  as: Heading = "h3",
 }: {
   doc: DocumentCard;
   className?: string;
   children?: ReactNode;
+  as?: "h2" | "h3";
 }) {
   return (
-    <h3 className={cn("font-bold tracking-tight text-balance", className)}>
+    <Heading className={cn("font-bold tracking-tight text-balance", className)}>
       <Link
         href={docHref(doc)}
         className="outline-none after:absolute after:inset-0 after:z-10 focus-visible:after:ring-2 focus-visible:after:ring-inset focus-visible:after:ring-current hover:underline underline-offset-4 decoration-2"
       >
         {children ?? doc.title}
       </Link>
-    </h3>
+    </Heading>
   );
 }
 
@@ -100,9 +102,9 @@ export function CardMeta({
     <div className={cn("flex items-center gap-2 text-xs", className)}>
       <Link
         href={`/${doc.author.username}`}
-        className="relative z-20 flex items-center gap-2 min-w-0 rounded-xs hover:underline underline-offset-4 outline-none focus-visible:outline-2 focus-visible:outline-current"
+        className="relative z-20 flex items-center gap-2 min-w-0 rounded-xs hover:underline underline-offset-4 outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
       >
-        <Avatar className="size-6 rounded-xs after:rounded-xs">
+        <Avatar aria-hidden className="size-6 rounded-xs after:rounded-xs">
           <AvatarImage src={doc.author.avatarUrl ?? undefined} alt="" />
           <AvatarFallback className="rounded-xs bg-foreground text-background font-sans text-[0.7rem] font-bold">
             {name.charAt(0).toUpperCase()}
