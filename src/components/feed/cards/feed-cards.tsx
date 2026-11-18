@@ -84,7 +84,11 @@ const tabCorners = (shape: Shape): Corner[] =>
 export function TextCard({ data }: CardProps) {
   const surface = surfaceOf(data.id);
   return (
-    <Shell card="text" shape={{ kind: "flat" }} className={surface.wash}>
+    <Shell
+      card="text"
+      shape={{ kind: "flat" }}
+      className={cn(surface.wash, "book:mix-blend-multiply")}
+    >
       <DitherSpotlight radius={130} className={surface.text} />
       <TypeTab type={data.typeName} tone="auto" />
       <div className="relative h-full flex flex-col p-5 pt-12 pointer-events-none [&_a]:pointer-events-auto">
@@ -353,7 +357,7 @@ export function HeadlineCard({ data, size }: CardProps) {
     <Shell
       card="headline"
       shape={{ kind: "pill" }}
-      className="bg-dark text-light"
+      className="bg-dark text-light dark:border-2 dark:border-foreground"
     >
       <TypeTab type={data.typeName} tone="paper" />
       <div className="h-full flex flex-col p-6 pt-12">
@@ -385,7 +389,11 @@ export function CatalogCard({ data }: CardProps) {
   const number = String(hash(data.id) % 10000).padStart(4, "0");
   const author = data.author.displayName || data.author.username;
   return (
-    <Shell card="catalog" shape={shape} className="bg-sepia text-dark">
+    <Shell
+      card="catalog"
+      shape={shape}
+      className="bg-sepia text-dark book:bg-sepia-medium"
+    >
       <div
         aria-hidden
         className="absolute inset-y-0 left-10 w-px bg-crimson-500/50"

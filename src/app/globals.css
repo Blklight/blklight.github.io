@@ -1116,6 +1116,15 @@
   }
 }
 
+/* Card focus: drawn on the cell, outside the card's clip-path or radius,
+   so chamfered and pill cards keep a whole, visible ring. */
+:where([data-bento-cell], [data-card-frame]):has(
+    [data-card-link]:focus-visible
+  ) {
+  outline: 3px solid var(--foreground);
+  outline-offset: 4px;
+}
+
 /* --- Chamfer Kit --- */
 @utility chamfer {
   --c: 16px;

@@ -234,6 +234,8 @@ Near-square everywhere: the base radius is 2px (`--radius: 0.125rem`), and most 
 - **Background:** one of nine surfaces (ultravioleta, sky, yellow, orange, magenta, …) as solid or pale wash, independent of the content type.
 - **Shadow Strategy:** flat at rest; shadow pop on hover where interactive.
 - **Border:** 1px ink or none, per model.
+- **Focus:** a 3px foreground outline 4px outside the card's cell, so chamfered and pill silhouettes never clip it.
+- **Themes:** in dark, the ink Manchete gets a 2px foreground border; in book, sepia surfaces step to sepia-medium and pale washes multiply into the page.
 - **Models:** Cover, Media, Selo, Paper, Texto, Manchete, Ficha, rotated per page and stable per item; images may take an SVG duotone in the surface ink.
 
 ### Inputs / Fields

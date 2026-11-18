@@ -182,7 +182,7 @@ export default function FeedPage() {
         </header>
 
         {featured && !isPending && !isError && (
-          <section aria-label="Em destaque" className="mb-10">
+          <section aria-label="Em destaque" data-card-frame className="mb-10">
             <FeaturedCard doc={featured} />
           </section>
         )}

@@ -80,7 +80,8 @@ export function CardTitle({
     <Heading className={cn("font-bold tracking-tight text-balance", className)}>
       <Link
         href={docHref(doc)}
-        className="outline-none after:absolute after:inset-0 after:z-10 focus-visible:after:ring-2 focus-visible:after:ring-inset focus-visible:after:ring-current hover:underline underline-offset-4 decoration-2"
+        data-card-link
+        className="outline-none after:absolute after:inset-0 after:z-10 hover:underline underline-offset-4 decoration-2"
       >
         {children ?? doc.title}
       </Link>

@@ -21,12 +21,13 @@ export function BentoCell({
 }: Props) {
   if (!animate)
     return (
-      <div className={cn("min-w-0", className)} style={style}>
+      <div data-bento-cell className={cn("min-w-0", className)} style={style}>
         {children}
       </div>
     );
   return (
     <motion.div
+      data-bento-cell
       className={cn("min-w-0", className)}
       style={style}
       initial={{ opacity: 0, y: 16 }}

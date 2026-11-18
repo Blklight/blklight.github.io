@@ -163,7 +163,7 @@ export const SURFACES: Surface[] = [
   },
   {
     id: "sepia",
-    solid: "bg-sepia text-dark",
+    solid: "bg-sepia text-dark book:bg-sepia-medium",
     wash: "bg-sepia/60 dark:bg-sepia/10",
     text: "text-dark/70 dark:text-sepia",
     onDark: "text-sepia",
