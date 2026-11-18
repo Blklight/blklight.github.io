@@ -202,7 +202,7 @@ Full-width pages on a modular grid, not a centered max-width column. The feed is
 Flat by default. Structure comes from ink borders, 1px rules and paper tone changes, not from shadows. Two depth moves exist. On hover, interactive cards may lift with the stepped "shadow pop": eight stacked 1px hard shadows in the current color plus an 8px translate, like a block lifted off the page. Floating layers (popovers, dropdowns, dialogs, command menu) may use a soft blurred shadow plus a faint ink ring so they read as above the page.
 
 ### Shadow Vocabulary
-- **Shadow pop** (stepped hard shadow toward bottom-left in `--foreground`, 0.3s): hover lift on interactive cards. Feed cards get it on the bento cell as four chained `drop-shadow(-1.5px 1.5px 0)` plus `translate: 6px -6px`, so the extrusion follows chamfered and pill silhouettes; reduced motion keeps the shadow and drops the lift. The `.shadow-pop-*` utilities (`bl`, `br`, `tl`, `tr`) cover rectangular elements.
+- **Shadow pop** (stepped hard shadow toward bottom-left in `--foreground`, 0.3s): hover lift on interactive cards. Feed cards get it on the bento cell as three chained `drop-shadow(-2px 2px 0)` plus `translate: 6px -6px` on an inner layer (the cell itself stays put and owns `:hover`), so the extrusion follows chamfered and pill silhouettes; reduced motion keeps the shadow and drops the lift. The `.shadow-pop-*` utilities (`bl`, `br`, `tl`, `tr`) cover rectangular elements.
 - **Overlay ring** (`ring-1 ring-foreground/10` with `shadow-md`/`shadow-lg`): popovers, menus, dialogs.
 
 ### Named Rules
