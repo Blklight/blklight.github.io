@@ -127,7 +127,7 @@ export function CardMeta({
       <AuthorLink doc={doc} className="flex items-center gap-2 min-w-0">
         <Avatar aria-hidden className="size-6 rounded-xs after:rounded-xs">
           <AvatarImage src={doc.author.avatarUrl ?? undefined} alt="" />
-          <AvatarFallback className="rounded-xs bg-foreground text-background font-sans text-xs font-bold">
+          <AvatarFallback className="rounded-xs bg-foreground text-background ring-1 ring-inset ring-current font-sans text-xs font-bold">
             {name.charAt(0).toUpperCase()}
           </AvatarFallback>
         </Avatar>

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-18T17:30:58.973682+00:00",
+  "generatedAt": "2026-11-18T21:55:04.912897+00:00",
   "title": "Design System: Blklight",
   "extensions": {
     "colorMeta": {
@@ -294,8 +294,8 @@
     "shadows": [
       {
         "name": "shadow-pop",
-        "value": "-1px 1px currentColor, -2px 2px currentColor, -3px 3px currentColor, -4px 4px currentColor, -5px 5px currentColor, -6px 6px currentColor, -7px 7px currentColor, -8px 8px currentColor",
-        "purpose": "Hover lift on interactive cards, with translate(8px,-8px); variants bl/br/tl/tr."
+        "value": "drop-shadow(-2px 2px 0 var(--foreground)) ×3 + translate(6px,-6px)",
+        "purpose": "Hover lift on feed cards; on an inner layer of the bento cell so it follows chamfer and pill silhouettes."
       },
       {
         "name": "overlay",
