@@ -48,7 +48,7 @@ function CoverBanner({ doc }: { doc: DocumentCard }) {
         className="absolute inset-0 size-full object-cover transition-[opacity,scale] duration-1000 ease-out group-hover/card:opacity-0 group-hover/card:scale-105 motion-reduce:transition-none"
       />
       <div className="absolute inset-0 bg-gradient-to-r from-dark/90 via-dark/45 to-transparent" />
-      <TypeTab type={doc.typeName} corners={["tl"]} />
+      <TypeTab type={doc.typeName} corners={["tl"]} tone="paper" />
 
       <div className="relative h-full min-h-[inherit] flex flex-col justify-end gap-4 p-6 md:p-10 max-w-3xl">
         <CardTitle
@@ -78,7 +78,6 @@ function CoverBanner({ doc }: { doc: DocumentCard }) {
 
 /** No cover: the author's page on the left, the reading cue on the right. */
 function PaperSpread({ doc }: { doc: DocumentCard }) {
-  const theme = typeTheme(doc.typeName);
   const design = derivePaperDesign(
     doc.style ?? { typography: "sans", paperStyle: null, paperTexture: null },
   );
@@ -115,7 +114,7 @@ function PaperSpread({ doc }: { doc: DocumentCard }) {
       </div>
 
       <div className="relative flex flex-col p-6 md:p-8 bg-card">
-        <p className={cn("text-sm font-medium mb-3", theme.text)}>
+        <p className="text-sm font-medium mb-3 text-muted-foreground">
           Em destaque
         </p>
         <CardTitle

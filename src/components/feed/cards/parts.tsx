@@ -1,6 +1,6 @@
 import { Heart } from "lucide-react";
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { createContext, type ReactNode, useContext } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { Corner } from "@/components/ui/chamfer-utils";
 import { cn } from "@/lib/utils";
@@ -21,24 +21,44 @@ export const formatDate = (value: string) => {
   return Number.isNaN(date.getTime()) ? value : DATE.format(date);
 };
 
+/**
+ * True while the feed is filtered to one type: only then does the type ink
+ * paint the tabs, because every card on screen shares it and color can't mislead.
+ */
+export const TypeInkContext = createContext(false);
+
+const NEUTRAL_TAB = {
+  ink: "bg-dark text-light",
+  paper: "bg-light text-dark",
+  auto: "bg-foreground text-background",
+} as const;
+
 /** Type label flush with a top corner; moves right when the top-left corner is cut. */
 export function TypeTab({
   type,
   corners = [],
+  tone = "ink",
 }: {
   type: string;
   corners?: Corner[];
+  /** Neutral tab colors, picked to stand out from the card body. */
+  tone?: keyof typeof NEUTRAL_TAB;
 }) {
+  const lit = useContext(TypeInkContext);
   const theme = typeTheme(type);
+  const Icon = theme.icon;
   const right = corners.includes("tl");
   return (
     <span
       className={cn(
-        "absolute top-0 z-20 px-2.5 py-1 font-mono text-xs uppercase tracking-wider",
+        "absolute top-0 z-20 inline-flex items-center gap-1.5 px-2.5 py-1 font-mono text-xs uppercase tracking-wider",
         right ? "right-0 rounded-bl-xs" : "left-0 rounded-br-xs",
-        theme.solid,
+        lit
+          ? cn(theme.solid, "ring-1 ring-inset ring-dark")
+          : NEUTRAL_TAB[tone],
       )}
     >
+      <Icon aria-hidden className="size-3.5" />
       {theme.label}
     </span>
   );

@@ -16,6 +16,7 @@ import {
   StampCard,
   TextCard,
 } from "@/components/feed/cards/feed-cards";
+import { TypeInkContext } from "@/components/feed/cards/parts";
 import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import {
@@ -216,10 +217,12 @@ export default function FeedPage() {
                   <span
                     aria-hidden
                     className={cn(
-                      "size-3 rounded-[1px] border border-dark/40",
+                      "size-5 inline-grid place-items-center rounded-[1px] border border-dark/40",
                       theme.solid,
                     )}
-                  />
+                  >
+                    <theme.icon className="size-3" />
+                  </span>
                   {theme.label}
                 </button>
               );
@@ -286,7 +289,9 @@ export default function FeedPage() {
           </Empty>
         ) : (
           <>
-            <BentoGrid items={bentoItems} cards={CARDS} />
+            <TypeInkContext value={type !== null}>
+              <BentoGrid items={bentoItems} cards={CARDS} />
+            </TypeInkContext>
 
             <div className="mt-10 flex flex-col items-center gap-2">
               {hasNextPage ? (

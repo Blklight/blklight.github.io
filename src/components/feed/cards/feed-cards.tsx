@@ -86,21 +86,21 @@ export function TextCard({ data }: CardProps) {
   return (
     <Shell card="text" shape={{ kind: "flat" }} className={surface.wash}>
       <DitherSpotlight radius={130} className={surface.text} />
-      <TypeTab type={data.typeName} />
+      <TypeTab type={data.typeName} tone="auto" />
       <div className="relative h-full flex flex-col p-5 pt-12 pointer-events-none [&_a]:pointer-events-auto">
         <CardTitle
           doc={data}
           className="font-sans text-xl @xs:text-2xl leading-tight line-clamp-3"
         />
         {data.abstract && (
-          <p className="mt-2 text-sm text-muted-foreground line-clamp-3">
+          <p className="mt-2 text-sm text-foreground/75 line-clamp-3">
             {data.abstract}
           </p>
         )}
         <CardMeta
           doc={data}
           className="mt-auto pt-4"
-          muted="text-muted-foreground"
+          muted="text-foreground/75"
         />
       </div>
     </Shell>
@@ -188,7 +188,7 @@ export function CoverCard({ data, size }: CardProps) {
         className="absolute inset-0 size-full object-cover transition-[opacity,scale] duration-700 ease-out group-hover/card:opacity-0 group-hover/card:scale-105 motion-reduce:transition-none"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-dark/95 via-dark/40 to-transparent" />
-      <TypeTab type={data.typeName} />
+      <TypeTab type={data.typeName} tone="paper" />
       <div className="relative h-full flex flex-col justify-end p-5">
         <CardTitle
           doc={data}
@@ -263,7 +263,7 @@ export function MediaCard({ data, size }: CardProps) {
           {data.abstract && (
             <p
               className={cn(
-                "order-3 text-sm text-dark/80",
+                "order-3 text-sm text-dark",
                 side ? "line-clamp-2" : "line-clamp-3",
               )}
             >
@@ -273,7 +273,7 @@ export function MediaCard({ data, size }: CardProps) {
           <CardMeta
             doc={data}
             className={cn("order-4", side && "mt-auto")}
-            muted="text-dark/70"
+            muted="text-dark"
           />
         </div>
       </div>
@@ -324,11 +324,11 @@ export function StampCard({ data, size }: CardProps) {
             className="font-sans text-xl @xs:text-2xl leading-tight line-clamp-3"
           />
           {side && data.abstract && (
-            <p className="mt-2 text-sm text-dark/80 line-clamp-3">
+            <p className="mt-2 text-sm text-dark line-clamp-3">
               {data.abstract}
             </p>
           )}
-          <CardMeta doc={data} className="mt-auto pt-3" muted="text-dark/70" />
+          <CardMeta doc={data} className="mt-auto pt-3" muted="text-dark" />
         </div>
       </div>
     </Shell>
@@ -344,7 +344,7 @@ export function HeadlineCard({ data, size }: CardProps) {
       shape={{ kind: "pill" }}
       className="bg-dark text-light"
     >
-      <TypeTab type={data.typeName} />
+      <TypeTab type={data.typeName} tone="paper" />
       <div className="h-full flex flex-col p-6 pt-12">
         <CardTitle
           doc={data}
@@ -389,22 +389,22 @@ export function CatalogCard({ data }: CardProps) {
           backgroundPosition: "0 2.25rem",
         }}
       >
-        <p className="text-dark/60 uppercase tracking-wider">
+        <p className="text-dark/75 uppercase tracking-wider">
           Ficha nº {number}
         </p>
         <dl className="grid grid-cols-[4.5rem_1fr] gap-x-2">
-          <dt className="text-dark/55 uppercase">Título</dt>
+          <dt className="text-dark/75 uppercase">Título</dt>
           <dd className="min-w-0">
             <CardTitle
               doc={data}
               className="font-serif text-sm leading-[inherit] line-clamp-2"
             />
           </dd>
-          <dt className="text-dark/55 uppercase">Autor</dt>
+          <dt className="text-dark/75 uppercase">Autor</dt>
           <dd className="truncate">{author}</dd>
-          <dt className="text-dark/55 uppercase">Data</dt>
+          <dt className="text-dark/75 uppercase">Data</dt>
           <dd>{formatDate(data.publishedAt)}</dd>
-          <dt className="text-dark/55 uppercase">Assunto</dt>
+          <dt className="text-dark/75 uppercase">Assunto</dt>
           <dd className="truncate font-bold">{data.category?.name ?? "—"}</dd>
         </dl>
       </div>

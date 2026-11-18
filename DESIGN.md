@@ -162,7 +162,7 @@ Ink-and-paper neutrals carry the interface; a small set of saturated print inks 
 Each brand ink has a full 50–950 scale in `src/app/globals.css` (`--color-blklight-*`, `--color-bluesky-*`, `--color-cyber-yellow-*`, `--color-orange-*`, `--color-magenta-*`, `--color-crimson-*`). Semantic tokens (`--background`, `--foreground`, `--muted`, `--border`, …) are redefined per theme under `:root`, `.dark` and `.book`.
 
 ### Named Rules
-**The Type Ink Rule.** Article is yellow, tutorial is orange, project is magenta, everywhere. A content type never borrows another type's ink, and the type ink lives on the tab or label, not necessarily on the whole card.
+**The Type Ink Rule.** Article is yellow, tutorial is orange, project is magenta. In the feed the type ink is a filter state, not decoration: the filter buttons always show it as a legend, and card tabs wear it only while the feed is filtered to that type. Unfiltered, the tab is neutral ink or paper with the type's name and symbol, and card bodies may use any surface, yellow, orange and magenta included.
 
 **The Ink-On-Ink Rule.** Saturated solids (yellow, orange, magenta, sky, ultravioleta) take ink text, never white. Yellow as text on light paper uses the 700 step.
 
@@ -226,7 +226,7 @@ Near-square everywhere: the base radius is 2px (`--radius: 0.125rem`), and most 
 - **Focus:** visible ring in `--ring` at 50% (3px); pressed state nudges down 1px.
 
 ### Chips and Type Tabs
-- **Type tab:** a square tab in the content type's solid ink with ink text, uppercase label type. It is how a card announces its type.
+- **Type tab:** a square tab flush with a top corner: type symbol (article Newspaper, tutorial BookOpen, project Hammer) plus uppercase label. Unfiltered it is neutral, ink on light bodies and paper on dark bodies; when the feed is filtered to a type it takes that type's solid ink with an inset ink ring, so it never merges with a same-colored body.
 - **Badge:** small label (20px tall), neutral fills.
 
 ### Cards / Containers
@@ -251,14 +251,15 @@ The editor and published document render as a sheet of paper: author-chosen font
 
 ### Do:
 - **Do** default to monospace and switch to EB Garamond only for long reading.
-- **Do** mark content type with its ink: article yellow, tutorial orange, project magenta.
-- **Do** put ink text on saturated solids and use the 700 yellow step for yellow text on light paper.
+- **Do** identify content type by name and symbol first; light up the type ink (article yellow, tutorial orange, project magenta) only when the feed is filtered to that type.
+- **Do** put full-strength ink text on saturated solids (no alpha), and use the 700 yellow step for yellow text on light paper.
 - **Do** run pages full width on 1px ink rules.
 - **Do** vary card models and shapes, deterministically by item id.
 - **Do** keep every surface correct in light, dark and book themes.
 - **Do** keep focus visible on every interactive element (outline or ring).
 
 ### Don't:
+- **Don't** fade text with alpha on saturated surfaces; `text-dark/70` on mid-tone solids fails AA. Secondary text on pale washes uses `text-foreground/75` at minimum.
 - **Don't** give every card the same corner or chamfer; the user rejected uniform chamfers as "too standardized".
 - **Don't** cast shadows on resting surfaces or use soft shadows on in-page cards.
 - **Don't** put white text on yellow, orange, magenta or sky solids.

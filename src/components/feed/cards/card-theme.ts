@@ -1,7 +1,17 @@
+import {
+  BookOpen,
+  FileSignature,
+  Hammer,
+  type LucideIcon,
+  Newspaper,
+  StickyNote,
+} from "lucide-react";
 import type { DocumentType } from "@/types/api.types";
 
 interface TypeTheme {
   label: string;
+  /** Non-color cue: the type stays identifiable when its ink is off. */
+  icon: LucideIcon;
   /** Accent text on neutral surfaces (light and dark). */
   text: string;
   /** Solid accent surface with readable dark text. */
@@ -16,6 +26,7 @@ interface TypeTheme {
 
 export const TYPE_THEME: Record<DocumentType, TypeTheme> = {
   article: {
+    icon: Newspaper,
     label: "Artigo",
     text: "text-cyber-yellow-700 dark:text-cyber-yellow-400",
     solid: "bg-cyber-yellow-400 text-dark",
@@ -24,6 +35,7 @@ export const TYPE_THEME: Record<DocumentType, TypeTheme> = {
     rgb: [0.992, 0.973, 0],
   },
   tutorial: {
+    icon: BookOpen,
     label: "Tutorial",
     text: "text-orange-500 dark:text-orange-400",
     solid: "bg-orange-400 text-dark",
@@ -32,6 +44,7 @@ export const TYPE_THEME: Record<DocumentType, TypeTheme> = {
     rgb: [1, 0.427, 0],
   },
   project: {
+    icon: Hammer,
     label: "Projeto",
     text: "text-magenta-500 dark:text-magenta-400",
     solid: "bg-magenta-400 text-dark",
@@ -40,6 +53,7 @@ export const TYPE_THEME: Record<DocumentType, TypeTheme> = {
     rgb: [1, 0.161, 1],
   },
   contract: {
+    icon: FileSignature,
     label: "Contrato",
     text: "text-crimson-500 dark:text-crimson-400",
     solid: "bg-crimson-400 text-dark",
@@ -48,6 +62,7 @@ export const TYPE_THEME: Record<DocumentType, TypeTheme> = {
     rgb: [0.922, 0.118, 0.196],
   },
   note: {
+    icon: StickyNote,
     label: "Nota",
     text: "text-bluesky-500 dark:text-bluesky-400",
     solid: "bg-bluesky-400 text-dark",
