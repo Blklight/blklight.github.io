@@ -62,10 +62,7 @@ export function TypeTab({
         "absolute z-20 inline-flex items-center gap-1.5 px-2.5 py-1 font-mono text-xs uppercase tracking-wider",
         inset
           ? cn("top-6 rounded-xs", right ? "right-6" : "left-6")
-          : cn(
-              "top-0",
-              right ? "right-0 rounded-bl-xs" : "left-0 rounded-br-xs",
-            ),
+          : cn("top-0 rounded-xs", right ? "right-0" : "left-0"),
         lit
           ? cn(theme.solid, "ring-1 ring-inset ring-dark")
           : NEUTRAL_TAB[tone],

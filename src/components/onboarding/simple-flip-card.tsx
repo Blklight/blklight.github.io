@@ -17,13 +17,12 @@ interface Props {
 
 /**
  * App ficha, after the Tally cards: colored stock with grain, registration
- * marks around the label and the name, a pixel numeral, and an ink bar that
- * turns the card over to its list of features.
+ * marks around the label and the name, and an ink bar that turns the card
+ * over to what the app does.
  */
 export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
   const [flipped, setFlipped] = useState(false);
   const meta = appMeta(app);
-  const count = String(meta.features.length).padStart(2, "0");
 
   const flip = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -73,15 +72,10 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
               </p>
             </div>
 
-            <p className="my-auto flex flex-col items-center gap-1 leading-none">
-              <span className="font-pixel-circle text-8xl">{count}</span>
-              <span className="text-sm opacity-70">
-                {meta.features.length === 1 ? "recurso" : "recursos"}
-              </span>
-            </p>
+            <div className="flex-1" />
 
-            <InkBar onClick={flip} label={`Ver recursos de ${app.name}`}>
-              Ver recursos
+            <InkBar onClick={flip} label={`Sobre o ${app.name}`}>
+              Sobre o app
               <RotateCw aria-hidden className="size-3.5" />
             </InkBar>
           </Face>
@@ -102,26 +96,17 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
               </span>
             </div>
 
-            <div className="relative mt-4 p-1.5">
+            <div className="relative mt-4 flex-1 p-4">
               <CornerBrackets size="size-3" className="opacity-80" />
-              <ul>
-                {meta.features.map((feature) => (
-                  <li
-                    key={feature}
-                    className="flex items-center gap-3 border-b border-dark/25 px-2.5 py-3.5 text-sm last:border-b-0"
-                  >
-                    <span
-                      aria-hidden
-                      className="size-4 shrink-0 rounded-[2px] border-2 border-dark"
-                    />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
+              <p className="text-base leading-relaxed">{meta.description}</p>
+              {meta.features.length > 0 && (
+                <p className="mt-4 text-sm leading-relaxed opacity-80">
+                  {joinPt(meta.features)}.
+                </p>
+              )}
             </div>
-
             {meta.idealFor && (
-              <p className="mt-auto pt-6 text-xs">
+              <p className="pt-5 text-xs">
                 <span className="opacity-70">Ideal para </span>
                 {meta.idealFor}
               </p>
@@ -137,6 +122,15 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
       </div>
     </div>
   );
+};
+
+// "A", "B", "C" -> "A, b e c": the features read as one sentence.
+const joinPt = (items: string[]) => {
+  const [first = "", ...rest] = items;
+  const tail = rest.map((item) => item.charAt(0).toLowerCase() + item.slice(1));
+  return tail.length === 0
+    ? first
+    : `${[first, ...tail.slice(0, -1)].join(", ")} e ${tail.at(-1)}`;
 };
 
 const SelectMark = ({ selected }: { selected: boolean }) => (

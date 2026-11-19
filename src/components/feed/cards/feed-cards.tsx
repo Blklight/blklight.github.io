@@ -303,8 +303,10 @@ export function MediaCard({ data, size }: CardProps) {
 }
 
 // Perforated edge: solid content box plus a ring of holes in the padding.
+// Perforated frame laid over the image's edge: the hole pattern, minus the
+// content box, leaves only a band of white paper whose holes show the image.
 const STAMP_MASK =
-  "conic-gradient(#000 0 0) content-box, radial-gradient(5px, #0000 98%, #000) -6px -6px / 12px 12px round";
+  "radial-gradient(5px, #0000 98%, #000) -6px -6px / 12px 12px round, conic-gradient(#000 0 0) content-box";
 
 /** A postage stamp on a flat envelope. */
 export function StampCard({ data, size }: CardProps) {
@@ -331,22 +333,25 @@ export function StampCard({ data, size }: CardProps) {
             side ? "w-2/5" : "aspect-[4/3] w-full",
           )}
         >
+          {/* biome-ignore lint/performance/noImgElement: covers come from arbitrary hosts; next/image needs a domain allowlist */}
+          <img
+            src={data.coverImageUrl ?? ""}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            style={{ filter: `url(#duo-${surface.id})` }}
+            className="absolute inset-0 size-full object-cover"
+          />
           <div
-            style={{ mask: STAMP_MASK, WebkitMask: STAMP_MASK }}
-            className="size-full bg-light p-3"
-          >
-            <div className="relative size-full overflow-hidden">
-              {/* biome-ignore lint/performance/noImgElement: covers come from arbitrary hosts; next/image needs a domain allowlist */}
-              <img
-                src={data.coverImageUrl ?? ""}
-                alt=""
-                loading="lazy"
-                decoding="async"
-                style={{ filter: `url(#duo-${surface.id})` }}
-                className="absolute inset-0 size-full object-cover"
-              />
-            </div>
-          </div>
+            aria-hidden
+            style={{
+              mask: STAMP_MASK,
+              WebkitMask: STAMP_MASK,
+              maskComposite: "subtract",
+              WebkitMaskComposite: "source-out",
+            }}
+            className="absolute inset-0 bg-light p-3"
+          />
           <span
             aria-hidden
             className="absolute -bottom-2 -right-2 rotate-3 border-2 border-dark bg-light px-1.5 py-0.5 font-mono text-xs font-bold text-dark"
