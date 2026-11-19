@@ -6,6 +6,7 @@ import Link from "next/link";
 import { typeTheme } from "@/components/feed/cards/card-theme";
 import { Navbar } from "@/components/navbar";
 import { appMeta } from "@/components/onboarding/app-meta";
+import { CornerBrackets } from "@/components/onboarding/corner-brackets";
 import { DitherSpotlight } from "@/components/onboarding/dither-spotlight";
 import { RequireAuth } from "@/components/require-auth";
 import { buttonVariants } from "@/components/ui/button";
@@ -284,27 +285,28 @@ function Dashboard() {
                 {apps.data.map((app, i) => {
                   const meta = appMeta(app);
                   const Icon = meta.icon;
+                  // Same stock as the onboarding fichas (Tally look): paper, marks, mono caps.
                   const body = (
-                    <>
-                      <DitherSpotlight
-                        radius={110}
-                        className={meta.accent.text}
-                      />
-                      <div className="relative z-10 h-full p-4 flex flex-col pointer-events-none">
+                    <div className="relative z-10 h-full p-4 flex flex-col pointer-events-none">
+                      <div className="flex items-start justify-between gap-2">
+                        <span className="relative px-1.5 py-0.5 text-xs uppercase">
+                          <CornerBrackets
+                            size="size-1.5"
+                            className="opacity-70"
+                          />
+                          {meta.available ? meta.tagline : "Em breve"}
+                        </span>
                         {Icon && (
                           <Icon
-                            className={cn("size-7", meta.accent.text)}
-                            strokeWidth={1.5}
+                            className="size-5 shrink-0"
+                            strokeWidth={1.75}
                           />
                         )}
-                        <p className="mt-auto font-sans font-bold">
-                          {app.name}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {meta.available ? meta.tagline : "Em breve"}
-                        </p>
                       </div>
-                    </>
+                      <p className="mt-auto font-mono text-lg font-medium uppercase leading-tight wrap-break-word">
+                        {app.name}
+                      </p>
+                    </div>
                   );
                   return (
                     <li key={app.id} className="aspect-square">
@@ -312,14 +314,18 @@ function Dashboard() {
                         corners={APP_CORNERS[i % APP_CORNERS.length]}
                         size="md"
                         radius={4}
-                        rounded={2}
+                        rounded={12}
+                        bordered={false}
                         style={{ height: "100%" }}
-                        className="relative overflow-hidden"
+                        className={cn(
+                          "relative overflow-hidden text-dark background-texture",
+                          meta.accent.paper,
+                        )}
                       >
                         {app.slug === "publisher" ? (
                           <Link
                             href="/escrever"
-                            className="absolute inset-0 hover:bg-muted/40 transition-colors outline-none focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-foreground"
+                            className="absolute inset-0 hover:bg-dark/10 transition-colors outline-none focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-dark"
                           >
                             {body}
                           </Link>

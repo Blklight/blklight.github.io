@@ -1,32 +1,31 @@
 "use client";
 
-import { Check, RotateCw } from "lucide-react";
+import { Check, ChevronLeft, RotateCw } from "lucide-react";
 import { useState } from "react";
 import type { Corner } from "@/components/ui/chamfer-utils";
 import { useFillet } from "@/components/ui/fillet-card";
 import { cn } from "@/lib/utils";
 import type { PlatformApp } from "@/types/api.types";
 import { appMeta } from "./app-meta";
-import { DitherSpotlight } from "./dither-spotlight";
+import { CornerBrackets } from "./corner-brackets";
 
 interface Props {
   app: PlatformApp;
   selected: boolean;
   onToggle: () => void;
-  hoverDither?: boolean;
 }
 
-export const SimpleFlipCard = ({
-  app,
-  selected,
-  onToggle,
-  hoverDither = true,
-}: Props) => {
+/**
+ * App ficha, after the Tally cards: colored stock with grain, registration
+ * marks around the label and the name, a pixel numeral, and an ink bar that
+ * turns the card over to its list of features.
+ */
+export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
   const [flipped, setFlipped] = useState(false);
   const meta = appMeta(app);
-  const Icon = meta.icon;
+  const count = String(meta.features.length).padStart(2, "0");
 
-  const handleFlip = (e: React.MouseEvent) => {
+  const flip = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
     setFlipped((f) => !f);
@@ -40,10 +39,6 @@ export const SimpleFlipCard = ({
     }
   };
 
-  const muted = selected ? "text-background/65" : "text-muted-foreground";
-  const rule = selected ? "border-background/25" : "border-border";
-  const statusLabel = selected ? "Selecionado" : "Clique para selecionar";
-
   return (
     <div className="group relative transition-transform duration-300 ease-out hover:-translate-y-1 motion-reduce:hover:translate-y-0">
       <div className="perspective-1000 h-115 relative">
@@ -55,139 +50,88 @@ export const SimpleFlipCard = ({
           aria-label={app.name}
           onClick={onToggle}
           onKeyDown={handleKey}
-          className="relative w-full h-full preserve-3d transition-transform duration-500 ease-out cursor-pointer rounded-xs outline-none focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2 motion-reduce:transition-none"
+          className="relative w-full h-full preserve-3d transition-transform duration-500 ease-out cursor-pointer rounded-[1.25rem] outline-none focus-visible:outline-3 focus-visible:outline-foreground focus-visible:outline-offset-4 motion-reduce:transition-none"
           style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
         >
-          <Face corner="br" selected={selected}>
-            {hoverDither && (
-              <DitherSpotlight
-                className={selected ? meta.accent.inverted : meta.accent.text}
-              />
-            )}
-            <div className="relative z-10 p-6 flex flex-col h-full pointer-events-none">
-              <div className="flex items-start justify-between">
-                <span className={cn("text-xs", muted)}>
-                  {meta.tagline}
-                  {!meta.available && " · Em breve"}
-                </span>
-                <span
-                  aria-hidden="true"
-                  className={cn(
-                    "size-6 rounded-full border flex items-center justify-center transition-colors",
-                    selected
-                      ? cn(meta.accent.badge, "text-dark")
-                      : "border-border",
-                  )}
-                >
-                  {selected && <Check className="size-3.5" strokeWidth={3} />}
-                </span>
-              </div>
+          <Face corner="br" paper={meta.accent.paper} selected={selected}>
+            <div className="flex items-center justify-between gap-2">
+              <span className="relative px-2 py-1 text-xs uppercase">
+                <CornerBrackets size="size-2" className="opacity-70" />
+                {meta.tagline}
+                {!meta.available && " · em breve"}
+              </span>
+              <SelectMark selected={selected} />
+            </div>
 
-              <div className="flex-1 flex items-center">
-                {app.iconUrl ? (
-                  // biome-ignore lint/performance/noImgElement: iconUrl pode vir de host arbitrário da API; next/image exigiria allowlist de domínios
-                  <img
-                    src={app.iconUrl}
-                    alt=""
-                    className="size-12 object-contain"
-                  />
-                ) : Icon ? (
-                  <Icon
-                    className={cn(
-                      "size-14",
-                      selected ? meta.accent.inverted : meta.accent.text,
-                    )}
-                    strokeWidth={1.25}
-                  />
-                ) : (
-                  <span className="font-sans text-5xl font-bold">
-                    {app.name.charAt(0).toUpperCase()}
-                  </span>
-                )}
-              </div>
-
-              <h3 className="font-sans text-3xl font-bold tracking-tight">
+            <div className="relative mt-8 p-3">
+              <CornerBrackets size="size-3" className="opacity-80" />
+              <h3 className="font-mono text-3xl font-medium uppercase wrap-break-word">
                 {app.name}
               </h3>
-              <p className={cn("text-sm mt-2 line-clamp-3", muted)}>
+              <p className="mt-1 text-sm opacity-80 line-clamp-2">
                 {meta.description}
               </p>
-              <div
-                className={cn(
-                  "flex items-center justify-between border-t pt-3 mt-5 pr-10 text-xs",
-                  rule,
-                  muted,
-                )}
-              >
-                {statusLabel}
-              </div>
             </div>
-            <FlipButton
-              onClick={handleFlip}
-              label={`Ver detalhes de ${app.name}`}
-            />
+
+            <p className="my-auto flex flex-col items-center gap-1 leading-none">
+              <span className="font-pixel-circle text-8xl">{count}</span>
+              <span className="text-sm opacity-70">
+                {meta.features.length === 1 ? "recurso" : "recursos"}
+              </span>
+            </p>
+
+            <InkBar onClick={flip} label={`Ver recursos de ${app.name}`}>
+              Ver recursos
+              <RotateCw aria-hidden className="size-3.5" />
+            </InkBar>
           </Face>
 
-          <Face corner="bl" selected={selected} back>
-            <div className="relative z-10 p-6 flex flex-col h-full pointer-events-none">
-              <div className="flex items-center gap-2 mb-4">
-                {Icon && (
-                  <Icon
-                    className={cn(
-                      "size-4",
-                      selected ? meta.accent.inverted : meta.accent.text,
-                    )}
-                    strokeWidth={1.75}
-                  />
-                )}
-                <span className="font-sans font-bold">{app.name}</span>
-                <span className={cn("ml-auto text-xs", muted)}>
-                  {meta.available ? "Disponível" : "Em breve"}
-                </span>
-              </div>
-              <p className="text-base leading-relaxed">{meta.description}</p>
-
-              {meta.features.length > 0 && (
-                <>
-                  <p className={cn("text-xs mt-5 mb-2", muted)}>Recursos</p>
-                  <ul className="space-y-1.5 text-sm">
-                    {meta.features.map((feature) => (
-                      <li key={feature} className="flex items-start gap-2">
-                        <span
-                          aria-hidden="true"
-                          className={cn(
-                            "mt-[0.55em] size-1 shrink-0 bg-current",
-                            selected ? meta.accent.inverted : meta.accent.text,
-                          )}
-                        />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              )}
-
-              {meta.idealFor && (
-                <p className={cn("text-xs mt-auto pt-4 border-t", rule, muted)}>
-                  Ideal para{" "}
-                  <span
-                    className={selected ? "text-background" : "text-foreground"}
-                  >
-                    {meta.idealFor}
-                  </span>
-                </p>
-              )}
-              <div
-                className={cn(
-                  "flex items-center justify-between pt-3 pr-10 text-xs",
-                  !meta.idealFor && "mt-auto",
-                  muted,
-                )}
+          <Face corner="bl" paper={meta.accent.paper} selected={selected} back>
+            <div className="flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={flip}
+                onKeyDown={(e) => e.stopPropagation()}
+                className="pointer-events-auto -ml-1 inline-flex items-center gap-1 rounded-xs px-1 py-1 text-sm hover:bg-dark/10 outline-none focus-visible:outline-2 focus-visible:outline-current cursor-pointer"
               >
-                {statusLabel}
-              </div>
+                <ChevronLeft aria-hidden className="size-4" />
+                Capa
+              </button>
+              <span className="text-xs uppercase opacity-70">
+                {meta.available ? "Disponível" : "Em breve"}
+              </span>
             </div>
-            <FlipButton onClick={handleFlip} label="Voltar à frente do card" />
+
+            <div className="relative mt-4 p-1.5">
+              <CornerBrackets size="size-3" className="opacity-80" />
+              <ul>
+                {meta.features.map((feature) => (
+                  <li
+                    key={feature}
+                    className="flex items-center gap-3 border-b border-dark/25 px-2.5 py-3.5 text-sm last:border-b-0"
+                  >
+                    <span
+                      aria-hidden
+                      className="size-4 shrink-0 rounded-[2px] border-2 border-dark"
+                    />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {meta.idealFor && (
+              <p className="mt-auto pt-6 text-xs">
+                <span className="opacity-70">Ideal para </span>
+                {meta.idealFor}
+              </p>
+            )}
+            <div className="mt-3 flex items-center justify-between text-xs">
+              <span className="opacity-70">
+                {selected ? "Selecionado" : "Clique para selecionar"}
+              </span>
+              <SelectMark selected={selected} />
+            </div>
           </Face>
         </div>
       </div>
@@ -195,57 +139,70 @@ export const SimpleFlipCard = ({
   );
 };
 
+const SelectMark = ({ selected }: { selected: boolean }) => (
+  <span
+    aria-hidden
+    className={cn(
+      "size-6 shrink-0 rounded-[3px] border-2 border-dark flex items-center justify-center",
+      selected && "bg-dark text-light",
+    )}
+  >
+    {selected && <Check className="size-3.5" strokeWidth={3} />}
+  </span>
+);
+
 interface FaceProps {
   corner: Corner;
+  paper: string;
   selected: boolean;
   back?: boolean;
   children: React.ReactNode;
 }
 
 // Back face cut is mirrored (bl): flipped around Y, the physical card's br corner lands bottom-left.
-const Face = ({ corner, selected, back, children }: FaceProps) => {
-  const [outerRef, outerClip] = useFillet([corner], "lg", 6, 0, 2);
-  const [innerRef, innerClip] = useFillet([corner], "lg", 6, 1, 2);
+const Face = ({ corner, paper, selected, back, children }: FaceProps) => {
+  const [outerRef, outerClip] = useFillet([corner], "lg", 6, 0, 20);
+  const [innerRef, innerClip] = useFillet([corner], "lg", 6, 3, 17);
   return (
     <div
       ref={outerRef}
       style={{ clipPath: outerClip }}
       className={cn(
-        "absolute inset-0 backface-hidden p-px transition-colors duration-200",
+        "absolute inset-0 backface-hidden p-[3px] transition-colors duration-200",
         back && "rotate-y-180",
-        selected ? "bg-foreground" : "bg-border group-hover:bg-foreground/60",
+        selected ? "bg-dark" : paper,
       )}
     >
       <div
         ref={innerRef}
         style={{ clipPath: innerClip }}
         className={cn(
-          "relative h-full overflow-hidden transition-colors duration-200",
-          selected
-            ? "bg-foreground text-background"
-            : "bg-card text-foreground",
+          "relative h-full overflow-hidden text-dark background-texture",
+          paper,
         )}
       >
-        {children}
+        <div className="relative h-full flex flex-col p-6 pointer-events-none [&_button]:pointer-events-auto">
+          {children}
+        </div>
       </div>
     </div>
   );
 };
 
-interface FlipButtonProps {
+interface InkBarProps {
   onClick: (e: React.MouseEvent) => void;
   label: string;
+  children: React.ReactNode;
 }
 
-const FlipButton = ({ onClick, label }: FlipButtonProps) => (
+const InkBar = ({ onClick, label, children }: InkBarProps) => (
   <button
     type="button"
     onClick={onClick}
     onKeyDown={(e) => e.stopPropagation()}
     aria-label={label}
-    title={label}
-    className="absolute bottom-5 right-5 z-30 size-9 rounded-full flex items-center justify-center text-current/60 hover:text-current hover:bg-current/10 transition-colors cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-current"
+    className="chamfer chamfer-br chamfer-xs mt-6 flex h-9 w-full items-center justify-center gap-2 bg-dark font-mono text-sm text-light hover:bg-dark/85 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-light cursor-pointer"
   >
-    <RotateCw className="size-4" />
+    {children}
   </button>
 );
