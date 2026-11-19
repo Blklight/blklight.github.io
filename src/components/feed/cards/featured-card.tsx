@@ -53,7 +53,13 @@ function CoverBanner({ doc }: { doc: DocumentCard }) {
         />
       </div>
       <div className="absolute inset-0 bg-gradient-to-r from-dark/90 via-dark/45 to-transparent" />
-      <TypeTab type={doc.typeName} corners={["tl"]} tone="paper" inset />
+      <TypeTab
+        type={doc.typeName}
+        corners={["tl"]}
+        tone="paper"
+        inset
+        className="md:top-10 md:right-10"
+      />
 
       {/* Full width so the stretched title link covers the whole banner. */}
       <div className="relative h-full min-h-[inherit] flex flex-col justify-end gap-4 p-6 md:p-10 *:max-w-3xl">
@@ -75,7 +81,7 @@ function CoverBanner({ doc }: { doc: DocumentCard }) {
         </div>
       </div>
 
-      <p className="absolute bottom-6 right-8 hidden lg:flex items-center gap-2 text-sm">
+      <p className="absolute bottom-10 right-10 hidden lg:flex items-center gap-2 text-sm">
         <span className="bg-dark/75 px-2 py-1 rounded-xs">Em destaque</span>
         <Image src="/blklight-light.svg" alt="" width={32} height={32} />
       </p>

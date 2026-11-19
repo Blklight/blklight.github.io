@@ -232,12 +232,12 @@ Near-square everywhere: the base radius is 2px (`--radius: 0.125rem`), and most 
 ### Cards / Containers
 - **Corner Style:** per model: chamfer, 2px, or square.
 - **Background:** one of nine surfaces (ultravioleta, sky, yellow, orange, magenta, …) as solid or pale wash, independent of the content type.
-- **Hover vocabulary:** several effects on purpose, not one shared signal. Each model has its own flourish (zoom, duotone fade, dither, tilt, title underline) and may add a shared one via `data-hover`: `pop` (stepped shadow pop, square cards only, no transition so the block jumps up whole) and `misreg` (the title's ink plates slip off register in cyan and magenta). The static bento cell owns `:hover`, so a moving card never flickers. New effects join this vocabulary rather than replacing it. The Texto dither is drawn in the surface's solid step (full in light, 30% in dark), so ink text over a dot keeps the solid's contrast.
+- **Hover vocabulary:** several effects on purpose, not one shared signal. Each model has its own flourish (zoom, duotone fade, dither, tilt, title underline) and may add a shared one via `data-hover`: `pop` (the original `shadow-pop-bl` keyframes: 8 stacked 1px shadows and an 8px lift, square cards only) and `misreg` (the title's ink plates slip off register in cyan and magenta). The static bento cell owns `:hover`, so a moving card never flickers. New effects join this vocabulary rather than replacing it. The Texto dither is drawn in the surface's solid step (full in light, 30% in dark), so ink text over a dot keeps the solid's contrast.
 - **Border:** 1px ink or none, per model.
 - **Focus:** a 3px foreground outline 4px outside the card's cell, so chamfered and pill silhouettes never clip it.
 - **Themes:** in dark, the ink Manchete gets a 2px foreground border; in book, sepia surfaces step to sepia-medium and pale washes multiply into the page.
 - **Models:** Cover, Media, Selo, Paper, Texto, Manchete, chosen from the item's id; images may take an SVG duotone in the surface ink. The Ficha (library catalog card) was removed on 2026-11-18 for clashing with the rest; models for documents without a cover are still open.
-- **Type tab placement:** no single fixed spot. Each model ships a default (flush on the flat Texto card); a per-document choice of position is planned.
+- **Type tab placement:** no single fixed spot. Each model ships a default: flush on square cards (Texto, Selo); inset on curved and chamfered ones, on the same 24px margin as the content so tab and title share one left edge. A per-document choice of position is planned.
 
 ### Inputs / Fields
 - **Style:** 1px rule border, transparent background, 36px tall, near-square.

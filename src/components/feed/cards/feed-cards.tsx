@@ -140,7 +140,7 @@ export function PaperCard({ data, size }: CardProps) {
       >
         <TypeTab type={data.typeName} corners={tabCorners(shape)} inset />
         <div
-          className="h-full flex flex-col p-6 pt-14"
+          className="h-full flex flex-col p-6 pt-19"
           style={{ color: design.paperColors?.text ?? undefined }}
         >
           <CardTitle
@@ -208,7 +208,7 @@ export function CoverCard({ data, size }: CardProps) {
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-dark/95 via-dark/40 to-transparent" />
       <TypeTab type={data.typeName} tone="paper" inset />
-      <div className="relative h-full flex flex-col justify-end p-5">
+      <div className="relative h-full flex flex-col justify-end p-6">
         <CardTitle
           doc={data}
           className={cn(
@@ -249,7 +249,7 @@ export function MediaCard({ data, size }: CardProps) {
       <TypeTab type={data.typeName} corners={tabCorners(shape)} inset />
       <div
         className={cn(
-          "h-full flex gap-4 p-6 pt-14",
+          "h-full flex gap-4 p-6 pt-19",
           side ? "flex-row" : "flex-col",
         )}
       >
@@ -390,7 +390,7 @@ export function HeadlineCard({ data, size }: CardProps) {
       className="bg-dark text-light dark:bg-card"
     >
       <TypeTab type={data.typeName} tone="paper" inset />
-      <div className="h-full flex flex-col p-6 pt-14">
+      <div className="h-full flex flex-col p-6 pt-19">
         <CardTitle
           doc={data}
           className={cn(

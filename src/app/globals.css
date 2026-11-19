@@ -1128,18 +1128,14 @@
 /* Shared hover vocabulary for feed cards (data-hover on the card). The static
    bento cell owns :hover, so a card that moves never slips out from under the
    pointer. Each model also keeps its own flourish (zoom, duotone, dither, tilt).
-   - pop: the stepped shadow pop, square cards only (a box-shadow follows the
-     2px rule; chamfers and pills would clip or pixelate it). No transition:
-     the block jumps up whole, the shadow never "grows".
+   - pop: the original shadow-pop-bl keyframes (8 stacked 1px shadows, 8px
+     lift), square cards only: a box-shadow follows the 2px rule, while
+     chamfers and pills would clip or pixelate it.
    - misreg: the title's ink plates slip off register, cyan and magenta. */
 @media (hover: hover) {
   [data-bento-cell]:hover > [data-hover~="pop"] {
-    translate: 4px -4px;
-    box-shadow:
-      -1px 1px 0 var(--foreground),
-      -2px 2px 0 var(--foreground),
-      -3px 3px 0 var(--foreground),
-      -4px 4px 0 var(--foreground);
+    --shadow-pop-color: var(--foreground);
+    animation: shadow-pop-bl 0.3s cubic-bezier(0.47, 0, 0.745, 0.715) both;
   }
   [data-hover~="misreg"] [data-card-link] {
     transition: text-shadow 0.2s ease-out;
@@ -1148,11 +1144,6 @@
     text-shadow:
       2px 2px 0 var(--color-bluesky-400),
       -2px -1px 0 var(--color-magenta-400);
-  }
-}
-@media (hover: hover) and (prefers-reduced-motion: reduce) {
-  [data-bento-cell]:hover > [data-hover~="pop"] {
-    translate: none;
   }
 }
 
