@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-18T17:30:58.973682+00:00",
+  "generatedAt": "2026-11-18T21:55:04.912897+00:00",
   "title": "Design System: Blklight",
   "extensions": {
     "colorMeta": {
@@ -294,8 +294,8 @@
     "shadows": [
       {
         "name": "shadow-pop",
-        "value": "-1px 1px currentColor, -2px 2px currentColor, -3px 3px currentColor, -4px 4px currentColor, -5px 5px currentColor, -6px 6px currentColor, -7px 7px currentColor, -8px 8px currentColor",
-        "purpose": "Hover lift on interactive cards, with translate(8px,-8px); variants bl/br/tl/tr."
+        "value": "-1px 1px … -8px 8px currentColor (8 stacked) + translate(8px,-8px)",
+        "purpose": "Hover lift for rectangular interactive elements; not on feed cards."
       },
       {
         "name": "overlay",
@@ -389,7 +389,7 @@
     "rules": [
       {
         "name": "The Type Ink Rule",
-        "body": "Article is yellow, tutorial is orange, project is magenta, everywhere. A content type never borrows another type's ink, and the type ink lives on the tab or label, not necessarily on the whole card.",
+        "body": "Article is yellow, tutorial is orange, project is magenta. In the feed the type ink is a filter state, not decoration: the filter buttons always show it as a legend, and card tabs wear it only while the feed is filtered to that type. Unfiltered, the tab is neutral ink or paper with the type's name and symbol, and card bodies may use any surface, yellow, orange and magenta included.",
         "section": "colors"
       },
       {
@@ -425,14 +425,15 @@
     ],
     "dos": [
       "**Do** default to monospace and switch to EB Garamond only for long reading.",
-      "**Do** mark content type with its ink: article yellow, tutorial orange, project magenta.",
-      "**Do** put ink text on saturated solids and use the 700 yellow step for yellow text on light paper.",
+      "**Do** identify content type by name and symbol first; light up the type ink (article yellow, tutorial orange, project magenta) only when the feed is filtered to that type.",
+      "**Do** put full-strength ink text on saturated solids (no alpha), and use the 700 yellow step for yellow text on light paper.",
       "**Do** run pages full width on 1px ink rules.",
       "**Do** vary card models and shapes, deterministically by item id.",
       "**Do** keep every surface correct in light, dark and book themes.",
       "**Do** keep focus visible on every interactive element (outline or ring)."
     ],
     "donts": [
+      "**Don't** fade text with alpha on saturated surfaces; `text-dark/70` on mid-tone solids fails AA. Secondary text on pale washes uses `text-foreground/75` at minimum.",
       "**Don't** give every card the same corner or chamfer; the user rejected uniform chamfers as \"too standardized\".",
       "**Don't** cast shadows on resting surfaces or use soft shadows on in-page cards.",
       "**Don't** put white text on yellow, orange, magenta or sky solids.",

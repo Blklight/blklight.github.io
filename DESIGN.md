@@ -162,7 +162,7 @@ Ink-and-paper neutrals carry the interface; a small set of saturated print inks 
 Each brand ink has a full 50–950 scale in `src/app/globals.css` (`--color-blklight-*`, `--color-bluesky-*`, `--color-cyber-yellow-*`, `--color-orange-*`, `--color-magenta-*`, `--color-crimson-*`). Semantic tokens (`--background`, `--foreground`, `--muted`, `--border`, …) are redefined per theme under `:root`, `.dark` and `.book`.
 
 ### Named Rules
-**The Type Ink Rule.** Article is yellow, tutorial is orange, project is magenta, everywhere. A content type never borrows another type's ink, and the type ink lives on the tab or label, not necessarily on the whole card.
+**The Type Ink Rule.** Article is yellow, tutorial is orange, project is magenta. In the feed the type ink is a filter state, not decoration: the filter buttons always show it as a legend, and card tabs wear it only while the feed is filtered to that type. Unfiltered, the tab is neutral ink or paper with the type's name and symbol, and card bodies may use any surface, yellow, orange and magenta included.
 
 **The Ink-On-Ink Rule.** Saturated solids (yellow, orange, magenta, sky, ultravioleta) take ink text, never white. Yellow as text on light paper uses the 700 step.
 
@@ -199,10 +199,10 @@ Full-width pages on a modular grid, not a centered max-width column. The feed is
 
 ## Elevation & Depth
 
-Flat by default. Structure comes from ink borders, 1px rules and paper tone changes, not from shadows. Two depth moves exist. On hover, interactive cards may lift with the stepped "shadow pop": eight stacked 1px hard shadows in the current color plus an 8px translate, like a block lifted off the page. Floating layers (popovers, dropdowns, dialogs, command menu) may use a soft blurred shadow plus a faint ink ring so they read as above the page.
+Flat by default. Structure comes from ink borders, 1px rules and paper tone changes, not from shadows. Two depth moves exist. On hover, rectangular interactive elements may lift with the stepped "shadow pop": eight stacked 1px hard shadows in the current color plus an 8px translate, like a block lifted off the page. Feed cards use it only on square models (`data-hover="pop"`): on chamfered and pill silhouettes the extrusion pixelates. Floating layers (popovers, dropdowns, dialogs, command menu) may use a soft blurred shadow plus a faint ink ring so they read as above the page.
 
 ### Shadow Vocabulary
-- **Shadow pop** (stepped hard shadow, `-1px 1px` through `-8px 8px` in `currentColor`, 0.3s): hover lift on interactive cards; direction variants `bl`, `br`, `tl`, `tr`.
+- **Shadow pop** (`.shadow-pop-bl/br/tl/tr`: eight stacked 1px hard shadows in `currentColor` plus an 8px translate, 0.3s): hover lift for rectangular interactive elements only.
 - **Overlay ring** (`ring-1 ring-foreground/10` with `shadow-md`/`shadow-lg`): popovers, menus, dialogs.
 
 ### Named Rules
@@ -226,15 +226,19 @@ Near-square everywhere: the base radius is 2px (`--radius: 0.125rem`), and most 
 - **Focus:** visible ring in `--ring` at 50% (3px); pressed state nudges down 1px.
 
 ### Chips and Type Tabs
-- **Type tab:** a square tab in the content type's solid ink with ink text, uppercase label type. It is how a card announces its type.
+- **Type tab:** a square tab flush with a top corner: type symbol (article Newspaper, tutorial BookOpen, project Hammer) plus uppercase label. Unfiltered it is neutral, ink on light bodies and paper on dark bodies; when the feed is filtered to a type it takes that type's solid ink with an inset ink ring, so it never merges with a same-colored body.
 - **Badge:** small label (20px tall), neutral fills.
 
 ### Cards / Containers
 - **Corner Style:** per model: chamfer, 2px, or square.
 - **Background:** one of nine surfaces (ultravioleta, sky, yellow, orange, magenta, …) as solid or pale wash, independent of the content type.
-- **Shadow Strategy:** flat at rest; shadow pop on hover where interactive.
+- **Hover vocabulary:** several effects on purpose, not one shared signal. Each model has its own flourish (zoom, duotone fade, dither, tilt, title underline) and may add a shared one via `data-hover`: `pop` (the original `shadow-pop-bl` keyframes: 8 stacked 1px shadows and an 8px lift, square cards only) and `misreg` (the title's ink plates slip off register in cyan and magenta). The static bento cell owns `:hover`, so a moving card never flickers. New effects join this vocabulary rather than replacing it. The Texto dither is drawn in the surface's solid step (full in light, 30% in dark), so ink text over a dot keeps the solid's contrast.
 - **Border:** 1px ink or none, per model.
-- **Models:** Cover, Media, Selo, Paper, Texto, Manchete, Ficha, rotated per page and stable per item; images may take an SVG duotone in the surface ink.
+- **Focus:** a 3px foreground outline 4px outside the card's cell, so chamfered and pill silhouettes never clip it.
+- **Themes:** in dark, the ink Manchete gets a 2px foreground border; in book, sepia surfaces step to sepia-medium and pale washes multiply into the page.
+- **Models:** Cover, Media, Selo, Paper, Texto, Manchete, chosen from the item's id; images may take an SVG duotone in the surface ink. The Ficha (library catalog card) was removed on 2026-11-18 for clashing with the rest; models for documents without a cover are still open.
+- **Type tab shape:** 2px radius on every corner (`rounded-xs`, the global default), flush or inset.
+- **Type tab placement:** no single fixed spot. Each model ships a default: flush on square cards (Texto, Selo); inset on curved and chamfered ones, on the same 24px margin as the content so tab and title share one left edge. A per-document choice of position is planned.
 
 ### Inputs / Fields
 - **Style:** 1px rule border, transparent background, 36px tall, near-square.
@@ -251,14 +255,15 @@ The editor and published document render as a sheet of paper: author-chosen font
 
 ### Do:
 - **Do** default to monospace and switch to EB Garamond only for long reading.
-- **Do** mark content type with its ink: article yellow, tutorial orange, project magenta.
-- **Do** put ink text on saturated solids and use the 700 yellow step for yellow text on light paper.
+- **Do** identify content type by name and symbol first; light up the type ink (article yellow, tutorial orange, project magenta) only when the feed is filtered to that type.
+- **Do** put full-strength ink text on saturated solids (no alpha), and use the 700 yellow step for yellow text on light paper.
 - **Do** run pages full width on 1px ink rules.
 - **Do** vary card models and shapes, deterministically by item id.
 - **Do** keep every surface correct in light, dark and book themes.
 - **Do** keep focus visible on every interactive element (outline or ring).
 
 ### Don't:
+- **Don't** fade text with alpha on saturated surfaces; `text-dark/70` on mid-tone solids fails AA. Secondary text on pale washes uses `text-foreground/75` at minimum.
 - **Don't** give every card the same corner or chamfer; the user rejected uniform chamfers as "too standardized".
 - **Don't** cast shadows on resting surfaces or use soft shadows on in-page cards.
 - **Don't** put white text on yellow, orange, magenta or sky solids.

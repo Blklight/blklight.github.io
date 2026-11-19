@@ -8,7 +8,6 @@ import { FEED_TYPES, TYPE_THEME } from "@/components/feed/cards/card-theme";
 import { DuotoneDefs } from "@/components/feed/cards/duotone-defs";
 import { FeaturedCard } from "@/components/feed/cards/featured-card";
 import {
-  CatalogCard,
   CoverCard,
   HeadlineCard,
   MediaCard,
@@ -16,6 +15,7 @@ import {
   StampCard,
   TextCard,
 } from "@/components/feed/cards/feed-cards";
+import { TypeInkContext } from "@/components/feed/cards/parts";
 import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import {
@@ -58,7 +58,6 @@ const CARDS = {
   media: { component: MediaCard, sizes: { "1x2": 2, "2x1": 1 } },
   stamp: { component: StampCard, sizes: { "2x1": 1, "1x2": 1 } },
   headline: { component: HeadlineCard, sizes: { "1x1": 1, "2x1": 1 } },
-  catalog: { component: CatalogCard },
 } as const satisfies Record<FeedCardType, unknown>;
 
 const TYPES = FEED_TYPES.map((id) => [id, TYPE_THEME[id]] as const);
@@ -181,7 +180,7 @@ export default function FeedPage() {
         </header>
 
         {featured && !isPending && !isError && (
-          <section aria-label="Em destaque" className="mb-10">
+          <section aria-label="Em destaque" data-card-frame className="mb-10">
             <FeaturedCard doc={featured} />
           </section>
         )}
@@ -207,7 +206,7 @@ export default function FeedPage() {
                   aria-pressed={active}
                   onClick={() => setType(active ? null : id)}
                   className={cn(
-                    "h-9 pl-2 pr-3 inline-flex items-center gap-2 rounded-xs border font-mono text-xs uppercase tracking-wider transition-colors outline-none focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2 cursor-pointer",
+                    "h-9 pl-2 pr-3 inline-flex items-center gap-2 rounded-xs border font-mono text-xs uppercase tracking-wider transition-colors outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2 cursor-pointer",
                     active
                       ? cn(theme.solid, "border-foreground")
                       : "border-border hover:border-foreground",
@@ -216,10 +215,12 @@ export default function FeedPage() {
                   <span
                     aria-hidden
                     className={cn(
-                      "size-3 rounded-[1px] border border-dark/40",
+                      "size-5 inline-grid place-items-center rounded-[1px] border border-dark/40",
                       theme.solid,
                     )}
-                  />
+                  >
+                    <theme.icon className="size-3" />
+                  </span>
                   {theme.label}
                 </button>
               );
@@ -286,7 +287,9 @@ export default function FeedPage() {
           </Empty>
         ) : (
           <>
-            <BentoGrid items={bentoItems} cards={CARDS} />
+            <TypeInkContext value={type !== null}>
+              <BentoGrid items={bentoItems} cards={CARDS} />
+            </TypeInkContext>
 
             <div className="mt-10 flex flex-col items-center gap-2">
               {hasNextPage ? (
@@ -311,25 +314,27 @@ export default function FeedPage() {
   );
 }
 
-const SKELETON_SPANS = [
-  "sm:col-span-2 sm:row-span-2",
-  "",
-  "sm:row-span-2",
-  "",
-  "sm:col-span-2",
-  "",
-  "",
+// Spans plus the card silhouettes (chamfer, pill, round, flat), so loading
+// already looks like the feed it turns into.
+const SKELETON_CELLS = [
+  "sm:col-span-2 sm:row-span-2 chamfer chamfer-tr chamfer-lg",
+  "rounded-[1.75rem]",
+  "sm:row-span-2 chamfer chamfer-bl chamfer-lg",
+  "rounded-none",
+  "sm:col-span-2 rounded-lg",
+  "chamfer chamfer-tr",
+  "rounded-none",
 ] as const;
 
 function FeedSkeleton() {
   return (
     <div aria-busy="true" aria-live="polite">
       <span className="sr-only">Carregando documentos</span>
-      <Skeleton className="h-[26rem] w-full rounded-xs mb-4" />
+      <Skeleton className="h-[26rem] w-full mb-4 chamfer chamfer-tl chamfer-br chamfer-xl" />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 grid-flow-dense auto-rows-[15rem] gap-4">
-        {SKELETON_SPANS.map((span, i) => (
+        {SKELETON_CELLS.map((cell, i) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: static placeholder list
-          <Skeleton key={i} className={cn("rounded-xs", span)} />
+          <Skeleton key={i} className={cell} />
         ))}
       </div>
     </div>

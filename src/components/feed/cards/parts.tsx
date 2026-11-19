@@ -1,6 +1,6 @@
 import { Heart } from "lucide-react";
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { createContext, type ReactNode, useContext } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { Corner } from "@/components/ui/chamfer-utils";
 import { cn } from "@/lib/utils";
@@ -21,24 +21,55 @@ export const formatDate = (value: string) => {
   return Number.isNaN(date.getTime()) ? value : DATE.format(date);
 };
 
-/** Type label flush with a top corner; moves right when the top-left corner is cut. */
+/**
+ * True while the feed is filtered to one type: only then does the type ink
+ * paint the tabs, because every card on screen shares it and color can't mislead.
+ */
+export const TypeInkContext = createContext(false);
+
+const NEUTRAL_TAB = {
+  ink: "bg-dark text-light",
+  paper: "bg-light text-dark",
+  auto: "bg-foreground text-background",
+} as const;
+
+/**
+ * Type label at a top corner; moves right when the top-left corner is cut.
+ * Flush with the edge on square cards; `inset` keeps it clear of a radius or
+ * chamfer, on the same 24px margin as the card's content so they line up.
+ */
 export function TypeTab({
   type,
   corners = [],
+  tone = "ink",
+  inset = false,
+  className,
 }: {
   type: string;
   corners?: Corner[];
+  /** Neutral tab colors, picked to stand out from the card body. */
+  tone?: keyof typeof NEUTRAL_TAB;
+  inset?: boolean;
+  className?: string;
 }) {
+  const lit = useContext(TypeInkContext);
   const theme = typeTheme(type);
+  const Icon = theme.icon;
   const right = corners.includes("tl");
   return (
     <span
       className={cn(
-        "absolute top-0 z-20 px-2.5 py-1 font-mono text-xs uppercase tracking-wider",
-        right ? "right-0 rounded-bl-xs" : "left-0 rounded-br-xs",
-        theme.solid,
+        "absolute z-20 inline-flex items-center gap-1.5 px-2.5 py-1 font-mono text-xs uppercase tracking-wider",
+        inset
+          ? cn("top-6 rounded-xs", right ? "right-6" : "left-6")
+          : cn("top-0 rounded-xs", right ? "right-0" : "left-0"),
+        lit
+          ? cn(theme.solid, "ring-1 ring-inset ring-dark")
+          : NEUTRAL_TAB[tone],
+        className,
       )}
     >
+      <Icon aria-hidden className="size-3.5" />
       {theme.label}
     </span>
   );
@@ -49,20 +80,46 @@ export function CardTitle({
   doc,
   className,
   children,
+  as: Heading = "h3",
 }: {
   doc: DocumentCard;
   className?: string;
   children?: ReactNode;
+  as?: "h2" | "h3";
 }) {
   return (
-    <h3 className={cn("font-bold tracking-tight text-balance", className)}>
+    <Heading className={cn("font-bold tracking-tight text-balance", className)}>
       <Link
         href={docHref(doc)}
-        className="outline-none after:absolute after:inset-0 after:z-10 focus-visible:after:ring-2 focus-visible:after:ring-inset focus-visible:after:ring-current hover:underline underline-offset-4 decoration-2"
+        data-card-link
+        className="outline-none after:absolute after:inset-0 after:z-10 hover:underline underline-offset-4 decoration-2"
       >
         {children ?? doc.title}
       </Link>
-    </h3>
+    </Heading>
+  );
+}
+
+/** Link to the author's profile, above the card's stretched title link. */
+export function AuthorLink({
+  doc,
+  className,
+  children,
+}: {
+  doc: DocumentCard;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <Link
+      href={`/${doc.author.username}`}
+      className={cn(
+        "relative z-20 rounded-xs hover:underline underline-offset-4 outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current",
+        className,
+      )}
+    >
+      {children}
+    </Link>
   );
 }
 
@@ -78,18 +135,15 @@ export function CardMeta({
   const name = doc.author.displayName || doc.author.username;
   return (
     <div className={cn("flex items-center gap-2 text-xs", className)}>
-      <Link
-        href={`/${doc.author.username}`}
-        className="relative z-20 flex items-center gap-2 min-w-0 rounded-xs hover:underline underline-offset-4 outline-none focus-visible:outline-2 focus-visible:outline-current"
-      >
-        <Avatar className="size-6 rounded-xs after:rounded-xs">
+      <AuthorLink doc={doc} className="flex items-center gap-2 min-w-0">
+        <Avatar aria-hidden className="size-6 rounded-xs after:rounded-xs">
           <AvatarImage src={doc.author.avatarUrl ?? undefined} alt="" />
-          <AvatarFallback className="rounded-xs bg-foreground text-background font-sans text-[0.7rem] font-bold">
+          <AvatarFallback className="rounded-xs bg-foreground text-background ring-1 ring-inset ring-current font-sans text-xs font-bold">
             {name.charAt(0).toUpperCase()}
           </AvatarFallback>
         </Avatar>
         <span className="truncate font-medium">{name}</span>
-      </Link>
+      </AuthorLink>
       <span aria-hidden className={muted}>
         ·
       </span>

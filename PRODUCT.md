@@ -51,7 +51,7 @@ Referências do benchmark do TCC: Medium (escrita; fraqueza: paywall), Behance (
 ## Brand Commitments
 
 - Nome: **Blklight**. Protótipo do TCC: https://allnew.blklight.dev/.
-- Cores por tipo de conteúdo são parte da identidade: tutorial laranja `#FF6D00`, artigo amarelo `#FDF800` (cyber-yellow), projeto magenta `#FF29FF`; primária ultravioleta `#6A4DFF`, secundária azul-céu `#28ACFF`.
+- Cores por tipo de conteúdo são parte da identidade: tutorial laranja `#FF6D00`, artigo amarelo `#FDF800` (cyber-yellow), projeto magenta `#FF29FF`; primária ultravioleta `#6A4DFF`, secundária azul-céu `#28ACFF`. No feed, a cor do tipo não pinta o corpo dos cards: aparece nos botões de filtro (como legenda) e acende nas abas só quando o feed está filtrado por aquele tipo. Sem filtro, a aba é neutra, com nome e símbolo do tipo (decisão de 2026-11-18).
 - Brutalismo controlado: mistura do analógico (grão, papel) com o digital (grid modular), layouts em largura total, cards variados entre si (nunca o mesmo modelo repetido), identidade estável por item.
 - Voz: português brasileiro, direto, sem jargão de marketing.
 

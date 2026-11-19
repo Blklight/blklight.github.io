@@ -15,8 +15,11 @@ interface Meta {
   idealFor: string;
   /** Whether the app already has screens in this front-end. */
   available: boolean;
-  /** Per-app accent: text color on light cards and on the inverted (selected) card. */
-  accent: { text: string; inverted: string; badge: string };
+  /**
+   * Per-app accent: text color on light cards and on the inverted (selected)
+   * card; `paper` is the ficha stock, read with ink text in every theme.
+   */
+  accent: { text: string; inverted: string; badge: string; paper: string };
 }
 
 const ACCENTS = {
@@ -24,21 +27,25 @@ const ACCENTS = {
     text: "text-blklight-500 dark:text-blklight-400",
     inverted: "text-blklight-400 dark:text-blklight-500",
     badge: "bg-blklight-400 border-blklight-400",
+    paper: "bg-blklight-300",
   },
   bluesky: {
     text: "text-bluesky-500 dark:text-bluesky-400",
     inverted: "text-bluesky-400 dark:text-bluesky-500",
     badge: "bg-bluesky-400 border-bluesky-400",
+    paper: "bg-bluesky-300",
   },
   orange: {
     text: "text-orange-500 dark:text-orange-400",
     inverted: "text-orange-400 dark:text-orange-500",
     badge: "bg-orange-400 border-orange-400",
+    paper: "bg-orange-300",
   },
   magenta: {
     text: "text-magenta-500 dark:text-magenta-400",
     inverted: "text-magenta-400 dark:text-magenta-500",
     badge: "bg-magenta-400 border-magenta-400",
+    paper: "bg-magenta-300",
   },
 };
 

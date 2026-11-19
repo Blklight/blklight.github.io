@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
 
 // 8×8 Bayer matrix: ordered-dither thresholds 0..63.
 const BAYER8 = [
@@ -69,11 +70,13 @@ export function DitherSpotlight({
     let target = 0;
     let raf = 0;
     let t = 0;
+    // Read once per hover, not per frame: getComputedStyle forces a style recalc.
+    let color = "";
 
     const draw = () => {
       ctx.clearRect(0, 0, w, h);
       if (level < 0.01) return;
-      ctx.fillStyle = getComputedStyle(canvas).color;
+      ctx.fillStyle = color;
       const r = radius * (0.85 + 0.15 * level);
       const x0 = Math.max(0, Math.floor((x - r) / cell) * cell);
       const y0 = Math.max(0, Math.floor((y - r) / cell) * cell);
@@ -124,6 +127,7 @@ export function DitherSpotlight({
 
     const onEnter = (e: PointerEvent) => {
       if (e.pointerType === "touch") return;
+      color = getComputedStyle(canvas).color;
       const rect = host.getBoundingClientRect();
       px = x = e.clientX - rect.left;
       py = y = e.clientY - rect.top;
@@ -133,6 +137,7 @@ export function DitherSpotlight({
       const rect = host.getBoundingClientRect();
       px = e.clientX - rect.left;
       py = e.clientY - rect.top;
+      if (!color) color = getComputedStyle(canvas).color;
       target = 1;
       kick();
     };
@@ -158,7 +163,10 @@ export function DitherSpotlight({
   return (
     <canvas
       ref={ref}
-      className={`absolute inset-0 size-full pointer-events-none opacity-55 [image-rendering:pixelated] ${className ?? ""}`}
+      className={cn(
+        "absolute inset-0 size-full pointer-events-none opacity-55 [image-rendering:pixelated]",
+        className,
+      )}
     />
   );
 }

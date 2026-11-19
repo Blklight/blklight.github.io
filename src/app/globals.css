@@ -1116,6 +1116,37 @@
   }
 }
 
+/* Card focus: drawn on the cell, outside the card's clip-path or radius,
+   so chamfered and pill cards keep a whole, visible ring. */
+:where([data-bento-cell], [data-card-frame]):has(
+    [data-card-link]:focus-visible
+  ) {
+  outline: 3px solid var(--foreground);
+  outline-offset: 4px;
+}
+
+/* Shared hover vocabulary for feed cards (data-hover on the card). The static
+   bento cell owns :hover, so a card that moves never slips out from under the
+   pointer. Each model also keeps its own flourish (zoom, duotone, dither, tilt).
+   - pop: the original shadow-pop-bl keyframes (8 stacked 1px shadows, 8px
+     lift), square cards only: a box-shadow follows the 2px rule, while
+     chamfers and pills would clip or pixelate it.
+   - misreg: the title's ink plates slip off register, cyan and magenta. */
+@media (hover: hover) {
+  [data-bento-cell]:hover > [data-hover~="pop"] {
+    --shadow-pop-color: var(--foreground);
+    animation: shadow-pop-bl 0.3s cubic-bezier(0.47, 0, 0.745, 0.715) both;
+  }
+  [data-hover~="misreg"] [data-card-link] {
+    transition: text-shadow 0.2s ease-out;
+  }
+  [data-bento-cell]:hover [data-hover~="misreg"] [data-card-link] {
+    text-shadow:
+      2px 2px 0 var(--color-bluesky-400),
+      -2px -1px 0 var(--color-magenta-400);
+  }
+}
+
 /* --- Chamfer Kit --- */
 @utility chamfer {
   --c: 16px;

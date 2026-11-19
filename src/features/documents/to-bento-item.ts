@@ -7,12 +7,11 @@ export type FeedCardType =
   | "cover"
   | "media"
   | "stamp"
-  | "headline"
-  | "catalog";
+  | "headline";
 
-// Model pools, walked in turn by toBentoItems; "cover" appears twice to weigh it.
-const WITH_COVER: FeedCardType[] = ["cover", "media", "cover", "stamp"];
-const PLAIN: FeedCardType[] = ["text", "headline", "catalog"];
+// Model pools: a document's model comes from its id (see feedCardType).
+const WITH_COVER: FeedCardType[] = ["cover", "media", "stamp"];
+const PLAIN: FeedCardType[] = ["text", "headline"];
 
 const asRecord = (value: unknown): Record<string, unknown> =>
   value && typeof value === "object" ? (value as Record<string, unknown>) : {};
@@ -29,7 +28,7 @@ export function hasCustomPaper(style: DocumentCard["style"]): boolean {
   );
 }
 
-/** Model for a single document, by hash (the feed uses toBentoItems instead). */
+/** Model for a single document, by hash of its id: the same everywhere it shows. */
 export function feedCardType(doc: DocumentCard): FeedCardType {
   // The author's own paper always wins: it is their identity, not ours.
   if (!doc.coverImageUrl && hasCustomPaper(doc.style)) return "paper";
@@ -46,21 +45,24 @@ export const toBentoItem = (
 });
 
 /**
- * Whole list, in feed order. Each pool is walked in turn (offset by the first
- * document's hash), so a page shows every model before repeating one.
- * Appending pages never changes the models already on screen.
+ * Whole list, in feed order. Each document keeps its id-based model, so
+ * filtering, searching or appending pages doesn't change it. The one exception:
+ * when it would repeat the previous card of the same pool, it takes the next
+ * model in that pool, so neighbours never look alike.
  */
 export function toBentoItems(
   docs: DocumentCard[],
 ): BentoItem<FeedCardType, DocumentCard>[] {
-  const seed = docs.length > 0 ? hash(docs[0].id) >>> 16 : 0;
-  let cover = seed;
-  let plain = seed;
+  const last = new Map<FeedCardType[], FeedCardType>();
   return docs.map((doc) => {
-    let type: FeedCardType;
-    if (doc.coverImageUrl) type = WITH_COVER[cover++ % WITH_COVER.length];
-    else if (hasCustomPaper(doc.style)) type = "paper";
-    else type = PLAIN[plain++ % PLAIN.length];
+    let type = feedCardType(doc);
+    const pool =
+      type === "paper" ? null : doc.coverImageUrl ? WITH_COVER : PLAIN;
+    if (pool) {
+      if (last.get(pool) === type)
+        type = pool[(pool.indexOf(type) + 1) % pool.length];
+      last.set(pool, type);
+    }
     return { id: doc.id, type, data: doc };
   });
 }

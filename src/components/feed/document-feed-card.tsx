@@ -53,12 +53,12 @@ export function DocumentFeedCard({ document }: DocumentFeedCardProps) {
         <div className="flex flex-wrap items-center gap-2">
           <Badge
             variant="outline"
-            className="font-mono text-[10px] uppercase tracking-widest"
+            className="font-mono text-xs uppercase tracking-widest"
           >
             {TYPE_LABEL[document.typeName] ?? document.typeName}
           </Badge>
           {document.category ? (
-            <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
               {document.category.name}
             </span>
           ) : null}
@@ -66,7 +66,7 @@ export function DocumentFeedCard({ document }: DocumentFeedCardProps) {
             <Link
               href={`/org/${document.organization.orgname}`}
               data-testid="feed-card-org"
-              className="font-mono text-[10px] uppercase tracking-widest text-accent hover:underline"
+              className="font-mono text-xs uppercase tracking-widest text-accent hover:underline"
             >
               {document.organization.name}
             </Link>
@@ -96,7 +96,7 @@ export function DocumentFeedCard({ document }: DocumentFeedCardProps) {
             {document.tags.map((tag) => (
               <li
                 key={tag.id}
-                className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground"
+                className="font-mono text-xs uppercase tracking-widest text-muted-foreground"
               >
                 #{tag.name}
               </li>

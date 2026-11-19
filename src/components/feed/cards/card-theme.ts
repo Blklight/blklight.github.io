@@ -1,7 +1,17 @@
+import {
+  BookOpen,
+  FileSignature,
+  Hammer,
+  type LucideIcon,
+  Newspaper,
+  StickyNote,
+} from "lucide-react";
 import type { DocumentType } from "@/types/api.types";
 
 interface TypeTheme {
   label: string;
+  /** Non-color cue: the type stays identifiable when its ink is off. */
+  icon: LucideIcon;
   /** Accent text on neutral surfaces (light and dark). */
   text: string;
   /** Solid accent surface with readable dark text. */
@@ -16,6 +26,7 @@ interface TypeTheme {
 
 export const TYPE_THEME: Record<DocumentType, TypeTheme> = {
   article: {
+    icon: Newspaper,
     label: "Artigo",
     text: "text-cyber-yellow-700 dark:text-cyber-yellow-400",
     solid: "bg-cyber-yellow-400 text-dark",
@@ -24,6 +35,7 @@ export const TYPE_THEME: Record<DocumentType, TypeTheme> = {
     rgb: [0.992, 0.973, 0],
   },
   tutorial: {
+    icon: BookOpen,
     label: "Tutorial",
     text: "text-orange-500 dark:text-orange-400",
     solid: "bg-orange-400 text-dark",
@@ -32,6 +44,7 @@ export const TYPE_THEME: Record<DocumentType, TypeTheme> = {
     rgb: [1, 0.427, 0],
   },
   project: {
+    icon: Hammer,
     label: "Projeto",
     text: "text-magenta-500 dark:text-magenta-400",
     solid: "bg-magenta-400 text-dark",
@@ -40,6 +53,7 @@ export const TYPE_THEME: Record<DocumentType, TypeTheme> = {
     rgb: [1, 0.161, 1],
   },
   contract: {
+    icon: FileSignature,
     label: "Contrato",
     text: "text-crimson-500 dark:text-crimson-400",
     solid: "bg-crimson-400 text-dark",
@@ -48,6 +62,7 @@ export const TYPE_THEME: Record<DocumentType, TypeTheme> = {
     rgb: [0.922, 0.118, 0.196],
   },
   note: {
+    icon: StickyNote,
     label: "Nota",
     text: "text-bluesky-500 dark:text-bluesky-400",
     solid: "bg-bluesky-400 text-dark",
@@ -73,6 +88,11 @@ export interface Surface {
   text: string;
   /** Accent text on ink surfaces. */
   onDark: string;
+  /**
+   * Dither dots on the pale wash: the solid's own step, so ink text over a
+   * dot still has the solid's contrast (>= 5.15:1).
+   */
+  dot: string;
   /** sRGB 0..1, for the SVG duotone filter. */
   rgb: [number, number, number];
 }
@@ -84,6 +104,7 @@ export interface Surface {
 export const SURFACES: Surface[] = [
   {
     id: "ultravioleta",
+    dot: "text-blklight-300",
     solid: "bg-blklight-300 text-dark",
     wash: "bg-blklight-50 dark:bg-blklight-400/10",
     text: "text-blklight-600 dark:text-blklight-300",
@@ -92,6 +113,7 @@ export const SURFACES: Surface[] = [
   },
   {
     id: "ceu",
+    dot: "text-bluesky-300",
     solid: "bg-bluesky-300 text-dark",
     wash: "bg-bluesky-50 dark:bg-bluesky-400/10",
     text: "text-bluesky-600 dark:text-bluesky-300",
@@ -100,6 +122,7 @@ export const SURFACES: Surface[] = [
   },
   {
     id: "amarelo",
+    dot: "text-cyber-yellow-400",
     solid: "bg-cyber-yellow-400 text-dark",
     wash: "bg-cyber-yellow-50 dark:bg-cyber-yellow-400/10",
     text: "text-cyber-yellow-700 dark:text-cyber-yellow-300",
@@ -108,6 +131,7 @@ export const SURFACES: Surface[] = [
   },
   {
     id: "laranja",
+    dot: "text-orange-400",
     solid: "bg-orange-400 text-dark",
     wash: "bg-orange-50 dark:bg-orange-400/10",
     text: "text-orange-600 dark:text-orange-300",
@@ -116,6 +140,7 @@ export const SURFACES: Surface[] = [
   },
   {
     id: "magenta",
+    dot: "text-magenta-300",
     solid: "bg-magenta-300 text-dark",
     wash: "bg-magenta-50 dark:bg-magenta-400/10",
     text: "text-magenta-600 dark:text-magenta-300",
@@ -124,6 +149,7 @@ export const SURFACES: Surface[] = [
   },
   {
     id: "carmim",
+    dot: "text-crimson-300",
     solid: "bg-crimson-300 text-dark",
     wash: "bg-crimson-50 dark:bg-crimson-400/10",
     text: "text-crimson-600 dark:text-crimson-300",
@@ -132,6 +158,7 @@ export const SURFACES: Surface[] = [
   },
   {
     id: "esmeralda",
+    dot: "text-emerald-300",
     solid: "bg-emerald-300 text-dark",
     wash: "bg-emerald-50 dark:bg-emerald-400/10",
     text: "text-emerald-700 dark:text-emerald-300",
@@ -140,6 +167,7 @@ export const SURFACES: Surface[] = [
   },
   {
     id: "lima",
+    dot: "text-lime-300",
     solid: "bg-lime-300 text-dark",
     wash: "bg-lime-50 dark:bg-lime-400/10",
     text: "text-lime-700 dark:text-lime-300",
@@ -148,7 +176,8 @@ export const SURFACES: Surface[] = [
   },
   {
     id: "sepia",
-    solid: "bg-sepia text-dark",
+    dot: "text-grey-medium",
+    solid: "bg-sepia text-dark book:bg-sepia-medium",
     wash: "bg-sepia/60 dark:bg-sepia/10",
     text: "text-dark/70 dark:text-sepia",
     onDark: "text-sepia",

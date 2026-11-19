@@ -34,25 +34,38 @@ function CoverBanner({ doc }: { doc: DocumentCard }) {
       bordered={false}
       className="group/card relative overflow-hidden min-h-[28rem] md:min-h-[32rem] bg-dark text-light"
     >
-      {/* biome-ignore lint/performance/noImgElement: covers come from arbitrary hosts; next/image needs a domain allowlist */}
-      <img
-        src={cover}
-        alt=""
-        className="absolute inset-0 size-full object-cover transition-transform duration-1000 ease-out group-hover/card:scale-105 motion-reduce:transition-none"
-      />
-      {/* biome-ignore lint/performance/noImgElement: same cover, brand duotone layer */}
-      <img
-        src={cover}
-        alt=""
-        style={{ filter: "url(#duo-brand)" }}
-        className="absolute inset-0 size-full object-cover transition-[opacity,scale] duration-1000 ease-out group-hover/card:opacity-0 group-hover/card:scale-105 motion-reduce:transition-none"
-      />
+      {/* One scaling wrapper: the duotone filter rasterizes once, the GPU scales the layer. */}
+      <div className="absolute inset-0 transition-transform duration-1000 ease-out group-hover/card:scale-105 motion-reduce:transition-none">
+        {/* biome-ignore lint/performance/noImgElement: covers come from arbitrary hosts; next/image needs a domain allowlist */}
+        <img
+          src={cover}
+          alt=""
+          fetchPriority="high"
+          className="absolute inset-0 size-full object-cover"
+        />
+        {/* biome-ignore lint/performance/noImgElement: same cover, brand duotone layer */}
+        <img
+          src={cover}
+          alt=""
+          fetchPriority="high"
+          style={{ filter: "url(#duo-brand)" }}
+          className="absolute inset-0 size-full object-cover transition-opacity duration-1000 ease-out group-hover/card:opacity-0 motion-reduce:transition-none"
+        />
+      </div>
       <div className="absolute inset-0 bg-gradient-to-r from-dark/90 via-dark/45 to-transparent" />
-      <TypeTab type={doc.typeName} corners={["tl"]} />
+      <TypeTab
+        type={doc.typeName}
+        corners={["tl"]}
+        tone="paper"
+        inset
+        className="md:top-10 md:right-10"
+      />
 
-      <div className="relative h-full min-h-[inherit] flex flex-col justify-end gap-4 p-6 md:p-10 max-w-3xl">
+      {/* Full width so the stretched title link covers the whole banner. */}
+      <div className="relative h-full min-h-[inherit] flex flex-col justify-end gap-4 p-6 md:p-10 *:max-w-3xl">
         <CardTitle
           doc={doc}
+          as="h2"
           className="font-sans text-4xl md:text-6xl leading-[1.02] tracking-tighter"
         >
           <span className="box-decoration-clone bg-dark px-2">{doc.title}</span>
@@ -68,7 +81,7 @@ function CoverBanner({ doc }: { doc: DocumentCard }) {
         </div>
       </div>
 
-      <p className="absolute bottom-6 right-8 hidden lg:flex items-center gap-2 text-sm">
+      <p className="absolute bottom-10 right-10 hidden lg:flex items-center gap-2 text-sm">
         <span className="bg-dark/75 px-2 py-1 rounded-xs">Em destaque</span>
         <Image src="/blklight-light.svg" alt="" width={32} height={32} />
       </p>
@@ -78,7 +91,6 @@ function CoverBanner({ doc }: { doc: DocumentCard }) {
 
 /** No cover: the author's page on the left, the reading cue on the right. */
 function PaperSpread({ doc }: { doc: DocumentCard }) {
-  const theme = typeTheme(doc.typeName);
   const design = derivePaperDesign(
     doc.style ?? { typography: "sans", paperStyle: null, paperTexture: null },
   );
@@ -114,12 +126,14 @@ function PaperSpread({ doc }: { doc: DocumentCard }) {
         <TypeTab type={doc.typeName} />
       </div>
 
-      <div className="relative flex flex-col p-6 md:p-8 bg-card">
-        <p className={cn("text-sm font-medium mb-3", theme.text)}>
+      {/* Not positioned: the stretched title link anchors to the whole card. */}
+      <div className="flex flex-col p-6 md:p-8 bg-card">
+        <p className="text-sm font-medium mb-3 text-muted-foreground">
           Em destaque
         </p>
         <CardTitle
           doc={doc}
+          as="h2"
           className="font-sans text-3xl lg:text-4xl leading-[1.08]"
         />
         <CardTags doc={doc} className="mt-4 text-muted-foreground" />

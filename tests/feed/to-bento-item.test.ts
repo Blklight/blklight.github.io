@@ -47,15 +47,25 @@ describe("feed card type", () => {
     expect(
       hasCustomPaper(style({ mode: "default", bg: null }, { type: "none" })),
     ).toBe(false);
-    expect(["text", "headline", "catalog"]).toContain(feedCardType(doc()));
+    expect(["text", "headline"]).toContain(feedCardType(doc()));
   });
 
-  it("shows every plain model before repeating one", () => {
-    const docs = Array.from({ length: 6 }, (_, i) => doc({ id: `d-${i}` }));
+  it("never gives two neighbours of the same pool the same model", () => {
+    const docs = Array.from({ length: 40 }, (_, i) => doc({ id: `d-${i}` }));
     const types = toBentoItems(docs).map((item) => item.type);
-    expect(new Set(types.slice(0, 3))).toEqual(
-      new Set(["text", "headline", "catalog"]),
-    );
+    for (let i = 1; i < types.length; i++)
+      expect(types[i]).not.toBe(types[i - 1]);
+  });
+
+  it("keeps the id-based model unless a neighbour already has it", () => {
+    const docs = Array.from({ length: 40 }, (_, i) => doc({ id: `d-${i}` }));
+    for (const list of [docs, docs.filter((_, i) => i % 3 === 0)]) {
+      const items = toBentoItems(list);
+      items.forEach((it, i) => {
+        const own = feedCardType(it.data);
+        if (it.type !== own) expect(items[i - 1]?.type).toBe(own);
+      });
+    }
   });
 
   it("keeps models stable when a page is appended", () => {

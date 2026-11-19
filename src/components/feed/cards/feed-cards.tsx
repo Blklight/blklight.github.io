@@ -35,11 +35,14 @@ type Shape =
 function Shell({
   card,
   shape,
+  hover,
   className,
   children,
 }: {
   card: string;
   shape: Shape;
+  /** Shared hover effect from globals.css, on top of the model's own. */
+  hover?: "pop" | "misreg";
   className?: string;
   children: ReactNode;
 }) {
@@ -48,6 +51,7 @@ function Shell({
     return (
       <FilletCard
         data-card={card}
+        data-hover={hover}
         corners={shape.corners}
         size={shape.big ? "lg" : "md"}
         radius={4}
@@ -63,6 +67,7 @@ function Shell({
   return (
     <div
       data-card={card}
+      data-hover={hover}
       className={cn(
         base,
         shape.kind === "round" && "rounded-lg",
@@ -84,23 +89,30 @@ const tabCorners = (shape: Shape): Corner[] =>
 export function TextCard({ data }: CardProps) {
   const surface = surfaceOf(data.id);
   return (
-    <Shell card="text" shape={{ kind: "flat" }} className={surface.wash}>
-      <DitherSpotlight radius={130} className={surface.text} />
-      <TypeTab type={data.typeName} />
+    <Shell
+      card="text"
+      shape={{ kind: "flat" }}
+      className={cn(surface.wash, "book:mix-blend-multiply")}
+    >
+      <DitherSpotlight
+        radius={130}
+        className={cn(surface.dot, "opacity-100 dark:opacity-30")}
+      />
+      <TypeTab type={data.typeName} tone="auto" />
       <div className="relative h-full flex flex-col p-5 pt-12 pointer-events-none [&_a]:pointer-events-auto">
         <CardTitle
           doc={data}
           className="font-sans text-xl @xs:text-2xl leading-tight line-clamp-3"
         />
         {data.abstract && (
-          <p className="mt-2 text-sm text-muted-foreground line-clamp-3">
+          <p className="mt-2 text-sm text-foreground/75 line-clamp-3">
             {data.abstract}
           </p>
         )}
         <CardMeta
           doc={data}
           className="mt-auto pt-4"
-          muted="text-muted-foreground"
+          muted="text-foreground/75"
         />
       </div>
     </Shell>
@@ -118,7 +130,7 @@ export function PaperCard({ data, size }: CardProps) {
     big: tall(size),
   };
   return (
-    <Shell card="paper" shape={shape}>
+    <Shell card="paper" shape={shape} hover="misreg">
       <PaperSurface
         paperColors={design.paperColors}
         paperTexture={design.paperTexture}
@@ -126,9 +138,9 @@ export function PaperCard({ data, size }: CardProps) {
         className="h-full border-0"
         contentClassName="h-full"
       >
-        <TypeTab type={data.typeName} corners={tabCorners(shape)} />
+        <TypeTab type={data.typeName} corners={tabCorners(shape)} inset />
         <div
-          className="h-full flex flex-col p-5 pt-12"
+          className="h-full flex flex-col p-6 pt-19"
           style={{ color: design.paperColors?.text ?? undefined }}
         >
           <CardTitle
@@ -174,22 +186,29 @@ export function CoverCard({ data, size }: CardProps) {
       shape={{ kind: "round" }}
       className="bg-dark text-light"
     >
-      {/* biome-ignore lint/performance/noImgElement: covers come from arbitrary hosts; next/image needs a domain allowlist */}
-      <img
-        src={cover}
-        alt=""
-        className="absolute inset-0 size-full object-cover transition-transform duration-700 ease-out group-hover/card:scale-105 motion-reduce:transition-none"
-      />
-      {/* biome-ignore lint/performance/noImgElement: same cover, duotone layer */}
-      <img
-        src={cover}
-        alt=""
-        style={{ filter: `url(#duo-${surface.id})` }}
-        className="absolute inset-0 size-full object-cover transition-[opacity,scale] duration-700 ease-out group-hover/card:opacity-0 group-hover/card:scale-105 motion-reduce:transition-none"
-      />
+      {/* One scaling wrapper: the duotone filter rasterizes once, the GPU scales the layer. */}
+      <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover/card:scale-105 motion-reduce:transition-none">
+        {/* biome-ignore lint/performance/noImgElement: covers come from arbitrary hosts; next/image needs a domain allowlist */}
+        <img
+          src={cover}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 size-full object-cover"
+        />
+        {/* biome-ignore lint/performance/noImgElement: same cover, duotone layer */}
+        <img
+          src={cover}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          style={{ filter: `url(#duo-${surface.id})` }}
+          className="absolute inset-0 size-full object-cover transition-opacity duration-700 ease-out group-hover/card:opacity-0 motion-reduce:transition-none"
+        />
+      </div>
       <div className="absolute inset-0 bg-gradient-to-t from-dark/95 via-dark/40 to-transparent" />
-      <TypeTab type={data.typeName} />
-      <div className="relative h-full flex flex-col justify-end p-5">
+      <TypeTab type={data.typeName} tone="paper" inset />
+      <div className="relative h-full flex flex-col justify-end p-6">
         <CardTitle
           doc={data}
           className={cn(
@@ -227,10 +246,10 @@ export function MediaCard({ data, size }: CardProps) {
   const side = wide(size);
   return (
     <Shell card="media" shape={shape} className={surface.solid}>
-      <TypeTab type={data.typeName} corners={tabCorners(shape)} />
+      <TypeTab type={data.typeName} corners={tabCorners(shape)} inset />
       <div
         className={cn(
-          "h-full flex gap-4 p-4 pt-11",
+          "h-full flex gap-4 p-6 pt-19",
           side ? "flex-row" : "flex-col",
         )}
       >
@@ -244,6 +263,8 @@ export function MediaCard({ data, size }: CardProps) {
           <img
             src={data.coverImageUrl ?? ""}
             alt=""
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 size-full object-cover transition-transform duration-700 ease-out group-hover/card:scale-105 motion-reduce:transition-none"
           />
         </div>
@@ -263,7 +284,7 @@ export function MediaCard({ data, size }: CardProps) {
           {data.abstract && (
             <p
               className={cn(
-                "order-3 text-sm text-dark/80",
+                "order-3 text-sm text-dark",
                 side ? "line-clamp-2" : "line-clamp-3",
               )}
             >
@@ -273,7 +294,7 @@ export function MediaCard({ data, size }: CardProps) {
           <CardMeta
             doc={data}
             className={cn("order-4", side && "mt-auto")}
-            muted="text-dark/70"
+            muted="text-dark"
           />
         </div>
       </div>
@@ -282,15 +303,22 @@ export function MediaCard({ data, size }: CardProps) {
 }
 
 // Perforated edge: solid content box plus a ring of holes in the padding.
+// Perforated frame laid over the image's edge: the hole pattern, minus the
+// content box, leaves only a band of white paper whose holes show the image.
 const STAMP_MASK =
-  "conic-gradient(#000 0 0) content-box, radial-gradient(5px, #0000 98%, #000) -6px -6px / 12px 12px round";
+  "radial-gradient(5px, #0000 98%, #000) -6px -6px / 12px 12px round, conic-gradient(#000 0 0) content-box";
 
 /** A postage stamp on a flat envelope. */
 export function StampCard({ data, size }: CardProps) {
   const surface = surfaceOf(data.id);
   const side = wide(size);
   return (
-    <Shell card="stamp" shape={{ kind: "flat" }} className={surface.solid}>
+    <Shell
+      card="stamp"
+      shape={{ kind: "flat" }}
+      hover="pop"
+      className={surface.solid}
+    >
       <TypeTab type={data.typeName} />
       <div
         className={cn(
@@ -298,37 +326,58 @@ export function StampCard({ data, size }: CardProps) {
           side ? "flex-row items-stretch" : "flex-col",
         )}
       >
+        {/* The date sits on the perforated edge, outside the mask, like a postmark. */}
         <div
-          style={{ mask: STAMP_MASK, WebkitMask: STAMP_MASK }}
           className={cn(
-            "relative shrink-0 bg-light p-3 transition-transform duration-500 ease-out group-hover/card:-rotate-2 motion-reduce:transition-none",
-            side ? "w-2/5" : "min-h-0 flex-1",
+            "relative shrink-0 transition-transform duration-500 ease-out group-hover/card:-rotate-2 motion-reduce:transition-none",
+            side ? "w-2/5" : "aspect-[4/3] w-full",
           )}
         >
-          <div className="relative size-full overflow-hidden">
-            {/* biome-ignore lint/performance/noImgElement: covers come from arbitrary hosts; next/image needs a domain allowlist */}
-            <img
-              src={data.coverImageUrl ?? ""}
-              alt=""
-              style={{ filter: `url(#duo-${surface.id})` }}
-              className="absolute inset-0 size-full object-cover"
-            />
-            <span className="absolute bottom-1 right-1.5 font-mono text-[0.7rem] font-bold text-light mix-blend-difference">
-              {formatDate(data.publishedAt)}
-            </span>
-          </div>
+          {/* biome-ignore lint/performance/noImgElement: covers come from arbitrary hosts; next/image needs a domain allowlist */}
+          <img
+            src={data.coverImageUrl ?? ""}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            style={{ filter: `url(#duo-${surface.id})` }}
+            className="absolute inset-0 size-full object-cover"
+          />
+          <div
+            aria-hidden
+            style={{
+              mask: STAMP_MASK,
+              WebkitMask: STAMP_MASK,
+              maskComposite: "subtract",
+              WebkitMaskComposite: "source-out",
+            }}
+            className="absolute inset-0 bg-light p-3"
+          />
+          <span
+            aria-hidden
+            className="absolute -bottom-2 -right-2 rotate-3 border-2 border-dark bg-light px-1.5 py-0.5 font-mono text-xs font-bold text-dark"
+          >
+            {formatDate(data.publishedAt)}
+          </span>
         </div>
         <div className="flex flex-col min-w-0 flex-1">
           <CardTitle
             doc={data}
-            className="font-sans text-xl @xs:text-2xl leading-tight line-clamp-3"
+            className={cn(
+              "font-sans text-xl @xs:text-2xl leading-tight",
+              side ? "line-clamp-3" : "line-clamp-2",
+            )}
           />
-          {side && data.abstract && (
-            <p className="mt-2 text-sm text-dark/80 line-clamp-3">
+          {data.abstract && (
+            <p
+              className={cn(
+                "mt-2 text-sm text-dark",
+                side ? "line-clamp-3" : "line-clamp-2",
+              )}
+            >
               {data.abstract}
             </p>
           )}
-          <CardMeta doc={data} className="mt-auto pt-3" muted="text-dark/70" />
+          <CardMeta doc={data} className="mt-auto pt-3" muted="text-dark" />
         </div>
       </div>
     </Shell>
@@ -341,11 +390,12 @@ export function HeadlineCard({ data, size }: CardProps) {
   return (
     <Shell
       card="headline"
+      hover="misreg"
       shape={{ kind: "pill" }}
-      className="bg-dark text-light"
+      className="bg-dark text-light dark:bg-card"
     >
-      <TypeTab type={data.typeName} />
-      <div className="h-full flex flex-col p-6 pt-12">
+      <TypeTab type={data.typeName} tone="paper" inset />
+      <div className="h-full flex flex-col p-6 pt-19">
         <CardTitle
           doc={data}
           className={cn(
@@ -360,53 +410,6 @@ export function HeadlineCard({ data, size }: CardProps) {
           </p>
         )}
         <CardMeta doc={data} className="mt-auto pt-4" muted="text-light/60" />
-      </div>
-    </Shell>
-  );
-}
-
-// One ruled line per 1.6rem: every text line on the card uses this leading.
-const RULE = "1.6rem";
-
-/** Library catalog card: ruled sepia stock, fields typed in mono. */
-export function CatalogCard({ data }: CardProps) {
-  const shape: Shape = { kind: "fillet", corners: ["tr"] };
-  const number = String(hash(data.id) % 10000).padStart(4, "0");
-  const author = data.author.displayName || data.author.username;
-  return (
-    <Shell card="catalog" shape={shape} className="bg-sepia text-dark">
-      <div
-        aria-hidden
-        className="absolute inset-y-0 left-10 w-px bg-crimson-500/50"
-      />
-      <TypeTab type={data.typeName} corners={tabCorners(shape)} />
-      <div
-        className="relative h-full pl-14 pr-5 pt-9 font-mono text-xs"
-        style={{
-          lineHeight: RULE,
-          backgroundImage: `linear-gradient(to bottom, transparent calc(${RULE} - 1px), rgb(40 172 255 / 0.35) calc(${RULE} - 1px))`,
-          backgroundSize: `100% ${RULE}`,
-          backgroundPosition: "0 2.25rem",
-        }}
-      >
-        <p className="text-dark/60 uppercase tracking-wider">
-          Ficha nº {number}
-        </p>
-        <dl className="grid grid-cols-[4.5rem_1fr] gap-x-2">
-          <dt className="text-dark/55 uppercase">Título</dt>
-          <dd className="min-w-0">
-            <CardTitle
-              doc={data}
-              className="font-serif text-sm leading-[inherit] line-clamp-2"
-            />
-          </dd>
-          <dt className="text-dark/55 uppercase">Autor</dt>
-          <dd className="truncate">{author}</dd>
-          <dt className="text-dark/55 uppercase">Data</dt>
-          <dd>{formatDate(data.publishedAt)}</dd>
-          <dt className="text-dark/55 uppercase">Assunto</dt>
-          <dd className="truncate font-bold">{data.category?.name ?? "—"}</dd>
-        </dl>
       </div>
     </Shell>
   );
