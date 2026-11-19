@@ -33,16 +33,22 @@ const NEUTRAL_TAB = {
   auto: "bg-foreground text-background",
 } as const;
 
-/** Type label flush with a top corner; moves right when the top-left corner is cut. */
+/**
+ * Type label at a top corner; moves right when the top-left corner is cut.
+ * Flush with the edge on square cards; `inset` keeps it clear of a radius or
+ * chamfer that would cut it.
+ */
 export function TypeTab({
   type,
   corners = [],
   tone = "ink",
+  inset = false,
 }: {
   type: string;
   corners?: Corner[];
   /** Neutral tab colors, picked to stand out from the card body. */
   tone?: keyof typeof NEUTRAL_TAB;
+  inset?: boolean;
 }) {
   const lit = useContext(TypeInkContext);
   const theme = typeTheme(type);
@@ -51,8 +57,13 @@ export function TypeTab({
   return (
     <span
       className={cn(
-        "absolute top-0 z-20 inline-flex items-center gap-1.5 px-2.5 py-1 font-mono text-xs uppercase tracking-wider",
-        right ? "right-0 rounded-bl-xs" : "left-0 rounded-br-xs",
+        "absolute z-20 inline-flex items-center gap-1.5 px-2.5 py-1 font-mono text-xs uppercase tracking-wider",
+        inset
+          ? cn("top-3 rounded-xs", right ? "right-3" : "left-3")
+          : cn(
+              "top-0",
+              right ? "right-0 rounded-bl-xs" : "left-0 rounded-br-xs",
+            ),
         lit
           ? cn(theme.solid, "ring-1 ring-inset ring-dark")
           : NEUTRAL_TAB[tone],

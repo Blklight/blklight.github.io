@@ -133,9 +133,9 @@ export function PaperCard({ data, size }: CardProps) {
         className="h-full border-0"
         contentClassName="h-full"
       >
-        <TypeTab type={data.typeName} corners={tabCorners(shape)} />
+        <TypeTab type={data.typeName} corners={tabCorners(shape)} inset />
         <div
-          className="h-full flex flex-col p-5 pt-12"
+          className="h-full flex flex-col p-6 pt-14"
           style={{ color: design.paperColors?.text ?? undefined }}
         >
           <CardTitle
@@ -202,7 +202,7 @@ export function CoverCard({ data, size }: CardProps) {
         />
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-dark/95 via-dark/40 to-transparent" />
-      <TypeTab type={data.typeName} tone="paper" />
+      <TypeTab type={data.typeName} tone="paper" inset />
       <div className="relative h-full flex flex-col justify-end p-5">
         <CardTitle
           doc={data}
@@ -241,10 +241,10 @@ export function MediaCard({ data, size }: CardProps) {
   const side = wide(size);
   return (
     <Shell card="media" shape={shape} className={surface.solid}>
-      <TypeTab type={data.typeName} corners={tabCorners(shape)} />
+      <TypeTab type={data.typeName} corners={tabCorners(shape)} inset />
       <div
         className={cn(
-          "h-full flex gap-4 p-4 pt-11",
+          "h-full flex gap-4 p-6 pt-14",
           side ? "flex-row" : "flex-col",
         )}
       >
@@ -314,30 +314,35 @@ export function StampCard({ data, size }: CardProps) {
           side ? "flex-row items-stretch" : "flex-col",
         )}
       >
+        {/* The date sits on the perforated edge, outside the mask, like a postmark. */}
         <div
-          style={{ mask: STAMP_MASK, WebkitMask: STAMP_MASK }}
           className={cn(
-            "relative shrink-0 bg-light p-3 transition-transform duration-500 ease-out group-hover/card:-rotate-2 motion-reduce:transition-none",
+            "relative shrink-0 transition-transform duration-500 ease-out group-hover/card:-rotate-2 motion-reduce:transition-none",
             side ? "w-2/5" : "aspect-[4/3] w-full",
           )}
         >
-          <div className="relative size-full overflow-hidden">
-            {/* biome-ignore lint/performance/noImgElement: covers come from arbitrary hosts; next/image needs a domain allowlist */}
-            <img
-              src={data.coverImageUrl ?? ""}
-              alt=""
-              loading="lazy"
-              decoding="async"
-              style={{ filter: `url(#duo-${surface.id})` }}
-              className="absolute inset-0 size-full object-cover"
-            />
-            <span
-              aria-hidden
-              className="absolute bottom-0 right-0 bg-dark px-1.5 py-0.5 font-mono text-xs font-bold text-light"
-            >
-              {formatDate(data.publishedAt)}
-            </span>
+          <div
+            style={{ mask: STAMP_MASK, WebkitMask: STAMP_MASK }}
+            className="size-full bg-light p-3"
+          >
+            <div className="relative size-full overflow-hidden">
+              {/* biome-ignore lint/performance/noImgElement: covers come from arbitrary hosts; next/image needs a domain allowlist */}
+              <img
+                src={data.coverImageUrl ?? ""}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                style={{ filter: `url(#duo-${surface.id})` }}
+                className="absolute inset-0 size-full object-cover"
+              />
+            </div>
           </div>
+          <span
+            aria-hidden
+            className="absolute -bottom-2 -right-2 rotate-3 border-2 border-dark bg-light px-1.5 py-0.5 font-mono text-xs font-bold text-dark"
+          >
+            {formatDate(data.publishedAt)}
+          </span>
         </div>
         <div className="flex flex-col min-w-0 flex-1">
           <CardTitle
@@ -371,10 +376,10 @@ export function HeadlineCard({ data, size }: CardProps) {
     <Shell
       card="headline"
       shape={{ kind: "pill" }}
-      className="bg-dark text-light dark:border-2 dark:border-foreground"
+      className="bg-dark text-light dark:bg-card"
     >
-      <TypeTab type={data.typeName} tone="paper" />
-      <div className="h-full flex flex-col p-6 pt-12">
+      <TypeTab type={data.typeName} tone="paper" inset />
+      <div className="h-full flex flex-col p-6 pt-14">
         <CardTitle
           doc={data}
           className={cn(
