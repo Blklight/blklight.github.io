@@ -199,7 +199,7 @@ Full-width pages on a modular grid, not a centered max-width column. The feed is
 
 ## Elevation & Depth
 
-Flat by default. Structure comes from ink borders, 1px rules and paper tone changes, not from shadows. Two depth moves exist. On hover, rectangular interactive elements may lift with the stepped "shadow pop": eight stacked 1px hard shadows in the current color plus an 8px translate, like a block lifted off the page. Feed cards don't use it: on chamfered and pill silhouettes the extrusion pixelates and, on translucent dark washes, shadows every glyph. Floating layers (popovers, dropdowns, dialogs, command menu) may use a soft blurred shadow plus a faint ink ring so they read as above the page.
+Flat by default. Structure comes from ink borders, 1px rules and paper tone changes, not from shadows. Two depth moves exist. On hover, rectangular interactive elements may lift with the stepped "shadow pop": eight stacked 1px hard shadows in the current color plus an 8px translate, like a block lifted off the page. Feed cards use it only on square models (`data-hover="pop"`): on chamfered and pill silhouettes the extrusion pixelates. Floating layers (popovers, dropdowns, dialogs, command menu) may use a soft blurred shadow plus a faint ink ring so they read as above the page.
 
 ### Shadow Vocabulary
 - **Shadow pop** (`.shadow-pop-bl/br/tl/tr`: eight stacked 1px hard shadows in `currentColor` plus an 8px translate, 0.3s): hover lift for rectangular interactive elements only.
@@ -232,7 +232,7 @@ Near-square everywhere: the base radius is 2px (`--radius: 0.125rem`), and most 
 ### Cards / Containers
 - **Corner Style:** per model: chamfer, 2px, or square.
 - **Background:** one of nine surfaces (ultravioleta, sky, yellow, orange, magenta, …) as solid or pale wash, independent of the content type.
-- **Shadow Strategy:** flat at rest and on hover; each model has its own hover flourish (zoom, duotone fade, dither, tilt, title underline). The Texto dither is drawn in the surface's solid step (full in light, 30% in dark), so ink text over a dot keeps the solid's contrast.
+- **Hover vocabulary:** several effects on purpose, not one shared signal. Each model has its own flourish (zoom, duotone fade, dither, tilt, title underline) and may add a shared one via `data-hover`: `pop` (stepped shadow pop, square cards only, no transition so the block jumps up whole) and `misreg` (the title's ink plates slip off register in cyan and magenta). The static bento cell owns `:hover`, so a moving card never flickers. New effects join this vocabulary rather than replacing it. The Texto dither is drawn in the surface's solid step (full in light, 30% in dark), so ink text over a dot keeps the solid's contrast.
 - **Border:** 1px ink or none, per model.
 - **Focus:** a 3px foreground outline 4px outside the card's cell, so chamfered and pill silhouettes never clip it.
 - **Themes:** in dark, the ink Manchete gets a 2px foreground border; in book, sepia surfaces step to sepia-medium and pale washes multiply into the page.

@@ -35,11 +35,14 @@ type Shape =
 function Shell({
   card,
   shape,
+  hover,
   className,
   children,
 }: {
   card: string;
   shape: Shape;
+  /** Shared hover effect from globals.css, on top of the model's own. */
+  hover?: "pop" | "misreg";
   className?: string;
   children: ReactNode;
 }) {
@@ -48,6 +51,7 @@ function Shell({
     return (
       <FilletCard
         data-card={card}
+        data-hover={hover}
         corners={shape.corners}
         size={shape.big ? "lg" : "md"}
         radius={4}
@@ -63,6 +67,7 @@ function Shell({
   return (
     <div
       data-card={card}
+      data-hover={hover}
       className={cn(
         base,
         shape.kind === "round" && "rounded-lg",
@@ -125,7 +130,7 @@ export function PaperCard({ data, size }: CardProps) {
     big: tall(size),
   };
   return (
-    <Shell card="paper" shape={shape}>
+    <Shell card="paper" shape={shape} hover="misreg">
       <PaperSurface
         paperColors={design.paperColors}
         paperTexture={design.paperTexture}
@@ -306,7 +311,12 @@ export function StampCard({ data, size }: CardProps) {
   const surface = surfaceOf(data.id);
   const side = wide(size);
   return (
-    <Shell card="stamp" shape={{ kind: "flat" }} className={surface.solid}>
+    <Shell
+      card="stamp"
+      shape={{ kind: "flat" }}
+      hover="pop"
+      className={surface.solid}
+    >
       <TypeTab type={data.typeName} />
       <div
         className={cn(
@@ -375,6 +385,7 @@ export function HeadlineCard({ data, size }: CardProps) {
   return (
     <Shell
       card="headline"
+      hover="misreg"
       shape={{ kind: "pill" }}
       className="bg-dark text-light dark:bg-card"
     >
