@@ -55,7 +55,7 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
           <Face corner="br" paper={meta.accent.paper} selected={selected}>
             <div className="flex items-center justify-between gap-2">
               <span className="relative px-2 py-1 text-xs uppercase">
-                <CornerBrackets size="size-2" className="opacity-70" />
+                {/* <CornerBrackets size="size-2" className="opacity-70" /> */}
                 {meta.tagline}
                 {!meta.available && " · em breve"}
               </span>
