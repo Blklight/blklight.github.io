@@ -55,7 +55,7 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
           className="relative w-full h-full preserve-3d transition-transform duration-500 ease-out cursor-pointer rounded-[1.25rem] outline-none focus-visible:outline-3 focus-visible:outline-foreground focus-visible:outline-offset-4 motion-reduce:transition-none"
           style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
         >
-          <Face corner="br" paper={meta.accent.paper} selected={selected}>
+          <FichaFace corner="br" paper={meta.accent.paper} selected={selected}>
             <div className="flex items-center justify-between gap-2">
               <span className="relative px-2 py-1 text-xs uppercase">
                 {/* <CornerBrackets size="size-2" className="opacity-70" /> */}
@@ -86,9 +86,14 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
             >
               Sobre o app ↻
             </ChamferButton>
-          </Face>
+          </FichaFace>
 
-          <Face corner="bl" paper={meta.accent.paper} selected={selected} back>
+          <FichaFace
+            corner="bl"
+            paper={meta.accent.paper}
+            selected={selected}
+            back
+          >
             <div className="flex items-center justify-between gap-2">
               <button
                 type="button"
@@ -131,7 +136,7 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
               </span>
               <SelectMark selected={selected} />
             </div>
-          </Face>
+          </FichaFace>
         </div>
       </TiltContent>
     </Tilt>
@@ -159,18 +164,28 @@ const SelectMark = ({ selected }: { selected: boolean }) => (
   </span>
 );
 
-interface FaceProps {
+interface FichaFaceProps {
   corner: Corner;
   paper: string;
-  selected: boolean;
+  selected?: boolean;
   back?: boolean;
+  size?: "md" | "lg";
+  className?: string;
   children: React.ReactNode;
 }
 
 // Back face cut is mirrored (bl): flipped around Y, the physical card's br corner lands bottom-left.
-const Face = ({ corner, paper, selected, back, children }: FaceProps) => {
-  const [outerRef, outerClip] = useFillet([corner], "lg", 6, 0, 20);
-  const [innerRef, innerClip] = useFillet([corner], "lg", 6, 3, 17);
+export const FichaFace = ({
+  corner,
+  paper,
+  selected = false,
+  back,
+  size = "lg",
+  className,
+  children,
+}: FichaFaceProps) => {
+  const [outerRef, outerClip] = useFillet([corner], size, 6, 0, 20);
+  const [innerRef, innerClip] = useFillet([corner], size, 6, 3, 17);
   return (
     <div
       ref={outerRef}
@@ -189,7 +204,12 @@ const Face = ({ corner, paper, selected, back, children }: FaceProps) => {
           paper,
         )}
       >
-        <div className="relative h-full flex flex-col p-6 pointer-events-none [&_button]:pointer-events-auto">
+        <div
+          className={cn(
+            "relative h-full flex flex-col p-6 pointer-events-none [&_button]:pointer-events-auto",
+            className,
+          )}
+        >
           {children}
         </div>
       </div>

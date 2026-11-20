@@ -8,9 +8,9 @@ import { Navbar } from "@/components/navbar";
 import { appMeta } from "@/components/onboarding/app-meta";
 import { CornerBrackets } from "@/components/onboarding/corner-brackets";
 import { DitherSpotlight } from "@/components/onboarding/dither-spotlight";
+import { FichaFace } from "@/components/onboarding/simple-flip-card";
 import { RequireAuth } from "@/components/require-auth";
 import { buttonVariants } from "@/components/ui/button";
-import type { Corner } from "@/components/ui/chamfer-utils";
 import { FilletCard } from "@/components/ui/fillet-card";
 import { TextureOverlay } from "@/components/ui/texture-overlay";
 import { getPublicFeed } from "@/features/documents/api";
@@ -47,7 +47,6 @@ const TODAY = new Intl.DateTimeFormat("pt-BR", {
 });
 
 const CTA = "group font-mono text-xs uppercase tracking-wider rounded-xs";
-const APP_CORNERS: Corner[][] = [["br"], ["tr"], ["bl"], ["tl"]];
 
 function SectionTitle({ id, children }: { id: string; children: string }) {
   return (
@@ -198,7 +197,7 @@ function Dashboard() {
         </div>
       </header>
 
-      <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-10">
+      <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_18rem] gap-10">
         <div className="flex flex-col gap-10 min-w-0">
           {docs.isPending ? (
             <div className="min-h-56 rounded-xs bg-muted animate-pulse" />
@@ -282,57 +281,45 @@ function Dashboard() {
             <SectionTitle id="apps">Seus apps</SectionTitle>
             {apps.data && apps.data.length > 0 ? (
               <ul className="grid grid-cols-2 gap-3">
-                {apps.data.map((app, i) => {
+                {apps.data.map((app) => {
                   const meta = appMeta(app);
                   const Icon = meta.icon;
-                  // Same stock as the onboarding fichas (Tally look): paper, marks, mono caps.
-                  const body = (
-                    <div className="relative z-10 h-full p-4 flex flex-col pointer-events-none">
-                      <div className="flex items-start justify-between gap-2">
-                        <span className="relative px-1.5 py-0.5 text-xs uppercase">
+                  return (
+                    <li key={app.id} className="group relative aspect-square">
+                      <FichaFace
+                        corner="br"
+                        size="md"
+                        paper={meta.accent.paper}
+                        className="p-3.5"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <span className="text-[0.65rem] uppercase leading-tight">
+                            {meta.available ? meta.tagline : "Em breve"}
+                          </span>
+                          {Icon && (
+                            <Icon
+                              className="size-4 shrink-0"
+                              strokeWidth={1.75}
+                            />
+                          )}
+                        </div>
+                        <div className="relative mt-auto px-2.5 py-1.5">
                           <CornerBrackets
                             size="size-1.5"
-                            className="opacity-70"
+                            className="opacity-80"
                           />
-                          {meta.available ? meta.tagline : "Em breve"}
-                        </span>
-                        {Icon && (
-                          <Icon
-                            className="size-5 shrink-0"
-                            strokeWidth={1.75}
-                          />
-                        )}
-                      </div>
-                      <p className="mt-auto font-mono text-lg font-medium uppercase leading-tight wrap-break-word">
-                        {app.name}
-                      </p>
-                    </div>
-                  );
-                  return (
-                    <li key={app.id} className="aspect-square">
-                      <FilletCard
-                        corners={APP_CORNERS[i % APP_CORNERS.length]}
-                        size="md"
-                        radius={4}
-                        rounded={12}
-                        bordered={false}
-                        style={{ height: "100%" }}
-                        className={cn(
-                          "relative overflow-hidden text-dark background-texture",
-                          meta.accent.paper,
-                        )}
-                      >
-                        {app.slug === "publisher" ? (
-                          <Link
-                            href="/escrever"
-                            className="absolute inset-0 hover:bg-dark/10 transition-colors outline-none focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-dark"
-                          >
-                            {body}
-                          </Link>
-                        ) : (
-                          body
-                        )}
-                      </FilletCard>
+                          <p className="font-mono text-sm font-medium uppercase leading-tight wrap-break-word group-hover:underline underline-offset-2">
+                            {app.name}
+                          </p>
+                        </div>
+                      </FichaFace>
+                      {app.slug === "publisher" && (
+                        <Link
+                          href="/escrever"
+                          aria-label={app.name}
+                          className="absolute inset-0 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+                        />
+                      )}
                     </li>
                   );
                 })}
