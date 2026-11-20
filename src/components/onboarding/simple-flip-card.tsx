@@ -55,7 +55,12 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
           className="relative w-full h-full preserve-3d transition-transform duration-500 ease-out cursor-pointer rounded-[1.25rem] outline-none focus-visible:outline-3 focus-visible:outline-foreground focus-visible:outline-offset-4 motion-reduce:transition-none"
           style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
         >
-          <FichaFace corner="br" paper={meta.accent.paper} selected={selected}>
+          <FichaFace
+            corner="br"
+            paper={meta.accent.paper}
+            selected={selected}
+            hidden={flipped}
+          >
             <div className="flex items-center justify-between gap-2">
               <span className="relative px-2 py-1 text-xs uppercase">
                 {/* <CornerBrackets size="size-2" className="opacity-70" /> */}
@@ -93,6 +98,7 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
             paper={meta.accent.paper}
             selected={selected}
             back
+            hidden={!flipped}
           >
             <div className="flex items-center justify-between gap-2">
               <button
@@ -169,6 +175,8 @@ interface FichaFaceProps {
   paper: string;
   selected?: boolean;
   back?: boolean;
+  // Face turned away: some browsers still hit-test it through backface-visibility in nested 3D.
+  hidden?: boolean;
   size?: "md" | "lg";
   className?: string;
   children: React.ReactNode;
@@ -180,6 +188,7 @@ export const FichaFace = ({
   paper,
   selected = false,
   back,
+  hidden,
   size = "lg",
   className,
   children,
@@ -189,10 +198,12 @@ export const FichaFace = ({
   return (
     <div
       ref={outerRef}
+      inert={hidden}
       style={{ clipPath: outerClip }}
       className={cn(
         "absolute inset-0 backface-hidden p-[3px] transition-colors duration-200",
         back && "rotate-y-180",
+        hidden && "pointer-events-none",
         selected ? "bg-dark" : paper,
       )}
     >
