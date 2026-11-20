@@ -1,6 +1,7 @@
 "use client";
 
 import { ScrollFade } from "@animate-ui/react/primitives/effects/scroll-fade";
+import { Tilt, TiltContent } from "@animate-ui/react/primitives/effects/tilt";
 import { Check, ChevronLeft } from "lucide-react";
 import { useState } from "react";
 import { ChamferButton } from "@/components/ui/chamfer-button";
@@ -41,8 +42,8 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
   };
 
   return (
-    <div className="group relative transition-transform duration-300 ease-out hover:-translate-y-1 motion-reduce:hover:translate-y-0">
-      <div className="perspective-1000 h-96 relative">
+    <Tilt maxTilt={8} perspective={1000} className="group relative">
+      <TiltContent className="perspective-1000 h-96 relative">
         {/* biome-ignore lint/a11y/useSemanticElements: card 3D com conteúdo em bloco e botão interno não cabe em <button> */}
         <div
           role="button"
@@ -132,8 +133,8 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
             </div>
           </Face>
         </div>
-      </div>
-    </div>
+      </TiltContent>
+    </Tilt>
   );
 };
 
