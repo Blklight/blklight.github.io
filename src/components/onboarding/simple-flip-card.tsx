@@ -1,5 +1,6 @@
 "use client";
 
+import { ScrollFade } from "@animate-ui/react/primitives/effects/scroll-fade";
 import { Check, ChevronLeft } from "lucide-react";
 import { useState } from "react";
 import { ChamferButton } from "@/components/ui/chamfer-button";
@@ -41,7 +42,7 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
 
   return (
     <div className="group relative transition-transform duration-300 ease-out hover:-translate-y-1 motion-reduce:hover:translate-y-0">
-      <div className="perspective-1000 h-115 relative">
+      <div className="perspective-1000 h-96 relative">
         {/* biome-ignore lint/a11y/useSemanticElements: card 3D com conteúdo em bloco e botão interno não cabe em <button> */}
         <div
           role="button"
@@ -95,21 +96,27 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
                 className="pointer-events-auto -ml-1 inline-flex items-center gap-1 rounded-xs px-1 py-1 text-sm hover:bg-dark/10 outline-none focus-visible:outline-2 focus-visible:outline-current cursor-pointer"
               >
                 <ChevronLeft aria-hidden className="size-4" />
-                Capa
+                Voltar
               </button>
               <span className="text-xs uppercase opacity-70">
                 {meta.available ? "Disponível" : "Em breve"}
               </span>
             </div>
 
-            <div className="relative mt-4 flex-1 p-4">
+            <div className="relative mt-4 flex min-h-0 flex-1 flex-col">
               <CornerBrackets size="size-3" className="opacity-80" />
-              <p className="text-base leading-relaxed">{meta.description}</p>
-              {meta.features.length > 0 && (
-                <p className="mt-4 text-sm leading-relaxed opacity-80">
-                  {joinPt(meta.features)}.
-                </p>
-              )}
+              <ScrollFade
+                size={24}
+                shrink={0}
+                className="pointer-events-auto min-h-0 flex-1 p-4 scrollbar-none"
+              >
+                <p className="text-base leading-relaxed">{meta.description}</p>
+                {meta.features.length > 0 && (
+                  <p className="mt-4 text-sm leading-relaxed opacity-80">
+                    {joinPt(meta.features)}.
+                  </p>
+                )}
+              </ScrollFade>
             </div>
             {meta.idealFor && (
               <p className="pt-5 text-xs">
