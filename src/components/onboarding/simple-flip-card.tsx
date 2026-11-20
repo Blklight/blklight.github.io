@@ -1,7 +1,8 @@
 "use client";
 
-import { Check, ChevronLeft, RotateCw } from "lucide-react";
+import { Check, ChevronLeft } from "lucide-react";
 import { useState } from "react";
+import { ChamferButton } from "@/components/ui/chamfer-button";
 import type { Corner } from "@/components/ui/chamfer-utils";
 import { useFillet } from "@/components/ui/fillet-card";
 import { cn } from "@/lib/utils";
@@ -74,10 +75,15 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
 
             <div className="flex-1" />
 
-            <InkBar onClick={flip} label={`Sobre o ${app.name}`}>
-              Sobre o app
-              <RotateCw aria-hidden className="size-3.5" />
-            </InkBar>
+            <ChamferButton
+              onClick={flip}
+              onKeyDown={(e) => e.stopPropagation()}
+              aria-label={`Sobre o ${app.name}`}
+              corner="br"
+              className="mt-6 w-full bg-dark text-light hover:bg-dark/85"
+            >
+              Sobre o app ↻
+            </ChamferButton>
           </Face>
 
           <Face corner="bl" paper={meta.accent.paper} selected={selected} back>
@@ -182,21 +188,3 @@ const Face = ({ corner, paper, selected, back, children }: FaceProps) => {
     </div>
   );
 };
-
-interface InkBarProps {
-  onClick: (e: React.MouseEvent) => void;
-  label: string;
-  children: React.ReactNode;
-}
-
-const InkBar = ({ onClick, label, children }: InkBarProps) => (
-  <button
-    type="button"
-    onClick={onClick}
-    onKeyDown={(e) => e.stopPropagation()}
-    aria-label={label}
-    className="chamfer chamfer-br chamfer-xs mt-6 flex h-9 w-full items-center justify-center gap-2 bg-dark font-mono text-sm text-light hover:bg-dark/85 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-light cursor-pointer"
-  >
-    {children}
-  </button>
-);
