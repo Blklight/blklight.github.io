@@ -85,7 +85,10 @@ function Choose() {
             rounded={2}
             bordered={false}
             style={{ height: "100%" }}
-            className={cn("h-full text-dark", TYPE_THEME.article.solid)}
+            className={cn(
+              "h-full text-dark background-texture",
+              TYPE_THEME.article.solid,
+            )}
           >
             <KindLink kind={FEED_KINDS[0]} />
           </FilletCard>
@@ -93,7 +96,7 @@ function Choose() {
         <li className="min-h-72">
           <div
             className={cn(
-              "h-full rounded-lg text-dark",
+              "h-full rounded-lg text-dark background-texture",
               TYPE_THEME.tutorial.solid,
             )}
           >
@@ -103,7 +106,7 @@ function Choose() {
         <li className="min-h-72">
           <div
             className={cn(
-              "h-full rounded-none border-2 border-foreground text-dark",
+              "h-full rounded-none border-2 border-foreground text-dark background-texture",
               TYPE_THEME.project.solid,
             )}
           >
@@ -118,7 +121,7 @@ function Choose() {
       <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {OTHER_KINDS.map((kind) => (
           <li key={kind.slug} className="min-h-44">
-            <div className="h-full rounded-[1.25rem] border border-border bg-card">
+            <div className="h-full rounded-[1.25rem] border border-border bg-card background-texture">
               <KindLink kind={kind} />
             </div>
           </li>
