@@ -248,6 +248,16 @@ Near-square everywhere: the base radius is 2px (`--radius: 0.125rem`), and most 
 ### Navigation
 - **Navbar:** 48px sticky, paper with noise texture, ink bottom rule; Inter bold wordmark; mono links with an active indicator; ⌘K command trigger; avatar menu with square avatar.
 
+### App fichas (Tally style)
+- **Shape:** double fillet frame (`FichaFace` in `src/components/onboarding/simple-flip-card.tsx`): app paper stock with `background-texture`, 3px inner border that turns ink when selected, chamfer always bottom-right (`br`; the back face mirrors to `bl`).
+- **Onboarding:** flip card, 384px tall. Front opens the back with a `ChamferButton` (`src/components/ui/chamfer-button.tsx`, copied from Tally). The back has "Voltar" and a scrollable body inside the corner brackets, faded at the edges with `ScrollFade` from `@animate-ui/react`. Hover tilts the card up to 8° (`Tilt` from `@animate-ui/react`, flat under reduced motion).
+- **Dashboard:** same face at `md` size, square, two per row in an 18rem side column. No flip, no button.
+
+### Page transitions (installed, not wired)
+- `src/components/animate-ui/components/page-transition.tsx` (Animate UI, via shadcn) is installed but not imported anywhere. It runs on the browser View Transitions API through `motion/react-animate-view`; to try it, wrap `{children}` in `src/app/layout.tsx` with `<PageTransition effect="fade">`, keeping the navbar outside, and mark back links with `transitionTypes={['nav-back']}`.
+- Alternative: React's `<ViewTransition>` directly, which the App Router supports with no config (`node_modules/next/dist/docs/01-app/02-guides/view-transitions.md`). Better for shared-element morphs such as a feed card cover into the document cover.
+- Check both under `cacheComponents: true` and reduced motion before choosing.
+
 ### Document Paper (signature)
 The editor and published document render as a sheet of paper: author-chosen font, paper color, texture and grain overlay, letterhead (`{{tipo}} de {{publicador}}`), cover, and an always-present digital signature block.
 

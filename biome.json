@@ -18,7 +18,8 @@
       "!.claude",
       "!.impeccable",
       "!src/components/GrainVsPaperLab.tsx",
-      "!src/types/api.generated.ts"
+      "!src/types/api.generated.ts",
+      "!src/components/animate-ui"
     ]
   },
   "formatter": {
