@@ -257,7 +257,7 @@ Near-square everywhere: the base radius is 2px (`--radius: 0.125rem`), and most 
 
 ### Onboarding
 - **One object across the flow:** the member badge (`Badge model="classic"`, `src/components/badge/`): a rounded plastic card with an ink rim and lanyard slot (not chamfered: badges aren't), paper texture and tilt. Front: centered photo (`avatarUrl` or initials until upload exists), name, @handle, Blklight logo at the base. Back (click to flip): profile URL, status, the apps. Step 1 shows it being built (handle updates live, empty app slots); the last step shows it with the chosen apps, and the "Confirmado" stamp lands on the front when setup finishes.
-- **Badge models:** `src/components/badge/index.tsx` maps model names to components that all take the same `BadgeData` (name, handle, avatar, member since, id, apps) and an optional `status` (`draft` in onboarding, `confirmed` right after it, none for someone else's badge). New looks (e.g. a holo card) are new entries in `BADGE_MODELS`, so profile and user search can render any member with any model.
+- **Badge models:** `src/components/badge/index.tsx` maps model names to components that all take the same `BadgeData` (name, handle, avatar, member since, id, apps) and an optional `status` (`draft` in onboarding, `confirmed` right after it, none for someone else's badge). Models today: `classic` and `holo` (dark card, rainbow foil and glare following the pointer via `--mx`/`--my`; compare them at `/lab/cracha`). New looks are new entries in `BADGE_MODELS`, so profile and user search can render any member with any model.
 - **Badge stage:** on the first and last steps the badge sits on the Grainient panel (`BadgeStage`), always in a 25rem column on the right (`BADGE_LAYOUT`).
 - **Step anatomy:** title + lede, content, then `StepFooter` (`src/components/onboarding/step-footer.tsx`), the same fixed bar on every step.
 - **Steps animate** 16px in the direction of travel with a fade (`AnimatePresence` in `src/app/onboarding/page.tsx`); reduced motion keeps only the fade. Finished steps on the progress bar are buttons back to them, until setup starts: then navigation locks.
@@ -271,6 +271,9 @@ The cards, covers and layouts vary; these never do:
 - **App cards:** `FichaFace` + tilt wherever an app appears (onboarding, confirmation, dashboard), chamfer `br`.
 - **Not available yet:** hatch + "Em breve" stamp, never only a muted color.
 - **Status after an action:** short text in an `aria-live` region next to the action, not a toast.
+
+### Dev showcase
+`/componentes` lists every component with a live demo (`src/components/showcase/`, port of the tpl-ui showcase). The page is `page.dev.tsx`, which `pageExtensions` in `next.config.ts` only picks up outside production. Add a demo to `demos/blklight.tsx` when a project component is created.
 
 ### Page transitions (installed, not wired)
 - `src/components/animate-ui/components/page-transition.tsx` (Animate UI, via shadcn) is installed but not imported anywhere. It runs on the browser View Transitions API through `motion/react-animate-view`; to try it, wrap `{children}` in `src/app/layout.tsx` with `<PageTransition effect="fade">`, keeping the navbar outside, and mark back links with `transitionTypes={['nav-back']}`.

@@ -62,6 +62,7 @@ function BadgeDemo() {
       <Badge data={{ ...MEMBER, apps: [] }} status="draft" />
       <Badge data={MEMBER} status="confirmed" />
       <Badge data={MEMBER} />
+      <Badge model="holo" data={MEMBER} />
     </div>
   );
 }
@@ -81,7 +82,7 @@ export const blklightCategory: ShowcaseCategory = {
   items: [
     { slug: "ficha", name: "Ficha de app (flip)", demo: FichaDemo },
     { slug: "app-tile", name: "App Tile", demo: AppTileDemo },
-    { slug: "member-badge", name: "Crachá (classic)", demo: BadgeDemo },
+    { slug: "member-badge", name: "Crachás (classic e holo)", demo: BadgeDemo },
     {
       slug: "corner-brackets",
       name: "Corner Brackets",

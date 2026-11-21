@@ -10,7 +10,7 @@ import { FLAT } from "@/components/onboarding/simple-flip-card";
 import { cn } from "@/lib/utils";
 import type { BadgeModelProps } from "./types";
 
-const SINCE = new Intl.DateTimeFormat("pt-BR", {
+export const SINCE = new Intl.DateTimeFormat("pt-BR", {
   day: "2-digit",
   month: "short",
   year: "numeric",
@@ -195,7 +195,13 @@ export const ClassicBadge = ({ data, status, className }: BadgeModelProps) => {
   );
 };
 
-const Row = ({ label, children }: { label: string; children: ReactNode }) => (
+export const Row = ({
+  label,
+  children,
+}: {
+  label: string;
+  children: ReactNode;
+}) => (
   <div>
     <dt className="text-[0.65rem] uppercase tracking-wider opacity-70">
       {label}
