@@ -1,11 +1,12 @@
 "use client";
 
-import { ArrowRight, RotateCw, Search } from "lucide-react";
+import { RotateCw, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { SimpleFlipCard } from "@/components/onboarding/simple-flip-card";
 import { Button } from "@/components/ui/button";
 import type { PlatformApp } from "@/types/api.types";
 import { appMeta } from "./app-meta";
+import { StepFooter } from "./step-footer";
 
 interface Props {
   apps: PlatformApp[];
@@ -15,11 +16,12 @@ interface Props {
    */
   initial: string[];
   onConfirm: (slugs: string[]) => void;
+  onBack: () => void;
 }
 
 const SEARCH_THRESHOLD = 6;
 
-export const AppsStep = ({ apps, initial, onConfirm }: Props) => {
+export const AppsStep = ({ apps, initial, onConfirm, onBack }: Props) => {
   const [selected, setSelected] = useState<Set<string>>(new Set(initial));
   const [query, setQuery] = useState("");
 
@@ -110,22 +112,17 @@ export const AppsStep = ({ apps, initial, onConfirm }: Props) => {
         </div>
       )}
 
-      <div className="sticky bottom-0 z-20 bg-background/90 backdrop-blur-sm border-t border-border -mx-6 md:-mx-10 px-6 md:px-10 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-auto">
-        <output aria-live="polite" className="text-sm">
-          {count === 0
+      <StepFooter
+        onBack={onBack}
+        status={
+          count === 0
             ? "Selecione ao menos um app para continuar."
-            : `${count} ${count === 1 ? "app selecionado" : "apps selecionados"}`}
-        </output>
-        <Button
-          size="lg"
-          disabled={count === 0}
-          onClick={() => onConfirm(Array.from(selected))}
-          className="group font-mono text-xs uppercase tracking-wider rounded-xs"
-        >
-          Continuar
-          <ArrowRight className="ml-3 size-4 transition-transform group-hover:translate-x-1" />
-        </Button>
-      </div>
+            : `${count} ${count === 1 ? "app selecionado" : "apps selecionados"}`
+        }
+        label="Continuar"
+        disabled={count === 0}
+        onNext={() => onConfirm(Array.from(selected))}
+      />
     </div>
   );
 };

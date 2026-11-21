@@ -74,17 +74,18 @@ describe("AppsStep", () => {
         apps={[app("publisher", "Publisher"), app("reader", "Reader")]}
         initial={[]}
         onConfirm={onConfirm}
+        onBack={vi.fn()}
       />,
     );
     const next = screen.getByRole("button", { name: /continuar/i });
     expect(next).toBeDisabled();
 
-    await userEvent.click(screen.getByRole("button", { name: "Reader" }));
-    expect(screen.getByRole("button", { name: "Reader" })).toHaveAttribute(
+    await userEvent.click(screen.getByRole("button", { name: "Publisher" }));
+    expect(screen.getByRole("button", { name: "Publisher" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
     await userEvent.click(next);
-    expect(onConfirm).toHaveBeenCalledWith(["reader"]);
+    expect(onConfirm).toHaveBeenCalledWith(["publisher"]);
   });
 });

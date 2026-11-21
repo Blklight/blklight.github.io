@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Step } from "@/app/onboarding/page";
+import { cn } from "@/lib/utils";
 
 const STEPS: { id: Step; label: string }[] = [
   { id: "welcome", label: "Boas-vindas" },
@@ -11,10 +12,11 @@ const STEPS: { id: Step; label: string }[] = [
 
 interface Props {
   step: Step;
+  onStepClick?: (step: Step) => void;
   children: ReactNode;
 }
 
-export const OnboardingShell = ({ step, children }: Props) => {
+export const OnboardingShell = ({ step, onStepClick, children }: Props) => {
   const idx = STEPS.findIndex((s) => s.id === step);
   const total = STEPS.length;
 
@@ -49,24 +51,44 @@ export const OnboardingShell = ({ step, children }: Props) => {
         </p>
       </header>
 
-      <div
-        className="mx-6 md:mx-10 grid gap-1.5"
-        style={{ gridTemplateColumns: `repeat(${total}, minmax(0, 1fr))` }}
-        role="progressbar"
-        aria-label="Progresso do onboarding"
-        aria-valuemin={1}
-        aria-valuemax={total}
-        aria-valuenow={idx + 1}
-      >
-        {STEPS.map((s, i) => (
-          <div
-            key={s.id}
-            className={`h-1 rounded-full transition-colors duration-500 ${
-              i <= idx ? "bg-blklight-500 dark:bg-blklight-400" : "bg-border"
-            }`}
-          />
-        ))}
-      </div>
+      <nav aria-label="Etapas do onboarding" className="mx-6 md:mx-10">
+        <ol
+          className="grid gap-1.5"
+          style={{ gridTemplateColumns: `repeat(${total}, minmax(0, 1fr))` }}
+        >
+          {STEPS.map((s, i) => {
+            const bar = (
+              <span
+                className={cn(
+                  "block h-1 rounded-full transition-colors duration-500",
+                  i <= idx
+                    ? "bg-blklight-500 dark:bg-blklight-400"
+                    : "bg-border",
+                )}
+              />
+            );
+            return (
+              <li key={s.id} aria-current={i === idx ? "step" : undefined}>
+                {i < idx && onStepClick ? (
+                  <button
+                    type="button"
+                    onClick={() => onStepClick(s.id)}
+                    aria-label={`Voltar para ${s.label}`}
+                    className="block w-full py-1.5 cursor-pointer rounded-xs outline-none hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+                  >
+                    {bar}
+                  </button>
+                ) : (
+                  <span className="block py-1.5">
+                    {bar}
+                    <span className="sr-only">{s.label}</span>
+                  </span>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      </nav>
 
       <main id="main" className="flex-1 flex flex-col">
         {children}
