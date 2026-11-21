@@ -4,23 +4,11 @@ import { Tilt, TiltContent } from "@animate-ui/react/primitives/effects/tilt";
 import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { type ReactNode, useState } from "react";
+import { appMeta } from "@/components/onboarding/app-meta";
+import { CornerBrackets } from "@/components/onboarding/corner-brackets";
+import { FLAT } from "@/components/onboarding/simple-flip-card";
 import { cn } from "@/lib/utils";
-import type { PlatformApp } from "@/types/api.types";
-import { appMeta } from "./app-meta";
-import { CornerBrackets } from "./corner-brackets";
-import { FLAT } from "./simple-flip-card";
-
-interface Props {
-  name: string;
-  handle: string;
-  avatarUrl?: string | null;
-  /** ISO date the account was created. */
-  memberSince: string;
-  memberId: string;
-  apps?: PlatformApp[];
-  confirmed?: boolean;
-  className?: string;
-}
+import type { BadgeModelProps } from "./types";
 
 const SINCE = new Intl.DateTimeFormat("pt-BR", {
   day: "2-digit",
@@ -28,7 +16,7 @@ const SINCE = new Intl.DateTimeFormat("pt-BR", {
   year: "numeric",
 });
 
-const initials = (name: string) =>
+export const initials = (name: string) =>
   name
     .replace(/^@/, "")
     .split(/[\s_.-]+/)
@@ -38,19 +26,13 @@ const initials = (name: string) =>
     .join("") || "?";
 
 /**
- * The member badge: built live on the first step, stamped on the last.
- * Front carries the person, back carries the apps; a click turns it over.
+ * Classic badge: rounded plastic card with a lanyard slot. Front carries the
+ * person, back carries the apps; a click turns it over.
  */
-export const MemberBadge = ({
-  name,
-  handle,
-  avatarUrl,
-  memberSince,
-  memberId,
-  apps = [],
-  confirmed = false,
-  className,
-}: Props) => {
+export const ClassicBadge = ({ data, status, className }: BadgeModelProps) => {
+  const { name, handle, avatarUrl, memberSince, memberId, apps = [] } = data;
+  const confirmed = status === "confirmed";
+  const draft = status === "draft";
   const reduceMotion = useReducedMotion();
   const [flipped, setFlipped] = useState(false);
   const since = SINCE.format(new Date(memberSince)).replace(".", "");
@@ -155,8 +137,8 @@ export const MemberBadge = ({
 
               <dl className="mt-6 grid gap-3 font-mono text-xs">
                 <Row label="Perfil">blklight.dev/{handle}</Row>
-                <Row label={confirmed ? "Membro desde" : "Situação"}>
-                  {confirmed ? since : "Em montagem"}
+                <Row label={draft ? "Situação" : "Membro desde"}>
+                  {draft ? "Em montagem" : since}
                 </Row>
               </dl>
 
@@ -191,7 +173,9 @@ export const MemberBadge = ({
                       />
                     ))}
                     <li className="mt-1 font-mono text-[0.65rem] opacity-70">
-                      Seus apps entram aqui no próximo passo.
+                      {draft
+                        ? "Seus apps entram aqui no próximo passo."
+                        : "Nenhum app ativo."}
                     </li>
                   </ul>
                 )}
@@ -199,7 +183,9 @@ export const MemberBadge = ({
 
               <div className="mt-4 flex items-center justify-between border-t-2 border-dashed border-dark/40 pt-3 font-mono text-[0.65rem] uppercase tracking-wider opacity-70">
                 <span>Frente ↻</span>
-                <span>{confirmed ? "Confirmado" : "Rascunho"}</span>
+                <span>
+                  {draft ? "Rascunho" : confirmed ? "Confirmado" : "Membro"}
+                </span>
               </div>
             </Face>
           </div>

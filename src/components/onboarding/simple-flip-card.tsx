@@ -20,8 +20,6 @@ interface Props {
   app: PlatformApp;
   selected?: boolean;
   onToggle?: () => void;
-  /** "display" shows the cover only: no flip, no selection. */
-  mode?: "select" | "display";
 }
 
 /**
@@ -29,16 +27,10 @@ interface Props {
  * marks around the label and the name, and an ink bar that turns the card
  * over to what the app does.
  */
-export const SimpleFlipCard = ({
-  app,
-  selected = false,
-  onToggle,
-  mode = "select",
-}: Props) => {
+export const SimpleFlipCard = ({ app, selected = false, onToggle }: Props) => {
   const [flipped, setFlipped] = useState(false);
   const meta = appMeta(app);
   const locked = !meta.available;
-  const display = mode === "display";
 
   const flip = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -73,23 +65,6 @@ export const SimpleFlipCard = ({
       </div>
     </>
   );
-
-  if (display) {
-    return (
-      <Tilt
-        maxTilt={8}
-        perspective={1000}
-        style={FLAT}
-        className="group relative"
-      >
-        <TiltContent className="relative h-72">
-          <FichaFace corner="br" paper={meta.accent.paper} selected={selected}>
-            {cover}
-          </FichaFace>
-        </TiltContent>
-      </Tilt>
-    );
-  }
 
   return (
     <Tilt
@@ -206,25 +181,37 @@ const joinPt = (items: string[]) => {
 };
 
 // Hatched, washed-out stock: reads as "not yet" before the label does.
-const LockedVeil = () => (
+export const LockedVeil = () => (
   <span
     aria-hidden
     className="absolute inset-0 bg-light/45 bg-[repeating-linear-gradient(135deg,transparent_0_9px,rgb(0_0_0/0.07)_9px_11px)]"
   />
 );
 
-const SoonStamp = () => (
-  <span className="-rotate-6 border-2 border-dark px-1.5 py-0.5 font-mono text-[0.7rem] font-semibold uppercase tracking-wider">
+export const SoonStamp = ({ className }: { className?: string }) => (
+  <span
+    className={cn(
+      "-rotate-6 shrink-0 border-2 border-dark px-1.5 py-0.5 font-mono text-[0.7rem] font-semibold uppercase tracking-wider",
+      className,
+    )}
+  >
     Em breve
   </span>
 );
 
-const SelectMark = ({ selected }: { selected: boolean }) => (
+export const SelectMark = ({
+  selected,
+  className,
+}: {
+  selected: boolean;
+  className?: string;
+}) => (
   <span
     aria-hidden
     className={cn(
       "size-6 shrink-0 rounded-[3px] border-2 border-dark flex items-center justify-center",
       selected && "bg-dark text-light",
+      className,
     )}
   >
     {selected && <Check className="size-3.5" strokeWidth={3} />}

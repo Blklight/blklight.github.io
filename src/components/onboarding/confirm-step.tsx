@@ -3,12 +3,13 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Badge } from "@/components/badge";
 import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/store/useAuthStore";
 import type { ApiResponse, PlatformApp } from "@/types/api.types";
-import { MemberBadge } from "./member-badge";
+import { AppTile } from "./app-tile";
+import { BADGE_LAYOUT, BadgeStage } from "./badge-stage";
 import { SetupProgress, type SetupTask } from "./setup-progress";
-import { SimpleFlipCard } from "./simple-flip-card";
 import { StepFooter } from "./step-footer";
 
 interface Props {
@@ -86,21 +87,7 @@ export const ConfirmStep = ({
 
   return (
     <div className="flex-1 flex flex-col px-6 md:px-10 pt-12">
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-[auto_minmax(0,1fr)] gap-12 lg:gap-16 items-start pb-12">
-        {badge && (
-          <div className="mx-auto lg:mx-0 lg:sticky lg:top-8">
-            <MemberBadge
-              name={username}
-              handle={badge.handle}
-              avatarUrl={badge.avatarUrl}
-              memberSince={badge.memberSince}
-              memberId={badge.memberId}
-              apps={apps}
-              confirmed={phase === "confirmed"}
-            />
-          </div>
-        )}
-
+      <div className={BADGE_LAYOUT}>
         <div className="min-w-0">
           <h1 className="font-sans text-5xl md:text-6xl font-bold tracking-tight leading-[1.02] mb-6 wrap-anywhere">
             {review ? (
@@ -121,19 +108,47 @@ export const ConfirmStep = ({
           {review ? (
             <>
               <p className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-xl mb-10">
-                Confira seu crachá; clique nele para ver os apps no verso.{" "}
+                Confira seu crachá ao lado; os apps ficam no verso.{" "}
                 {apps.length === 1
                   ? "Este app vai aparecer no seu menu e no seu dashboard."
                   : `Estes ${apps.length} apps vão aparecer no seu menu e no seu dashboard.`}{" "}
                 Dá para mudar depois.
               </p>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5">
+              <ul className="grid max-w-2xl grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3">
                 {apps.map((app) => (
                   <li key={app.id}>
-                    <SimpleFlipCard app={app} selected mode="display" />
+                    <AppTile app={app} selected />
                   </li>
                 ))}
               </ul>
+              {badge && (
+                <dl className="mt-10 grid max-w-2xl gap-4 border-t border-border pt-6 text-sm sm:grid-cols-3">
+                  <div>
+                    <dt className="font-mono text-xs text-muted-foreground">
+                      Perfil público
+                    </dt>
+                    <dd className="mt-1 wrap-anywhere">
+                      blklight.dev/{badge.handle}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="font-mono text-xs text-muted-foreground">
+                      Depois
+                    </dt>
+                    <dd className="mt-1">
+                      Troque apps e foto quando quiser, na sua conta.
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="font-mono text-xs text-muted-foreground">
+                      Em seguida
+                    </dt>
+                    <dd className="mt-1">
+                      Seu dashboard, com os apps e os textos recentes.
+                    </dd>
+                  </div>
+                </dl>
+              )}
             </>
           ) : (
             <>
@@ -150,6 +165,22 @@ export const ConfirmStep = ({
             </>
           )}
         </div>
+
+        {badge && (
+          <BadgeStage>
+            <Badge
+              status={phase === "confirmed" ? "confirmed" : "draft"}
+              data={{
+                name: username,
+                handle: badge.handle,
+                avatarUrl: badge.avatarUrl,
+                memberSince: badge.memberSince,
+                memberId: badge.memberId,
+                apps,
+              }}
+            />
+          </BadgeStage>
+        )}
       </div>
 
       {review && (

@@ -3,9 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { useReducedMotion } from "motion/react";
 import { useForm } from "react-hook-form";
-import Grainient from "@/components/Grainient";
+import { Badge } from "@/components/badge";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import {
   InputGroup,
@@ -13,13 +12,14 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { apiClient } from "@/lib/api-client";
+import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 import type { ApiResponse } from "@/types/api.types";
 import {
   type OnboardingFormData,
   onboardingSchema,
 } from "@/types/form.schemas";
-import { MemberBadge } from "./member-badge";
+import { BADGE_LAYOUT, BadgeStage } from "./badge-stage";
 import { StepFooter } from "./step-footer";
 
 interface Props {
@@ -43,6 +43,18 @@ const errorMessages: Record<string, string> = {
 
 const t = (key: string) => errorMessages[key] ?? key;
 
+const ROADMAP = [
+  {
+    title: "Crachá",
+    text: "Seu nome e endereço público. Clique nele para ver o verso.",
+  },
+  {
+    title: "Apps",
+    text: "As ferramentas que entram no seu menu e no dashboard.",
+  },
+  { title: "Confirmação", text: "Você revisa, a gente ativa tudo." },
+];
+
 export const WelcomeStep = ({
   username,
   onNext,
@@ -50,7 +62,6 @@ export const WelcomeStep = ({
   badge,
 }: Props) => {
   const setUser = useAuthStore((state) => state.setUser);
-  const reduceMotion = useReducedMotion();
 
   const form = useForm<OnboardingFormData>({
     resolver: zodResolver(onboardingSchema),
@@ -93,7 +104,7 @@ export const WelcomeStep = ({
 
   return (
     <div className="flex-1 flex flex-col px-6 md:px-10 pt-12">
-      <div className="flex-1 w-full grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-12 lg:gap-16 items-center pb-12">
+      <div className={BADGE_LAYOUT}>
         <div>
           <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.02] mb-6 wrap-anywhere">
             {needsUsername ? "Boas-vindas ao " : "Olá, "}
@@ -149,40 +160,41 @@ export const WelcomeStep = ({
               )}
             </form>
           ) : null}
+
+          <ol className="mt-12 grid max-w-xl gap-4 border-t border-border pt-6 sm:grid-cols-3">
+            {ROADMAP.map((item, i) => (
+              <li
+                key={item.title}
+                className={cn(i > 0 && "text-muted-foreground")}
+              >
+                <p className="font-mono text-xs">
+                  {String(i + 1).padStart(2, "0")}
+                </p>
+                <p className="mt-1 font-sans text-sm font-bold">{item.title}</p>
+                <p className="mt-1 text-xs leading-relaxed">{item.text}</p>
+              </li>
+            ))}
+          </ol>
         </div>
 
-        <aside
-          aria-label="Prévia do seu crachá"
-          className="relative overflow-hidden rounded-xs text-light"
-        >
-          <div className="absolute inset-0">
-            <Grainient
-              color1="#9c40f7"
-              color2="#2969ff"
-              color3="#252525"
-              timeSpeed={reduceMotion ? 0 : 0.25}
-              warpAmplitude={50}
-              grainAmount={0.1}
-              contrast={1.5}
-              zoom={0.9}
+        <BadgeStage>
+          {badge ? (
+            <Badge
+              status="draft"
+              data={{
+                name: username,
+                handle,
+                avatarUrl: badge.avatarUrl,
+                memberSince: badge.memberSince,
+                memberId: badge.memberId,
+              }}
             />
-          </div>
-          <div className="relative z-10 flex min-h-[32rem] items-center justify-center p-8">
-            {badge ? (
-              <MemberBadge
-                name={username}
-                handle={handle}
-                avatarUrl={badge.avatarUrl}
-                memberSince={badge.memberSince}
-                memberId={badge.memberId}
-              />
-            ) : (
-              <p className="font-sans text-2xl md:text-3xl font-bold tracking-tight wrap-anywhere">
-                blklight.dev/{handle}
-              </p>
-            )}
-          </div>
-        </aside>
+          ) : (
+            <p className="font-sans text-2xl md:text-3xl font-bold tracking-tight wrap-anywhere">
+              blklight.dev/{handle}
+            </p>
+          )}
+        </BadgeStage>
       </div>
 
       {needsUsername ? (
