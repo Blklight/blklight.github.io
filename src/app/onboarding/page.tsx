@@ -169,6 +169,7 @@ export default function OnboardingPage() {
                     selected.includes(a.slug),
                   )}
                   onBack={() => setStep("apps")}
+                  badge={badge ?? undefined}
                 />
               )}
             </motion.div>
