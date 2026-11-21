@@ -21,7 +21,7 @@ import {
   UserPlus,
   UserRound,
 } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { type ReactNode, useDeferredValue, useEffect, useState } from "react";
 import { typeTheme } from "@/components/feed/cards/card-theme";
@@ -101,8 +101,6 @@ function Group({
 /** Global ⌘K / Ctrl+K palette: navigation, feed search, and theme. */
 export function CommandMenu() {
   const router = useRouter();
-  // The landing page is a marketing surface: no palette there.
-  const onLanding = usePathname() === "/";
   const { setTheme } = useTheme();
   const open = useCommandMenuStore((s) => s.open);
   const setOpen = useCommandMenuStore((s) => s.setOpen);
@@ -126,8 +124,10 @@ export function CommandMenu() {
   );
 
   useEffect(() => {
-    if (onLanding) return;
     const onKey = (e: KeyboardEvent) => {
+      // The landing page is a marketing surface: no palette there. Read at key
+      // time, not via usePathname, which would block this root-layout component's prerender.
+      if (window.location.pathname === "/") return;
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         setOpen(!useCommandMenuStore.getState().open);
@@ -135,7 +135,7 @@ export function CommandMenu() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [setOpen, onLanding]);
+  }, [setOpen]);
 
   const docs = useQuery({
     queryKey: ["command-menu", "feed", q],
