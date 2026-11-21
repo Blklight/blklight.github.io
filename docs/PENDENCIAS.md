@@ -128,6 +128,8 @@ Branch `refino-ui` (ainda não enviada). Itens que ficaram abertos depois do ref
 - **Redes sociais:** `BadgeData.socials` existe, mas a API não tem esse campo; só aparecem no `/lab/cracha`. O holo-card não mostra redes (exigiria mexer no layout dele).
 - **Escolha do modelo:** os modelos (`classic`, `holo`, `holo-card`) só são escolhidos no código. Falta onde a pessoa escolhe (perfil ou onboarding) e onde o crachá aparece fora do onboarding (perfil, busca de usuários).
 - **Holo-card:** o GIF de brilho (`public/badges/sparkles.gif`) e a imagem de teste (`public/badges/holo-bg.jpg`) vieram de terceiros (CodePen e imgur). Conferir a licença antes de ir para produção. A frente ainda usa `react-parallax-tilt` (outra lib de tilt além da do Animate UI).
+- **Industrial:** sem versão escura (é sempre metal claro). Setor e Nível estão fixos no código ("Escrita", "Pleno"/"Provisório"), porque a API não tem esses dados.
+- **Holo-card, recorte:** a arte e o wrapper agora têm o mesmo raio, e uma máscara impede que o desfoque escape do canto durante o tilt. A máscara também corta a sombra externa, que ficou bem mais fraca. Confirmar se o vazamento relatado sumiu.
 - **Pastas:** os crachás importam `app-meta`, `corner-brackets` e `FLAT` de `src/components/onboarding/`. Mover para uma pasta comum quando a busca de usuários existir.
 
 ### Onboarding
@@ -144,7 +146,7 @@ Branch `refino-ui` (ainda não enviada). Itens que ficaram abertos depois do ref
 
 ## Prioridade baixa
 
-- O showcase (`/componentes`) não tem demo do holo-card nem do menu de conta.
+- O showcase (`/componentes`) não tem demo do holo-card, do industrial nem do menu de conta.
 - Textos em inglês no holo-card foram traduzidos à mão no componente adaptado; se o heygaia atualizar o original, a adaptação não acompanha.
 
 ## Ambiente (2026-11-21)
