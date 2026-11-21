@@ -1,5 +1,6 @@
 import { ClassicBadge } from "./classic-badge";
 import { HoloBadge } from "./holo-badge";
+import { HoloCardBadge } from "./holo-card-badge";
 import type { BadgeModelProps } from "./types";
 
 export type { BadgeData, BadgeModelProps, BadgeStatus } from "./types";
@@ -8,6 +9,7 @@ export type { BadgeData, BadgeModelProps, BadgeStatus } from "./types";
 export const BADGE_MODELS = {
   classic: ClassicBadge,
   holo: HoloBadge,
+  "holo-card": HoloCardBadge,
 } as const;
 
 export type BadgeModel = keyof typeof BADGE_MODELS;
