@@ -166,7 +166,7 @@ export const ProfileMenu = ({
             role="menu"
             aria-label="Conta"
             onKeyDown={onPanelKey}
-            className="absolute right-0 top-0 z-[120] w-72 overflow-hidden rounded-xs border-2 border-foreground bg-popover text-popover-foreground background-texture"
+            className="absolute right-0 top-0 z-[120] w-72 overflow-hidden rounded-xs border border-foreground bg-popover text-popover-foreground background-texture"
           >
             <motion.div
               initial={reduceMotion ? false : { opacity: 0 }}

@@ -76,6 +76,11 @@ const DEFAULT_BRANDING: HoloCardBranding = {
   logoAlt: "Blklight",
 };
 
+// overflow-hidden + radius stops clipping blurred children once the tilt
+// transforms the face; the mask forces the rounded clip back on.
+const FACE_CLIP =
+  "relative h-full w-full overflow-hidden rounded-2xl shadow-xl [mask-image:linear-gradient(#000,#000)]";
+
 const PILL =
   "flex h-7 items-center gap-1.5 rounded-full bg-white/20 px-2.5 text-sm font-medium text-white/85 backdrop-blur-md";
 
@@ -354,7 +359,7 @@ export const HoloCard = ({
   ) => {
     if (isStatic || forceSide) {
       return (
-        <div className="relative h-full w-full overflow-hidden rounded-2xl shadow-xl">
+        <div className={FACE_CLIP}>
           {OverlayLayer}
           {content}
           <div ref={ref} className={holoCardClasses} style={holoCardStyle}>
@@ -365,7 +370,7 @@ export const HoloCard = ({
     }
 
     return (
-      <Tilt className="relative h-full w-full overflow-hidden rounded-2xl p-0! shadow-xl">
+      <Tilt className={cn(FACE_CLIP, "p-0!")}>
         {OverlayLayer}
         {content}
         <div

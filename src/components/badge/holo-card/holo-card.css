@@ -66,7 +66,8 @@
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  border-radius: 5% / 3.5%;
+  /* Same radius as the rounded-2xl tilt wrapper, or the art leaks at the corners. */
+  border-radius: 1rem;
   box-shadow:
     -3px -3px 3px 0 rgba(38, 230, 247, 0.3),
     3px 3px 3px 0 rgba(247, 89, 228, 0.3),

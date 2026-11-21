@@ -365,7 +365,7 @@ export function CommandBar({ className }: { className?: string }) {
               animate={{ opacity: 1, y: 0 }}
               exit={reduceMotion ? undefined : { opacity: 0, y: -4 }}
               transition={{ duration: 0.14, ease: [0.23, 1, 0.32, 1] }}
-              className="absolute inset-x-0 top-full z-[120] mt-0.5 overflow-hidden rounded-xs border-2 border-foreground bg-popover text-popover-foreground background-texture"
+              className="absolute inset-x-0 top-full z-[120] mt-0.5 overflow-hidden rounded-xs border border-foreground bg-popover text-popover-foreground background-texture"
             >
               <Command.List className="max-h-[min(60vh,26rem)] overflow-y-auto overscroll-contain py-1">
                 {!docs.data?.items.length && (
