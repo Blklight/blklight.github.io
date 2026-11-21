@@ -252,6 +252,22 @@ Near-square everywhere: the base radius is 2px (`--radius: 0.125rem`), and most 
 - **Shape:** double fillet frame (`FichaFace` in `src/components/onboarding/simple-flip-card.tsx`): app paper stock with `background-texture`, 3px inner border that turns ink when selected, chamfer always bottom-right (`br`; the back face mirrors to `bl`).
 - **Onboarding:** flip card, 384px tall. Front opens the back with a `ChamferButton` (`src/components/ui/chamfer-button.tsx`, copied from Tally). The back has "Voltar" and a scrollable body inside the corner brackets, faded at the edges with `ScrollFade` from `@animate-ui/react`. Hover tilts the card up to 8° (`Tilt` from `@animate-ui/react`, flat under reduced motion).
 - **Dashboard:** same face at `md` size, square, two per row in an 18rem side column. No flip, no button.
+- **Display mode** (`mode="display"`): cover only, 288px, tilt kept, no flip and no selection. Used on the onboarding confirmation.
+- **Em breve:** an app with no screens yet is always hatched and washed out (`LockedVeil`), with a tilted "Em breve" stamp where the checkbox would be. It still flips to explain itself, but it can't be selected (`aria-disabled`).
+
+### Onboarding
+- **One object across the flow:** the member badge (`MemberBadge`, `src/components/onboarding/member-badge.tsx`), on the same `FichaFace` stock with tilt. Step 1 shows it being built (handle updates live as the username is typed, empty dashed app slots, "Em montagem"); the last step shows it with the chosen apps, and the "Confirmado" stamp lands when setup finishes. Photo slot shows `avatarUrl` or initials until upload exists.
+- **Step anatomy:** title + lede, content, then `StepFooter` (`src/components/onboarding/step-footer.tsx`), the same fixed bar on every step.
+- **Steps animate** 16px in the direction of travel with a fade (`AnimatePresence` in `src/app/onboarding/page.tsx`); reduced motion keeps only the fade. Finished steps on the progress bar are buttons back to them.
+- **Setup feedback:** confirming runs the real calls as rows (`SetupProgress`): pending, spinner, check; a failure marks its row and retries from there.
+
+### Fixed patterns (the exceptions to "no patterns")
+The cards, covers and layouts vary; these never do:
+- **Primary action:** one per screen, dark `ChamferButton` (`bg-foreground`, chamfer `br`) with an arrow, mono uppercase label. `Enter` triggers it when focus isn't on a control.
+- **Back:** ghost button labelled "Voltar", left of the primary action.
+- **App cards:** `FichaFace` + tilt wherever an app appears (onboarding, confirmation, dashboard), chamfer `br`.
+- **Not available yet:** hatch + "Em breve" stamp, never only a muted color.
+- **Status after an action:** short text in an `aria-live` region next to the action, not a toast.
 
 ### Page transitions (installed, not wired)
 - `src/components/animate-ui/components/page-transition.tsx` (Animate UI, via shadcn) is installed but not imported anywhere. It runs on the browser View Transitions API through `motion/react-animate-view`; to try it, wrap `{children}` in `src/app/layout.tsx` with `<PageTransition effect="fade">`, keeping the navbar outside, and mark back links with `transitionTypes={['nav-back']}`.
