@@ -1,5 +1,17 @@
 import type { PlatformApp } from "@/types/api.types";
 
+export type SocialNetwork =
+  | "github"
+  | "x"
+  | "linkedin"
+  | "instagram"
+  | "bluesky";
+
+export interface SocialLink {
+  network: SocialNetwork;
+  url: string;
+}
+
 /** What a badge shows, whatever its model. */
 export interface BadgeData {
   name: string;
@@ -9,6 +21,7 @@ export interface BadgeData {
   memberSince: string;
   memberId: string;
   apps?: PlatformApp[];
+  socials?: SocialLink[];
 }
 
 /** draft: being built in onboarding; confirmed: onboarding just finished; none: someone else's badge. */

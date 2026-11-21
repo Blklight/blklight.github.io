@@ -22,6 +22,13 @@ const MEMBER: BadgeData = {
   memberSince: "2026-11-20T12:00:00.000Z",
   memberId: "A1B2C3",
   apps: [app("publisher", "Publisher"), app("reader", "Reader")],
+  socials: [
+    { network: "github", url: "https://github.com" },
+    { network: "x", url: "https://x.com" },
+    { network: "linkedin", url: "https://linkedin.com" },
+    { network: "instagram", url: "https://instagram.com" },
+    { network: "bluesky", url: "https://bsky.app" },
+  ],
 };
 
 const MODELS = Object.keys(BADGE_MODELS) as BadgeModel[];

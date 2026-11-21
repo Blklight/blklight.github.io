@@ -3,7 +3,13 @@ import { HoloBadge } from "./holo-badge";
 import { HoloCardBadge } from "./holo-card-badge";
 import type { BadgeModelProps } from "./types";
 
-export type { BadgeData, BadgeModelProps, BadgeStatus } from "./types";
+export type {
+  BadgeData,
+  BadgeModelProps,
+  BadgeStatus,
+  SocialLink,
+  SocialNetwork,
+} from "./types";
 
 /** Every badge model takes the same data, so any of them can show any member (onboarding, profile, search). */
 export const BADGE_MODELS = {

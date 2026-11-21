@@ -8,6 +8,7 @@ import { CornerBrackets } from "@/components/onboarding/corner-brackets";
 import { FLAT } from "@/components/onboarding/simple-flip-card";
 import { cn } from "@/lib/utils";
 import { ConfirmStamp } from "./confirm-stamp";
+import { SocialRow } from "./social-row";
 import type { BadgeModelProps } from "./types";
 
 export const SINCE = new Intl.DateTimeFormat("pt-BR", {
@@ -95,6 +96,12 @@ export const ClassicBadge = ({ data, status, className }: BadgeModelProps) => {
                 </p>
               </div>
 
+              {data.socials && data.socials.length > 0 && (
+                <SocialRow
+                  links={data.socials}
+                  className="mt-auto mb-3 justify-center"
+                />
+              )}
               <div className="mt-auto flex items-center justify-between border-t-2 border-dashed border-dark/40 pt-3">
                 <span className="flex items-center gap-1.5">
                   <Image
