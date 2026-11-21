@@ -88,4 +88,20 @@ describe("AppsStep", () => {
     await userEvent.click(next);
     expect(onConfirm).toHaveBeenCalledWith(["publisher"]);
   });
+
+  it("keeps apps marked as em breve out of the selection", async () => {
+    render(
+      <AppsStep
+        apps={[app("publisher", "Publisher"), app("reader", "Reader")]}
+        initial={["reader"]}
+        onConfirm={vi.fn()}
+        onBack={vi.fn()}
+      />,
+    );
+    const reader = screen.getByRole("button", { name: "Reader" });
+    expect(reader).toHaveAttribute("aria-disabled", "true");
+    await userEvent.click(reader);
+    expect(reader).not.toHaveAttribute("aria-pressed");
+    expect(screen.getByRole("button", { name: /continuar/i })).toBeDisabled();
+  });
 });

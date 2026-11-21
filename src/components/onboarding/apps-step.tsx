@@ -22,12 +22,25 @@ interface Props {
 const SEARCH_THRESHOLD = 6;
 
 export const AppsStep = ({ apps, initial, onConfirm, onBack }: Props) => {
-  const [selected, setSelected] = useState<Set<string>>(new Set(initial));
   const [query, setQuery] = useState("");
 
+  // Available apps first; "em breve" ones stay visible but can't be picked.
   const openApps = useMemo(
-    () => apps.filter((a) => a.accessMode === "open"),
+    () =>
+      apps
+        .filter((a) => a.accessMode === "open")
+        .sort(
+          (a, b) => Number(appMeta(b).available) - Number(appMeta(a).available),
+        ),
     [apps],
+  );
+  const [selected, setSelected] = useState<Set<string>>(
+    () =>
+      new Set(
+        initial.filter((slug) =>
+          openApps.some((a) => a.slug === slug && appMeta(a).available),
+        ),
+      ),
   );
 
   // Selection is keyed by slug, not id: the onboarding API

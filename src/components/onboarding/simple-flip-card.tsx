@@ -14,8 +14,10 @@ import { CornerBrackets } from "./corner-brackets";
 
 interface Props {
   app: PlatformApp;
-  selected: boolean;
-  onToggle: () => void;
+  selected?: boolean;
+  onToggle?: () => void;
+  /** "display" shows the cover only: no flip, no selection. */
+  mode?: "select" | "display";
 }
 
 /**
@@ -23,9 +25,16 @@ interface Props {
  * marks around the label and the name, and an ink bar that turns the card
  * over to what the app does.
  */
-export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
+export const SimpleFlipCard = ({
+  app,
+  selected = false,
+  onToggle,
+  mode = "select",
+}: Props) => {
   const [flipped, setFlipped] = useState(false);
   const meta = appMeta(app);
+  const locked = !meta.available;
+  const display = mode === "display";
 
   const flip = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -37,9 +46,41 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
     if (e.target !== e.currentTarget) return;
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      onToggle();
+      if (!locked) onToggle?.();
     }
   };
+
+  const cover = (
+    <>
+      {locked && <LockedVeil />}
+      <div className="relative flex items-center justify-between gap-2">
+        <span className="px-2 py-1 text-xs uppercase">{meta.tagline}</span>
+        {locked ? <SoonStamp /> : <SelectMark selected={selected} />}
+      </div>
+
+      <div className="relative mt-8 p-3">
+        <CornerBrackets size="size-3" className="opacity-80" />
+        <h3 className="font-mono text-3xl font-medium uppercase wrap-break-word">
+          {app.name}
+        </h3>
+        <p className="mt-1 text-sm opacity-80 line-clamp-2">
+          {meta.description}
+        </p>
+      </div>
+    </>
+  );
+
+  if (display) {
+    return (
+      <Tilt maxTilt={8} perspective={1000} className="group relative">
+        <TiltContent className="relative h-72">
+          <FichaFace corner="br" paper={meta.accent.paper} selected={selected}>
+            {cover}
+          </FichaFace>
+        </TiltContent>
+      </Tilt>
+    );
+  }
 
   return (
     <Tilt maxTilt={8} perspective={1000} className="group relative">
@@ -48,11 +89,15 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
         <div
           role="button"
           tabIndex={0}
-          aria-pressed={selected}
+          aria-pressed={locked ? undefined : selected}
+          aria-disabled={locked || undefined}
           aria-label={app.name}
-          onClick={onToggle}
+          onClick={locked ? undefined : onToggle}
           onKeyDown={handleKey}
-          className="relative w-full h-full preserve-3d transition-transform duration-500 ease-out cursor-pointer rounded-[1.25rem] outline-none focus-visible:outline-3 focus-visible:outline-foreground focus-visible:outline-offset-4 motion-reduce:transition-none"
+          className={cn(
+            "relative w-full h-full preserve-3d transition-transform duration-500 ease-out rounded-[1.25rem] outline-none focus-visible:outline-3 focus-visible:outline-foreground focus-visible:outline-offset-4 motion-reduce:transition-none",
+            !locked && "cursor-pointer",
+          )}
           style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
         >
           <FichaFace
@@ -61,24 +106,7 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
             selected={selected}
             hidden={flipped}
           >
-            <div className="flex items-center justify-between gap-2">
-              <span className="relative px-2 py-1 text-xs uppercase">
-                {/* <CornerBrackets size="size-2" className="opacity-70" /> */}
-                {meta.tagline}
-                {!meta.available && " · em breve"}
-              </span>
-              <SelectMark selected={selected} />
-            </div>
-
-            <div className="relative mt-8 p-3">
-              <CornerBrackets size="size-3" className="opacity-80" />
-              <h3 className="font-mono text-3xl font-medium uppercase wrap-break-word">
-                {app.name}
-              </h3>
-              <p className="mt-1 text-sm opacity-80 line-clamp-2">
-                {meta.description}
-              </p>
-            </div>
+            {cover}
 
             <div className="flex-1" />
 
@@ -100,7 +128,8 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
             back
             hidden={!flipped}
           >
-            <div className="flex items-center justify-between gap-2">
+            {locked && <LockedVeil />}
+            <div className="relative flex items-center justify-between gap-2">
               <button
                 type="button"
                 onClick={flip}
@@ -111,7 +140,7 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
                 Voltar
               </button>
               <span className="text-xs uppercase opacity-70">
-                {meta.available ? "Disponível" : "Em breve"}
+                {locked ? "Em breve" : "Disponível"}
               </span>
             </div>
 
@@ -136,11 +165,15 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
                 {meta.idealFor}
               </p>
             )}
-            <div className="mt-3 flex items-center justify-between text-xs">
+            <div className="relative mt-3 flex items-center justify-between text-xs">
               <span className="opacity-70">
-                {selected ? "Selecionado" : "Clique para selecionar"}
+                {locked
+                  ? "Ainda não dá para ativar"
+                  : selected
+                    ? "Selecionado"
+                    : "Clique para selecionar"}
               </span>
-              <SelectMark selected={selected} />
+              {locked ? <SoonStamp /> : <SelectMark selected={selected} />}
             </div>
           </FichaFace>
         </div>
@@ -157,6 +190,20 @@ const joinPt = (items: string[]) => {
     ? first
     : `${[first, ...tail.slice(0, -1)].join(", ")} e ${tail.at(-1)}`;
 };
+
+// Hatched, washed-out stock: reads as "not yet" before the label does.
+const LockedVeil = () => (
+  <span
+    aria-hidden
+    className="absolute inset-0 bg-light/45 bg-[repeating-linear-gradient(135deg,transparent_0_9px,rgb(0_0_0/0.07)_9px_11px)]"
+  />
+);
+
+const SoonStamp = () => (
+  <span className="-rotate-6 border-2 border-dark px-1.5 py-0.5 font-mono text-[0.7rem] font-semibold uppercase tracking-wider">
+    Em breve
+  </span>
+);
 
 const SelectMark = ({ selected }: { selected: boolean }) => (
   <span
