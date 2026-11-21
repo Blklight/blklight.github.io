@@ -1,7 +1,6 @@
 import { GeistPixelCircle, GeistPixelSquare } from "geist/font/pixel";
 import type { Metadata } from "next";
 import { EB_Garamond, Inter, JetBrains_Mono } from "next/font/google";
-import { CommandMenu } from "@/components/command-menu";
 import { Html } from "@/components/html";
 import { LayoutBase } from "@/components/layout-base";
 import { QueryProvider } from "@/components/query-provider";
@@ -68,7 +67,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               <LayoutBase>{children}</LayoutBase>
             </TooltipProvider>
             <Toaster />
-            <CommandMenu />
           </QueryProvider>
         </ThemeProvider>
       </body>

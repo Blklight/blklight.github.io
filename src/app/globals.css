@@ -651,8 +651,9 @@
 /* ============================================================
    LAYOUT COMPONENTS
    ============================================================ */
+/* Navbar: brand and nav | command bar centered | account. */
 .background-header {
-  @apply sticky lg:top-2.25 top-0 w-full z-99 h-12 grid lg:grid-cols-[125px_3fr_1fr] md:grid-cols-[125px_3fr_1fr] grid-cols-[125px_3fr_1fr] justify-between items-center border-b border-foreground bg-background;
+  @apply sticky lg:top-2.25 top-0 w-full z-99 h-12 grid grid-cols-[auto_minmax(0,1fr)_auto] md:grid-cols-[minmax(0,1fr)_minmax(0,36rem)_minmax(0,1fr)] justify-between items-center border-b border-foreground bg-background;
 }
 
 .background-header::before {

@@ -246,7 +246,9 @@ Near-square everywhere: the base radius is 2px (`--radius: 0.125rem`), and most 
 - **Error:** crimson border and 20% crimson ring.
 
 ### Navigation
-- **Navbar:** 48px sticky, paper with noise texture, ink bottom rule; Inter bold wordmark; mono links with an active indicator; ⌘K command trigger; avatar menu with square avatar.
+- **Navbar:** 48px sticky, paper with noise texture, ink bottom rule. Three columns: brand + navigation dropdown (`LayoutGrid`, lists Feed and Escrever, shows the current section) | command bar, centered, max 36rem | theme toggle + account menu.
+- **Command bar** (`CommandBar`, `src/components/command-menu.tsx`): looks like a browser address bar (`blklight.dev/current/path`); focus or ⌘K turns it into search with the results panel attached below (same groups as before: texts, go to, explore, appearance). Only exists where the navbar does, so the landing page has none.
+- **Account menu** (`ProfileMenu`, `src/components/profile-menu.tsx`): the avatar card grows into the panel (shared layout); theme segmented control (light, dark, book, system), shortcuts, and sign out that needs a 1.2s hold.
 
 ### App fichas (Tally style)
 - **Shape:** double fillet frame (`FichaFace` in `src/components/onboarding/simple-flip-card.tsx`): app paper stock with `background-texture`, 3px inner border that turns ink when selected, chamfer always bottom-right (`br`; the back face mirrors to `bl`).
