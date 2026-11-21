@@ -1,29 +1,18 @@
 "use client";
 
-import { HoloCard } from "@/components/ui/holo-card";
 import { SINCE } from "./classic-badge";
+import { HoloCard } from "./holo-card/holo-card";
 import type { BadgeModelProps } from "./types";
 
-const BRANDING = {
-  logo: "/blklight-white.svg",
-  logoAlt: "Blklight",
-  icon: "/blklight-white.svg",
-  iconAlt: "",
-};
-
 /**
- * Holo card from ui.heygaia.io (src/components/ui/holo-card.tsx), fed with
- * badge data. Local background and logos; the remote sparkle GIF stays off.
+ * Holo card from ui.heygaia.io (adapted in ./holo-card), fed with badge data.
+ * The member's photo is the card art; `accent` tints it like the original's color variants.
  */
 export const HoloCardBadge = ({ data, status, className }: BadgeModelProps) => {
   const apps = data.apps ?? [];
   return (
     <HoloCard
       className={className}
-      width={288}
-      height={448}
-      showSparkles={false}
-      branding={BRANDING}
       data={{
         name: data.name,
         subtitle: `@${data.handle}`,
@@ -37,7 +26,9 @@ export const HoloCardBadge = ({ data, status, className }: BadgeModelProps) => {
           "",
         ),
         badge: status === "draft" ? "Rascunho" : "Membro",
-        backgroundImage: "/badges/holo-bg.svg",
+        backgroundImage: data.avatarUrl ?? undefined,
+        overlayColor: data.accent,
+        overlayOpacity: 35,
       }}
     />
   );

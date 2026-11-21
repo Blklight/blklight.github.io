@@ -17,7 +17,8 @@ const ON_DARK: Partial<Record<SocialNetwork, string>> = {
 
 interface Props {
   links: SocialLink[];
-  onDark?: boolean;
+  /** true: card is always dark; "auto": card follows the theme. */
+  onDark?: boolean | "auto";
   className?: string;
 }
 
@@ -37,10 +38,23 @@ export const SocialRow = ({ links, onDark = false, className }: Props) => (
         >
           {/* biome-ignore lint/performance/noImgElement: tiny static SVGs, no optimization to gain */}
           <img
-            src={(onDark && ON_DARK[network]) || `/social/${network}.svg`}
+            src={
+              (onDark === true && ON_DARK[network]) || `/social/${network}.svg`
+            }
             alt=""
-            className="size-4"
+            className={cn(
+              "size-5",
+              onDark === "auto" && ON_DARK[network] && "dark:hidden",
+            )}
           />
+          {onDark === "auto" && ON_DARK[network] && (
+            // biome-ignore lint/performance/noImgElement: tiny static SVGs, no optimization to gain
+            <img
+              src={ON_DARK[network]}
+              alt=""
+              className="hidden size-5 dark:block"
+            />
+          )}
         </a>
       </li>
     ))}

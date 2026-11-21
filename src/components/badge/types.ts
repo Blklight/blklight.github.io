@@ -22,6 +22,8 @@ export interface BadgeData {
   memberId: string;
   apps?: PlatformApp[];
   socials?: SocialLink[];
+  /** Optional tint (CSS color) for models that support one, e.g. holo-card. */
+  accent?: string;
 }
 
 /** draft: being built in onboarding; confirmed: onboarding just finished; none: someone else's badge. */

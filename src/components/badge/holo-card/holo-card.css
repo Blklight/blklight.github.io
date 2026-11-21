@@ -108,7 +108,7 @@
 /* Sparkles effect */
 .holo-card--sparkles::after {
   background-image:
-    url("https://assets.codepen.io/13471/sparkles.gif"),
+    url("/badges/sparkles.gif"),
     linear-gradient(
       125deg,
       rgba(255, 0, 132, 0.31) 15%,

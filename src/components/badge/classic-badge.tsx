@@ -76,7 +76,7 @@ export const ClassicBadge = ({ data, status, className }: BadgeModelProps) => {
                     className="size-full object-cover"
                   />
                 ) : (
-                  <span className="flex size-full flex-col items-center justify-center bg-blklight-300 background-texture">
+                  <span className="flex size-full flex-col items-center justify-center bg-blklight-300 text-dark background-texture">
                     <span className="font-mono text-4xl font-medium">
                       {initials(name)}
                     </span>
@@ -96,19 +96,30 @@ export const ClassicBadge = ({ data, status, className }: BadgeModelProps) => {
                 </p>
               </div>
 
-              {data.socials && data.socials.length > 0 && (
-                <SocialRow
-                  links={data.socials}
-                  className="mt-auto mb-3 justify-center"
+              {/* Confirmed badges trade the social row for the stamp, in the same slot. */}
+              {confirmed ? (
+                <ConfirmStamp
+                  date={memberSince}
+                  className="mx-auto mt-auto -mb-1 size-24"
                 />
+              ) : (
+                data.socials &&
+                data.socials.length > 0 && (
+                  <SocialRow
+                    links={data.socials}
+                    onDark="auto"
+                    className="mt-auto mb-3 justify-center"
+                  />
+                )
               )}
-              <div className="mt-auto flex items-center justify-between border-t-2 border-dashed border-dark/40 pt-3">
+              <div className="mt-auto flex items-center justify-between border-t-2 border-dashed border-dark/40 dark:border-light/40 pt-3">
                 <span className="flex items-center gap-1.5">
                   <Image
                     src="/blklight-black.svg"
                     alt=""
                     width={18}
                     height={18}
+                    className="dark:invert"
                   />
                   <span className="font-sans text-sm font-bold tracking-tight">
                     Blklight
@@ -118,13 +129,6 @@ export const ClassicBadge = ({ data, status, className }: BadgeModelProps) => {
                   Verso ↻
                 </span>
               </div>
-
-              {confirmed && (
-                <ConfirmStamp
-                  date={memberSince}
-                  className="absolute right-0 top-24"
-                />
-              )}
             </Face>
 
             <Face back hidden={!flipped}>
@@ -151,7 +155,7 @@ export const ClassicBadge = ({ data, status, className }: BadgeModelProps) => {
                       <li
                         key={app.id}
                         className={cn(
-                          "flex items-center justify-between rounded-xs px-2 py-1 font-mono text-xs uppercase background-texture",
+                          "flex items-center justify-between rounded-xs px-2 py-1 font-mono text-xs uppercase text-dark background-texture",
                           appMeta(app).accent.paper,
                         )}
                       >
@@ -167,7 +171,7 @@ export const ClassicBadge = ({ data, status, className }: BadgeModelProps) => {
                     {[0, 1, 2].map((slot) => (
                       <li
                         key={slot}
-                        className="h-6 rounded-xs border border-dashed border-dark/50"
+                        className="h-6 rounded-xs border border-dashed border-dark/50 dark:border-light/50"
                       />
                     ))}
                     <li className="mt-1 font-mono text-[0.65rem] opacity-70">
@@ -179,7 +183,7 @@ export const ClassicBadge = ({ data, status, className }: BadgeModelProps) => {
                 )}
               </div>
 
-              <div className="mt-4 flex items-center justify-between border-t-2 border-dashed border-dark/40 pt-3 font-mono text-[0.65rem] uppercase tracking-wider opacity-70">
+              <div className="mt-4 flex items-center justify-between border-t-2 border-dashed border-dark/40 dark:border-light/40 pt-3 font-mono text-[0.65rem] uppercase tracking-wider opacity-70">
                 <span>Frente ↻</span>
                 <span>
                   {draft ? "Rascunho" : confirmed ? "Confirmado" : "Membro"}
@@ -209,6 +213,7 @@ export const Row = ({
 );
 
 // Rounded plastic card with an ink rim and a lanyard slot, like a real badge.
+// In the dark theme it inverts: dark stock, light rim and ink.
 const Face = ({
   back,
   hidden,
@@ -221,15 +226,15 @@ const Face = ({
   <div
     inert={hidden}
     className={cn(
-      "absolute inset-0 block rounded-[1.4rem] bg-dark p-[3px] backface-hidden",
+      "absolute inset-0 block rounded-[1.4rem] bg-dark p-[3px] backface-hidden dark:bg-light/85",
       back && "rotate-y-180",
       hidden && "pointer-events-none",
     )}
   >
-    <div className="relative flex h-full flex-col rounded-[1.25rem] bg-light p-6 pt-4 text-dark background-texture">
+    <div className="relative flex h-full flex-col rounded-[1.25rem] bg-light p-6 pt-4 text-dark background-texture dark:bg-dark dark:text-light">
       <span
         aria-hidden
-        className="mx-auto mb-4 block h-2.5 w-14 shrink-0 rounded-full bg-dark/80 shadow-[inset_0_1px_2px_rgb(0_0_0/0.5)]"
+        className="mx-auto mb-4 block h-2.5 w-14 shrink-0 rounded-full bg-dark/80 shadow-[inset_0_1px_2px_rgb(0_0_0/0.5)] dark:bg-light/70"
       />
       {children}
     </div>

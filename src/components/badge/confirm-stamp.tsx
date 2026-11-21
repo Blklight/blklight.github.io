@@ -37,7 +37,7 @@ export const ConfirmStamp = ({ date, className }: Props) => {
       animate={{ opacity: 1, scale: 1, rotate: -16 }}
       transition={{ type: "spring", stiffness: 380, damping: 20 }}
       className={cn(
-        "pointer-events-none size-32 text-blklight-600 mix-blend-multiply",
+        "pointer-events-none size-32 text-blklight-600 mix-blend-multiply dark:text-blklight-300 dark:mix-blend-screen",
         className,
       )}
     >
