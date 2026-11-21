@@ -15,6 +15,8 @@ interface Props {
   username: string;
   apps: PlatformApp[];
   onBack: () => void;
+  /** Called once setup starts: from then on the flow can't go back. */
+  onLock?: () => void;
   badge?: {
     handle: string;
     avatarUrl?: string | null;
@@ -39,7 +41,13 @@ const describeError = (cause: unknown) => {
   );
 };
 
-export const ConfirmStep = ({ username, apps, onBack, badge }: Props) => {
+export const ConfirmStep = ({
+  username,
+  apps,
+  onBack,
+  onLock,
+  badge,
+}: Props) => {
   const router = useRouter();
   const setUser = useAuthStore((state) => state.setUser);
   const [phase, setPhase] = useState<Phase>("review");
@@ -148,7 +156,10 @@ export const ConfirmStep = ({ username, apps, onBack, badge }: Props) => {
         <StepFooter
           onBack={onBack}
           label="Confirmar"
-          onNext={() => setPhase("setup")}
+          onNext={() => {
+            onLock?.();
+            setPhase("setup");
+          }}
         />
       )}
     </div>

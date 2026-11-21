@@ -35,6 +35,8 @@ export default function OnboardingPage() {
       ORDER.indexOf(next) >= ORDER.indexOf(current) ? 1 : -1,
     ]);
   const offset = reduceMotion ? 0 : 16;
+  // Setup has started: the API calls are running, so no going back to edit.
+  const [locked, setLocked] = React.useState(false);
   // Slugs of the apps picked in the catalog step. The API activates apps by
   // slug, so the selection is stored (and resolved) with that same key.
   const [selected, setSelected] = React.useState<string[]>([]);
@@ -81,7 +83,7 @@ export default function OnboardingPage() {
   return (
     <section className="bg-light book:bg-sepia dark:bg-dark background-texture rounded-xs relative z-0">
       <TextureOverlay texture={"grid"} className="mix-blend-overlay" />
-      <OnboardingShell step={step} onStepClick={setStep}>
+      <OnboardingShell step={step} onStepClick={locked ? undefined : setStep}>
         {statusQuery.isPending && (
           <div className="flex-1 flex items-center justify-center px-6 py-16">
             <p className="text-sm text-muted-foreground animate-pulse">
@@ -169,6 +171,7 @@ export default function OnboardingPage() {
                     selected.includes(a.slug),
                   )}
                   onBack={() => setStep("apps")}
+                  onLock={() => setLocked(true)}
                   badge={badge ?? undefined}
                 />
               )}
