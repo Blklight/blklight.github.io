@@ -121,7 +121,7 @@ export const ConfirmStep = ({
           {review ? (
             <>
               <p className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-xl mb-10">
-                Confira seu crachá.{" "}
+                Confira seu crachá; clique nele para ver os apps no verso.{" "}
                 {apps.length === 1
                   ? "Este app vai aparecer no seu menu e no seu dashboard."
                   : `Estes ${apps.length} apps vão aparecer no seu menu e no seu dashboard.`}{" "}

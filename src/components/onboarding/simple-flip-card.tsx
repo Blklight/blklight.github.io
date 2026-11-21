@@ -14,7 +14,7 @@ import { CornerBrackets } from "./corner-brackets";
 
 // Tilt sets preserve-3d on its wrapper; nested under the flip's own 3D context,
 // Firefox then hit-tests the wrapper instead of the card. Flat keeps the tilt visible.
-const FLAT = { transformStyle: "flat" } as const;
+export const FLAT = { transformStyle: "flat" } as const;
 
 interface Props {
   app: PlatformApp;

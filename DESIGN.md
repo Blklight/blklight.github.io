@@ -256,9 +256,10 @@ Near-square everywhere: the base radius is 2px (`--radius: 0.125rem`), and most 
 - **Em breve:** an app with no screens yet is always hatched and washed out (`LockedVeil`), with a tilted "Em breve" stamp where the checkbox would be. It still flips to explain itself, but it can't be selected (`aria-disabled`).
 
 ### Onboarding
-- **One object across the flow:** the member badge (`MemberBadge`, `src/components/onboarding/member-badge.tsx`), on the same `FichaFace` stock with tilt. Step 1 shows it being built (handle updates live as the username is typed, empty dashed app slots, "Em montagem"); the last step shows it with the chosen apps, and the "Confirmado" stamp lands when setup finishes. Photo slot shows `avatarUrl` or initials until upload exists.
+- **One object across the flow:** the member badge (`MemberBadge`, `src/components/onboarding/member-badge.tsx`): a rounded plastic card with an ink rim and lanyard slot (not chamfered: badges aren't), paper texture and tilt. Front: centered photo (`avatarUrl` or initials until upload exists), name, @handle, Blklight logo at the base. Back (click to flip): profile URL, status, the apps. Step 1 shows it being built (handle updates live, empty app slots); the last step shows it with the chosen apps, and the "Confirmado" stamp lands on the front when setup finishes.
 - **Step anatomy:** title + lede, content, then `StepFooter` (`src/components/onboarding/step-footer.tsx`), the same fixed bar on every step.
-- **Steps animate** 16px in the direction of travel with a fade (`AnimatePresence` in `src/app/onboarding/page.tsx`); reduced motion keeps only the fade. Finished steps on the progress bar are buttons back to them.
+- **Steps animate** 16px in the direction of travel with a fade (`AnimatePresence` in `src/app/onboarding/page.tsx`); reduced motion keeps only the fade. Finished steps on the progress bar are buttons back to them, until setup starts: then navigation locks.
+- **Tilt + flip:** pass `style={FLAT}` (exported from `simple-flip-card.tsx`) to `Tilt` whenever its content flips; its default `preserve-3d` breaks hit-testing in Firefox.
 - **Setup feedback:** confirming runs the real calls as rows (`SetupProgress`): pending, spinner, check; a failure marks its row and retries from there.
 
 ### Fixed patterns (the exceptions to "no patterns")
