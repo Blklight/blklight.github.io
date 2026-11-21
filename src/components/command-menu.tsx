@@ -103,8 +103,8 @@ function Group({
 }
 
 /**
- * Command bar in the navbar: reads like a browser address bar
- * (blklight.dev/current/path) and, on focus or ⌘K, turns into a search with
+ * Command bar in the navbar: reads like a browser address bar (the current
+ * path, e.g. /feed) and, on focus or ⌘K, turns into a search with
  * the results panel attached below. Same entries as the old ⌘K palette.
  */
 export function CommandBar({ className }: { className?: string }) {
@@ -326,7 +326,7 @@ export function CommandBar({ className }: { className?: string }) {
       >
         <div
           className={cn(
-            "relative flex h-8 items-center gap-2 rounded-full border bg-background/70 px-3 transition-colors",
+            "relative flex h-8 items-center gap-2 rounded-xs border bg-background/70 px-3 transition-colors",
             open
               ? "border-foreground"
               : "border-border hover:border-foreground/60",
@@ -350,10 +350,7 @@ export function CommandBar({ className }: { className?: string }) {
               aria-hidden
               className="pointer-events-none absolute inset-y-0 left-8 right-14 flex items-center truncate font-mono text-xs"
             >
-              <span className="text-muted-foreground">blklight.dev</span>
-              <span className="truncate">
-                {pathname === "/" ? "" : pathname}
-              </span>
+              <span className="truncate">{pathname}</span>
             </span>
           )}
           <Kbd className="hidden sm:inline-flex border">
@@ -368,7 +365,7 @@ export function CommandBar({ className }: { className?: string }) {
               animate={{ opacity: 1, y: 0 }}
               exit={reduceMotion ? undefined : { opacity: 0, y: -4 }}
               transition={{ duration: 0.14, ease: [0.23, 1, 0.32, 1] }}
-              className="absolute inset-x-0 top-full z-[120] mt-1.5 overflow-hidden rounded-xs border-2 border-foreground bg-popover text-popover-foreground shadow-[4px_4px_0_0_var(--foreground)] background-texture"
+              className="absolute inset-x-0 top-full z-[120] mt-0.5 overflow-hidden rounded-xs border-2 border-foreground bg-popover text-popover-foreground background-texture"
             >
               <Command.List className="max-h-[min(60vh,26rem)] overflow-y-auto overscroll-contain py-1">
                 {!docs.data?.items.length && (
