@@ -44,6 +44,12 @@ export default function BadgeLabPage() {
             </figcaption>
           </figure>
         ))}
+        <figure className="flex flex-col items-center gap-4">
+          <Badge data={MEMBER} status="confirmed" />
+          <figcaption className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+            classic · confirmado
+          </figcaption>
+        </figure>
       </div>
     </div>
   );

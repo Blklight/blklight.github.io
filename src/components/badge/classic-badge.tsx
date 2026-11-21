@@ -1,13 +1,13 @@
 "use client";
 
 import { Tilt, TiltContent } from "@animate-ui/react/primitives/effects/tilt";
-import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { type ReactNode, useState } from "react";
 import { appMeta } from "@/components/onboarding/app-meta";
 import { CornerBrackets } from "@/components/onboarding/corner-brackets";
 import { FLAT } from "@/components/onboarding/simple-flip-card";
 import { cn } from "@/lib/utils";
+import { ConfirmStamp } from "./confirm-stamp";
 import type { BadgeModelProps } from "./types";
 
 export const SINCE = new Intl.DateTimeFormat("pt-BR", {
@@ -33,7 +33,6 @@ export const ClassicBadge = ({ data, status, className }: BadgeModelProps) => {
   const { name, handle, avatarUrl, memberSince, memberId, apps = [] } = data;
   const confirmed = status === "confirmed";
   const draft = status === "draft";
-  const reduceMotion = useReducedMotion();
   const [flipped, setFlipped] = useState(false);
   const since = SINCE.format(new Date(memberSince)).replace(".", "");
 
@@ -114,18 +113,10 @@ export const ClassicBadge = ({ data, status, className }: BadgeModelProps) => {
               </div>
 
               {confirmed && (
-                <motion.span
-                  initial={
-                    reduceMotion
-                      ? false
-                      : { opacity: 0, scale: 1.6, rotate: -14 }
-                  }
-                  animate={{ opacity: 1, scale: 1, rotate: -14 }}
-                  transition={{ type: "spring", stiffness: 420, damping: 22 }}
-                  className="absolute right-3 top-40 border-[3px] border-blklight-600 px-2 py-1 font-mono text-sm font-bold uppercase tracking-widest text-blklight-600 mix-blend-multiply"
-                >
-                  Confirmado
-                </motion.span>
+                <ConfirmStamp
+                  date={memberSince}
+                  className="absolute right-0 top-24"
+                />
               )}
             </Face>
 
