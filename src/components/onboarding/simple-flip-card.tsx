@@ -12,6 +12,10 @@ import type { PlatformApp } from "@/types/api.types";
 import { appMeta } from "./app-meta";
 import { CornerBrackets } from "./corner-brackets";
 
+// Tilt sets preserve-3d on its wrapper; nested under the flip's own 3D context,
+// Firefox then hit-tests the wrapper instead of the card. Flat keeps the tilt visible.
+const FLAT = { transformStyle: "flat" } as const;
+
 interface Props {
   app: PlatformApp;
   selected?: boolean;
@@ -72,7 +76,12 @@ export const SimpleFlipCard = ({
 
   if (display) {
     return (
-      <Tilt maxTilt={8} perspective={1000} className="group relative">
+      <Tilt
+        maxTilt={8}
+        perspective={1000}
+        style={FLAT}
+        className="group relative"
+      >
         <TiltContent className="relative h-72">
           <FichaFace corner="br" paper={meta.accent.paper} selected={selected}>
             {cover}
@@ -83,7 +92,12 @@ export const SimpleFlipCard = ({
   }
 
   return (
-    <Tilt maxTilt={8} perspective={1000} className="group relative">
+    <Tilt
+      maxTilt={8}
+      perspective={1000}
+      style={FLAT}
+      className="group relative"
+    >
       <TiltContent className="perspective-1000 h-96 relative">
         {/* biome-ignore lint/a11y/useSemanticElements: card 3D com conteúdo em bloco e botão interno não cabe em <button> */}
         <div
