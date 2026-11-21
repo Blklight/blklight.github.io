@@ -70,6 +70,14 @@ export default function OnboardingPage() {
     statusQuery.data?.profile.username ??
     statusQuery.data?.user.username;
 
+  const status = statusQuery.data;
+  const badge = status && {
+    handle: status.profile.username ?? status.user.username,
+    avatarUrl: status.profile.avatarUrl,
+    memberSince: status.user.createdAt,
+    memberId: status.user.id.replace(/-/g, "").slice(0, 6).toUpperCase(),
+  };
+
   return (
     <section className="bg-light book:bg-sepia dark:bg-dark background-texture rounded-xs relative z-0">
       <TextureOverlay texture={"grid"} className="mix-blend-overlay" />
@@ -114,6 +122,7 @@ export default function OnboardingPage() {
                   username={displayName}
                   onNext={() => setStep("apps")}
                   needsUsername={statusQuery.data.step === "username"}
+                  badge={badge ?? undefined}
                 />
               )}
               {step === "apps" && (
