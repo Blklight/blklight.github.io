@@ -1,13 +1,5 @@
 "use client";
-import {
-  ChevronDown,
-  LayoutDashboard,
-  LogOut,
-  PenLine,
-  Settings,
-  Shield,
-  UserRound,
-} from "lucide-react";
+import { LayoutGrid, PenLine, Rss } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -18,19 +10,16 @@ import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useEditorOverlaysStore } from "@/store/useEditorOverlaysStore";
 import { AuthLinks } from "./auth-links";
-import { CommandMenuTrigger } from "./command-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { CommandBar } from "./command-menu";
+import { ProfileMenu } from "./profile-menu";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuSeparator,
+  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-
-const LINK =
-  "relative h-12 inline-flex items-center text-xs font-mono uppercase tracking-wider transition-colors rounded-xs outline-none focus-visible:outline-2 focus-visible:outline-foreground focus-visible:-outline-offset-4";
 
 export const Navbar = () => {
   const editorOverlaysOpen = useEditorOverlaysStore((s) => s.overlaysOpen);
@@ -43,8 +32,6 @@ export const Navbar = () => {
   const { data: profile } = useCurrentProfile(isAuthenticated);
 
   const displayName = profile?.displayName ?? user?.username ?? "";
-  const avatarUrl = profile?.avatarUrl ?? undefined;
-  const avatarInitial = (displayName || "?").trim().charAt(0).toUpperCase();
 
   const handleLogout = async () => {
     await logout();
@@ -52,123 +39,103 @@ export const Navbar = () => {
   };
 
   const links = [
-    { href: "/feed", label: "Feed", show: true },
-    { href: "/escrever", label: "Escrever", show: isAuthenticated },
-  ];
+    {
+      href: "/feed",
+      label: "Feed",
+      hint: "O que foi publicado",
+      icon: Rss,
+      show: true,
+    },
+    {
+      href: "/escrever",
+      label: "Escrever",
+      hint: "Começar um texto",
+      icon: PenLine,
+      show: isAuthenticated,
+    },
+  ].filter((l) => l.show);
+  const isActive = (href: string) =>
+    pathname === href || pathname.startsWith(`${href}/`);
+  const current = links.find((l) => isActive(l.href));
 
   return (
     <div
       className="background-header rounded-b-xs background-texture px-1"
       style={editorOverlaysOpen ? { zIndex: 40 } : undefined}
     >
-      <Link
-        href={isAuthenticated ? "/dashboard" : "/"}
-        className="relative z-2 flex items-center gap-2 px-3 h-12 rounded-xs outline-none focus-visible:outline-2 focus-visible:outline-foreground focus-visible:-outline-offset-4"
-      >
-        <Image
-          src="/blklight-black.svg"
-          alt=""
-          width={18}
-          height={18}
-          className="dark:invert"
-        />
-        <span className="font-sans font-bold tracking-tight">Blklight</span>
-      </Link>
+      <div className="relative z-2 flex items-center gap-1">
+        <Link
+          href={isAuthenticated ? "/dashboard" : "/"}
+          className="flex items-center gap-2 px-3 h-12 rounded-xs outline-none focus-visible:outline-2 focus-visible:outline-foreground focus-visible:-outline-offset-4"
+        >
+          <Image
+            src="/blklight-black.svg"
+            alt=""
+            width={18}
+            height={18}
+            className="dark:invert"
+          />
+          <span className="hidden sm:inline font-sans font-bold tracking-tight">
+            Blklight
+          </span>
+          <span className="sr-only sm:hidden">Blklight</span>
+        </Link>
 
-      <nav
-        aria-label="Principal"
-        className="relative z-2 flex items-center gap-5"
-      >
-        {links
-          .filter((l) => l.show)
-          .map((l) => {
-            const active =
-              pathname === l.href || pathname.startsWith(`${l.href}/`);
-            return (
-              <Link
-                key={l.href}
-                href={l.href}
-                aria-current={active ? "page" : undefined}
-                className={cn(
-                  LINK,
-                  active
-                    ? "text-foreground after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-blklight-500 dark:after:bg-blklight-400"
-                    : "text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {l.label}
-              </Link>
-            );
-          })}
-        <CommandMenuTrigger className="hidden md:flex ml-auto mr-4" />
-      </nav>
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            aria-label="Navegação"
+            className="flex h-8 items-center gap-1.5 rounded-xs border border-transparent px-2 text-muted-foreground hover:border-border hover:bg-muted/60 hover:text-foreground data-popup-open:border-border data-popup-open:bg-muted/60 data-popup-open:text-foreground outline-none focus-visible:outline-2 focus-visible:outline-foreground cursor-pointer"
+          >
+            <LayoutGrid className="size-4" />
+            {current && (
+              <span className="hidden md:inline font-mono text-xs uppercase tracking-wider">
+                {current.label}
+              </span>
+            )}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-60 rounded-xs">
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="font-mono text-xs uppercase tracking-wider">
+                Navegação
+              </DropdownMenuLabel>
+              {links.map((l) => (
+                <DropdownMenuItem
+                  key={l.href}
+                  onClick={() => router.push(l.href)}
+                  aria-current={isActive(l.href) ? "page" : undefined}
+                  className={cn(
+                    "gap-3 py-2",
+                    isActive(l.href) && "bg-foreground/[0.06]",
+                  )}
+                >
+                  <l.icon />
+                  <span className="flex flex-col">
+                    <span>{l.label}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {l.hint}
+                    </span>
+                  </span>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      <div className="relative z-2 hidden md:flex justify-center px-4">
+        <CommandBar className="max-w-xl" />
+      </div>
 
       <div className="relative z-2 flex items-center gap-1 justify-end pr-1">
         <AnimatedThemeToggler />
         {isAuthenticated ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              className="flex items-center gap-2 h-9 pl-1 pr-2 rounded-xs border border-transparent hover:border-border hover:bg-muted/60 data-popup-open:border-border data-popup-open:bg-muted/60 transition-colors outline-none focus-visible:outline-2 focus-visible:outline-foreground cursor-pointer"
-              aria-label={`Menu da conta de ${displayName}`}
-            >
-              <Avatar className="size-7 rounded-xs after:rounded-xs">
-                <AvatarImage src={avatarUrl} alt="" className="rounded-xs" />
-                <AvatarFallback className="rounded-xs bg-foreground text-background font-sans text-xs font-bold">
-                  {avatarInitial}
-                </AvatarFallback>
-              </Avatar>
-              <span className="hidden sm:block max-w-32 truncate text-sm">
-                {displayName}
-              </span>
-              <ChevronDown className="size-3.5 text-muted-foreground" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 rounded-xs">
-              <div className="px-2 py-2">
-                <p className="text-sm font-medium truncate">{displayName}</p>
-                {user?.username && (
-                  <p className="text-xs text-muted-foreground truncate">
-                    @{user.username}
-                  </p>
-                )}
-              </div>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => router.push("/dashboard")}>
-                  <LayoutDashboard />
-                  Dashboard
-                </DropdownMenuItem>
-                {user?.username && (
-                  <DropdownMenuItem
-                    onClick={() => router.push(`/${user.username}`)}
-                  >
-                    <UserRound />
-                    Meu perfil
-                  </DropdownMenuItem>
-                )}
-                <DropdownMenuItem onClick={() => router.push("/escrever")}>
-                  <PenLine />
-                  Escrever
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push("/conta")}>
-                  <Settings />
-                  Conta
-                </DropdownMenuItem>
-                {user?.role === "admin" && (
-                  <DropdownMenuItem onClick={() => router.push("/admin")}>
-                    <Shield />
-                    Administração
-                  </DropdownMenuItem>
-                )}
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem variant="destructive" onClick={handleLogout}>
-                  <LogOut />
-                  Sair
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <ProfileMenu
+            displayName={displayName}
+            username={user?.username}
+            avatarUrl={profile?.avatarUrl ?? undefined}
+            isAdmin={user?.role === "admin"}
+            onSignOut={handleLogout}
+          />
         ) : (
           <AuthLinks compact />
         )}

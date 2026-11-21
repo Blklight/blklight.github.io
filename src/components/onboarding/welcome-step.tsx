@@ -3,31 +3,35 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { ArrowRight } from "lucide-react";
-import { useReducedMotion } from "motion/react";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import Grainient from "@/components/Grainient";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/badge";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { Kbd } from "@/components/ui/kbd";
 import { apiClient } from "@/lib/api-client";
+import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 import type { ApiResponse } from "@/types/api.types";
 import {
   type OnboardingFormData,
   onboardingSchema,
 } from "@/types/form.schemas";
+import { BADGE_LAYOUT, BadgeStage } from "./badge-stage";
+import { StepFooter } from "./step-footer";
 
 interface Props {
   username: string;
   onNext: () => void;
   needsUsername?: boolean;
+  badge?: {
+    handle: string;
+    avatarUrl?: string | null;
+    memberSince: string;
+    memberId: string;
+  };
 }
 
 const errorMessages: Record<string, string> = {
@@ -39,22 +43,34 @@ const errorMessages: Record<string, string> = {
 
 const t = (key: string) => errorMessages[key] ?? key;
 
-const CTA_CLASS = "group font-mono text-xs uppercase tracking-wider rounded-xs";
+const ROADMAP = [
+  {
+    title: "Crachá",
+    text: "Seu nome e endereço público. Clique nele para ver o verso.",
+  },
+  {
+    title: "Apps",
+    text: "As ferramentas que entram no seu menu e no dashboard.",
+  },
+  { title: "Confirmação", text: "Você revisa, a gente ativa tudo." },
+];
 
 export const WelcomeStep = ({
   username,
   onNext,
   needsUsername = false,
+  badge,
 }: Props) => {
   const setUser = useAuthStore((state) => state.setUser);
-  const reduceMotion = useReducedMotion();
 
   const form = useForm<OnboardingFormData>({
     resolver: zodResolver(onboardingSchema),
     defaultValues: { username: "" },
   });
   const typed = form.watch("username");
-  const handle = needsUsername ? typed || "seu_usuario" : username;
+  const handle = needsUsername
+    ? typed || "seu_usuario"
+    : (badge?.handle ?? username);
 
   const mutation = useMutation({
     mutationFn: async (data: OnboardingFormData) => {
@@ -86,23 +102,9 @@ export const WelcomeStep = ({
     },
   });
 
-  useEffect(() => {
-    if (needsUsername) return;
-    const onKey = (e: KeyboardEvent) => {
-      const tag = (e.target as HTMLElement)?.tagName;
-      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "BUTTON") return;
-      if (e.key === "Enter") {
-        e.preventDefault();
-        onNext();
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onNext, needsUsername]);
-
   return (
-    <div className="flex-1 flex items-center px-6 md:px-10 py-12">
-      <div className="w-full grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-12 lg:gap-16 items-center animate-fade-in">
+    <div className="flex-1 flex flex-col px-6 md:px-10 pt-12">
+      <div className={BADGE_LAYOUT}>
         <div>
           <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.02] mb-6 wrap-anywhere">
             {needsUsername ? "Boas-vindas ao " : "Olá, "}
@@ -114,12 +116,13 @@ export const WelcomeStep = ({
 
           <p className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-xl mb-10">
             {needsUsername
-              ? "Antes de começar, escolha o username que vai aparecer no seu perfil e nos seus textos publicados."
-              : "Em dois passos você escolhe as ferramentas que quer por perto e já pode começar a escrever."}
+              ? "Antes de começar, escolha o username do seu perfil e dos seus textos publicados. Ele já aparece no crachá ao lado."
+              : "Este é o seu crachá na plataforma. Falta escolher os apps que entram nele; depois é só confirmar."}
           </p>
 
           {needsUsername ? (
             <form
+              id="username-form"
               onSubmit={form.handleSubmit((data) => mutation.mutate(data))}
               className="max-w-md"
             >
@@ -155,59 +158,54 @@ export const WelcomeStep = ({
                   {form.formState.errors.root.message}
                 </p>
               )}
-
-              <Button
-                type="submit"
-                size="lg"
-                disabled={mutation.isPending}
-                className={`${CTA_CLASS} mt-6`}
-              >
-                {mutation.isPending ? "Salvando…" : "Salvar e continuar"}
-                <ArrowRight className="ml-3 size-4 transition-transform group-hover:translate-x-1" />
-              </Button>
             </form>
-          ) : (
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-              <Button size="lg" onClick={onNext} className={CTA_CLASS}>
-                Começar
-                <ArrowRight className="ml-3 size-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-              <p className="hidden sm:flex items-center gap-2 text-xs text-muted-foreground">
-                ou pressione <Kbd className="border">Enter</Kbd>
-              </p>
-            </div>
-          )}
+          ) : null}
+
+          <ol className="mt-12 grid max-w-xl gap-4 border-t border-border pt-6 sm:grid-cols-3">
+            {ROADMAP.map((item, i) => (
+              <li
+                key={item.title}
+                className={cn(i > 0 && "text-muted-foreground")}
+              >
+                <p className="font-mono text-xs">
+                  {String(i + 1).padStart(2, "0")}
+                </p>
+                <p className="mt-1 font-sans text-sm font-bold">{item.title}</p>
+                <p className="mt-1 text-xs leading-relaxed">{item.text}</p>
+              </li>
+            ))}
+          </ol>
         </div>
 
-        <aside
-          aria-label="Prévia do seu endereço público"
-          className="relative overflow-hidden rounded-xs min-h-72 text-light"
-        >
-          <div className="absolute inset-0">
-            <Grainient
-              color1="#9c40f7"
-              color2="#2969ff"
-              color3="#252525"
-              timeSpeed={reduceMotion ? 0 : 0.25}
-              warpAmplitude={50}
-              grainAmount={0.1}
-              contrast={1.5}
-              zoom={0.9}
+        <BadgeStage>
+          {badge ? (
+            <Badge
+              status="draft"
+              data={{
+                name: username,
+                handle,
+                avatarUrl: badge.avatarUrl,
+                memberSince: badge.memberSince,
+                memberId: badge.memberId,
+              }}
             />
-          </div>
-          <div className="relative z-10 h-full min-h-72 flex flex-col justify-end p-8">
-            <p className="text-sm text-light/75 mb-2">
-              Seu perfil público fica em
-            </p>
+          ) : (
             <p className="font-sans text-2xl md:text-3xl font-bold tracking-tight wrap-anywhere">
               blklight.dev/{handle}
             </p>
-            <p className="text-sm text-light/75 mt-4 max-w-xs">
-              É onde seus textos publicados aparecem para quem te segue.
-            </p>
-          </div>
-        </aside>
+          )}
+        </BadgeStage>
       </div>
+
+      {needsUsername ? (
+        <StepFooter
+          form="username-form"
+          label={mutation.isPending ? "Salvando…" : "Salvar e continuar"}
+          disabled={mutation.isPending}
+        />
+      ) : (
+        <StepFooter label="Começar" onNext={onNext} />
+      )}
     </div>
   );
 };

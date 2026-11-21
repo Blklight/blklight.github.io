@@ -12,10 +12,14 @@ import type { PlatformApp } from "@/types/api.types";
 import { appMeta } from "./app-meta";
 import { CornerBrackets } from "./corner-brackets";
 
+// Tilt sets preserve-3d on its wrapper; nested under the flip's own 3D context,
+// Firefox then hit-tests the wrapper instead of the card. Flat keeps the tilt visible.
+export const FLAT = { transformStyle: "flat" } as const;
+
 interface Props {
   app: PlatformApp;
-  selected: boolean;
-  onToggle: () => void;
+  selected?: boolean;
+  onToggle?: () => void;
 }
 
 /**
@@ -23,9 +27,10 @@ interface Props {
  * marks around the label and the name, and an ink bar that turns the card
  * over to what the app does.
  */
-export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
+export const SimpleFlipCard = ({ app, selected = false, onToggle }: Props) => {
   const [flipped, setFlipped] = useState(false);
   const meta = appMeta(app);
+  const locked = !meta.available;
 
   const flip = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -37,43 +42,60 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
     if (e.target !== e.currentTarget) return;
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      onToggle();
+      if (!locked) onToggle?.();
     }
   };
 
+  const cover = (
+    <>
+      {locked && <LockedVeil />}
+      <div className="relative flex items-center justify-between gap-2">
+        <span className="px-2 py-1 text-xs uppercase">{meta.tagline}</span>
+        {locked ? <SoonStamp /> : <SelectMark selected={selected} />}
+      </div>
+
+      <div className="relative mt-8 p-3">
+        <CornerBrackets size="size-3" className="opacity-80" />
+        <h3 className="font-mono text-3xl font-medium uppercase wrap-break-word">
+          {app.name}
+        </h3>
+        <p className="mt-1 text-sm opacity-80 line-clamp-2">
+          {meta.description}
+        </p>
+      </div>
+    </>
+  );
+
   return (
-    <Tilt maxTilt={8} perspective={1000} className="group relative">
+    <Tilt
+      maxTilt={8}
+      perspective={1000}
+      style={FLAT}
+      className="group relative"
+    >
       <TiltContent className="perspective-1000 h-96 relative">
         {/* biome-ignore lint/a11y/useSemanticElements: card 3D com conteúdo em bloco e botão interno não cabe em <button> */}
         <div
           role="button"
           tabIndex={0}
-          aria-pressed={selected}
+          aria-pressed={locked ? undefined : selected}
+          aria-disabled={locked || undefined}
           aria-label={app.name}
-          onClick={onToggle}
+          onClick={locked ? undefined : onToggle}
           onKeyDown={handleKey}
-          className="relative w-full h-full preserve-3d transition-transform duration-500 ease-out cursor-pointer rounded-[1.25rem] outline-none focus-visible:outline-3 focus-visible:outline-foreground focus-visible:outline-offset-4 motion-reduce:transition-none"
+          className={cn(
+            "relative w-full h-full preserve-3d transition-transform duration-500 ease-out rounded-[1.25rem] outline-none focus-visible:outline-3 focus-visible:outline-foreground focus-visible:outline-offset-4 motion-reduce:transition-none",
+            !locked && "cursor-pointer",
+          )}
           style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
         >
-          <FichaFace corner="br" paper={meta.accent.paper} selected={selected}>
-            <div className="flex items-center justify-between gap-2">
-              <span className="relative px-2 py-1 text-xs uppercase">
-                {/* <CornerBrackets size="size-2" className="opacity-70" /> */}
-                {meta.tagline}
-                {!meta.available && " · em breve"}
-              </span>
-              <SelectMark selected={selected} />
-            </div>
-
-            <div className="relative mt-8 p-3">
-              <CornerBrackets size="size-3" className="opacity-80" />
-              <h3 className="font-mono text-3xl font-medium uppercase wrap-break-word">
-                {app.name}
-              </h3>
-              <p className="mt-1 text-sm opacity-80 line-clamp-2">
-                {meta.description}
-              </p>
-            </div>
+          <FichaFace
+            corner="br"
+            paper={meta.accent.paper}
+            selected={selected}
+            hidden={flipped}
+          >
+            {cover}
 
             <div className="flex-1" />
 
@@ -93,8 +115,10 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
             paper={meta.accent.paper}
             selected={selected}
             back
+            hidden={!flipped}
           >
-            <div className="flex items-center justify-between gap-2">
+            {locked && <LockedVeil />}
+            <div className="relative flex items-center justify-between gap-2">
               <button
                 type="button"
                 onClick={flip}
@@ -105,7 +129,7 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
                 Voltar
               </button>
               <span className="text-xs uppercase opacity-70">
-                {meta.available ? "Disponível" : "Em breve"}
+                {locked ? "Em breve" : "Disponível"}
               </span>
             </div>
 
@@ -130,11 +154,15 @@ export const SimpleFlipCard = ({ app, selected, onToggle }: Props) => {
                 {meta.idealFor}
               </p>
             )}
-            <div className="mt-3 flex items-center justify-between text-xs">
+            <div className="relative mt-3 flex items-center justify-between text-xs">
               <span className="opacity-70">
-                {selected ? "Selecionado" : "Clique para selecionar"}
+                {locked
+                  ? "Ainda não dá para ativar"
+                  : selected
+                    ? "Selecionado"
+                    : "Clique para selecionar"}
               </span>
-              <SelectMark selected={selected} />
+              {locked ? <SoonStamp /> : <SelectMark selected={selected} />}
             </div>
           </FichaFace>
         </div>
@@ -152,12 +180,38 @@ const joinPt = (items: string[]) => {
     : `${[first, ...tail.slice(0, -1)].join(", ")} e ${tail.at(-1)}`;
 };
 
-const SelectMark = ({ selected }: { selected: boolean }) => (
+// Hatched, washed-out stock: reads as "not yet" before the label does.
+export const LockedVeil = () => (
+  <span
+    aria-hidden
+    className="absolute inset-0 bg-light/45 bg-[repeating-linear-gradient(135deg,transparent_0_9px,rgb(0_0_0/0.07)_9px_11px)]"
+  />
+);
+
+export const SoonStamp = ({ className }: { className?: string }) => (
+  <span
+    className={cn(
+      "-rotate-6 shrink-0 border-2 border-dark px-1.5 py-0.5 font-mono text-[0.7rem] font-semibold uppercase tracking-wider",
+      className,
+    )}
+  >
+    Em breve
+  </span>
+);
+
+export const SelectMark = ({
+  selected,
+  className,
+}: {
+  selected: boolean;
+  className?: string;
+}) => (
   <span
     aria-hidden
     className={cn(
       "size-6 shrink-0 rounded-[3px] border-2 border-dark flex items-center justify-center",
       selected && "bg-dark text-light",
+      className,
     )}
   >
     {selected && <Check className="size-3.5" strokeWidth={3} />}
@@ -169,6 +223,8 @@ interface FichaFaceProps {
   paper: string;
   selected?: boolean;
   back?: boolean;
+  // Face turned away: some browsers still hit-test it through backface-visibility in nested 3D.
+  hidden?: boolean;
   size?: "md" | "lg";
   className?: string;
   children: React.ReactNode;
@@ -180,6 +236,7 @@ export const FichaFace = ({
   paper,
   selected = false,
   back,
+  hidden,
   size = "lg",
   className,
   children,
@@ -189,10 +246,12 @@ export const FichaFace = ({
   return (
     <div
       ref={outerRef}
+      inert={hidden}
       style={{ clipPath: outerClip }}
       className={cn(
         "absolute inset-0 backface-hidden p-[3px] transition-colors duration-200",
         back && "rotate-y-180",
+        hidden && "pointer-events-none",
         selected ? "bg-dark" : paper,
       )}
     >

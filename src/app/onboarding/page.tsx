@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { AppsStep } from "@/components/onboarding/apps-step";
@@ -18,9 +19,24 @@ import type {
 
 export type Step = "welcome" | "apps" | "done";
 
+const ORDER: Step[] = ["welcome", "apps", "done"];
+
 export default function OnboardingPage() {
   const router = useRouter();
-  const [step, setStep] = React.useState<Step>("welcome");
+  const reduceMotion = useReducedMotion();
+  // Direction (1 forward, -1 back) travels with the step so the exit and enter slide the same way.
+  const [[step, direction], setNav] = React.useState<[Step, number]>([
+    "welcome",
+    1,
+  ]);
+  const setStep = (next: Step) =>
+    setNav(([current]) => [
+      next,
+      ORDER.indexOf(next) >= ORDER.indexOf(current) ? 1 : -1,
+    ]);
+  const offset = reduceMotion ? 0 : 16;
+  // Setup has started: the API calls are running, so no going back to edit.
+  const [locked, setLocked] = React.useState(false);
   // Slugs of the apps picked in the catalog step. The API activates apps by
   // slug, so the selection is stored (and resolved) with that same key.
   const [selected, setSelected] = React.useState<string[]>([]);
@@ -56,10 +72,18 @@ export default function OnboardingPage() {
     statusQuery.data?.profile.username ??
     statusQuery.data?.user.username;
 
+  const status = statusQuery.data;
+  const badge = status && {
+    handle: status.profile.username ?? status.user.username,
+    avatarUrl: status.profile.avatarUrl,
+    memberSince: status.user.createdAt,
+    memberId: status.user.id.replace(/-/g, "").slice(0, 6).toUpperCase(),
+  };
+
   return (
     <section className="bg-light book:bg-sepia dark:bg-dark background-texture rounded-xs relative z-0">
       <TextureOverlay texture={"grid"} className="mix-blend-overlay" />
-      <OnboardingShell step={step}>
+      <OnboardingShell step={step} onStepClick={locked ? undefined : setStep}>
         {statusQuery.isPending && (
           <div className="flex-1 flex items-center justify-center px-6 py-16">
             <p className="text-sm text-muted-foreground animate-pulse">
@@ -79,54 +103,80 @@ export default function OnboardingPage() {
             </div>
           </div>
         )}
-        {statusQuery.data && step === "welcome" && displayName && (
-          <WelcomeStep
-            username={displayName}
-            onNext={() => setStep("apps")}
-            needsUsername={statusQuery.data.step === "username"}
-          />
-        )}
-        {statusQuery.data && step === "apps" && (
-          <>
-            {appsQuery.isPending && (
-              <div className="flex-1 flex items-center justify-center px-6 py-16">
-                <p className="text-sm text-muted-foreground animate-pulse">
-                  Carregando apps…
-                </p>
-              </div>
-            )}
-            {appsQuery.isError && (
-              <div className="flex-1 flex items-center justify-center px-6 py-16">
-                <div className="border border-border rounded-xs p-8 max-w-md w-full">
-                  <p className="text-sm text-muted-foreground mb-6">
-                    Não foi possível carregar os apps.
-                  </p>
-                  <Button variant="outline" onClick={() => appsQuery.refetch()}>
-                    Tentar novamente
-                  </Button>
-                </div>
-              </div>
-            )}
-            {appsQuery.data && (
-              <AppsStep
-                apps={appsQuery.data}
-                initial={selected}
-                onConfirm={(slugs) => {
-                  setSelected(slugs);
-                  setStep("done");
-                }}
-              />
-            )}
-          </>
-        )}
-        {statusQuery.data && step === "done" && (
-          <ConfirmStep
-            username={displayName ?? ""}
-            apps={(appsQuery.data ?? []).filter((a) =>
-              selected.includes(a.slug),
-            )}
-            onBack={() => setStep("apps")}
-          />
+        {statusQuery.data && (
+          <AnimatePresence mode="wait" initial={false} custom={direction}>
+            <motion.div
+              key={step}
+              custom={direction}
+              variants={{
+                enter: (d: number) => ({ opacity: 0, x: d * offset }),
+                center: { opacity: 1, x: 0 },
+                exit: (d: number) => ({ opacity: 0, x: -d * offset }),
+              }}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
+              className="flex-1 flex flex-col"
+            >
+              {step === "welcome" && displayName && (
+                <WelcomeStep
+                  username={displayName}
+                  onNext={() => setStep("apps")}
+                  needsUsername={statusQuery.data.step === "username"}
+                  badge={badge ?? undefined}
+                />
+              )}
+              {step === "apps" && (
+                <>
+                  {appsQuery.isPending && (
+                    <div className="flex-1 flex items-center justify-center px-6 py-16">
+                      <p className="text-sm text-muted-foreground animate-pulse">
+                        Carregando apps…
+                      </p>
+                    </div>
+                  )}
+                  {appsQuery.isError && (
+                    <div className="flex-1 flex items-center justify-center px-6 py-16">
+                      <div className="border border-border rounded-xs p-8 max-w-md w-full">
+                        <p className="text-sm text-muted-foreground mb-6">
+                          Não foi possível carregar os apps.
+                        </p>
+                        <Button
+                          variant="outline"
+                          onClick={() => appsQuery.refetch()}
+                        >
+                          Tentar novamente
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                  {appsQuery.data && (
+                    <AppsStep
+                      apps={appsQuery.data}
+                      initial={selected}
+                      onBack={() => setStep("welcome")}
+                      onConfirm={(slugs) => {
+                        setSelected(slugs);
+                        setStep("done");
+                      }}
+                    />
+                  )}
+                </>
+              )}
+              {step === "done" && (
+                <ConfirmStep
+                  username={displayName ?? ""}
+                  apps={(appsQuery.data ?? []).filter((a) =>
+                    selected.includes(a.slug),
+                  )}
+                  onBack={() => setStep("apps")}
+                  onLock={() => setLocked(true)}
+                  badge={badge ?? undefined}
+                />
+              )}
+            </motion.div>
+          </AnimatePresence>
         )}
       </OnboardingShell>
     </section>

@@ -5,10 +5,8 @@ import { ArrowRight, FileText, PenLine } from "lucide-react";
 import Link from "next/link";
 import { typeTheme } from "@/components/feed/cards/card-theme";
 import { Navbar } from "@/components/navbar";
-import { appMeta } from "@/components/onboarding/app-meta";
-import { CornerBrackets } from "@/components/onboarding/corner-brackets";
+import { AppTile } from "@/components/onboarding/app-tile";
 import { DitherSpotlight } from "@/components/onboarding/dither-spotlight";
-import { FichaFace } from "@/components/onboarding/simple-flip-card";
 import { RequireAuth } from "@/components/require-auth";
 import { buttonVariants } from "@/components/ui/button";
 import { FilletCard } from "@/components/ui/fillet-card";
@@ -281,48 +279,14 @@ function Dashboard() {
             <SectionTitle id="apps">Seus apps</SectionTitle>
             {apps.data && apps.data.length > 0 ? (
               <ul className="grid grid-cols-2 gap-3">
-                {apps.data.map((app) => {
-                  const meta = appMeta(app);
-                  const Icon = meta.icon;
-                  return (
-                    <li key={app.id} className="group relative aspect-square">
-                      <FichaFace
-                        corner="br"
-                        size="md"
-                        paper={meta.accent.paper}
-                        className="p-3.5"
-                      >
-                        <div className="flex items-start justify-between gap-2">
-                          <span className="text-[0.65rem] uppercase leading-tight">
-                            {meta.available ? meta.tagline : "Em breve"}
-                          </span>
-                          {Icon && (
-                            <Icon
-                              className="size-4 shrink-0"
-                              strokeWidth={1.75}
-                            />
-                          )}
-                        </div>
-                        <div className="relative mt-auto px-2.5 py-1.5">
-                          <CornerBrackets
-                            size="size-1.5"
-                            className="opacity-80"
-                          />
-                          <p className="font-mono text-sm font-medium uppercase leading-tight wrap-break-word group-hover:underline underline-offset-2">
-                            {app.name}
-                          </p>
-                        </div>
-                      </FichaFace>
-                      {app.slug === "publisher" && (
-                        <Link
-                          href="/escrever"
-                          aria-label={app.name}
-                          className="absolute inset-0 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
-                        />
-                      )}
-                    </li>
-                  );
-                })}
+                {apps.data.map((app) => (
+                  <li key={app.id}>
+                    <AppTile
+                      app={app}
+                      href={app.slug === "publisher" ? "/escrever" : undefined}
+                    />
+                  </li>
+                ))}
               </ul>
             ) : (
               <p className="text-sm text-muted-foreground">

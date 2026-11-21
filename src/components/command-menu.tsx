@@ -1,6 +1,5 @@
 "use client";
 
-import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { useQuery } from "@tanstack/react-query";
 import { Command } from "cmdk";
 import {
@@ -21,17 +20,22 @@ import {
   UserPlus,
   UserRound,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
-import { type ReactNode, useDeferredValue, useEffect, useState } from "react";
+import {
+  type ReactNode,
+  useDeferredValue,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { typeTheme } from "@/components/feed/cards/card-theme";
-import { useFillet } from "@/components/ui/fillet-card";
 import { Kbd } from "@/components/ui/kbd";
 import { getPublicFeed } from "@/features/documents/api";
 import { kindByType } from "@/features/documents/document-kinds";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useCommandMenuStore } from "@/store/useCommandMenuStore";
 
 interface Entry {
   id: string;
@@ -98,41 +102,53 @@ function Group({
   );
 }
 
-/** Global ⌘K / Ctrl+K palette: navigation, feed search, and theme. */
-export function CommandMenu() {
+/**
+ * Command bar in the navbar: reads like a browser address bar (the current
+ * path, e.g. /feed) and, on focus or ⌘K, turns into a search with
+ * the results panel attached below. Same entries as the old ⌘K palette.
+ */
+export function CommandBar({ className }: { className?: string }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { setTheme } = useTheme();
-  const open = useCommandMenuStore((s) => s.open);
-  const setOpen = useCommandMenuStore((s) => s.setOpen);
+  const reduceMotion = useReducedMotion();
   const user = useAuthStore((s) => s.user);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const q = useDeferredValue(query.trim());
-  const [outerRef, outerClip] = useFillet<HTMLDivElement>(
-    ["tl", "br"],
-    "lg",
-    6,
-    0,
-    2,
-  );
-  const [innerRef, innerClip] = useFillet<HTMLDivElement>(
-    ["tl", "br"],
-    "lg",
-    6,
-    2,
-    2,
-  );
+  const rootRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const close = () => {
+    setOpen(false);
+    setQuery("");
+    inputRef.current?.blur();
+  };
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        setOpen(!useCommandMenuStore.getState().open);
+        setOpen(true);
+        inputRef.current?.focus();
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [setOpen]);
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: PointerEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) {
+        setOpen(false);
+        setQuery("");
+      }
+    };
+    document.addEventListener("pointerdown", onDown);
+    return () => document.removeEventListener("pointerdown", onDown);
+  }, [open]);
 
   const docs = useQuery({
     queryKey: ["command-menu", "feed", q],
@@ -142,8 +158,7 @@ export function CommandMenu() {
   });
 
   const go = (href: string) => () => {
-    setOpen(false);
-    setQuery("");
+    close();
     router.push(href);
   };
 
@@ -259,7 +274,7 @@ export function CommandMenu() {
 
   const theme = (value: string) => () => {
     setTheme(value);
-    setOpen(false);
+    close();
   };
   const appearance: Entry[] = [
     {
@@ -298,88 +313,106 @@ export function CommandMenu() {
   ];
 
   return (
-    <DialogPrimitive.Root
-      open={open}
-      onOpenChange={(next) => {
-        setOpen(next);
-        if (!next) setQuery("");
-      }}
-    >
-      <DialogPrimitive.Portal>
-        <DialogPrimitive.Backdrop className="fixed inset-0 z-[150] bg-dark/40 backdrop-blur-[2px] data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0" />
-        <DialogPrimitive.Popup
-          ref={outerRef}
-          style={{ clipPath: outerClip }}
-          className="fixed left-1/2 top-[12vh] z-[151] w-[min(40rem,calc(100%-2rem))] -translate-x-1/2 bg-foreground p-0.5 outline-none data-open:animate-in data-open:fade-in-0 data-open:slide-in-from-top-2 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none"
+    <div ref={rootRef} className={cn("relative w-full", className)}>
+      <Command
+        loop
+        label="Buscar ou ir para"
+        onKeyDown={(e) => {
+          if (e.key === "Escape") {
+            e.preventDefault();
+            close();
+          }
+        }}
+      >
+        <div
+          className={cn(
+            "relative flex h-8 items-center gap-2 rounded-xs border bg-background/70 px-3 transition-colors",
+            open
+              ? "border-foreground"
+              : "border-border hover:border-foreground/60",
+          )}
         >
-          <DialogPrimitive.Title className="sr-only">
-            Menu de comandos
-          </DialogPrimitive.Title>
-          <div
-            ref={innerRef}
-            style={{ clipPath: innerClip }}
-            className="bg-popover text-popover-foreground background-texture"
-          >
-            <Command loop label="Menu de comandos" className="flex flex-col">
-              <div className="flex items-center gap-3 px-5 border-b-2 border-foreground">
-                <Search
-                  className="size-5 shrink-0 text-muted-foreground"
-                  aria-hidden
-                />
-                <Command.Input
-                  value={query}
-                  onValueChange={setQuery}
-                  placeholder="Buscar textos ou ir para…"
-                  className="h-16 w-full bg-transparent text-lg outline-none placeholder:text-muted-foreground"
-                />
-                <Kbd className="hidden sm:inline-flex border">esc</Kbd>
-              </div>
+          <Search
+            className="size-3.5 shrink-0 text-muted-foreground"
+            aria-hidden
+          />
+          <Command.Input
+            ref={inputRef}
+            value={query}
+            onValueChange={setQuery}
+            onFocus={() => setOpen(true)}
+            placeholder={open ? "Buscar textos ou ir para…" : ""}
+            aria-label="Buscar ou ir para"
+            className="peer h-full w-full min-w-0 bg-transparent font-mono text-xs outline-none placeholder:text-muted-foreground"
+          />
+          {!open && !query && (
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-y-0 left-8 right-14 flex items-center truncate font-mono text-xs"
+            >
+              <span className="truncate">{pathname}</span>
+            </span>
+          )}
+          <Kbd className="hidden sm:inline-flex border">
+            {open ? "esc" : "⌘K"}
+          </Kbd>
+        </div>
 
-              <Command.List className="max-h-[min(60vh,28rem)] overflow-y-auto overscroll-contain py-1">
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={reduceMotion ? undefined : { opacity: 0, y: -4 }}
+              transition={{ duration: 0.14, ease: [0.23, 1, 0.32, 1] }}
+              className="absolute inset-x-0 top-full z-[120] mt-0.5 overflow-hidden rounded-xs border border-foreground bg-popover text-popover-foreground background-texture"
+            >
+              <Command.List className="max-h-[min(60vh,26rem)] overflow-y-auto overscroll-contain py-1">
                 {!docs.data?.items.length && (
                   <Command.Empty className="px-5 py-10 text-center text-sm text-muted-foreground">
                     Nada encontrado para “{query}”.
                   </Command.Empty>
                 )}
 
-                {q.length >= 2 && (
-                  <Group heading="Textos" forceMount>
-                    {docs.isFetching && !docs.data && (
-                      <Command.Loading>
-                        <p className="px-3 py-2 text-sm text-muted-foreground">
-                          Buscando…
-                        </p>
-                      </Command.Loading>
-                    )}
-                    {docs.data?.items.map((doc) => (
-                      <Command.Item
-                        key={doc.id}
-                        value={`doc-${doc.id}`}
-                        forceMount
-                        onSelect={go(`/${doc.author.username}/${doc.slug}`)}
-                        className="group/item flex items-center gap-3 px-3 py-2 rounded-xs cursor-pointer outline-none data-[selected=true]:bg-foreground/[0.06]"
-                      >
-                        <span
-                          className={cn(
-                            "h-8 w-1.5 shrink-0 rounded-[1px]",
-                            typeTheme(doc.typeName).solid,
-                          )}
-                          aria-hidden
-                        />
-                        <span className="min-w-0 flex-1">
-                          <span className="block truncate text-sm font-medium">
-                            {doc.title}
+                {q.length >= 2 &&
+                  (docs.isFetching || !!docs.data?.items.length) && (
+                    <Group heading="Textos" forceMount>
+                      {docs.isFetching && !docs.data && (
+                        <Command.Loading>
+                          <p className="px-3 py-2 text-sm text-muted-foreground">
+                            Buscando…
+                          </p>
+                        </Command.Loading>
+                      )}
+                      {docs.data?.items.map((doc) => (
+                        <Command.Item
+                          key={doc.id}
+                          value={`doc-${doc.id}`}
+                          forceMount
+                          onSelect={go(`/${doc.author.username}/${doc.slug}`)}
+                          className="group/item flex items-center gap-3 px-3 py-2 rounded-xs cursor-pointer outline-none data-[selected=true]:bg-foreground/[0.06]"
+                        >
+                          <span
+                            className={cn(
+                              "h-8 w-1.5 shrink-0 rounded-[1px]",
+                              typeTheme(doc.typeName).solid,
+                            )}
+                            aria-hidden
+                          />
+                          <span className="min-w-0 flex-1">
+                            <span className="block truncate text-sm font-medium">
+                              {doc.title}
+                            </span>
+                            <span className="block truncate text-xs text-muted-foreground">
+                              {typeTheme(doc.typeName).label} ·{" "}
+                              {doc.author.displayName || doc.author.username}
+                            </span>
                           </span>
-                          <span className="block truncate text-xs text-muted-foreground">
-                            {typeTheme(doc.typeName).label} ·{" "}
-                            {doc.author.displayName || doc.author.username}
-                          </span>
-                        </span>
-                        <ArrowRight className="size-4 shrink-0 opacity-0 group-data-[selected=true]/item:opacity-100" />
-                      </Command.Item>
-                    ))}
-                  </Group>
-                )}
+                          <ArrowRight className="size-4 shrink-0 opacity-0 group-data-[selected=true]/item:opacity-100" />
+                        </Command.Item>
+                      ))}
+                    </Group>
+                  )}
 
                 <Group heading="Ir para">
                   {navigate.map((entry) => (
@@ -397,8 +430,7 @@ export function CommandMenu() {
                   ))}
                 </Group>
               </Command.List>
-
-              <div className="hidden sm:flex items-center gap-4 px-5 py-2.5 border-t border-border font-mono text-xs text-muted-foreground">
+              <div className="hidden sm:flex items-center gap-4 px-4 py-2 border-t border-border font-mono text-xs text-muted-foreground">
                 <span className="flex items-center gap-1.5">
                   <Kbd className="border">↑</Kbd>
                   <Kbd className="border">↓</Kbd> navegar
@@ -406,33 +438,17 @@ export function CommandMenu() {
                 <span className="flex items-center gap-1.5">
                   <Kbd className="border">↵</Kbd> abrir
                 </span>
+                <span className="flex items-center gap-1.5">
+                  <Kbd className="border">esc</Kbd> fechar
+                </span>
                 <span className="ml-auto flex items-center gap-1.5">
                   <SunMoon className="size-3.5" aria-hidden /> Blklight
                 </span>
               </div>
-            </Command>
-          </div>
-        </DialogPrimitive.Popup>
-      </DialogPrimitive.Portal>
-    </DialogPrimitive.Root>
-  );
-}
-
-/** Navbar trigger; the palette itself is mounted once in the root layout. */
-export function CommandMenuTrigger({ className }: { className?: string }) {
-  const setOpen = useCommandMenuStore((s) => s.setOpen);
-  return (
-    <button
-      type="button"
-      onClick={() => setOpen(true)}
-      className={cn(
-        "group flex items-center gap-2 h-8 pl-2.5 pr-1.5 rounded-xs border border-border bg-background/60 text-muted-foreground hover:text-foreground hover:border-foreground transition-colors outline-none focus-visible:outline-2 focus-visible:outline-foreground cursor-pointer",
-        className,
-      )}
-    >
-      <Search className="size-3.5" aria-hidden />
-      <span className="text-xs">Buscar ou ir para</span>
-      <Kbd className="ml-3 border">⌘K</Kbd>
-    </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </Command>
+    </div>
   );
 }

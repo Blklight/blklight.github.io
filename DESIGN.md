@@ -246,12 +246,36 @@ Near-square everywhere: the base radius is 2px (`--radius: 0.125rem`), and most 
 - **Error:** crimson border and 20% crimson ring.
 
 ### Navigation
-- **Navbar:** 48px sticky, paper with noise texture, ink bottom rule; Inter bold wordmark; mono links with an active indicator; ⌘K command trigger; avatar menu with square avatar.
+- **Navbar:** 48px sticky, paper with noise texture, ink bottom rule. Three columns: brand + navigation dropdown (`LayoutGrid`, lists Feed and Escrever, shows the current section) | command bar, centered, max 36rem | theme toggle + account menu.
+- **Command bar** (`CommandBar`, `src/components/command-menu.tsx`): looks like a browser address bar showing the current path (`/feed`); focus or ⌘K turns it into search with the results panel attached below (same groups as before: texts, go to, explore, appearance). Only exists where the navbar does, so the landing page has none.
+- **Account menu** (`ProfileMenu`, `src/components/profile-menu.tsx`): the avatar card grows into the panel (shared layout); theme segmented control (light, dark, book, system), shortcuts, and sign out that needs a 1.2s hold.
 
 ### App fichas (Tally style)
 - **Shape:** double fillet frame (`FichaFace` in `src/components/onboarding/simple-flip-card.tsx`): app paper stock with `background-texture`, 3px inner border that turns ink when selected, chamfer always bottom-right (`br`; the back face mirrors to `bl`).
 - **Onboarding:** flip card, 384px tall. Front opens the back with a `ChamferButton` (`src/components/ui/chamfer-button.tsx`, copied from Tally). The back has "Voltar" and a scrollable body inside the corner brackets, faded at the edges with `ScrollFade` from `@animate-ui/react`. Hover tilts the card up to 8° (`Tilt` from `@animate-ui/react`, flat under reduced motion).
-- **Dashboard:** same face at `md` size, square, two per row in an 18rem side column. No flip, no button.
+- **Dashboard:** `AppTile`, two per row in an 18rem side column.
+- **Tile** (`AppTile`, `src/components/onboarding/app-tile.tsx`): the cover at square tile size (label and mark on top, name and description in the brackets), with tilt. Used on the onboarding confirmation and in the dashboard, which no longer has its own markup.
+- **Em breve:** an app with no screens yet is always hatched and washed out (`LockedVeil`), with a tilted "Em breve" stamp where the checkbox would be. It still flips to explain itself, but it can't be selected (`aria-disabled`).
+
+### Onboarding
+- **One object across the flow:** the member badge (`Badge model="classic"`, `src/components/badge/`): a rounded plastic card with an ink rim and lanyard slot (not chamfered: badges aren't), paper texture and tilt. Front: centered photo (`avatarUrl` or initials until upload exists), name, @handle, Blklight logo at the base. Back (click to flip): profile URL, status, the apps. Step 1 shows it being built (handle updates live, empty app slots); the last step shows it with the chosen apps, and the "Confirmado" stamp lands on the front when setup finishes.
+- **Badge models:** `src/components/badge/index.tsx` maps model names to components that all take the same `BadgeData` (name, handle, avatar, member since, id, apps) and an optional `status` (`draft` in onboarding, `confirmed` right after it, none for someone else's badge). Models today: `classic` (light paper; dark stock in the dark theme; a confirmed badge shows the round stamp where the social row would be), `holo` (dark card, rainbow foil and glare following the pointer via `--mx`/`--my`) and `holo-card` (heygaia's holo card adapted in `src/components/badge/holo-card/`: member photo as art, local sparkles, Inter, optional `accent` tint) and `industrial` (chamfered brushed-steel plate with rivets, hazard stripe, stencil type, barcode from the member id; spec sheet on the back). Compare them at `/lab/cracha`. New looks are new entries in `BADGE_MODELS`, so profile and user search can render any member with any model.
+- **Badge stage:** on the first and last steps the badge sits on the Grainient panel (`BadgeStage`), always in a 25rem column on the right (`BADGE_LAYOUT`).
+- **Step anatomy:** title + lede, content, then `StepFooter` (`src/components/onboarding/step-footer.tsx`), the same fixed bar on every step.
+- **Steps animate** 16px in the direction of travel with a fade (`AnimatePresence` in `src/app/onboarding/page.tsx`); reduced motion keeps only the fade. Finished steps on the progress bar are buttons back to them, until setup starts: then navigation locks.
+- **Tilt + flip:** pass `style={FLAT}` (exported from `simple-flip-card.tsx`) to `Tilt` whenever its content flips; its default `preserve-3d` breaks hit-testing in Firefox.
+- **Setup feedback:** confirming runs the real calls as rows (`SetupProgress`): pending, spinner, check; a failure marks its row and retries from there.
+
+### Fixed patterns (the exceptions to "no patterns")
+The cards, covers and layouts vary; these never do:
+- **Primary action:** one per screen, dark `ChamferButton` (`bg-foreground`, chamfer `br`) with an arrow, mono uppercase label. `Enter` triggers it when focus isn't on a control.
+- **Back:** ghost button labelled "Voltar", left of the primary action.
+- **App cards:** `FichaFace` + tilt wherever an app appears (onboarding, confirmation, dashboard), chamfer `br`.
+- **Not available yet:** hatch + "Em breve" stamp, never only a muted color.
+- **Status after an action:** short text in an `aria-live` region next to the action, not a toast.
+
+### Dev showcase
+`/componentes` lists every component with a live demo (`src/components/showcase/`, port of the tpl-ui showcase). The page is `page.dev.tsx`, which `pageExtensions` in `next.config.ts` only picks up outside production. Add a demo to `demos/blklight.tsx` when a project component is created.
 
 ### Page transitions (installed, not wired)
 - `src/components/animate-ui/components/page-transition.tsx` (Animate UI, via shadcn) is installed but not imported anywhere. It runs on the browser View Transitions API through `motion/react-animate-view`; to try it, wrap `{children}` in `src/app/layout.tsx` with `<PageTransition effect="fade">`, keeping the navbar outside, and mark back links with `transitionTypes={['nav-back']}`.

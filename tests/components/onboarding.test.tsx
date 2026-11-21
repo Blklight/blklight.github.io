@@ -74,17 +74,34 @@ describe("AppsStep", () => {
         apps={[app("publisher", "Publisher"), app("reader", "Reader")]}
         initial={[]}
         onConfirm={onConfirm}
+        onBack={vi.fn()}
       />,
     );
     const next = screen.getByRole("button", { name: /continuar/i });
     expect(next).toBeDisabled();
 
-    await userEvent.click(screen.getByRole("button", { name: "Reader" }));
-    expect(screen.getByRole("button", { name: "Reader" })).toHaveAttribute(
+    await userEvent.click(screen.getByRole("button", { name: "Publisher" }));
+    expect(screen.getByRole("button", { name: "Publisher" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
     await userEvent.click(next);
-    expect(onConfirm).toHaveBeenCalledWith(["reader"]);
+    expect(onConfirm).toHaveBeenCalledWith(["publisher"]);
+  });
+
+  it("keeps apps marked as em breve out of the selection", async () => {
+    render(
+      <AppsStep
+        apps={[app("publisher", "Publisher"), app("reader", "Reader")]}
+        initial={["reader"]}
+        onConfirm={vi.fn()}
+        onBack={vi.fn()}
+      />,
+    );
+    const reader = screen.getByRole("button", { name: "Reader" });
+    expect(reader).toHaveAttribute("aria-disabled", "true");
+    await userEvent.click(reader);
+    expect(reader).not.toHaveAttribute("aria-pressed");
+    expect(screen.getByRole("button", { name: /continuar/i })).toBeDisabled();
   });
 });

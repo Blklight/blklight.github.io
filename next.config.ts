@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV !== "production";
+
+// `*.dev.tsx` pages (e.g. the /componentes showcase) exist only outside production builds.
+const pageExtensions = isDev ? ["tsx", "ts", "dev.tsx"] : ["tsx", "ts"];
 const apiOrigin = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 // Static CSP without nonce: a nonce forces dynamic rendering and disables PPR (Next CSP guide).
@@ -31,6 +34,7 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  pageExtensions,
   cacheComponents: true,
   partialPrefetching: true,
   async headers() {
