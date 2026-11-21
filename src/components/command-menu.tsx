@@ -21,7 +21,7 @@ import {
   UserPlus,
   UserRound,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { type ReactNode, useDeferredValue, useEffect, useState } from "react";
 import { typeTheme } from "@/components/feed/cards/card-theme";
@@ -101,6 +101,8 @@ function Group({
 /** Global ⌘K / Ctrl+K palette: navigation, feed search, and theme. */
 export function CommandMenu() {
   const router = useRouter();
+  // The landing page is a marketing surface: no palette there.
+  const onLanding = usePathname() === "/";
   const { setTheme } = useTheme();
   const open = useCommandMenuStore((s) => s.open);
   const setOpen = useCommandMenuStore((s) => s.setOpen);
@@ -124,6 +126,7 @@ export function CommandMenu() {
   );
 
   useEffect(() => {
+    if (onLanding) return;
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
@@ -132,7 +135,7 @@ export function CommandMenu() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [setOpen]);
+  }, [setOpen, onLanding]);
 
   const docs = useQuery({
     queryKey: ["command-menu", "feed", q],
