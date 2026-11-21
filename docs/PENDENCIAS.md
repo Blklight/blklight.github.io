@@ -93,3 +93,63 @@ Relatórios completos: `.impeccable/critique/` e `.impeccable/audit/` (última a
 
 - O servidor de dev (Turbopack) às vezes para de atualizar o `src/app/globals.css` e continua servindo o CSS antigo, mesmo depois de salvar. Reiniciar o `bun run dev` resolve.
 - O Tally (`../../workspace/tally`) está no Next 16.4.2, versão com vulnerabilidade conhecida, a mesma que o Blklight atualizou para 16.4.6.
+
+---
+
+# Pendências de 2026-11-21: onboarding, crachás e navbar
+
+Branch `refino-ui` (ainda não enviada). Itens que ficaram abertos depois do refino das fichas, do onboarding, dos crachás e da navbar. As seções acima são de 2026-11-19 e continuam valendo, exceto onde indicado aqui.
+
+## Resolvido desde 2026-11-19
+
+- O vazio na frente das fichas do onboarding: a altura caiu de `h-115` para `h-96` e o verso passou a rolar com fade.
+- O dashboard agora usa o mesmo card das fichas (`AppTile`), com chanfro sempre no canto inferior direito.
+
+## Prioridade alta
+
+### Navegação e busca no celular
+
+- **Problema:** abaixo de `md` a barra de comando fica escondida, então não há busca nem ⌘K em telas pequenas. O dropdown de navegação aparece, mas só tem Feed e Escrever.
+- **Onde:** `src/components/navbar.tsx` (`hidden md:flex` na coluna central) e `src/components/command-menu.tsx`.
+- **Caminho:** resolver junto com a reforma da navegação interna, já planejada (botão de busca que abre a barra em tela cheia, por exemplo).
+
+### Verificações que não foram feitas
+
+- Nada desta rodada foi conferido a 390px, no tema livro, com `prefers-reduced-motion` ligado nem no Safari.
+- O holo-card do heygaia foi testado no Firefox antes da adaptação; depois dela, só no Chromium.
+- A versão escura do classic também aparece no onboarding, sobre o painel Grainient. Conferir se combina.
+
+## Prioridade média
+
+### Crachás
+
+- **Foto:** sem API de upload. O classic mostra as iniciais com "foto em breve"; os demais usam `avatarUrl` quando existe.
+- **Número de membro:** hoje são os 6 primeiros caracteres do id do usuário (`src/app/onboarding/page.tsx`). Não há número sequencial na API.
+- **Redes sociais:** `BadgeData.socials` existe, mas a API não tem esse campo; só aparecem no `/lab/cracha`. O holo-card não mostra redes (exigiria mexer no layout dele).
+- **Escolha do modelo:** os modelos (`classic`, `holo`, `holo-card`) só são escolhidos no código. Falta onde a pessoa escolhe (perfil ou onboarding) e onde o crachá aparece fora do onboarding (perfil, busca de usuários).
+- **Holo-card:** o GIF de brilho (`public/badges/sparkles.gif`) e a imagem de teste (`public/badges/holo-bg.jpg`) vieram de terceiros (CodePen e imgur). Conferir a licença antes de ir para produção. A frente ainda usa `react-parallax-tilt` (outra lib de tilt além da do Animate UI).
+- **Pastas:** os crachás importam `app-meta`, `corner-brackets` e `FLAT` de `src/components/onboarding/`. Mover para uma pasta comum quando a busca de usuários existir.
+
+### Onboarding
+
+- **Apps "em breve":** a lista de quais apps têm telas vem de um atalho no front (`src/components/onboarding/app-meta.ts`). A API não tem esse campo.
+- **Configuração interrompida:** se a pessoa fechar a aba durante o "Configurando…", os apps podem ficar ativos sem o onboarding concluído. Ao voltar, o fluxo recomeça e refaz as chamadas (idempotentes, mas não foi testado).
+- **Transição de página:** `src/components/animate-ui/components/page-transition.tsx` está instalado e não ligado (ver DESIGN.md).
+
+### Navbar
+
+- O seletor de tema existe em dois lugares: o botão ao lado do perfil e o menu de conta. Decidir se o botão fica.
+- No menu de conta, o foco abre no seletor de tema, antes dos atalhos.
+- O menu de conta não prende o foco: Tab pode sair dele com o painel aberto (fecha só com Esc ou clique fora).
+
+## Prioridade baixa
+
+- O showcase (`/componentes`) não tem demo do holo-card nem do menu de conta.
+- Textos em inglês no holo-card foram traduzidos à mão no componente adaptado; se o heygaia atualizar o original, a adaptação não acompanha.
+
+## Ambiente (2026-11-21)
+
+- Contas de teste criadas no backend local durante os testes, com e-mail `@example.test`: prefixos `cards_check_`, `cards_fix_`, `ff_`, `ffb_`, `badge_`, `tile_`. Podem ser apagadas.
+- Firefox do Playwright instalado em `~/.cache/ms-playwright/firefox-1495` para reproduzir o bug de clique com tilt.
+- O problema do `globals.css` antigo no dev server se repetiu; editar o arquivo (não só `touch`) também força a atualização.
+
