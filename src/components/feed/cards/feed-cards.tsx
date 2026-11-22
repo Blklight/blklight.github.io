@@ -10,7 +10,14 @@ import { derivePaperDesign } from "@/features/documents/document-read";
 import { cn } from "@/lib/utils";
 import type { DocumentCard } from "@/types/api.types";
 import { surfaceFor } from "./card-theme";
-import { CardMeta, CardTags, CardTitle, formatDate, TypeTab } from "./parts";
+import {
+  CardMeta,
+  CardTags,
+  CardTitle,
+  cardFont,
+  formatDate,
+  TypeTab,
+} from "./parts";
 
 export type CardProps = BentoCardProps<DocumentCard>;
 
@@ -102,10 +109,18 @@ export function TextCard({ data }: CardProps) {
       <div className="relative h-full flex flex-col p-5 pt-12 pointer-events-none [&_a]:pointer-events-auto">
         <CardTitle
           doc={data}
-          className="font-sans text-xl @xs:text-2xl leading-tight line-clamp-3"
+          className={cn(
+            "text-xl @xs:text-2xl leading-tight line-clamp-3",
+            cardFont(data),
+          )}
         />
         {data.abstract && (
-          <p className="mt-2 text-sm text-foreground/75 line-clamp-3">
+          <p
+            className={cn(
+              "mt-2 text-sm text-foreground/75 line-clamp-3",
+              cardFont(data),
+            )}
+          >
             {data.abstract}
           </p>
         )}
@@ -212,7 +227,8 @@ export function CoverCard({ data, size }: CardProps) {
         <CardTitle
           doc={data}
           className={cn(
-            "font-sans leading-[1.15]",
+            "leading-[1.15]",
+            cardFont(data),
             size === "2x2" ? "text-3xl @lg:text-4xl" : "text-2xl",
           )}
         >
@@ -221,7 +237,12 @@ export function CoverCard({ data, size }: CardProps) {
           </span>
         </CardTitle>
         {data.abstract && size !== "1x1" && (
-          <p className="mt-3 text-sm text-light/80 line-clamp-2 max-w-prose">
+          <p
+            className={cn(
+              "mt-3 text-sm text-light/80 line-clamp-2 max-w-prose",
+              cardFont(data),
+            )}
+          >
             {data.abstract}
           </p>
         )}
@@ -277,7 +298,8 @@ export function MediaCard({ data, size }: CardProps) {
           <CardTitle
             doc={data}
             className={cn(
-              "order-1 font-sans leading-tight",
+              "order-1 leading-tight",
+              cardFont(data),
               side ? "text-xl line-clamp-2" : "text-2xl line-clamp-3",
             )}
           />
@@ -285,6 +307,7 @@ export function MediaCard({ data, size }: CardProps) {
             <p
               className={cn(
                 "order-3 text-sm text-dark",
+                cardFont(data),
                 side ? "line-clamp-2" : "line-clamp-3",
               )}
             >
@@ -363,7 +386,8 @@ export function StampCard({ data, size }: CardProps) {
           <CardTitle
             doc={data}
             className={cn(
-              "font-sans text-xl @xs:text-2xl leading-tight",
+              "text-xl @xs:text-2xl leading-tight",
+              cardFont(data),
               side ? "line-clamp-3" : "line-clamp-2",
             )}
           />
@@ -371,6 +395,7 @@ export function StampCard({ data, size }: CardProps) {
             <p
               className={cn(
                 "mt-2 text-sm text-dark",
+                cardFont(data),
                 side ? "line-clamp-3" : "line-clamp-2",
               )}
             >
@@ -399,13 +424,19 @@ export function HeadlineCard({ data, size }: CardProps) {
         <CardTitle
           doc={data}
           className={cn(
-            "font-sans font-black tracking-tight leading-[0.95] line-clamp-4",
+            "font-black tracking-tight leading-[0.95] line-clamp-4",
+            cardFont(data),
             size === "1x1" ? "text-3xl" : "text-4xl @md:text-5xl",
             surface.onDark,
           )}
         />
         {data.abstract && size !== "1x1" && (
-          <p className="mt-4 text-sm text-light/70 line-clamp-3 max-w-prose">
+          <p
+            className={cn(
+              "mt-4 text-sm text-light/70 line-clamp-3 max-w-prose",
+              cardFont(data),
+            )}
+          >
             {data.abstract}
           </p>
         )}
