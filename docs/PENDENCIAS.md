@@ -149,8 +149,8 @@ Branch `refino-ui` (ainda não enviada). Itens que ficaram abertos depois do ref
 ## Prioridade baixa
 
 - O showcase (`/componentes`) não tem demo do holo-card, dos crachás poster/factory/ops/spec nem do menu de conta.
-- `/lab/cracha` falha no SSR por causa do holo-card ("Element type is invalid", cai para render no cliente). Suspeita: `import Tilt from "react-parallax-tilt"` em `src/components/badge/holo-card/holo-card.tsx` (interop do default export no servidor).
-- Cards ficha, field report e jornal existem só no lab; decidir se entram no feed (`CARDS` em `src/app/feed/page.tsx` e `FeedCardType`).
+- Crachás mostram os apps no verso; para o uso social (perfil, busca) isso vai mudar.
+- Cards ficha, field report, jornal, pasta, linhas e hud existem só no lab; decidir se entram no feed (`CARDS` em `src/app/feed/page.tsx` e `FeedCardType`).
 - Textos em inglês no holo-card foram traduzidos à mão no componente adaptado; se o heygaia atualizar o original, a adaptação não acompanha.
 
 ## Ambiente (2026-11-21)

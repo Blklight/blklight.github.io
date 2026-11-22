@@ -125,6 +125,15 @@ export default function BadgeLabPage() {
         </Item>
       </Section>
 
+      <Section title="lab">
+        <Item label="iniciais">
+          <Badge model="lab" data={MEMBER} />
+        </Item>
+        <Item label="com foto">
+          <Badge model="lab" data={WITH_PHOTO} status="draft" />
+        </Item>
+      </Section>
+
       <Section title="holo-card (heygaia)">
         {HOLO_VARIANTS.map(({ label, accent }) => (
           <Item key={label} label={label}>

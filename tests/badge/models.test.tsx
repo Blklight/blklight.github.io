@@ -21,6 +21,7 @@ describe.each([
   "factory",
   "ops",
   "spec",
+  "lab",
 ] as const)("%s badge", (model) => {
   it("flips to the back on click", () => {
     render(<Badge model={model} data={MEMBER} />);
