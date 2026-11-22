@@ -4,6 +4,11 @@ import { ArrowRight } from "lucide-react";
 import { MotionConfig, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { CAPABILITIES } from "@/components/capabilities";
+import {
+  DocumentFooterRenderer,
+  DocumentHeaderRenderer,
+} from "@/components/document";
+import { SignatureBlock } from "@/components/document/signature-block";
 import Grainient from "@/components/Grainient";
 import { LandingNavbar } from "@/components/landing-navbar";
 import { SiteFooter } from "@/components/site-footer";
@@ -11,6 +16,13 @@ import { AuroraText } from "@/components/ui/aurora-text";
 import { buttonVariants } from "@/components/ui/button";
 import { TextAnimate } from "@/components/ui/text-animate";
 import { TextureOverlay } from "@/components/ui/texture-overlay";
+import {
+  defaultDesignDocumentFooter,
+  defaultDesignDocumentHeader,
+  defaultDesignPaperStyle,
+  defaultDesignPaperTexture,
+} from "@/features/documents/design/defaults";
+import { PaperSurface } from "@/features/documents/design/paper-surface";
 import { useRedirectIfAuthenticated } from "@/hooks/useRedirectIfAuthenticated";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -18,34 +30,57 @@ import { useAuthStore } from "@/store/useAuthStore";
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 const CTA = "group font-mono text-xs uppercase tracking-wider rounded-xs px-5";
 
+const MOCK_CONTEXT = {
+  author: { displayName: "Marina Alves", username: "marina" },
+  typeLabel: "Ensaio",
+  authorship: { publicIdentifier: "PLT-8edf2701.d29c4b90" },
+  // Fixed date: the landing is prerendered (cacheComponents).
+  publishedAt: "2026-11-20T12:00:00.000Z",
+};
+
+/** A document in the default design: letterhead, text, signature, footer. */
 function PaperMock() {
   return (
-    <div className="relative w-full max-w-md rotate-[-2deg] rounded-xs bg-light text-dark shadow-[0_24px_60px_-20px_rgb(0_0_0/0.55)] p-8">
-      <div className="flex items-center justify-between border-b border-dark/15 pb-3 mb-6 text-[0.75rem] text-dark/60">
-        <span className="font-sans font-bold text-dark">Ateliê Norte</span>
-        <span>Ensaios · nº 12</span>
-      </div>
-      <p className="font-serif text-2xl font-bold leading-tight mb-2">
-        Sobre escrever devagar
-      </p>
-      <p className="text-xs text-dark/55 mb-5">por @marina · 4 min</p>
-      <div className="space-y-3 font-serif text-sm leading-relaxed text-dark/80">
-        <p>
-          Um texto pede tempo antes de pedir leitores. Primeiro o rascunho,
-          depois o papel, por fim o lugar onde ele vai morar.
+    <div className="relative w-full max-w-md rotate-[-2deg] shadow-[0_24px_60px_-20px_rgb(0_0_0/0.55)]">
+      <PaperSurface
+        paperColors={null}
+        paperTexture={defaultDesignPaperTexture}
+        textureStyle={{}}
+        grains={defaultDesignPaperStyle.grains}
+        className="bg-background text-foreground"
+        contentClassName="p-5 sm:p-6"
+      >
+        <DocumentHeaderRenderer
+          header={defaultDesignDocumentHeader}
+          className="mb-4"
+          textContext={MOCK_CONTEXT}
+        />
+        <p className="font-sans text-2xl font-bold tracking-tight leading-tight mb-1">
+          Sobre escrever devagar
         </p>
-        <p className="hidden sm:block">
-          Escolher a fonte e a textura é parte da escrita, não um enfeite posto
-          no fim.
+        <p className="font-sans text-sm text-muted-foreground mb-4">
+          Um texto pede tempo antes de pedir leitores.
         </p>
-      </div>
-      <div className="mt-8 pt-4 border-t border-dark/15 flex items-end justify-between">
-        <div>
-          <p className="font-serif italic text-lg leading-none">Marina A.</p>
-          <p className="text-[0.75rem] text-dark/55 mt-1">Assinatura digital</p>
+        <div className="h-px bg-foreground/20 mb-4" />
+        <div className="space-y-3 font-sans text-sm leading-relaxed text-foreground/85">
+          <p>
+            Primeiro o rascunho, depois o papel, por fim o lugar onde ele vai
+            morar.
+          </p>
+          <p className="hidden sm:block">
+            Escolher a fonte e a textura é parte da escrita, não um enfeite
+            posto no fim.
+          </p>
         </div>
-        <span className="text-[0.75rem] text-dark/55">blklight.dev/marina</span>
-      </div>
+        <div className="mt-5">
+          <SignatureBlock context={MOCK_CONTEXT} />
+        </div>
+        <DocumentFooterRenderer
+          footer={defaultDesignDocumentFooter}
+          className="mt-3"
+          textContext={MOCK_CONTEXT}
+        />
+      </PaperSurface>
     </div>
   );
 }
