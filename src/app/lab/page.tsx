@@ -5,6 +5,7 @@ const LABS = [
   { href: "/lab/cards", label: "Cards" },
   { href: "/lab/cracha", label: "Crachás" },
   { href: "/lab/artigo", label: "Artigo" },
+  { href: "/lab/assinatura", label: "Assinatura" },
 ];
 
 export default function LabPage() {

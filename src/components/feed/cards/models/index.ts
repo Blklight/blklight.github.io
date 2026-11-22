@@ -10,12 +10,14 @@ import {
 } from "../feed-cards";
 import type { CardProps } from "../shell";
 import { TemplateCard } from "./_template";
+import { EnvelopeCard } from "./envelope-card";
 import { FichaCard } from "./ficha-card";
 import { FieldReportCard } from "./field-report-card";
 import { HudCard } from "./hud-card";
 import { JornalCard } from "./jornal-card";
 import { LinhasCard } from "./linhas-card";
 import { PastaCard } from "./pasta-card";
+import { PostalCard } from "./postal-card";
 
 export interface LabCard {
   id: string;
@@ -43,6 +45,8 @@ export const LAB_CARDS: LabCard[] = [
   { id: "pasta", label: "pasta", component: PastaCard, sizes: ALL },
   { id: "linhas", label: "linhas", component: LinhasCard, sizes: ALL },
   { id: "hud", label: "hud", component: HudCard, sizes: ALL },
+  { id: "postal", label: "postal", component: PostalCard, sizes: ALL },
+  { id: "envelope", label: "envelope", component: EnvelopeCard, sizes: ALL },
   {
     id: "text",
     label: "text",
