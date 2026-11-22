@@ -723,7 +723,13 @@ export function DocumentEditor({
                   <button
                     type="button"
                     aria-label="Editar papel"
-                    onClick={() => pickRegion("colors")}
+                    onClick={() => {
+                      // Keep the paper tab already open (texture, grain) instead of jumping back to colors.
+                      const current = isWide ? paperTab : activeTab;
+                      pickRegion(
+                        SURFACE_TABS.includes(current) ? current : "colors",
+                      );
+                    }}
                     className="absolute inset-0 z-0 cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-current"
                   />
                 )}
@@ -985,6 +991,7 @@ export function DocumentEditor({
 const WIDE_QUERY = "(min-width: 80rem)";
 
 const PAPER_TABS: DesignTab[] = ["colors", "texture", "grain", "font"];
+const SURFACE_TABS: DesignTab[] = ["colors", "texture", "grain"];
 const PARTS_TABS: DesignTab[] = ["letterhead", "cover", "signature"];
 
 // Flush against the paper (45rem wide, 1rem gap), filling the margin up to 22rem.
