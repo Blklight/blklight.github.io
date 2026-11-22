@@ -6,7 +6,6 @@ import {
   Image,
   Palette,
   PenTool,
-  SeparatorHorizontal,
   Sparkles,
   Type,
 } from "lucide-react";
@@ -19,7 +18,6 @@ export type DesignTab =
   | "font"
   | "cover"
   | "letterhead"
-  | "footer"
   | "signature";
 
 interface TabItem {
@@ -40,13 +38,8 @@ export const DESIGN_TABS: TabItem[] = [
   { id: "cover", label: "Capa", icon: <Image className="w-4 h-4" /> },
   {
     id: "letterhead",
-    label: "Cabeçalho",
+    label: "Cabeçalho e rodapé",
     icon: <FileText className="w-4 h-4" />,
-  },
-  {
-    id: "footer",
-    label: "Rodapé",
-    icon: <SeparatorHorizontal className="w-4 h-4" />,
   },
   {
     id: "signature",

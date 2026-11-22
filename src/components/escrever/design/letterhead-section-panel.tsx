@@ -18,10 +18,6 @@ import {
   HEADER_PRESET_COMPONENTS,
   HEADER_PRESET_LIST,
 } from "@/components/document/header-presets";
-import {
-  DocumentFooterRenderer,
-  DocumentHeaderRenderer,
-} from "@/components/document/letterhead-renderer";
 import type {
   DocumentFooter,
   DocumentHeader,
@@ -40,20 +36,15 @@ import type { DesignContext } from "./layout";
 import { LetterheadStyleEditor } from "./letterhead-style-editor";
 import { LineFormatEditor } from "./line-format-editor";
 
-// Rendering mode of the section panel:
-// - "full":  complete section editor (identity, enable, mode/preset, lines,
-//            style editor, preview) — the default, unchanged behavior.
-// - "text":  only the section's identity, enable toggle, text lines editor
-//            and preview (used by the linked header/footer view, where the
-//            shared style editor lives once at panel level).
-// - "style": only the mode/preset + style editor block (used as the single
-//            shared style editor in the linked header/footer view).
-export type LetterheadSectionVariant = "full" | "text" | "style";
+// What the section panel shows (header and footer always share one look):
+// - "style": model or custom style, once for both sides.
+// - "text":  one side's on/off switch and its text lines.
+export type LetterheadSectionVariant = "text" | "style";
 
 interface LetterheadSectionPanelProps {
   design: DesignContext["design"];
   kind: "header" | "footer";
-  variant?: LetterheadSectionVariant;
+  variant: LetterheadSectionVariant;
 }
 
 const defaultLineFormat = (bold: boolean): LineFormat => ({
@@ -68,7 +59,7 @@ const defaultLineFormat = (bold: boolean): LineFormat => ({
 export function LetterheadSectionPanel({
   design,
   kind,
-  variant = "full",
+  variant,
 }: LetterheadSectionPanelProps) {
   const isFooter = kind === "footer";
   const section = isFooter ? design.documentFooter : design.documentHeader;
@@ -131,60 +122,36 @@ export function LetterheadSectionPanel({
   };
 
   return (
-    <div className={cn("flex flex-col", isFooter ? "gap-4" : "gap-6")}>
-      {/* Section identity + enable toggle (hidden in the pure style variant) */}
-      {variant !== "style" && (
-        <>
-          <div className="flex items-center gap-2">
+    <div className="flex flex-col gap-4">
+      {variant === "text" && (
+        <div className="flex items-center justify-between gap-3">
+          <span className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider">
             {isFooter ? (
-              <SeparatorHorizontal className="w-4 h-4 text-foreground/60" />
+              <SeparatorHorizontal className="size-4 text-foreground/60" />
             ) : (
-              <FileText className="w-4 h-4 text-foreground/60" />
+              <FileText className="size-4 text-foreground/60" />
             )}
-            <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-              {isFooter ? "Rodapé" : "Cabeçalho"}
-            </span>
-          </div>
-
-          {isFooter && (
-            <p className="text-xs font-mono text-foreground/60 leading-relaxed">
-              Adicione um rodapé ao documento. Escolha um modelo, personalize o
-              texto, as estrelas decorativas e as cores de fundo.
-            </p>
-          )}
-
-          {/* Enable toggle (independent per section, linked or not) */}
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-mono text-foreground/60">
-              {isFooter ? "Ativar rodapé" : "Cabeçalho"}
-            </span>
-            <button
-              type="button"
-              onClick={() =>
-                setSection({ ...section, enabled: !section.enabled })
-              }
-              className={cn(
-                "w-10 h-5 rounded-full transition-colors relative",
-                section.enabled ? "bg-foreground" : "bg-foreground/20",
-              )}
-            >
-              <span
-                className={cn(
-                  "absolute top-0.5 w-4 h-4 rounded-full bg-background transition-transform",
-                  section.enabled ? "translate-x-5" : "translate-x-0.5",
-                )}
-              />
-            </button>
-          </div>
-        </>
+            {isFooter ? "Rodapé" : "Cabeçalho"}
+          </span>
+          <PanelSwitch
+            checked={section.enabled}
+            label={isFooter ? "Mostrar rodapé" : "Mostrar cabeçalho"}
+            onChange={(enabled) => setSection({ ...section, enabled })}
+          />
+        </div>
       )}
 
       {showContent && (
         <>
           {variant === "style" && (
-            <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-              Estilo compartilhado (cabeçalho e rodapé)
-            </span>
+            <div>
+              <p className="font-mono text-xs uppercase tracking-wider">
+                Modelo
+              </p>
+              <p className="mt-1 text-xs text-foreground/60">
+                Cabeçalho e rodapé usam sempre o mesmo modelo.
+              </p>
+            </div>
           )}
 
           {/* Mode toggle (hidden in the text-only variant) */}
@@ -231,7 +198,7 @@ export function LetterheadSectionPanel({
 
           {/* ── Preset mode ── */}
           {variant !== "text" && section.mode === "preset" && (
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-2">
               {presetList.map((preset) => {
                 const PresetComponent = presetComponents[preset.id];
                 return (
@@ -256,15 +223,15 @@ export function LetterheadSectionPanel({
                     )}
                   >
                     <div
-                      className="h-14 overflow-hidden"
+                      className="h-16 overflow-hidden"
                       style={{
                         background:
                           "repeating-linear-gradient(0deg, transparent, transparent 7px, rgba(0,0,0,0.015) 7px, rgba(0,0,0,0.015) 8px)",
                       }}
                     >
                       <div
-                        className="scale-[0.55] origin-top-left"
-                        style={{ width: "181%", height: "181%" }}
+                        className="scale-[0.6] origin-top-left"
+                        style={{ width: "166.67%", height: "166.67%" }}
                       >
                         <PresetComponent lines={preset.defaultLines} />
                       </div>
@@ -273,7 +240,7 @@ export function LetterheadSectionPanel({
                       <span className="text-xs font-mono uppercase tracking-wider block">
                         {preset.name}
                       </span>
-                      <span className="text-[8px] font-mono text-foreground/60 mt-0.5 block">
+                      <span className="text-xs text-foreground/60 mt-0.5 block">
                         {preset.description}
                       </span>
                     </div>
@@ -283,7 +250,7 @@ export function LetterheadSectionPanel({
             </div>
           )}
 
-          {/* ── Lines editor (full & text variants) ──
+          {/* ── Lines editor (text variant) ──
               Preset mode: text fields only (no format editor, no add/remove). */}
           {variant !== "style" && (
             <div className="flex flex-col gap-1.5">
@@ -402,7 +369,7 @@ export function LetterheadSectionPanel({
             </div>
           )}
 
-          {/* ── Shared LetterheadStyleEditor (full & style variants) ── */}
+          {/* ── Shared LetterheadStyleEditor (style variant) ── */}
           {variant !== "text" && section.mode === "custom" && (
             <LetterheadStyleEditor
               style={mergedStyle}
@@ -411,36 +378,45 @@ export function LetterheadSectionPanel({
               }
             />
           )}
-
-          {/* ── Preview (full & text variants) ── */}
-          {variant !== "style" && (
-            <div
-              className={cn(
-                "border border-border rounded-xs overflow-hidden",
-                isFooter ? "mt-1" : "mt-2",
-              )}
-            >
-              {isFooter ? (
-                <DocumentFooterRenderer
-                  footer={{
-                    ...(section as DocumentFooter),
-                    style: mergedStyle,
-                  }}
-                  className=""
-                />
-              ) : (
-                <DocumentHeaderRenderer
-                  header={{
-                    ...(section as DocumentHeader),
-                    style: mergedStyle,
-                  }}
-                  className=""
-                />
-              )}
-            </div>
-          )}
         </>
       )}
     </div>
+  );
+}
+
+/** On/off switch: hairline track, ink knob that slides right when on. */
+function PanelSwitch({
+  checked,
+  label,
+  onChange,
+}: {
+  checked: boolean;
+  label: string;
+  onChange: (checked: boolean) => void;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      aria-label={label}
+      title={label}
+      onClick={() => onChange(!checked)}
+      className={cn(
+        "relative h-5 w-9 shrink-0 rounded-full border transition-colors outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2",
+        checked
+          ? "border-foreground bg-foreground/10"
+          : "border-foreground/30 bg-transparent",
+      )}
+    >
+      <span
+        className={cn(
+          "absolute top-1/2 size-3.5 -translate-y-1/2 rounded-full transition-[left,background-color]",
+          checked
+            ? "left-[calc(100%-1rem)] bg-foreground"
+            : "left-0.5 bg-foreground/35",
+        )}
+      />
+    </button>
   );
 }

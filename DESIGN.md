@@ -289,6 +289,8 @@ The editor and published document render as a sheet of paper: author-chosen font
 
 **Design mode.** "Design" edits the look on the paper itself, not in a fullscreen overlay, and the paper never moves: the text turns read-only and faded (a sample text stands in when the document is empty), and each part gets a dashed outline and label on hover. From 1280px two panels sit flush against the paper (1rem gap, up to 22rem): paper on the left (colors, texture, grain, font), parts on the right (letterhead, cover, signature, footer); clicking a part opens it on its side. Below 1280px everything goes in one bottom sheet. Esc, a panel's close button or the tab again goes back to writing.
 
+**Letterhead.** Header and footer always share one look (`linkLetterhead`): a model (Blklight, Corporativo, Alerta Vermelho) or a custom style, edited once under "Cabeçalho e rodapé"; each side keeps its own switch and lines. Models removed on 2026-11-22 (gov-militar, academia, minimalista, selo-dourado, confidencial) render as Blklight, and opening such a document in the editor rewrites it to Blklight on the next save.
+
 **Reading per typeface.** `.doc-prose` keeps the measure near 70 characters for each face: Inter 18–19px / 1.7; EB Garamond 21–22px / 1.6 (small x-height); JetBrains Mono 16–17px / 1.75 and always ragged-right (justified fixed-width text opens holes). The signature sits 3rem below the body.
 
 ## Do's and Don'ts

@@ -144,9 +144,7 @@ export function DesignPanel({
       case "cover":
         return <CoverPanel {...ctx} />;
       case "letterhead":
-        return <LetterheadLinkPanel design={design} focusedSection="header" />;
-      case "footer":
-        return <LetterheadLinkPanel design={design} focusedSection="footer" />;
+        return <LetterheadLinkPanel design={design} />;
       case "signature":
         return <SignaturePanel {...ctx} />;
     }

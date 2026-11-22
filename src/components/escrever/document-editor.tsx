@@ -848,7 +848,11 @@ export function DocumentEditor({
 
                 {/* Footer Letterhead */}
                 {documentFooter.enabled && (
-                  <DesignRegion {...region("footer")} className="mt-4">
+                  <DesignRegion
+                    {...region("letterhead")}
+                    label="Rodapé"
+                    className="mt-4"
+                  >
                     <DocumentFooterRenderer
                       footer={documentFooter}
                       textContext={letterheadContext}
@@ -981,7 +985,7 @@ export function DocumentEditor({
 const WIDE_QUERY = "(min-width: 80rem)";
 
 const PAPER_TABS: DesignTab[] = ["colors", "texture", "grain", "font"];
-const PARTS_TABS: DesignTab[] = ["letterhead", "cover", "signature", "footer"];
+const PARTS_TABS: DesignTab[] = ["letterhead", "cover", "signature"];
 
 // Flush against the paper (45rem wide, 1rem gap), filling the margin up to 22rem.
 const DESIGN_ASIDE =

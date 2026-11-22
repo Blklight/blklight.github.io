@@ -112,5 +112,4 @@ export const defaultDesignState: DesignState = {
   typography: defaultDesignTypography,
   coverImage: null,
   coverSettings: { ...DEFAULT_COVER_SETTINGS },
-  headerFooterLinked: true,
 };

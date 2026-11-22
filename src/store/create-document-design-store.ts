@@ -15,6 +15,7 @@ import type {
   PaperTexture,
 } from "@/components/document/types";
 import { normalizeLetterheadStyle } from "@/components/document/types";
+import { linkLetterhead } from "@/features/documents/design/blklight-letterhead";
 import { defaultDesignState } from "@/features/documents/design/defaults";
 import { normalizeGrainSettings } from "@/features/documents/design/grains";
 
@@ -27,16 +28,10 @@ export interface DesignState {
   typography: "sans" | "serif" | "mono";
   coverImage: string | null;
   coverSettings: CoverImageSettings;
-  // Editor meta: when true, presetId/mode/style stay in sync between header
-  // and footer (but never lines/lineFormats/enabled). NOT part of the saved
-  // document payload — excluded from selectDesignState().
-  headerFooterLinked: boolean;
 }
 
-// The persistable "data" subset of the design (everything except the editor
-// meta flag headerFooterLinked). Templates and save payloads are built from
-// this shape; the flag is per-editor-session state.
-export type DesignInput = Omit<DesignState, "headerFooterLinked">;
+// The persistable design. Templates and save payloads are built from this shape.
+export type DesignInput = DesignState;
 
 /** Strip headerFooterLinked from a full DesignState, producing a safe
  *  snapshot for template storage / save payloads. */
@@ -62,11 +57,9 @@ export interface DesignActions {
   setTypography: (font: "sans" | "serif" | "mono") => void;
   setCoverImage: (url: string | null) => void;
   setCoverSettings: (settings: CoverImageSettings) => void;
-  setHeaderFooterLinked: (linked: boolean) => void;
   resetDesign: () => void;
   // Bulk replace of all data fields — reserved for future theme switching
-  // (applying a saved theme from /design to a document in /escrever). The
-  // headerFooterLinked flag is editor meta and is never taken from a snapshot.
+  // (applying a saved theme from /design to a document in /escrever).
   loadDesignSnapshot: (snapshot: DesignInput) => void;
 }
 
@@ -123,79 +116,50 @@ function createDesignState(set: DesignSetState): DocumentDesignStore {
     setPaperStyle: (paperStyle) =>
       set({ paperStyle: normalizePaperStyle(paperStyle) }),
     setPaperTexture: (paperTexture) => set({ paperTexture }),
-    // When header/footer are linked, presetId/mode/style are mirrored to the
-    // opposite side. lines/lineFormats/enabled are never mirrored. The mirror
-    // builds the sibling object directly (no nested set() call), so it cannot
-    // re-trigger another mirror (no recursion).
+    // Header and footer always share mode/model/style (linkLetterhead);
+    // lines, lineFormats and enabled stay per side.
     setDocumentHeader: (documentHeader) =>
       set((state) => {
-        const header = {
-          ...documentHeader,
-          style: normalizeLetterheadStyle(documentHeader.style),
-        };
-        if (!state.headerFooterLinked) return { documentHeader: header };
-        return {
-          documentHeader: header,
-          documentFooter: {
-            ...state.documentFooter,
-            presetId: header.presetId,
-            mode: header.mode,
-            style: header.style,
+        const { header, footer } = linkLetterhead(
+          {
+            ...documentHeader,
+            style: normalizeLetterheadStyle(documentHeader.style),
           },
-        };
+          state.documentFooter,
+        );
+        return { documentHeader: header, documentFooter: footer };
       }),
     setDocumentFooter: (documentFooter) =>
       set((state) => {
-        const footer = {
-          ...documentFooter,
+        const look = {
+          ...state.documentHeader,
+          mode: documentFooter.mode,
+          presetId: documentFooter.presetId,
           style: normalizeLetterheadStyle(documentFooter.style),
         };
-        if (!state.headerFooterLinked) return { documentFooter: footer };
-        return {
-          documentFooter: footer,
-          documentHeader: {
-            ...state.documentHeader,
-            presetId: footer.presetId,
-            mode: footer.mode,
-            style: footer.style,
-          },
-        };
+        const { header, footer } = linkLetterhead(look, documentFooter);
+        return { documentHeader: header, documentFooter: footer };
       }),
     setDocumentSignature: (documentSignature) => set({ documentSignature }),
     setTypography: (typography) => set({ typography }),
     setCoverImage: (coverImage) => set({ coverImage }),
     setCoverSettings: (coverSettings) => set({ coverSettings }),
-    // Turning the link ON copies the current header presetId/mode/style to the
-    // footer (header is the source of truth). Turning it OFF does not touch
-    // either side — both simply stop syncing from that point on.
-    setHeaderFooterLinked: (linked) =>
-      set((state) => {
-        if (!linked) return { headerFooterLinked: false };
-        return {
-          headerFooterLinked: true,
-          documentFooter: {
-            ...state.documentFooter,
-            presetId: state.documentHeader.presetId,
-            mode: state.documentHeader.mode,
-            style: state.documentHeader.style,
-          },
-        };
-      }),
     resetDesign: () => set({ ...defaultDocumentDesign }),
-    loadDesignSnapshot: (snapshot) =>
-      set((state) => ({
-        ...snapshot,
-        headerFooterLinked: state.headerFooterLinked,
-        paperStyle: normalizePaperStyle(snapshot.paperStyle),
-        documentHeader: {
+    loadDesignSnapshot: (snapshot) => {
+      const { header, footer } = linkLetterhead(
+        {
           ...snapshot.documentHeader,
           style: normalizeLetterheadStyle(snapshot.documentHeader.style),
         },
-        documentFooter: {
-          ...snapshot.documentFooter,
-          style: normalizeLetterheadStyle(snapshot.documentFooter.style),
-        },
-      })),
+        snapshot.documentFooter,
+      );
+      set({
+        ...snapshot,
+        paperStyle: normalizePaperStyle(snapshot.paperStyle),
+        documentHeader: header,
+        documentFooter: footer,
+      });
+    },
   };
 }
 
@@ -210,11 +174,9 @@ export function mergeDesignState(
   persisted: Partial<DesignState>,
   current: DesignState,
 ): DesignState {
-  return {
+  const merged: DesignState = {
     ...current,
     ...persisted,
-    headerFooterLinked:
-      persisted.headerFooterLinked ?? current.headerFooterLinked,
     paperStyle: normalizePaperStyle(persisted.paperStyle ?? current.paperStyle),
     documentHeader: {
       ...current.documentHeader,
@@ -235,6 +197,11 @@ export function mergeDesignState(
       ...persisted.coverSettings,
     },
   };
+  const { header, footer } = linkLetterhead(
+    merged.documentHeader,
+    merged.documentFooter,
+  );
+  return { ...merged, documentHeader: header, documentFooter: footer };
 }
 
 export function createDocumentDesignStore(
@@ -258,9 +225,7 @@ export function createDocumentDesignStore(
   return create<DocumentDesignStore>()(createDesignState);
 }
 
-// The subset of the design that is actually persisted/sent. headerFooterLinked
-// is editor meta and deliberately NOT included here (it never reaches the
-// save payload or the template snapshots).
+// The design as persisted/sent (save payload and template snapshots).
 export function selectDesignState(state: DocumentDesignStore): DesignInput {
   return {
     paperStyle: state.paperStyle,
