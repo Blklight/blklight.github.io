@@ -15,13 +15,13 @@ import {
   Heading3,
   Highlighter,
   ImageIcon,
-  ImagePlus,
   Italic,
   Link as LinkIcon,
   List,
   ListOrdered,
   Minus,
   Pilcrow,
+  Plus,
   Quote,
   Strikethrough,
 } from "lucide-react";
@@ -245,9 +245,82 @@ export const MEDIA_BLOCKS: Block[] = [
   },
 ];
 
+export interface BlockGroup {
+  label: string;
+  blocks: Block[];
+}
+
+const byLabel = (label: string) =>
+  [...TEXT_BLOCKS, ...MEDIA_BLOCKS].find(
+    (block) => block.label === label,
+  ) as Block;
+
+/** Everything that can be inserted, grouped: shared by "/" and the "+". */
+export const INSERT_GROUPS: BlockGroup[] = [
+  {
+    label: "Texto",
+    blocks: ["Parágrafo", "Título 1", "Título 2", "Título 3"].map(byLabel),
+  },
+  { label: "Listas", blocks: ["Lista", "Lista numerada"].map(byLabel) },
+  {
+    label: "Blocos",
+    blocks: ["Citação", "Bloco de código", "Linha"].map(byLabel),
+  },
+  { label: "Mídia", blocks: ["Imagem"].map(byLabel) },
+];
+
+/** Grouped block list (the "+" panel and the "/" menu). */
+export function InsertMenuList({
+  groups,
+  selected,
+  onPick,
+}: {
+  groups: BlockGroup[];
+  /** Highlighted block (keyboard navigation in the "/" menu). */
+  selected?: Block;
+  onPick: (block: Block) => void;
+}) {
+  if (groups.length === 0) {
+    return (
+      <p className="px-2 py-1.5 text-sm text-muted-foreground">
+        Nenhum bloco encontrado
+      </p>
+    );
+  }
+  return (
+    <div className="flex flex-col">
+      {groups.map((group) => (
+        <div
+          key={group.label}
+          className="flex flex-col py-1 first:pt-0 last:pb-0"
+        >
+          <p className="px-2 pb-1 font-mono text-[0.65rem] uppercase tracking-wider text-muted-foreground">
+            {group.label}
+          </p>
+          {group.blocks.map((block) => (
+            <button
+              key={block.label}
+              type="button"
+              aria-current={selected === block ? "true" : undefined}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => onPick(block)}
+              className={cn(
+                "flex items-center gap-3 rounded-sm px-2 py-1.5 text-left text-sm outline-none hover:bg-secondary focus-visible:bg-secondary [&_svg]:size-4 [&_svg]:text-muted-foreground",
+                selected === block && "bg-secondary",
+              )}
+            >
+              {block.icon}
+              {block.label}
+            </button>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /**
- * "+" on an empty line: inserts media (image, divider). Text blocks live in
- * the top bar. Rendered inside the
+ * "+" on an empty line: opens the grouped insert menu (same as typing "/"). Rendered inside the
  * editor wrapper (position: relative) and placed from the line's coordinates,
  * so it scrolls with the text instead of floating over the viewport.
  */
@@ -311,8 +384,8 @@ export function EditorBlockMenu({ editor }: { editor: Editor }) {
     >
       <button
         type="button"
-        aria-label="Inserir mídia"
-        title="Inserir mídia"
+        aria-label="Inserir bloco"
+        title="Inserir bloco (ou digite /)"
         aria-expanded={open}
         onMouseDown={(event) => event.preventDefault()}
         onClick={(event) => {
@@ -325,31 +398,23 @@ export function EditorBlockMenu({ editor }: { editor: Editor }) {
           open && "bg-foreground text-background",
         )}
       >
-        <ImagePlus className="size-4" />
+        <Plus className="size-4" />
       </button>
       {open && (
         <div
           className={cn(
             PANEL,
-            "absolute -left-9 flex-col items-stretch w-44 p-1.5 gap-0",
+            "absolute -left-9 flex-col items-stretch w-56 max-h-80 overflow-y-auto p-1.5 gap-0",
             upward ? "bottom-5" : "top-5",
           )}
         >
-          {MEDIA_BLOCKS.map((block) => (
-            <button
-              key={block.label}
-              type="button"
-              onMouseDown={(event) => event.preventDefault()}
-              onClick={() => {
-                block.run(editor);
-                setOpen(false);
-              }}
-              className="flex items-center gap-3 rounded-sm px-2 py-1.5 text-sm text-left hover:bg-secondary outline-none focus-visible:bg-secondary [&_svg]:size-4 [&_svg]:text-muted-foreground"
-            >
-              {block.icon}
-              {block.label}
-            </button>
-          ))}
+          <InsertMenuList
+            groups={INSERT_GROUPS}
+            onPick={(block) => {
+              block.run(editor);
+              setOpen(false);
+            }}
+          />
         </div>
       )}
     </div>

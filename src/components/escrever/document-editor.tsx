@@ -44,6 +44,7 @@ import type {
   DocumentSignature,
   PaperTexture,
 } from "@/components/document/types";
+import { BlockHandle } from "@/components/escrever/block-handle";
 import type { DesignTab } from "@/components/escrever/design/sidebar";
 import { DocumentPaperFooter } from "@/components/escrever/document-paper-footer";
 import { DocumentPaperHeader } from "@/components/escrever/document-paper-header";
@@ -61,6 +62,7 @@ import {
   SidePanelFrame,
   SideTabs,
 } from "@/components/escrever/side-panel";
+import { SlashCommand, SlashMenu } from "@/components/escrever/slash-command";
 import { TemplatePicker } from "@/components/escrever/template-picker";
 import { useAutosave } from "@/components/escrever/use-autosave";
 import { useCurrentAuthorContext } from "@/components/escrever/use-current-author-context";
@@ -334,6 +336,7 @@ export function DocumentEditor({
       }),
       Typography,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
+      SlashCommand,
     ],
     editorProps: {
       attributes: {
@@ -826,6 +829,8 @@ export function DocumentEditor({
                         onShowLinkModal={() => setShowLinkModal(true)}
                       />
                       <EditorBlockMenu editor={editor} />
+                      <BlockHandle editor={editor} />
+                      <SlashMenu />
                     </>
                   )}
                 </div>
