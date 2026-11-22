@@ -364,15 +364,16 @@ export function DocumentEditor({
     setCharCount(text.length);
   }, [draftContent, editor, initialValues]);
 
-  // Step the global navbar out of the way while the bottom sheet (narrow
-  // screens) or the publish overlay is open (they render at z-50; the navbar is z-99).
+  // Step the global navbar out of the way while the themes sheet, the design
+  // bottom sheet (narrow screens) or the publish overlay is open (they render at z-50; the navbar is z-99).
   useEffect(() => {
-    const open = (sidePanel !== null && !isWide) || isPublishOpen;
+    const open =
+      sidePanel === "themes" || (isDesignMode && !isWide) || isPublishOpen;
     useEditorOverlaysStore.getState().setOverlaysOpen(open);
     return () => {
       useEditorOverlaysStore.getState().setOverlaysOpen(false);
     };
-  }, [sidePanel, isWide, isPublishOpen]);
+  }, [sidePanel, isDesignMode, isWide, isPublishOpen]);
 
   // Design mode shows the paper as it will look: the text is read-only.
   useEffect(() => {
@@ -619,21 +620,15 @@ export function DocumentEditor({
     onSelect: pickRegion,
   });
 
-  const panelTitle = sidePanel === "themes" ? "Temas" : "Design";
-  const panelBody =
-    sidePanel === "themes" ? (
-      <TemplatePicker
-        designStore={designStore}
-        onClose={() => setSidePanel(null)}
-      />
-    ) : (
-      <DesignPanel
-        designStore={designStore}
-        tab={activeTab}
-        onTabChange={setActiveTab}
-        signatureContext={signatureContext}
-      />
-    );
+  const panelTitle = "Design";
+  const panelBody = (
+    <DesignPanel
+      designStore={designStore}
+      tab={activeTab}
+      onTabChange={setActiveTab}
+      signatureContext={signatureContext}
+    />
+  );
 
   return (
     <>
@@ -717,7 +712,6 @@ export function DocumentEditor({
                   <DesignRegion {...region("letterhead")} className="mb-4">
                     <DocumentHeaderRenderer
                       header={documentHeader}
-                      className={isDesignMode ? undefined : "mb-4"}
                       textContext={letterheadContext}
                     />
                   </DesignRegion>
@@ -777,7 +771,7 @@ export function DocumentEditor({
 
                 {/* Cover Image */}
                 <DesignRegion {...region("cover")} className="mb-10">
-                  <div className={isDesignMode ? undefined : "mb-10"}>
+                  <div>
                     <CoverImageEditor
                       coverImage={coverImage ?? null}
                       onCoverChange={handleCoverUpload}
@@ -820,7 +814,7 @@ export function DocumentEditor({
 
                 {/* Signature */}
                 {isSignatureVisible(signatureContext) && (
-                  <DesignRegion {...region("signature")}>
+                  <DesignRegion {...region("signature")} className="mt-12">
                     <SignatureBlock
                       context={signatureContext}
                       color={paperColors?.text}
@@ -834,7 +828,6 @@ export function DocumentEditor({
                   <DesignRegion {...region("footer")} className="mt-4">
                     <DocumentFooterRenderer
                       footer={documentFooter}
-                      className={isDesignMode ? undefined : "mt-4"}
                       textContext={letterheadContext}
                     />
                   </DesignRegion>
@@ -849,7 +842,7 @@ export function DocumentEditor({
             </motion.div>
 
             {/* Side panel beside the paper (wide screens); a bottom sheet below lg. */}
-            {sidePanel && isWide && (
+            {isDesignMode && isWide && (
               <aside className="sticky top-32 h-[calc(100dvh-14rem)] w-96 shrink-0 self-start">
                 <SidePanelFrame
                   title={panelTitle}
@@ -862,8 +855,21 @@ export function DocumentEditor({
           </div>
         </main>
 
+        {/* Themes: right sheet over the page, as before the side tabs. */}
         <Sheet
-          open={sidePanel !== null && !isWide}
+          open={sidePanel === "themes"}
+          onOpenChange={(open) => !open && setSidePanel(null)}
+        >
+          <SheetContent side="right" className="p-0">
+            <TemplatePicker
+              designStore={designStore}
+              onClose={() => setSidePanel(null)}
+            />
+          </SheetContent>
+        </Sheet>
+
+        <Sheet
+          open={isDesignMode && !isWide}
           onOpenChange={(open) => !open && setSidePanel(null)}
         >
           <SheetContent

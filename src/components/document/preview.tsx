@@ -144,11 +144,13 @@ export function DocumentPreview(props: PreviewDesignProps) {
         </p>
       </div>
       {isSignatureVisible(sigContext) && (
-        <SignatureBlock
-          context={sigContext}
-          color={paperColors?.text}
-          background={paperColors?.bg}
-        />
+        <div className="mt-12">
+          <SignatureBlock
+            context={sigContext}
+            color={paperColors?.text}
+            background={paperColors?.bg}
+          />
+        </div>
       )}
       {documentFooter.enabled && (
         <DocumentFooterRenderer

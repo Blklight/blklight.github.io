@@ -1,6 +1,13 @@
 "use client";
 
-import { Check, Wand2 } from "lucide-react";
+import { Check } from "lucide-react";
+import {
+  DocumentFooterRenderer,
+  DocumentHeaderRenderer,
+} from "@/components/document/letterhead-renderer";
+import { PaperSurface } from "@/features/documents/design/paper-surface";
+import { derivePaperDesign } from "@/features/documents/document-read";
+import { cn } from "@/lib/utils";
 import type { DesignTemplate } from "@/store/useDesignTemplatesStore";
 
 interface TemplatePickerItemProps {
@@ -9,13 +16,63 @@ interface TemplatePickerItemProps {
   onApply: () => void;
 }
 
-function formatDate(iso: string): string {
-  const d = new Date(iso);
-  return d.toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
+const DATE = new Intl.DateTimeFormat("pt-BR", {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+});
+
+const SAMPLE = { author: { displayName: "Você" }, typeLabel: "Artigo" };
+
+/** The theme as a tiny page: real paper, letterhead, typeface and footer, scaled down. */
+function TemplateThumb({ template }: { template: DesignTemplate }) {
+  const { snapshot } = template;
+  const design = derivePaperDesign(snapshot);
+  return (
+    <div aria-hidden className="relative h-40 overflow-hidden bg-secondary">
+      <div className="pointer-events-none absolute top-3 left-1/2 w-[30rem] origin-top -translate-x-1/2 scale-[0.5]">
+        <PaperSurface
+          paperColors={design.paperColors}
+          paperTexture={design.paperTexture}
+          textureStyle={design.textureStyle}
+          grains={snapshot.paperStyle?.grains}
+          className="bg-background"
+          contentClassName="p-6"
+        >
+          {snapshot.documentHeader?.enabled && (
+            <DocumentHeaderRenderer
+              header={snapshot.documentHeader}
+              className="mb-4"
+              textContext={SAMPLE}
+            />
+          )}
+          <p
+            className={cn(
+              "text-3xl font-bold tracking-tight",
+              design.fontClass,
+            )}
+            style={{ color: design.paperColors?.text ?? undefined }}
+          >
+            Título do documento
+          </p>
+          <p
+            className={cn("mt-3 text-base leading-relaxed", design.fontClass)}
+            style={{ color: design.paperColors?.muted ?? undefined }}
+          >
+            Um parágrafo de exemplo para mostrar a fonte, as cores do papel e a
+            textura deste tema.
+          </p>
+          {snapshot.documentFooter?.enabled && (
+            <DocumentFooterRenderer
+              footer={snapshot.documentFooter}
+              className="mt-6"
+              textContext={SAMPLE}
+            />
+          )}
+        </PaperSurface>
+      </div>
+    </div>
+  );
 }
 
 export function TemplatePickerItem({
@@ -24,44 +81,40 @@ export function TemplatePickerItem({
   onApply,
 }: TemplatePickerItemProps) {
   return (
-    <div className="group flex flex-col border border-foreground/10 rounded-xs overflow-hidden transition-colors hover:border-foreground/30">
-      <button
-        type="button"
-        onClick={onApply}
-        disabled={isApplied}
-        className="text-left disabled:cursor-default"
-      >
-        <div
-          className="h-20 w-full relative"
-          style={{ backgroundColor: template.accentColor }}
-        >
-          {isApplied && (
-            <span className="absolute top-2 right-2 flex items-center gap-1 bg-background/90 text-foreground px-1.5 py-0.5 rounded-xs font-mono text-[9px] uppercase tracking-wider">
-              <Check className="w-3 h-3 text-accent" />
-              Aplicado
-            </span>
-          )}
-        </div>
-        <div className="px-3 pt-3 pb-2">
-          <p className="text-xs font-mono uppercase tracking-wider truncate text-foreground">
+    <button
+      type="button"
+      onClick={onApply}
+      disabled={isApplied}
+      aria-pressed={isApplied}
+      className={cn(
+        "group flex w-full flex-col overflow-hidden rounded-xs border text-left transition-colors outline-none focus-visible:ring-2 focus-visible:ring-foreground disabled:cursor-default",
+        isApplied
+          ? "border-foreground"
+          : "border-foreground/15 hover:border-foreground",
+      )}
+    >
+      <TemplateThumb template={template} />
+      <span className="flex items-center justify-between gap-3 border-t border-inherit px-3 py-2.5">
+        <span className="min-w-0">
+          <span className="block truncate font-mono text-xs uppercase tracking-wider">
             {template.name}
-          </p>
-          <p className="text-[10px] font-mono text-foreground/40 mt-1">
-            Editado em {formatDate(template.updatedAt)}
-          </p>
-        </div>
-      </button>
-      <div className="flex items-center justify-end px-2 pb-2 mt-auto">
-        <button
-          type="button"
-          onClick={onApply}
-          disabled={isApplied}
-          className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-foreground/60 hover:text-foreground transition-colors disabled:opacity-40 disabled:hover:text-foreground/60 disabled:cursor-default"
+          </span>
+          <span className="mt-0.5 block font-mono text-[0.65rem] text-foreground/50">
+            Editado em {DATE.format(new Date(template.updatedAt))}
+          </span>
+        </span>
+        <span
+          className={cn(
+            "flex shrink-0 items-center gap-1 rounded-xs px-1.5 py-0.5 font-mono text-[0.65rem] uppercase tracking-wider",
+            isApplied
+              ? "bg-foreground text-background"
+              : "text-foreground/60 group-hover:text-foreground",
+          )}
         >
-          <Wand2 className="w-3 h-3" />
-          {isApplied ? "Tema ativo" : "Aplicar"}
-        </button>
-      </div>
-    </div>
+          {isApplied && <Check className="size-3" />}
+          {isApplied ? "Aplicado" : "Aplicar"}
+        </span>
+      </span>
+    </button>
   );
 }

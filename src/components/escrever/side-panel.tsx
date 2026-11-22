@@ -201,7 +201,7 @@ export function DesignRegion({
   className?: string;
   children?: ReactNode;
 }) {
-  if (!active) return <>{children}</>;
+  if (!active) return <div className={className}>{children}</div>;
   return (
     <div className={cn("group/region relative", className)}>
       {children}

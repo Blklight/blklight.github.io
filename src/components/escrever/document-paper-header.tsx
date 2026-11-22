@@ -96,7 +96,7 @@ export function DocumentPaperHeader({
         aria-label="Formatação"
         inert={locked}
         className={cn(
-          "flex items-center gap-0.5 overflow-x-auto px-2 py-1.5 border-x border-t bg-background shadow-[0_6px_16px_-10px_rgb(0_0_0/0.35)] transition-[color,background-color,opacity] duration-300",
+          "flex flex-wrap items-center gap-0.5 px-2 py-1.5 border-x border-t bg-background shadow-[0_6px_16px_-10px_rgb(0_0_0/0.35)] transition-[color,background-color,opacity] duration-300",
           locked && "*:opacity-40",
         )}
         style={{

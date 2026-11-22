@@ -176,7 +176,7 @@ export default async function PublicDocumentPage({
             />
 
             {showSignature && (
-              <div className="mt-8">
+              <div className="mt-12">
                 <SignatureBlock
                   context={signatureContext}
                   color={paperColors?.text}
