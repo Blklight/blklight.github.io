@@ -89,12 +89,39 @@ export default function BadgeLabPage() {
         </Item>
       </Section>
 
-      <Section title="industrial">
+      <Section title="poster">
         <Item label="iniciais">
-          <Badge model="industrial" data={MEMBER} />
+          <Badge model="poster" data={MEMBER} />
         </Item>
         <Item label="com foto">
-          <Badge model="industrial" data={WITH_PHOTO} />
+          <Badge model="poster" data={WITH_PHOTO} status="draft" />
+        </Item>
+      </Section>
+
+      <Section title="factory">
+        <Item label="iniciais">
+          <Badge model="factory" data={MEMBER} />
+        </Item>
+        <Item label="com foto">
+          <Badge model="factory" data={WITH_PHOTO} status="draft" />
+        </Item>
+      </Section>
+
+      <Section title="ops">
+        <Item label="iniciais">
+          <Badge model="ops" data={MEMBER} />
+        </Item>
+        <Item label="com foto">
+          <Badge model="ops" data={WITH_PHOTO} status="draft" />
+        </Item>
+      </Section>
+
+      <Section title="spec">
+        <Item label="iniciais">
+          <Badge model="spec" data={MEMBER} />
+        </Item>
+        <Item label="com foto">
+          <Badge model="spec" data={WITH_PHOTO} status="draft" />
         </Item>
       </Section>
 
