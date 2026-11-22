@@ -1,7 +1,13 @@
 import { ClassicBadge } from "./classic-badge";
+import { FactoryBadge } from "./factory-badge";
 import { HoloBadge } from "./holo-badge";
 import { HoloCardBadge } from "./holo-card-badge";
-import { IndustrialBadge } from "./industrial-badge";
+import { LabBadge } from "./lab-badge";
+import { OpsBadge } from "./ops-badge";
+import { PostalBadge } from "./postal-badge";
+import { PosterBadge } from "./poster-badge";
+import { SeloBadge } from "./selo-badge";
+import { SpecBadge } from "./spec-badge";
 import type { BadgeModelProps } from "./types";
 
 export type {
@@ -17,7 +23,13 @@ export const BADGE_MODELS = {
   classic: ClassicBadge,
   holo: HoloBadge,
   "holo-card": HoloCardBadge,
-  industrial: IndustrialBadge,
+  poster: PosterBadge,
+  factory: FactoryBadge,
+  ops: OpsBadge,
+  spec: SpecBadge,
+  lab: LabBadge,
+  postal: PostalBadge,
+  selo: SeloBadge,
 } as const;
 
 export type BadgeModel = keyof typeof BADGE_MODELS;

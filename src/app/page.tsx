@@ -4,6 +4,11 @@ import { ArrowRight } from "lucide-react";
 import { MotionConfig, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { CAPABILITIES } from "@/components/capabilities";
+import {
+  DocumentFooterRenderer,
+  DocumentHeaderRenderer,
+} from "@/components/document";
+import { SignatureBlock } from "@/components/document/signature-block";
 import Grainient from "@/components/Grainient";
 import { LandingNavbar } from "@/components/landing-navbar";
 import { SiteFooter } from "@/components/site-footer";
@@ -11,6 +16,13 @@ import { AuroraText } from "@/components/ui/aurora-text";
 import { buttonVariants } from "@/components/ui/button";
 import { TextAnimate } from "@/components/ui/text-animate";
 import { TextureOverlay } from "@/components/ui/texture-overlay";
+import {
+  defaultDesignDocumentFooter,
+  defaultDesignDocumentHeader,
+  defaultDesignPaperStyle,
+  defaultDesignPaperTexture,
+} from "@/features/documents/design/defaults";
+import { PaperSurface } from "@/features/documents/design/paper-surface";
 import { useRedirectIfAuthenticated } from "@/hooks/useRedirectIfAuthenticated";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -18,34 +30,57 @@ import { useAuthStore } from "@/store/useAuthStore";
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 const CTA = "group font-mono text-xs uppercase tracking-wider rounded-xs px-5";
 
+const MOCK_CONTEXT = {
+  author: { displayName: "Marina Alves", username: "marina" },
+  typeLabel: "Ensaio",
+  authorship: { publicIdentifier: "PLT-8edf2701.d29c4b90" },
+  // Fixed date: the landing is prerendered (cacheComponents).
+  publishedAt: "2026-11-20T12:00:00.000Z",
+};
+
+/** A document in the default design: letterhead, text, signature, footer. */
 function PaperMock() {
   return (
-    <div className="relative w-full max-w-md rotate-[-2deg] rounded-xs bg-light text-dark shadow-[0_24px_60px_-20px_rgb(0_0_0/0.55)] p-8">
-      <div className="flex items-center justify-between border-b border-dark/15 pb-3 mb-6 text-[0.75rem] text-dark/60">
-        <span className="font-sans font-bold text-dark">Ateliê Norte</span>
-        <span>Ensaios · nº 12</span>
-      </div>
-      <p className="font-serif text-2xl font-bold leading-tight mb-2">
-        Sobre escrever devagar
-      </p>
-      <p className="text-xs text-dark/55 mb-5">por @marina · 4 min</p>
-      <div className="space-y-3 font-serif text-sm leading-relaxed text-dark/80">
-        <p>
-          Um texto pede tempo antes de pedir leitores. Primeiro o rascunho,
-          depois o papel, por fim o lugar onde ele vai morar.
+    <div className="relative w-full max-w-lg xl:max-w-xl rotate-[-2deg] shadow-[0_24px_60px_-20px_rgb(0_0_0/0.55)]">
+      <PaperSurface
+        paperColors={null}
+        paperTexture={defaultDesignPaperTexture}
+        textureStyle={{}}
+        grains={defaultDesignPaperStyle.grains}
+        className="bg-background text-foreground"
+        contentClassName="p-5 sm:p-6 xl:p-8"
+      >
+        <DocumentHeaderRenderer
+          header={defaultDesignDocumentHeader}
+          className="mb-4"
+          textContext={MOCK_CONTEXT}
+        />
+        <p className="font-sans text-2xl xl:text-3xl font-bold tracking-tight leading-tight mb-1">
+          Sobre escrever devagar
         </p>
-        <p className="hidden sm:block">
-          Escolher a fonte e a textura é parte da escrita, não um enfeite posto
-          no fim.
+        <p className="font-sans text-sm xl:text-base text-muted-foreground mb-4">
+          Um texto pede tempo antes de pedir leitores.
         </p>
-      </div>
-      <div className="mt-8 pt-4 border-t border-dark/15 flex items-end justify-between">
-        <div>
-          <p className="font-serif italic text-lg leading-none">Marina A.</p>
-          <p className="text-[0.75rem] text-dark/55 mt-1">Assinatura digital</p>
+        <div className="h-px bg-foreground/20 mb-4" />
+        <div className="space-y-3 font-sans text-sm xl:text-base leading-relaxed text-foreground/85">
+          <p>
+            Primeiro o rascunho, depois o papel, por fim o lugar onde ele vai
+            morar.
+          </p>
+          <p className="hidden sm:block">
+            Escolher a fonte e a textura é parte da escrita, não um enfeite
+            posto no fim.
+          </p>
         </div>
-        <span className="text-[0.75rem] text-dark/55">blklight.dev/marina</span>
-      </div>
+        <div className="mt-5">
+          <SignatureBlock context={MOCK_CONTEXT} />
+        </div>
+        <DocumentFooterRenderer
+          footer={defaultDesignDocumentFooter}
+          className="mt-3"
+          textContext={MOCK_CONTEXT}
+        />
+      </PaperSurface>
     </div>
   );
 }
@@ -63,29 +98,29 @@ export default function Home() {
         <TextureOverlay texture="grid" className="mix-blend-overlay z-0" />
         <LandingNavbar />
 
-        <section className="relative z-1 px-6 pt-10 pb-20 lg:min-h-[calc(100dvh-5.5rem)] flex items-center">
-          <div className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-14 items-center">
+        <section className="relative z-1 px-6 md:px-10 pt-10 pb-20 lg:min-h-[calc(100dvh-5.5rem)] flex items-center">
+          <div className="w-full grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-14 xl:gap-20 items-center">
             <div>
-              <p className="font-sans text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-4">
+              <p className="font-sans text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight mb-4">
                 <AuroraText>Blklight</AuroraText>
               </p>
               <h1 className="font-sans mb-8">
                 <TextAnimate
                   text="Crie."
                   type="fadeInUp"
-                  className="block text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
+                  className="block text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight"
                 />
                 <TextAnimate
                   text="Escreva."
                   type="fadeInUp"
                   delay={0.1}
-                  className="block text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
+                  className="block text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight"
                 />
                 <TextAnimate
                   text="Compartilhe."
                   type="fadeInUp"
                   delay={0.2}
-                  className="block text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-blklight-500 dark:text-blklight-400"
+                  className="block text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight text-blklight-500 dark:text-blklight-400"
                 />
               </h1>
 
@@ -129,7 +164,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 24, filter: "blur(8px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ delay: 0.3, duration: 0.8, ease: EASE_OUT }}
-              className="relative overflow-hidden rounded-xs min-h-[28rem] lg:min-h-[34rem] flex items-center justify-center p-8"
+              className="relative overflow-hidden rounded-xs min-h-[28rem] lg:min-h-[40rem] flex items-center justify-center p-8"
             >
               <div className="absolute inset-0">
                 <Grainient
@@ -150,9 +185,9 @@ export default function Home() {
 
         <section
           aria-labelledby="recursos"
-          className="relative z-1 px-6 py-20 border-t border-border"
+          className="relative z-1 px-6 md:px-10 py-20 border-t border-border"
         >
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12">
             <h2
               id="recursos"
               className="font-sans text-3xl md:text-4xl font-bold tracking-tight max-w-sm"
@@ -174,8 +209,8 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="relative z-1 px-6 pb-20">
-          <div className="max-w-7xl mx-auto rounded-xs bg-dark text-light px-8 py-14 md:px-14 flex flex-col md:flex-row md:items-center justify-between gap-8">
+        <section className="relative z-1 px-6 md:px-10 pb-20">
+          <div className="rounded-xs bg-dark text-light px-8 py-14 md:px-14 flex flex-col md:flex-row md:items-center justify-between gap-8">
             <div>
               <h2 className="font-sans text-3xl md:text-4xl font-bold tracking-tight mb-3">
                 Seu primeiro texto começa aqui.
