@@ -73,6 +73,13 @@ Relatórios completos: `.impeccable/critique/` e `.impeccable/audit/` (última a
 
 - As capas vêm de endereços arbitrários informados pelo autor. Variantes de largura dependem de um serviço de imagens na API, ou de uma lista de domínios permitidos para usar `next/image`.
 
+## Editor (2026-11-21, branch `feat/editor-refino`)
+
+- **Design perdido ao publicar direto:** um documento novo que nunca foi salvo e é publicado direto sai com o estilo padrão (`typography: "serif"`, `paperStyle: {}`). O `POST /api/v1/documents` parece ignorar os campos de estilo; o `PATCH` salva. Caminho: criar e em seguida aplicar o estilo, ou corrigir no backend.
+- Inserir imagem pelo "+" ainda usa `window.prompt`; trocar por um diálogo como o da capa.
+- O "+" de mídia pode ganhar embed e tabela.
+- Conta de teste no backend local: `editor_check1@example.test`, com o documento publicado "Teste de tipografia".
+
 ## Prioridade baixa
 
 - O contador "12/22" está dentro do `h2` "Mais recentes" (`src/app/feed/page.tsx`). Tirar do título ou dar um `aria-label`.

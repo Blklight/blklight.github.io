@@ -183,7 +183,7 @@ Each brand ink has a full 50–950 scale in `src/app/globals.css` (`--color-blkl
 - **Headline** (700, 1.5rem, tight tracking): card titles and panel headings.
 - **Title** (600, 0.875rem, uppercase, widest tracking): section labels and small headings.
 - **Body** (400, 0.875rem, 1.5): interface text.
-- **Reading** (400, EB Garamond): document bodies and the editor. Paragraphs indent 2rem and stack without gaps, like a printed page.
+- **Reading** (`.doc-prose`, shared by the editor and the published page): 18px (19px from md) with line-height 1.7; book paragraphs with a 1.5em first-line indent and no gap, no indent after a heading, divider or block; justified with `hyphens: auto` (`lang="pt-BR"`) from 640px, left-aligned below; headings with more space above (1.8em) than below (0.5em). The face is the document's typography.
 - **Label** (500, 0.75rem, uppercase, wide tracking): metadata, tabs, chips, buttons.
 
 Documents may override all of this: the author picks the document's font, paper and colors in "Editar design".
@@ -284,6 +284,10 @@ The cards, covers and layouts vary; these never do:
 
 ### Document Paper (signature)
 The editor and published document render as a sheet of paper: author-chosen font, paper color, texture and grain overlay, letterhead (`{{tipo}} de {{publicador}}`), cover, and an always-present digital signature block.
+
+**Editor chrome.** Type and status are folder tabs on top of the paper's sticky bar. The bar holds the font selector (fixed `w-40`; a long name slides back and forth, `MarqueeText`), the text blocks (paragraph, H1–H3, lists, quote, code) and undo/redo. The "+" on an empty line inserts media only (image, divider): an ink-bordered square. "Temas" and "Design" are vertical tabs on the paper's right edge (horizontal next to the type tabs below lg) and open a side panel beside the paper (bottom sheet below lg).
+
+**Design mode.** "Design" edits the look on the paper itself, not in a fullscreen overlay: the text turns read-only and faded (a sample text stands in when the document is empty), and each part (paper, letterhead, title and font, cover, signature, footer) gets a dashed outline and label on hover. Clicking a part opens its controls in the side panel, which also lists every part for keyboard use. Esc or the tab again goes back to writing.
 
 ## Do's and Don'ts
 
