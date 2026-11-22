@@ -75,10 +75,12 @@ export function SideTabs({
 /** Shell of the side panel: title, close button and a scrolling body. */
 export function SidePanelFrame({
   title,
+  closeLabel = "Fechar painel",
   onClose,
   children,
 }: {
   title: string;
+  closeLabel?: string;
   onClose: () => void;
   children: ReactNode;
 }) {
@@ -91,7 +93,8 @@ export function SidePanelFrame({
         <h2 className="font-mono text-xs uppercase tracking-wider">{title}</h2>
         <button
           type="button"
-          aria-label="Fechar painel"
+          aria-label={closeLabel}
+          title={closeLabel}
           onClick={onClose}
           className="inline-flex size-7 items-center justify-center rounded-xs hover:bg-secondary outline-none focus-visible:ring-2 focus-visible:ring-foreground"
         >
@@ -110,11 +113,14 @@ export function DesignPanel({
   designStore,
   tab,
   onTabChange,
+  tabs,
   signatureContext,
 }: {
   designStore: UseBoundStore<StoreApi<DocumentDesignStore>>;
   tab: DesignTab;
   onTabChange: (tab: DesignTab) => void;
+  /** Subset of parts this panel edits; all of them when absent. */
+  tabs?: DesignTab[];
   signatureContext?: SignatureContext | null;
 }) {
   const design = useDocumentDesign(designStore);
@@ -152,23 +158,25 @@ export function DesignPanel({
         aria-label="Partes do documento"
         className="flex flex-wrap gap-1 border-b border-border p-3"
       >
-        {DESIGN_TABS.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            aria-current={tab === item.id ? "true" : undefined}
-            onClick={() => onTabChange(item.id)}
-            className={cn(
-              "flex items-center gap-1.5 rounded-xs px-2 py-1 text-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-foreground [&_svg]:size-3.5",
-              tab === item.id
-                ? "bg-foreground text-background"
-                : "text-foreground/70 hover:bg-secondary hover:text-foreground",
-            )}
-          >
-            {item.icon}
-            {item.label}
-          </button>
-        ))}
+        {DESIGN_TABS.filter((item) => !tabs || tabs.includes(item.id)).map(
+          (item) => (
+            <button
+              key={item.id}
+              type="button"
+              aria-current={tab === item.id ? "true" : undefined}
+              onClick={() => onTabChange(item.id)}
+              className={cn(
+                "flex items-center gap-1.5 rounded-xs px-2 py-1 text-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-foreground [&_svg]:size-3.5",
+                tab === item.id
+                  ? "bg-foreground text-background"
+                  : "text-foreground/70 hover:bg-secondary hover:text-foreground",
+              )}
+            >
+              {item.icon}
+              {item.label}
+            </button>
+          ),
+        )}
       </nav>
       <div className="p-4">{panel()}</div>
     </div>

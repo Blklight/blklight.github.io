@@ -86,6 +86,7 @@ import {
 } from "@/features/documents/queries";
 import { useMyOrganizations } from "@/features/organizations/queries";
 import { documentDesignKey } from "@/lib/user-storage";
+import { cn } from "@/lib/utils";
 import {
   createDocumentDesignStore,
   type DesignInput,
@@ -298,8 +299,13 @@ export function DocumentEditor({
       setSidePanel((current) => (current === panel ? null : panel)),
     [],
   );
+  // Wide screens split design controls: paper on the left, parts on the right.
+  const [paperTab, setPaperTab] = useState<DesignTab>("colors");
+  const [partsTab, setPartsTab] = useState<DesignTab>("letterhead");
   const pickRegion = useCallback((tab: DesignTab) => {
     setActiveTab(tab);
+    if (PAPER_TABS.includes(tab)) setPaperTab(tab);
+    else setPartsTab(tab);
     setSidePanel("design");
   }, []);
 
@@ -616,16 +622,22 @@ export function DocumentEditor({
   const region = (tab: DesignTab) => ({
     active: isDesignMode,
     tab,
-    selected: isDesignMode && activeTab === tab,
+    selected:
+      isDesignMode &&
+      (isWide ? tab === paperTab || tab === partsTab : tab === activeTab),
     onSelect: pickRegion,
   });
 
-  const panelTitle = "Design";
-  const panelBody = (
+  const designPanel = (
+    tab: DesignTab,
+    onTabChange: (tab: DesignTab) => void,
+    tabs?: DesignTab[],
+  ) => (
     <DesignPanel
       designStore={designStore}
-      tab={activeTab}
-      onTabChange={setActiveTab}
+      tab={tab}
+      onTabChange={onTabChange}
+      tabs={tabs}
       signatureContext={signatureContext}
     />
   );
@@ -648,12 +660,12 @@ export function DocumentEditor({
         <EditorStyles />
 
         <main className="relative z-10 py-12 bg-background rounded-xs">
-          <div className="mx-auto flex max-w-[calc(48rem+27rem)] justify-center gap-12 px-4 md:px-6">
+          <div className="mx-auto max-w-3xl px-4 md:px-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="relative w-full max-w-3xl min-w-0"
+              className="relative"
             >
               <DocumentPaperHeader
                 editor={editor}
@@ -673,8 +685,14 @@ export function DocumentEditor({
                 }
               />
 
-              {/* Side tabs pinned to the paper's right edge (wide screens). */}
-              <div className="absolute top-24 bottom-0 left-full hidden lg:block">
+              {/* Side tabs pinned to the paper's right edge (wide screens);
+                  hidden while the design panels sit in the margins. */}
+              <div
+                className={cn(
+                  "absolute top-24 bottom-0 left-full hidden lg:block",
+                  isDesignMode && isWide && "lg:hidden",
+                )}
+              >
                 <SideTabs
                   vertical
                   open={sidePanel}
@@ -840,20 +858,32 @@ export function DocumentEditor({
                 paperColors={paperColors}
               />
             </motion.div>
-
-            {/* Side panel beside the paper (wide screens); a bottom sheet below lg. */}
-            {isDesignMode && isWide && (
-              <aside className="sticky top-32 h-[calc(100dvh-14rem)] w-96 shrink-0 self-start">
-                <SidePanelFrame
-                  title={panelTitle}
-                  onClose={() => setSidePanel(null)}
-                >
-                  {panelBody}
-                </SidePanelFrame>
-              </aside>
-            )}
           </div>
         </main>
+
+        {/* Design panels in the page margins (xl and up): the paper stays put. */}
+        {isDesignMode && isWide && (
+          <>
+            <aside className={cn(DESIGN_ASIDE, "left-4")}>
+              <SidePanelFrame
+                title="Papel"
+                closeLabel="Sair do modo design"
+                onClose={() => setSidePanel(null)}
+              >
+                {designPanel(paperTab, setPaperTab, PAPER_TABS)}
+              </SidePanelFrame>
+            </aside>
+            <aside className={cn(DESIGN_ASIDE, "right-4")}>
+              <SidePanelFrame
+                title="Partes do documento"
+                closeLabel="Sair do modo design"
+                onClose={() => setSidePanel(null)}
+              >
+                {designPanel(partsTab, setPartsTab, PARTS_TABS)}
+              </SidePanelFrame>
+            </aside>
+          </>
+        )}
 
         {/* Themes: right sheet over the page, as before the side tabs. */}
         <Sheet
@@ -876,8 +906,10 @@ export function DocumentEditor({
             side="bottom"
             className="data-[side=bottom]:h-[75dvh] p-0"
           >
-            <SheetTitle className="sr-only">{panelTitle}</SheetTitle>
-            <div className="h-full overflow-y-auto pt-10">{panelBody}</div>
+            <SheetTitle className="sr-only">Design</SheetTitle>
+            <div className="h-full overflow-y-auto pt-10">
+              {designPanel(activeTab, setActiveTab)}
+            </div>
           </SheetContent>
         </Sheet>
 
@@ -941,9 +973,16 @@ export function DocumentEditor({
   );
 }
 
-const WIDE_QUERY = "(min-width: 64rem)";
+const WIDE_QUERY = "(min-width: 80rem)";
 
-/** lg and up: the side panel sits beside the paper instead of in a bottom sheet. */
+const PAPER_TABS: DesignTab[] = ["colors", "texture", "grain", "font"];
+const PARTS_TABS: DesignTab[] = ["letterhead", "cover", "signature", "footer"];
+
+// Fills the margin beside the 48rem paper, never wider than 22rem.
+const DESIGN_ASIDE =
+  "fixed top-28 bottom-28 z-40 w-[clamp(15rem,calc(50vw-24rem-2.5rem),22rem)]";
+
+/** xl and up: design panels fit in the margins beside the paper; below, a bottom sheet. */
 function useIsWide() {
   return useSyncExternalStore(
     (onChange) => {

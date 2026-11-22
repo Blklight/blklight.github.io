@@ -58,7 +58,7 @@ export function FontPanel({ design }: DesignContext) {
           The quick brown fox jumps over the lazy dog
         </p>
         <p
-          className={cn("text-sm mt-2", design.fontClass)}
+          className={cn("text-sm mt-2 break-all", design.fontClass)}
           style={{ color: design.paperColors?.muted || undefined }}
         >
           ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789
