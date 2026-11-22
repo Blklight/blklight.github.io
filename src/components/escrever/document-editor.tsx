@@ -314,8 +314,7 @@ export function DocumentEditor({
     ],
     editorProps: {
       attributes: {
-        class:
-          "prose prose-lg max-w-none focus:outline-none min-h-[50vh] text-foreground",
+        class: "focus:outline-none min-h-[50vh] text-foreground",
       },
     },
     onUpdate: ({ editor: e }) => {
@@ -720,7 +719,8 @@ export function DocumentEditor({
                 {/* Editor */}
                 <div
                   data-testid="editor-content"
-                  className={`relative editor-wrapper editor-${typography} ${paperColors ? "custom-paper" : ""}`}
+                  lang="pt-BR"
+                  className={`relative editor-wrapper doc-prose editor-${typography} ${paperColors ? "custom-paper" : ""}`}
                   style={{
                     ["--custom-text-color" as string]: paperColors?.text,
                     ["--custom-muted-color" as string]: paperColors?.muted,

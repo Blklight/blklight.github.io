@@ -130,7 +130,8 @@ export function DocumentPreview(props: PreviewDesignProps) {
         }}
       />
       <div
-        className={cn("prose prose-lg max-w-none space-y-3", fontClass)}
+        lang="pt-BR"
+        className={cn("doc-prose", fontClass)}
         style={getPaperProseStyle(paperColors)}
       >
         <p>
