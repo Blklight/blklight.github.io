@@ -89,6 +89,23 @@ const DocumentEnd = ({ children }: { children: ReactNode }) => (
   </div>
 );
 
+/** Organization block: its stamp and a short record, kept apart from the author's signature. */
+const OrgBlock = ({ stamp }: { stamp: ReactNode }) => (
+  <div className="flex items-center gap-5">
+    <div className="shrink-0">{stamp}</div>
+    <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 font-mono text-[0.7rem] uppercase">
+      <dt className="text-muted-foreground">Org:</dt>
+      <dd>{ORG.name}</dd>
+      <dt className="text-muted-foreground">Ref:</dt>
+      <dd>{ORG.ref}</dd>
+      <dt className="text-muted-foreground">Status:</dt>
+      <dd>{ORG.status}</dd>
+      <dt className="text-muted-foreground">Data:</dt>
+      <dd>{ORG.date.replace(/·/g, "/")}</dd>
+    </dl>
+  </div>
+);
+
 /** Lab: organization signature ideas from the postal-stamp references. */
 export default function SignatureLabPage() {
   return (
@@ -154,58 +171,33 @@ export default function SignatureLabPage() {
 
       <Section
         title="No documento"
-        hint="Três jeitos de juntar com a assinatura do autor. Troque o tema para ver no escuro."
+        hint="O carimbo da organização fica num bloco próprio, acima ou abaixo da assinatura do autor, nunca sobre ela. Troque o tema para ver no escuro."
       >
-        <div className="grid gap-8 lg:grid-cols-3">
+        <div className="grid gap-8 lg:grid-cols-2">
           <figure className="flex flex-col gap-3">
             <DocumentEnd>
-              <div className="flex items-center justify-between gap-4">
-                <div className="min-w-0 flex-1">
-                  <DigitalSignature {...AUTHOR} />
-                </div>
-                <WaxStamp data={ORG} rotate={-8} className="w-32 shrink-0 text-foreground/70" />
-              </div>
-            </DocumentEnd>
-            <Caption>A · lado a lado, selo de cera</Caption>
-          </figure>
-
-          <figure className="flex flex-col gap-3">
-            <DocumentEnd>
-              <div className="relative">
+              <OrgBlock
+                stamp={
+                  <DiamondStamp data={ORG} className="w-28 text-foreground/70" />
+                }
+              />
+              <div className="border-t border-dashed border-foreground/30 pt-6">
                 <DigitalSignature {...AUTHOR} />
-                <HoloSeal
-                  data={ORG}
-                  shape="diamond"
-                  rotate={-6}
-                  className="absolute -right-3 -bottom-10 w-32"
-                />
-              </div>
-              <div className="flex items-end justify-between gap-4 pt-4">
-                <LabelStamp data={ORG} className="text-foreground/70" />
-                <p className="font-mono text-[0.65rem] uppercase tracking-wider text-muted-foreground">
-                  Postado 00:00 BRT
-                </p>
               </div>
             </DocumentEnd>
-            <Caption>B · selo sobre a assinatura, etiqueta embaixo</Caption>
+            <Caption>Acima · carimbo a tinta</Caption>
           </figure>
 
           <figure className="flex flex-col gap-3">
             <DocumentEnd>
               <DigitalSignature {...AUTHOR} />
-              <div className="flex items-center gap-4 border-t border-dashed border-foreground/30 pt-6">
-                <TriangleStamp data={ORG} className="w-28 shrink-0 text-foreground/70" />
-                <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 font-mono text-[0.7rem] uppercase">
-                  <dt className="text-muted-foreground">Org:</dt>
-                  <dd>{ORG.name}</dd>
-                  <dt className="text-muted-foreground">Ref:</dt>
-                  <dd>{ORG.ref}</dd>
-                  <dt className="text-muted-foreground">Status:</dt>
-                  <dd>{ORG.status}</dd>
-                </dl>
+              <div className="border-t border-dashed border-foreground/30 pt-6">
+                <OrgBlock
+                  stamp={<HoloSeal data={ORG} shape="diamond" className="w-28" />}
+                />
               </div>
             </DocumentEnd>
-            <Caption>C · bloco próprio abaixo, com ficha</Caption>
+            <Caption>Abaixo · selo holográfico</Caption>
           </figure>
         </div>
       </Section>
