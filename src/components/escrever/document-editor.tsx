@@ -869,7 +869,7 @@ export function DocumentEditor({
         {/* Design panels in the page margins (xl and up): the paper stays put. */}
         {isDesignMode && isWide && (
           <>
-            <aside className={cn(DESIGN_ASIDE, "left-4")}>
+            <aside className={cn(DESIGN_ASIDE, "right-[calc(50%+23.5rem)]")}>
               <SidePanelFrame
                 title="Papel"
                 closeLabel="Sair do modo design"
@@ -878,7 +878,7 @@ export function DocumentEditor({
                 {designPanel(paperTab, setPaperTab, PAPER_TABS)}
               </SidePanelFrame>
             </aside>
-            <aside className={cn(DESIGN_ASIDE, "right-4")}>
+            <aside className={cn(DESIGN_ASIDE, "left-[calc(50%+23.5rem)]")}>
               <SidePanelFrame
                 title="Partes do documento"
                 closeLabel="Sair do modo design"
@@ -983,9 +983,9 @@ const WIDE_QUERY = "(min-width: 80rem)";
 const PAPER_TABS: DesignTab[] = ["colors", "texture", "grain", "font"];
 const PARTS_TABS: DesignTab[] = ["letterhead", "cover", "signature", "footer"];
 
-// Fills the margin beside the 48rem paper, never wider than 22rem.
+// Flush against the paper (45rem wide, 1rem gap), filling the margin up to 22rem.
 const DESIGN_ASIDE =
-  "fixed top-28 bottom-28 z-40 w-[clamp(15rem,calc(50vw-24rem-2.5rem),22rem)]";
+  "fixed top-28 bottom-28 z-40 w-[clamp(15rem,calc(50vw-24.5rem),22rem)]";
 
 /** xl and up: design panels fit in the margins beside the paper; below, a bottom sheet. */
 function useIsWide() {
