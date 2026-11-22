@@ -38,7 +38,7 @@ export const ClassicBadge = ({ data, status, className }: BadgeModelProps) => {
   const since = SINCE.format(new Date(memberSince)).replace(".", "");
 
   return (
-    <div className={cn("w-72 max-w-full", className)}>
+    <div className={cn("w-80 max-w-full", className)}>
       <Tilt maxTilt={8} perspective={1000} style={FLAT}>
         <TiltContent className="perspective-1000 relative h-[28rem]">
           {/* biome-ignore lint/a11y/useSemanticElements: both faces hold block content, which a <button> can't contain */}

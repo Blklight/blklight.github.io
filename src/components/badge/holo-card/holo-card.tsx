@@ -1,9 +1,10 @@
 "use client";
 
+import { Tilt, TiltContent } from "@animate-ui/react/primitives/effects/tilt";
 import Image from "next/image";
 import type React from "react";
 import { useCallback, useRef, useState } from "react";
-import Tilt from "react-parallax-tilt";
+import { FLAT } from "@/components/onboarding/simple-flip-card";
 import { cn } from "@/lib/utils";
 import "./holo-card.css";
 
@@ -100,7 +101,7 @@ const Brand = ({ branding }: { branding: HoloCardBranding }) =>
 
 export const HoloCard = ({
   data,
-  height = 446,
+  height = 448,
   width = 320,
   showSparkles = true,
   forceSide,
@@ -370,20 +371,23 @@ export const HoloCard = ({
     }
 
     return (
-      <Tilt className={cn(FACE_CLIP, "p-0!")}>
-        {OverlayLayer}
-        {content}
-        <div
-          ref={ref}
-          className={holoCardClasses}
-          style={holoCardStyle}
-          onMouseMove={handleOnMouseMove}
-          onTouchMove={handleOnTouchMove}
-          onMouseOut={handleOnMouseOut}
-          onBlur={handleOnMouseOut}
-        >
-          {children}
-        </div>
+      // Same tilt as the classic badge (animate-ui): leans toward the pointer.
+      <Tilt maxTilt={8} perspective={1000} style={FLAT} className="size-full">
+        <TiltContent className={FACE_CLIP}>
+          {OverlayLayer}
+          {content}
+          <div
+            ref={ref}
+            className={holoCardClasses}
+            style={holoCardStyle}
+            onMouseMove={handleOnMouseMove}
+            onTouchMove={handleOnTouchMove}
+            onMouseOut={handleOnMouseOut}
+            onBlur={handleOnMouseOut}
+          >
+            {children}
+          </div>
+        </TiltContent>
       </Tilt>
     );
   };

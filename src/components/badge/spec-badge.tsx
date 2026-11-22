@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { BadgeFlip, Portrait, statusLabel } from "./badge-flip";
+import { BadgeFlip, BadgeLogo, Portrait, statusLabel } from "./badge-flip";
 import { SINCE } from "./classic-badge";
 import { SocialRow } from "./social-row";
 import type { BadgeModelProps } from "./types";
@@ -66,11 +66,9 @@ export const SpecBadge = ({ data, status, className }: BadgeModelProps) => {
               >
                 &gt;&gt;&gt;&gt;
               </span>
-              <span
-                aria-hidden
-                className="grid size-9 place-items-center rounded-full border-[3px] border-dark font-sans text-sm font-black"
-              >
-                R
+              <span className="flex items-center gap-1.5 font-sans text-sm font-black tracking-tight">
+                <BadgeLogo size={22} />
+                Blklight
               </span>
             </div>
           </div>

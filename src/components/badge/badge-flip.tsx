@@ -1,6 +1,7 @@
 "use client";
 
 import { Tilt, TiltContent } from "@animate-ui/react/primitives/effects/tilt";
+import Image from "next/image";
 import { type ReactNode, useState } from "react";
 import { FLAT } from "@/components/onboarding/simple-flip-card";
 import { cn } from "@/lib/utils";
@@ -25,18 +26,18 @@ export const BadgeFlip = ({
     <div
       inert={isBack !== flipped}
       className={cn(
-        "absolute inset-0 overflow-hidden backface-hidden",
+        "absolute inset-0 overflow-hidden backface-hidden background-texture",
         isBack && "rotate-y-180",
         isBack !== flipped && "pointer-events-none",
         faceClassName,
       )}
     >
-      {children}
+      <div className="texture-item size-full">{children}</div>
     </div>
   );
 
   return (
-    <div className={cn("w-72 max-w-full", className)}>
+    <div className={cn("w-80 max-w-full", className)}>
       <Tilt maxTilt={6} perspective={1000} style={FLAT}>
         <TiltContent className="perspective-1000 relative h-[28rem]">
           {/* biome-ignore lint/a11y/useSemanticElements: both faces hold block content, which a <button> can't contain */}
@@ -100,3 +101,22 @@ export const Portrait = ({
 
 export const statusLabel = (status?: string) =>
   status === "draft" ? "Em montagem" : "Ativo";
+
+/** Blklight mark for the poster badges: black on light stock, white on dark. */
+export const BadgeLogo = ({
+  tone = "dark",
+  size = 16,
+  className,
+}: {
+  tone?: "dark" | "light";
+  size?: number;
+  className?: string;
+}) => (
+  <Image
+    src={tone === "dark" ? "/blklight-black.svg" : "/blklight-white.svg"}
+    alt=""
+    width={size}
+    height={size}
+    className={className}
+  />
+);

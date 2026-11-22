@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { BadgeFlip, Portrait, statusLabel } from "./badge-flip";
+import { BadgeFlip, BadgeLogo, Portrait, statusLabel } from "./badge-flip";
 import { initials, SINCE } from "./classic-badge";
 import { SocialRow } from "./social-row";
 import type { BadgeModelProps } from "./types";
@@ -40,7 +40,10 @@ export const FactoryBadge = ({ data, status, className }: BadgeModelProps) => {
         <span className="flex-1 px-2 py-1.5 truncate">
           Membro {"//"} {memberId}
         </span>
-        <span className="bg-dark px-2 py-1.5 text-orange-500">Blklight</span>
+        <span className="flex items-center gap-1.5 bg-dark px-2 py-1.5 text-orange-500">
+          <BadgeLogo tone="light" size={12} />
+          Blklight
+        </span>
       </div>
       <div
         aria-hidden

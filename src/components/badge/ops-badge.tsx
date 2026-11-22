@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { BadgeFlip, Portrait, statusLabel } from "./badge-flip";
+import { BadgeFlip, BadgeLogo, Portrait, statusLabel } from "./badge-flip";
 import { SINCE } from "./classic-badge";
 import { SocialRow } from "./social-row";
 import type { BadgeModelProps } from "./types";
@@ -69,7 +69,10 @@ export const OpsBadge = ({ data, status, className }: BadgeModelProps) => {
               fallbackClassName="bg-[#8e9396] text-2xl text-[#1e1f21]"
             />
             <div className="flex flex-1 flex-col justify-center border-l-2 border-[#8e9396] px-3 font-sans text-sm font-black tracking-tight">
-              <span>Blklight</span>
+              <span className="flex items-center gap-1.5">
+                <BadgeLogo tone="light" size={14} className="opacity-60" />
+                Blklight
+              </span>
               <span>Log ID: {memberId}</span>
             </div>
           </div>

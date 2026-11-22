@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { BadgeFlip, Portrait, statusLabel } from "./badge-flip";
+import { BadgeFlip, BadgeLogo, Portrait, statusLabel } from "./badge-flip";
 import { SINCE } from "./classic-badge";
 import { SocialRow } from "./social-row";
 import type { BadgeModelProps } from "./types";
@@ -67,12 +67,7 @@ export const PosterBadge = ({ data, status, className }: BadgeModelProps) => {
             />
             <div className="flex w-24 flex-col">
               <Block className="flex flex-1 items-center justify-center">
-                <span
-                  aria-hidden
-                  className="grid size-10 place-items-center rounded-full border-[3px] border-dark font-sans text-lg font-black"
-                >
-                  R
-                </span>
+                <BadgeLogo size={44} />
               </Block>
               <div className="bg-dark p-2 font-sans text-sm font-black leading-tight text-orange-500">
                 Status

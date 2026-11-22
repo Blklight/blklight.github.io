@@ -50,7 +50,7 @@ export const HoloBadge = ({ data, status, className }: BadgeModelProps) => {
       onPointerEnter={() => setActive(true)}
       onPointerLeave={() => setActive(false)}
       style={{ "--mx": "50%", "--my": "30%" } as CSSProperties}
-      className={cn("w-72 max-w-full", className)}
+      className={cn("w-80 max-w-full", className)}
     >
       <Tilt maxTilt={12} perspective={900} style={FLAT}>
         <TiltContent className="perspective-1000 relative h-[28rem]">
