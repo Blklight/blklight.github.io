@@ -77,7 +77,6 @@ export const SeloBadge = ({ data, status, className }: BadgeModelProps) => {
           <div className="absolute inset-0 flex items-center justify-center">
             <WaxStamp
               data={seal}
-              worn={false}
               className="w-48 rounded-[2.5rem] bg-[#0c0c0c] text-[#eceae6]"
             />
           </div>

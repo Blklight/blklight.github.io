@@ -16,90 +16,93 @@ export interface OrgStampData {
   status: string;
 }
 
+/**
+ * ink: crisp hand-drawn line, as if stamped.
+ * emboss: pressed into the stock (light edge below, shadow above), for dark or colored paper.
+ */
+export type StampFinish = "ink" | "emboss";
+
 interface StampProps {
   data: OrgStampData;
   /** Ink color; defaults to the surrounding text color. */
   color?: string;
   /** Degrees; stamps look hand-applied when slightly turned. */
   rotate?: number;
-  /** Worn ink: specks and rough edges. */
-  worn?: boolean;
+  finish?: StampFinish;
   className?: string;
 }
 
+const EMBOSS =
+  "drop-shadow(0 1px 0 rgb(255 255 255 / 0.22)) drop-shadow(0 -1px 0 rgb(0 0 0 / 0.55))";
+
 const round = (n: number) => Math.round(n * 10) / 10;
+
+/** Slow, deterministic wobble: a hand-drawn line never stays on the exact curve. */
+const wobble = (t: number, seed: number) =>
+  0.9 * Math.sin(3 * t + seed) +
+  0.55 * Math.sin(7 * t + seed * 2.3) +
+  0.3 * Math.sin(13 * t + seed * 4.1);
 
 /** Closed path from a radius function around (cx, cy). */
 function radialPath(
   cx: number,
   cy: number,
-  radius: (theta: number) => [number, number],
-  steps = 240,
+  radius: (theta: number) => number,
+  steps = 360,
 ) {
   const points = Array.from({ length: steps }, (_, i) => {
     const theta = (i / steps) * Math.PI * 2;
-    const [rx, ry] = radius(theta);
-    return `${round(cx + rx * Math.cos(theta))} ${round(cy + ry * Math.sin(theta))}`;
+    const r = radius(theta);
+    return `${round(cx + r * Math.cos(theta))} ${round(cy + r * Math.sin(theta))}`;
   });
   return `M${points.join("L")}Z`;
 }
 
-/** Squircle with a scalloped edge, like a wax seal. */
-const waxPath = (r: number, amp: number, waves: number) =>
-  radialPath(100, 100, (t) => {
-    // Superellipse (n=4) radius, so the seal reads as a rounded square.
-    const base =
-      r / (Math.abs(Math.cos(t)) ** 4 + Math.abs(Math.sin(t)) ** 4) ** 0.25;
-    const k = base * (1 + amp * Math.sin(waves * t));
-    return [k, k];
+/** Rounded square with a few soft, uneven lobes: a wax seal's poured edge. */
+const waxPath = (seed: number) =>
+  radialPath(110, 110, (t) => {
+    const squircle =
+      86 / (Math.abs(Math.cos(t)) ** 5 + Math.abs(Math.sin(t)) ** 5) ** 0.2;
+    // Twelve shallow scallops of slightly different heights, so it never looks machined.
+    const lobe = Math.sin(12 * t + 0.4) * (3.4 + 0.9 * Math.sin(5 * t + 1));
+    return squircle + lobe + wobble(t, seed) * 0.6;
   });
 
-/** Cog with soft teeth and a slightly uneven rim. */
-const gearPath = (r: number, depth: number, teeth: number) =>
-  radialPath(
-    100,
-    100,
-    (t) => {
-      const tooth = 0.5 + 0.5 * Math.tanh(3 * Math.sin(teeth * t));
-      const wobble = 1.2 * Math.sin(5 * t) + 0.8 * Math.sin(11 * t + 1);
-      const k = r - depth * (1 - tooth) + wobble;
-      return [k, k];
-    },
-    360,
-  );
+/** Round body with eight notches cut in, like a cog-shaped rubber stamp. */
+const gearPath = (seed: number) =>
+  radialPath(110, 110, (t) => {
+    const notch = Math.max(0, Math.cos(8 * t + 0.2)) ** 6;
+    return 98 - 11 * notch + wobble(t, seed);
+  });
 
-/** Triangle with rounded corners. */
-function triPath(points: [number, number][], radius: number) {
-  const n = points.length;
+/** Triangle with soft corners; `seed` nudges the corners for the retrace. */
+function triPath(seed: number) {
+  const j = (k: number) => Math.sin(seed * 3.7 + k) * 1.2;
+  const points: [number, number][] = [
+    [110 + j(1), 10 + j(2)],
+    [212 + j(3), 184 + j(4)],
+    [8 + j(5), 184 + j(6)],
+  ];
+  const radius = 24 + j(7);
   const parts = points.map((p, i) => {
-    const prev = points[(i - 1 + n) % n];
-    const next = points[(i + 1) % n];
+    const prev = points[(i + 2) % 3];
+    const next = points[(i + 1) % 3];
     const toward = (q: [number, number]) => {
-      const dx = q[0] - p[0];
-      const dy = q[1] - p[1];
-      const len = Math.hypot(dx, dy);
-      return [
-        round(p[0] + (dx / len) * radius),
-        round(p[1] + (dy / len) * radius),
-      ];
+      const len = Math.hypot(q[0] - p[0], q[1] - p[1]);
+      return `${round(p[0] + ((q[0] - p[0]) / len) * radius)} ${round(p[1] + ((q[1] - p[1]) / len) * radius)}`;
     };
-    const a = toward(prev);
-    const b = toward(next);
-    return `${i === 0 ? "M" : "L"}${a[0]} ${a[1]}Q${p[0]} ${p[1]} ${b[0]} ${b[1]}`;
+    return `${i === 0 ? "M" : "L"}${toward(prev)}Q${p[0]} ${p[1]} ${toward(next)}`;
   });
   return `${parts.join("")}Z`;
 }
 
-/** Monospace glyphs are ~0.6em wide: squeeze a line only when it would overflow. */
-const fit = (text: string, size: number, max: number) =>
-  text.length * size * 0.6 > max
-    ? { textLength: max, lengthAdjust: "spacingAndGlyphs" as const }
-    : {};
+/** Monospace glyphs are ~0.62em wide with the tracking: squeeze only when a line would overflow. */
+const textWidth = (text: string, size: number) => text.length * size * 0.68;
 
 function Line({
   y,
-  size = 10,
-  max = 140,
+  size = 12,
+  max = 150,
   underline = false,
   children,
 }: {
@@ -109,87 +112,69 @@ function Line({
   underline?: boolean;
   children: string;
 }) {
-  const width = Math.min(children.length * size * 0.6, max);
+  const width = Math.min(textWidth(children, size), max);
+  const squeeze =
+    textWidth(children, size) > max
+      ? { textLength: max, lengthAdjust: "spacingAndGlyphs" as const }
+      : {};
   return (
     <>
       <text
-        x={100}
+        x={110}
         y={y}
         fontSize={size}
         textAnchor="middle"
         fill="currentColor"
         stroke="none"
-        letterSpacing="0.06em"
-        {...fit(children, size, max)}
+        letterSpacing="0.08em"
+        {...squeeze}
       >
         {children}
       </text>
       {underline && (
-        <line x1={100 - width / 2} x2={100 + width / 2} y1={y + 3} y2={y + 3} />
+        <path
+          d={`M${round(110 - width / 2)} ${y + 4}l${round(width)} 0.6`}
+          strokeWidth={1.2}
+        />
       )}
     </>
   );
 }
 
-/** SVG frame shared by the drawn stamps: ink filter, stroke and rotation. */
+/** Outline drawn twice: the stamp's edge plus a faint retrace a hair off it. */
+const Outline = ({ d, retrace }: { d: string; retrace: string }) => (
+  <>
+    <path d={d} strokeWidth={1.8} />
+    <path d={retrace} strokeWidth={0.7} opacity={0.55} />
+  </>
+);
+
+/** SVG frame shared by the drawn stamps: color, finish and rotation. */
 function StampSvg({
   label,
-  viewBox,
   color,
   rotate = 0,
-  worn = true,
+  finish = "ink",
   className,
   children,
-}: Omit<StampProps, "data"> & {
-  label: string;
-  viewBox: string;
-  children: ReactNode;
-}) {
-  const id = useId().replace(/:/g, "");
+}: Omit<StampProps, "data"> & { label: string; children: ReactNode }) {
   return (
     <svg
       role="img"
       aria-label={label}
-      viewBox={viewBox}
+      viewBox="0 0 220 220"
       className={cn("font-mono uppercase", className)}
-      style={{ color, transform: rotate ? `rotate(${rotate}deg)` : undefined }}
+      style={{
+        color,
+        transform: rotate ? `rotate(${rotate}deg)` : undefined,
+        filter: finish === "emboss" ? EMBOSS : undefined,
+      }}
     >
-      {worn && (
-        <filter id={`ink-${id}`}>
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="1.4"
-            numOctaves="1"
-            seed="7"
-            result="noise"
-          />
-          <feColorMatrix
-            in="noise"
-            type="matrix"
-            values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.8 1.9"
-            result="specks"
-          />
-          <feComposite
-            in="SourceGraphic"
-            in2="specks"
-            operator="in"
-            result="inked"
-          />
-          <feTurbulence
-            type="turbulence"
-            baseFrequency="0.05"
-            numOctaves="2"
-            seed="3"
-            result="warp"
-          />
-          <feDisplacementMap in="inked" in2="warp" scale="1" />
-        </filter>
-      )}
       <g
         fill="none"
         stroke="currentColor"
-        strokeWidth={1.6}
-        filter={worn ? `url(#ink-${id})` : undefined}
+        strokeLinecap="round"
+        strokeLinejoin="round"
       >
         {children}
       </g>
@@ -199,100 +184,95 @@ function StampSvg({
 
 const square = (x: number, y: number) => (
   <rect
-    x={x - 3}
-    y={y - 3}
-    width={6}
-    height={6}
+    x={x - 3.5}
+    y={y - 3.5}
+    width={7}
+    height={7}
     fill="currentColor"
     stroke="none"
   />
 );
 
-/** Triangle: class of mail on top, organization in the middle, motto and founding at the base. */
+/** Triangle: mark on top, organization in the middle, motto and founding at the base. */
 export function TriangleStamp({ data, ...props }: StampProps) {
   return (
-    <StampSvg
-      {...props}
-      label={`Carimbo de ${data.name}`}
-      viewBox="0 0 200 178"
-    >
-      <path
-        d={triPath(
-          [
-            [100, 6],
-            [194, 172],
-            [6, 172],
-          ],
-          14,
-        )}
-        strokeWidth={2}
-      />
-      {square(100, 30)}
-      <Line y={58} size={9}>
-        SELO
-      </Line>
-      <Line y={70} size={9}>
-        OFICIAL
-      </Line>
-      <Line y={100} size={15} max={110}>
-        {data.name}
-      </Line>
-      <Line y={132} size={9} max={130}>
-        {data.tagline}
-      </Line>
-      <Line y={152} size={9} max={110}>{`DESDE ${data.since}`}</Line>
-      {square(26, 158)}
-      {square(174, 158)}
+    <StampSvg {...props} label={`Carimbo de ${data.name}`}>
+      <g transform="translate(0 14)">
+        <Outline d={triPath(0)} retrace={triPath(1)} />
+        {square(110, 38)}
+        <Line y={68} size={11} max={60}>
+          SELO
+        </Line>
+        <Line y={82} size={11} max={76}>
+          OFICIAL
+        </Line>
+        <Line y={118} size={15} max={104}>
+          {data.name}
+        </Line>
+        <Line y={150} size={11} max={150}>
+          {data.tagline}
+        </Line>
+        <Line y={170} size={11} max={130}>
+          {`DESDE ${data.since}`}
+        </Line>
+        {square(32, 170)}
+        {square(188, 170)}
+      </g>
     </StampSvg>
   );
 }
 
-/** Wax seal: scalloped rim around a rounded square with city, year and status. */
+/** Wax seal: poured edge around a rounded square with name, city, year and status. */
 export function WaxStamp({ data, ...props }: StampProps) {
   const year = data.date.slice(-4);
+  const [first, ...rest] = data.status.split(" ");
+  const status = rest.length > 0 ? [first, rest.join(" ")] : [first];
   return (
-    <StampSvg {...props} label={`Selo de ${data.name}`} viewBox="0 0 200 200">
-      <path d={waxPath(88, 0.035, 16)} strokeWidth={2} />
-      <path d={waxPath(80, 0.03, 16)} strokeWidth={1} opacity={0.7} />
-      <rect x={34} y={34} width={132} height={132} rx={20} strokeWidth={2} />
-      <Line y={66} size={11} max={112} underline>
+    <StampSvg {...props} label={`Selo de ${data.name}`}>
+      <Outline d={waxPath(0)} retrace={waxPath(2)} />
+      <rect x={47} y={47} width={126} height={126} rx={26} strokeWidth={1.8} />
+      <Line y={74} size={12} max={104} underline>
         {data.name}
       </Line>
-      <Line y={92} size={11} max={120}>
+      <Line y={100} size={12} max={112}>
         {data.city}
       </Line>
-      <Line y={116} size={11}>{`▪▪▪ ${year} ▪▪▪`}</Line>
-      <Line y={140} size={11} max={112}>
-        {data.status}
+      <Line y={126} size={12} max={112}>
+        {`▪▪▪ ${year} ▪▪▪`}
       </Line>
-      <Line y={156} size={9} max={100}>{`@${data.handle}`}</Line>
+      {status.map((line, i) => (
+        <Line
+          key={line}
+          y={(status.length > 1 ? 150 : 156) + i * 17}
+          size={12}
+          max={104}
+        >
+          {line}
+        </Line>
+      ))}
     </StampSvg>
   );
 }
 
-/** Cog: delivered by the organization, via Blklight. */
+/** Cog: signed by the organization, via Blklight. */
 export function GearStamp({ data, ...props }: StampProps) {
   return (
-    <StampSvg
-      {...props}
-      label={`Carimbo de entrega de ${data.name}`}
-      viewBox="0 0 200 200"
-    >
-      <path d={gearPath(92, 9, 10)} strokeWidth={2} />
-      <Line y={58} size={11}>
+    <StampSvg {...props} label={`Carimbo de entrega de ${data.name}`}>
+      <Outline d={gearPath(0)} retrace={gearPath(3)} />
+      <Line y={66} size={13}>
         ASSINADO
       </Line>
-      <line x1={52} x2={86} y1={82} y2={81} />
-      <rect x={88} y={70} width={24} height={24} rx={3} strokeWidth={2} />
-      <path d="M95 76v12h10" strokeWidth={1.6} />
-      <line x1={114} x2={148} y1={81} y2={82} />
-      <Line y={116} size={11}>
+      <path d="M58 92.5 L94 91.5" strokeWidth={1.4} />
+      <rect x={97} y={79} width={26} height={26} rx={3} strokeWidth={1.8} />
+      <rect x={103} y={85} width={14} height={14} rx={1.5} strokeWidth={1.2} />
+      <path d="M126 91.5 L162 92.5" strokeWidth={1.4} />
+      <Line y={130} size={13}>
         POR:
       </Line>
-      <Line y={134} size={12} max={130}>
+      <Line y={150} size={13} max={150}>
         {data.name}
       </Line>
-      <Line y={156} size={10}>
+      <Line y={174} size={12}>
         VIA: BLKLIGHT
       </Line>
     </StampSvg>
@@ -304,6 +284,7 @@ export function LabelStamp({
   data,
   color,
   rotate = 0,
+  finish = "ink",
   className,
   style,
 }: StampProps & { style?: CSSProperties }) {
@@ -318,6 +299,7 @@ export function LabelStamp({
       style={{
         color,
         transform: rotate ? `rotate(${rotate}deg)` : undefined,
+        filter: finish === "emboss" ? EMBOSS : undefined,
         ...style,
       }}
     >
@@ -346,7 +328,7 @@ export function HoloSeal({
   rotate = 0,
   tint,
   className,
-}: Omit<StampProps, "color" | "worn"> & {
+}: Omit<StampProps, "color" | "finish"> & {
   /** Solid foil (e.g. orange) instead of the rainbow. */
   tint?: string;
 }) {

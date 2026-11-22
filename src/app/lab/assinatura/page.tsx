@@ -7,6 +7,7 @@ import {
   HoloSeal,
   LabelStamp,
   type OrgStampData,
+  type StampFinish,
   TriangleStamp,
   WaxStamp,
 } from "@/components/stamps/org-stamps";
@@ -30,11 +31,18 @@ const AUTHOR = {
 };
 
 /** Paper stocks from the references: grey card, charcoal, signal orange. */
-const STOCKS = [
-  { id: "cinza", label: "cartão cinza", bg: "#dcdcd6", ink: "#55554f" },
-  { id: "grafite", label: "grafite", bg: "#2b2b2b", ink: "#c9c9c4" },
-  { id: "laranja", label: "laranja", bg: "#ff6a13", ink: "#fff4ea" },
-];
+const STOCKS: {
+  id: string;
+  label: string;
+  bg: string;
+  ink: string;
+  finish: StampFinish;
+}[] = [
+  { id: "cinza", label: "cartão cinza · tinta", bg: "#dcdcd6", ink: "#4f4f4a", finish: "ink" },
+  { id: "grafite", label: "grafite · relevo", bg: "#2b2b2b", ink: "#a3a39e", finish: "emboss" },
+  { id: "laranja", label: "laranja · tinta clara", bg: "#ff6a13", ink: "#fff4ea", finish: "ink" },
+  { id: "preto", label: "preto · relevo", bg: "#141414", ink: "#6e6e69", finish: "emboss" },
+]
 
 const Section = ({
   title,
@@ -91,7 +99,7 @@ export default function SignatureLabPage() {
         title="Carimbos"
         hint="Mesma organização em cada forma e papel. A tinta vem da cor do texto, então o carimbo segue o tema do documento."
       >
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2">
           {STOCKS.map((stock) => (
             <figure key={stock.id} className="flex flex-col gap-3">
               <div
@@ -99,10 +107,10 @@ export default function SignatureLabPage() {
                 style={{ background: stock.bg, color: stock.ink }}
               >
                 <div className="texture-item grid grid-cols-2 place-items-center gap-6 p-6">
-                  <TriangleStamp data={ORG} className="w-40" />
-                  <WaxStamp data={ORG} rotate={-6} className="w-40" />
-                  <GearStamp data={ORG} rotate={4} className="w-40" />
-                  <LabelStamp data={ORG} className="w-40" />
+                  <TriangleStamp data={ORG} finish={stock.finish} className="w-48" />
+                  <WaxStamp data={ORG} finish={stock.finish} rotate={-6} className="w-48" />
+                  <GearStamp data={ORG} finish={stock.finish} rotate={4} className="w-48" />
+                  <LabelStamp data={ORG} finish={stock.finish} className="w-44" />
                 </div>
               </div>
               <Caption>{stock.label}</Caption>

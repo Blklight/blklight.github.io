@@ -125,7 +125,7 @@ export const PostalBadge = ({ data, status, className }: BadgeModelProps) => {
           className="flex size-full flex-col items-center px-5 py-6 text-[#cfcfca]"
           style={{ background: CHARCOAL }}
         >
-          <TriangleStamp data={stamp} className="w-36" worn={false} />
+          <TriangleStamp data={stamp} className="w-36" />
           <dl className="mt-5 grid w-full grid-cols-2 gap-x-5 gap-y-1">
             <Pair label="ID">{memberId}</Pair>
             <Pair label="Desde">{stamp.since}</Pair>
