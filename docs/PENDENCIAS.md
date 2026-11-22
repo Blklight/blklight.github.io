@@ -23,6 +23,8 @@ Relatórios completos: `.impeccable/critique/` e `.impeccable/audit/` (última a
 
 ### Modelos para documentos sem capa
 
+- **2026-11-21:** ficha técnica, field report e jornal criados em `/lab/cards`, ainda fora do feed.
+
 - **Problema:** a Ficha saiu, e documentos sem capa só usam Texto e Manchete (e Paper quando o autor muda o papel). A variedade nesse grupo caiu.
 - **Próximo passo:** pesquisar referências e desenhar modelos novos. As ideias de recorte de jornal, ingresso, planta técnica, polaroid, pôster de risografia e cartão-postal foram descartadas.
 
@@ -146,7 +148,9 @@ Branch `refino-ui` (ainda não enviada). Itens que ficaram abertos depois do ref
 
 ## Prioridade baixa
 
-- O showcase (`/componentes`) não tem demo do holo-card, do industrial nem do menu de conta.
+- O showcase (`/componentes`) não tem demo do holo-card, dos crachás poster/factory/ops/spec nem do menu de conta.
+- Crachás mostram os apps no verso; para o uso social (perfil, busca) isso vai mudar.
+- Cards ficha, field report, jornal, pasta, linhas e hud existem só no lab; decidir se entram no feed (`CARDS` em `src/app/feed/page.tsx` e `FeedCardType`).
 - Textos em inglês no holo-card foram traduzidos à mão no componente adaptado; se o heygaia atualizar o original, a adaptação não acompanha.
 
 ## Ambiente (2026-11-21)

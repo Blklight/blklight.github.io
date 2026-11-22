@@ -8,7 +8,7 @@ import { derivePaperDesign } from "@/features/documents/document-read";
 import { cn } from "@/lib/utils";
 import type { DocumentCard } from "@/types/api.types";
 import { typeTheme } from "./card-theme";
-import { CardMeta, CardTags, CardTitle, TypeTab } from "./parts";
+import { CardMeta, CardTags, CardTitle, cardFont, TypeTab } from "./parts";
 
 function ReadCue({ type }: { type: string }) {
   return (
@@ -66,12 +66,20 @@ function CoverBanner({ doc }: { doc: DocumentCard }) {
         <CardTitle
           doc={doc}
           as="h2"
-          className="font-sans text-4xl md:text-6xl leading-[1.02] tracking-tighter"
+          className={cn(
+            "text-4xl md:text-6xl leading-[1.02] tracking-tighter",
+            cardFont(doc),
+          )}
         >
           <span className="box-decoration-clone bg-dark px-2">{doc.title}</span>
         </CardTitle>
         {doc.abstract && (
-          <p className="text-base md:text-lg text-light/85 leading-relaxed max-w-2xl">
+          <p
+            className={cn(
+              "text-base md:text-lg text-light/85 leading-relaxed max-w-2xl",
+              cardFont(doc),
+            )}
+          >
             {doc.abstract}
           </p>
         )}
@@ -134,7 +142,7 @@ function PaperSpread({ doc }: { doc: DocumentCard }) {
         <CardTitle
           doc={doc}
           as="h2"
-          className="font-sans text-3xl lg:text-4xl leading-[1.08]"
+          className={cn("text-3xl lg:text-4xl leading-[1.08]", cardFont(doc))}
         />
         <CardTags doc={doc} className="mt-4 text-muted-foreground" />
         <div className="mt-auto pt-6 flex flex-col gap-4">

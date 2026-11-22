@@ -16,6 +16,16 @@ const DATE = new Intl.DateTimeFormat("pt-BR", {
 export const docHref = (doc: DocumentCard) =>
   `/${doc.author.username}/${doc.slug}`;
 
+const FONT: Record<string, string> = {
+  sans: "font-sans",
+  serif: "font-serif",
+  mono: "font-mono",
+};
+
+/** The author's typeface: cards use it for the title and the abstract only. */
+export const cardFont = (doc: DocumentCard) =>
+  FONT[doc.style?.typography ?? "sans"] ?? "font-sans";
+
 export const formatDate = (value: string) => {
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? value : DATE.format(date);
