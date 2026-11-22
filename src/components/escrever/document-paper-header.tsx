@@ -34,14 +34,38 @@ export interface DocumentPaperHeaderProps {
 const ACTION =
   "flex items-center gap-1.5 h-8 px-2 rounded-xs text-xs font-mono uppercase tracking-wider transition-colors hover:bg-black/5 dark:hover:bg-white/10 disabled:opacity-30 disabled:pointer-events-none outline-none focus-visible:ring-2 focus-visible:ring-current [&_svg]:size-4";
 
+/**
+ * S-curve joining a raised tab to the lower middle edge. Fixed 32x44 box, so
+ * the 12px drop matches the h-11 tabs and the h-8 middle exactly.
+ */
+const Dip = ({
+  fill,
+  stroke,
+  flip = false,
+}: {
+  fill: string;
+  stroke: string;
+  flip?: boolean;
+}) => (
+  <svg
+    aria-hidden="true"
+    viewBox="0 0 32 44"
+    className={cn("h-11 w-8 shrink-0", flip && "-scale-x-100")}
+  >
+    <path d="M0 0C16 0 16 12 32 12V44H0Z" fill={fill} />
+    <path d="M0 0.5C16 0.5 16 12.5 32 12.5" fill="none" stroke={stroke} />
+  </svg>
+);
+
 const Divider = () => (
   <span aria-hidden className="mx-1 h-4 w-px shrink-0 bg-current opacity-20" />
 );
 
 /**
  * Bar glued to the top of the paper; it sticks under the navbar while writing.
- * Type and status are folder tabs on top of it; the bar holds the font and the
- * text blocks (media goes through the "+" on an empty line).
+ * Its top edge rises into a tab at each end: type and status on the left,
+ * undo/redo (and the side tabs on narrow screens) on the right. The bar holds
+ * the font and the text blocks (media goes through the "+" on an empty line).
  */
 export function DocumentPaperHeader({
   editor,
@@ -63,47 +87,76 @@ export function DocumentPaperHeader({
     }),
   });
   const border = paperColors?.border || "var(--foreground)";
-  const tab =
-    "-mb-px px-3 pt-1.5 pb-1 rounded-t-xs border-x border-t font-mono text-xs uppercase tracking-wider";
+  const fill = paperColors?.bg || "var(--background)";
+  const surface = {
+    borderColor: border,
+    backgroundColor: paperColors?.bg || undefined,
+    color: paperColors?.text || undefined,
+  };
+  const chip =
+    "flex h-6 items-center rounded-full px-2.5 font-mono text-[0.7rem] uppercase tracking-wider";
 
   return (
     <div className="sticky top-12 lg:top-[3.6rem] z-30">
-      <div className="flex items-end gap-1 px-3">
-        <span
-          className={cn(tab, typeTheme(type).solid)}
-          style={{ borderColor: border }}
+      {/* Raised tabs at both ends, the edge dipping between them (one silhouette). */}
+      <div className="flex items-end">
+        <div
+          className="flex h-11 shrink-0 items-center gap-1.5 rounded-tl-2xl border-t border-l bg-background pr-1 pl-3"
+          style={surface}
         >
-          {typeLabel}
-        </span>
-        <span
-          className={cn(
-            tab,
-            "bg-background",
-            status === "published" ? "font-bold" : "opacity-80",
-          )}
-          style={{
-            borderColor: border,
-            backgroundColor: paperColors?.bg || undefined,
-            color: paperColors?.text || undefined,
-          }}
+          <span className={cn(chip, typeTheme(type).solid)}>{typeLabel}</span>
+          <span
+            className={cn(
+              chip,
+              "border border-current/25",
+              status === "published" ? "font-bold" : "opacity-80",
+            )}
+          >
+            {STATUS_LABEL[status]}
+          </span>
+        </div>
+        <Dip fill={fill} stroke={border} />
+        <div
+          className="h-8 min-w-0 flex-1 border-t bg-background"
+          style={surface}
+        />
+        <Dip fill={fill} stroke={border} flip />
+        <div
+          className="flex h-11 shrink-0 items-center gap-0.5 rounded-tr-2xl border-t border-r bg-background pr-2 pl-1"
+          style={surface}
         >
-          {STATUS_LABEL[status]}
-        </span>
-        {extraTabs && <div className="ml-auto">{extraTabs}</div>}
+          {extraTabs}
+          <button
+            type="button"
+            aria-label="Desfazer"
+            title="Desfazer"
+            disabled={!state.undo || locked}
+            onClick={() => editor.chain().focus().undo().run()}
+            className={ACTION}
+          >
+            <Undo />
+          </button>
+          <button
+            type="button"
+            aria-label="Refazer"
+            title="Refazer"
+            disabled={!state.redo || locked}
+            onClick={() => editor.chain().focus().redo().run()}
+            className={ACTION}
+          >
+            <Redo />
+          </button>
+        </div>
       </div>
       <div
         role="toolbar"
         aria-label="Formatação"
         inert={locked}
         className={cn(
-          "flex flex-wrap items-center gap-0.5 px-2 py-1.5 border-x border-t bg-background shadow-[0_6px_16px_-10px_rgb(0_0_0/0.35)] transition-[color,background-color,opacity] duration-300",
+          "flex flex-wrap items-center gap-0.5 px-2 py-1.5 border-x border-b bg-background shadow-[0_6px_16px_-10px_rgb(0_0_0/0.35)] transition-[color,background-color,opacity] duration-300",
           locked && "*:opacity-40",
         )}
-        style={{
-          borderColor: border,
-          backgroundColor: paperColors?.bg || undefined,
-          color: paperColors?.text || undefined,
-        }}
+        style={surface}
       >
         <TypographySelector
           value={typography}
@@ -133,27 +186,6 @@ export function DocumentPaperHeader({
             </button>
           </Fragment>
         ))}
-        <Divider />
-        <button
-          type="button"
-          aria-label="Desfazer"
-          title="Desfazer"
-          disabled={!state.undo}
-          onClick={() => editor.chain().focus().undo().run()}
-          className={ACTION}
-        >
-          <Undo />
-        </button>
-        <button
-          type="button"
-          aria-label="Refazer"
-          title="Refazer"
-          disabled={!state.redo}
-          onClick={() => editor.chain().focus().redo().run()}
-          className={ACTION}
-        >
-          <Redo />
-        </button>
       </div>
     </div>
   );

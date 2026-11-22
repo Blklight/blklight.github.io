@@ -30,7 +30,7 @@ const SIDE_TABS: { id: SidePanel; label: string; icon: ReactNode }[] = [
 
 /**
  * Tabs for the side panel. Vertical: pinned to the paper's right edge on wide
- * screens. Horizontal: next to the type/status tabs on narrow ones.
+ * screens. Horizontal: chips in the bar's right tab on narrow ones.
  */
 export function SideTabs({
   open,
@@ -58,7 +58,7 @@ export function SideTabs({
             "flex items-center gap-1.5 border border-foreground font-mono text-xs uppercase tracking-wider transition-colors outline-none focus-visible:ring-2 focus-visible:ring-foreground [&_svg]:size-3.5",
             vertical
               ? "-ml-px rounded-r-xs px-1.5 py-3 [writing-mode:vertical-rl]"
-              : "-mb-px rounded-t-xs border-b-0 px-3 pt-1.5 pb-1",
+              : "h-6 rounded-full border-current/25 px-2.5",
             open === tab.id
               ? "bg-foreground text-background"
               : "bg-background hover:bg-secondary",
