@@ -29,14 +29,27 @@ export interface DocumentPaperHeaderProps {
   extraTabs?: ReactNode;
   /** Design mode: the text is read-only, so the formatting tools are off. */
   locked?: boolean;
+  /** Save state, shown next to the status. */
+  save?: { lastSaved: Date | null; isSaving: boolean; dirty: boolean };
+}
+
+const TIME = new Intl.DateTimeFormat("pt-BR", {
+  hour: "2-digit",
+  minute: "2-digit",
+});
+
+function saveLabel(save: NonNullable<DocumentPaperHeaderProps["save"]>) {
+  if (save.isSaving) return "Salvando…";
+  if (save.dirty) return "Não salvo";
+  return save.lastSaved ? `Salvo às ${TIME.format(save.lastSaved)}` : null;
 }
 
 const ACTION =
   "flex items-center gap-1.5 h-8 px-2 rounded-xs text-xs font-mono uppercase tracking-wider transition-colors hover:bg-black/5 dark:hover:bg-white/10 disabled:opacity-30 disabled:pointer-events-none outline-none focus-visible:ring-2 focus-visible:ring-current [&_svg]:size-4";
 
 /**
- * S-curve joining a raised tab to the lower middle edge. Fixed 32x44 box, so
- * the 12px drop matches the h-11 tabs and the h-8 middle exactly.
+ * S-curve joining a raised tab to the lower middle edge. Fixed 48x56 box, so
+ * the 20px drop matches the h-14 tabs and the h-9 middle exactly.
  */
 const Dip = ({
   fill,
@@ -49,11 +62,11 @@ const Dip = ({
 }) => (
   <svg
     aria-hidden="true"
-    viewBox="0 0 32 44"
-    className={cn("h-11 w-8 shrink-0", flip && "-scale-x-100")}
+    viewBox="0 0 48 56"
+    className={cn("h-14 w-12 shrink-0", flip && "-scale-x-100")}
   >
-    <path d="M0 0C16 0 16 12 32 12V44H0Z" fill={fill} />
-    <path d="M0 0.5C16 0.5 16 12.5 32 12.5" fill="none" stroke={stroke} />
+    <path d="M0 0C24 0 24 20 48 20V56H0Z" fill={fill} />
+    <path d="M0 0.5C24 0.5 24 20.5 48 20.5" fill="none" stroke={stroke} />
   </svg>
 );
 
@@ -63,8 +76,8 @@ const Divider = () => (
 
 /**
  * Bar glued to the top of the paper; it sticks under the navbar while writing.
- * Its top edge rises into a tab at each end: type and status on the left,
- * undo/redo (and the side tabs on narrow screens) on the right. The bar holds
+ * Its top edge rises into a tab at each end: the type on the left; status and
+ * save state (plus the side tabs on narrow screens) on the right. The bar holds
  * the font and the text blocks (media goes through the "+" on an empty line).
  */
 export function DocumentPaperHeader({
@@ -77,6 +90,7 @@ export function DocumentPaperHeader({
   typeLabel,
   extraTabs,
   locked = false,
+  save,
 }: DocumentPaperHeaderProps) {
   const state = useEditorState({
     editor,
@@ -94,17 +108,39 @@ export function DocumentPaperHeader({
     color: paperColors?.text || undefined,
   };
   const chip =
-    "flex h-6 items-center rounded-full px-2.5 font-mono text-[0.7rem] uppercase tracking-wider";
+    "flex h-7 items-center rounded-full px-3 font-mono text-xs uppercase tracking-wider";
 
   return (
     <div className="sticky top-12 lg:top-[3.6rem] z-30">
       {/* Raised tabs at both ends, the edge dipping between them (one silhouette). */}
       <div className="flex items-end">
         <div
-          className="flex h-11 shrink-0 items-center gap-1.5 rounded-tl-2xl border-t border-l bg-background pr-1 pl-3"
+          className="flex h-14 shrink-0 items-center rounded-tl-3xl border-t border-l bg-background pr-1 pl-5"
           style={surface}
         >
           <span className={cn(chip, typeTheme(type).solid)}>{typeLabel}</span>
+        </div>
+        <Dip fill={fill} stroke={border} />
+        <div
+          className="h-9 min-w-0 flex-1 border-t bg-background"
+          style={surface}
+        />
+        <Dip fill={fill} stroke={border} flip />
+        <div
+          className="flex h-14 shrink-0 items-center gap-2 rounded-tr-3xl border-t border-r bg-background pr-5 pl-1"
+          style={surface}
+        >
+          {save && saveLabel(save) && (
+            <span
+              aria-live="polite"
+              className={cn(
+                "hidden font-mono text-[0.7rem] uppercase tracking-wider sm:inline",
+                save.dirty && !save.isSaving ? "opacity-80" : "opacity-55",
+              )}
+            >
+              {saveLabel(save)}
+            </span>
+          )}
           <span
             className={cn(
               chip,
@@ -114,38 +150,7 @@ export function DocumentPaperHeader({
           >
             {STATUS_LABEL[status]}
           </span>
-        </div>
-        <Dip fill={fill} stroke={border} />
-        <div
-          className="h-8 min-w-0 flex-1 border-t bg-background"
-          style={surface}
-        />
-        <Dip fill={fill} stroke={border} flip />
-        <div
-          className="flex h-11 shrink-0 items-center gap-0.5 rounded-tr-2xl border-t border-r bg-background pr-2 pl-1"
-          style={surface}
-        >
           {extraTabs}
-          <button
-            type="button"
-            aria-label="Desfazer"
-            title="Desfazer"
-            disabled={!state.undo || locked}
-            onClick={() => editor.chain().focus().undo().run()}
-            className={ACTION}
-          >
-            <Undo />
-          </button>
-          <button
-            type="button"
-            aria-label="Refazer"
-            title="Refazer"
-            disabled={!state.redo || locked}
-            onClick={() => editor.chain().focus().redo().run()}
-            className={ACTION}
-          >
-            <Redo />
-          </button>
         </div>
       </div>
       <div
@@ -186,6 +191,29 @@ export function DocumentPaperHeader({
             </button>
           </Fragment>
         ))}
+        <div className="ml-auto flex items-center gap-0.5">
+          <Divider />
+          <button
+            type="button"
+            aria-label="Desfazer"
+            title="Desfazer"
+            disabled={!state.undo}
+            onClick={() => editor.chain().focus().undo().run()}
+            className={ACTION}
+          >
+            <Undo />
+          </button>
+          <button
+            type="button"
+            aria-label="Refazer"
+            title="Refazer"
+            disabled={!state.redo}
+            onClick={() => editor.chain().focus().redo().run()}
+            className={ACTION}
+          >
+            <Redo />
+          </button>
+        </div>
       </div>
     </div>
   );

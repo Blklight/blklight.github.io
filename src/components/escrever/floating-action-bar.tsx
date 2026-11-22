@@ -1,12 +1,11 @@
 "use client";
 
-import { Check, FileJson, Save } from "lucide-react";
+import { FileJson, Save } from "lucide-react";
 import { motion } from "motion/react";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 
 export interface FloatingActionBarProps {
-  lastSaved: Date | null;
   isSaving: boolean;
   onSave: () => void;
   publishTrigger: ReactNode;
@@ -14,7 +13,6 @@ export interface FloatingActionBarProps {
 }
 
 export function FloatingActionBar({
-  lastSaved,
   isSaving,
   onSave,
   publishTrigger,
@@ -30,15 +28,6 @@ export function FloatingActionBar({
         border: "1px solid hsl(var(--border))",
       }}
     >
-      {lastSaved && (
-        <span className="text-[10px] font-mono text-muted-foreground hidden md:flex items-center gap-1 px-2">
-          <Check className="w-3 h-3 text-accent" />
-          {lastSaved.toLocaleTimeString("pt-BR", {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </span>
-      )}
       <Button
         variant="ghost"
         size="sm"

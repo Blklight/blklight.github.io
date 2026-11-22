@@ -679,6 +679,7 @@ export function DocumentEditor({
                 typeLabel={kind.label}
                 paperColors={paperColors}
                 locked={isDesignMode}
+                save={{ lastSaved, isSaving, dirty: hasUnsavedChanges }}
                 extraTabs={
                   <SideTabs
                     open={sidePanel}
@@ -935,7 +936,6 @@ export function DocumentEditor({
           onExpandChange={setIsPublishOpen}
         >
           <FloatingActionBar
-            lastSaved={lastSaved}
             isSaving={isSaving}
             onSave={handleSubmit(onSave)}
             publishTrigger={publishTrigger}
