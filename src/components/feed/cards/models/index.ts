@@ -10,6 +10,9 @@ import {
 } from "../feed-cards";
 import type { CardProps } from "../shell";
 import { TemplateCard } from "./_template";
+import { FichaCard } from "./ficha-card";
+import { FieldReportCard } from "./field-report-card";
+import { JornalCard } from "./jornal-card";
 
 export interface LabCard {
   id: string;
@@ -26,6 +29,14 @@ const ALL: BentoSize[] = ["1x1", "2x1", "1x2", "2x2"];
 /** Every card model, for /lab/cards. A new card is a new file plus one line here. */
 export const LAB_CARDS: LabCard[] = [
   { id: "template", label: "template", component: TemplateCard, sizes: ALL },
+  { id: "ficha", label: "ficha técnica", component: FichaCard, sizes: ALL },
+  {
+    id: "field-report",
+    label: "field report",
+    component: FieldReportCard,
+    sizes: ALL,
+  },
+  { id: "jornal", label: "jornal", component: JornalCard, sizes: ALL },
   {
     id: "text",
     label: "text",
