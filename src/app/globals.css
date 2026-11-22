@@ -1351,3 +1351,24 @@
     margin: 1.5em 0;
   }
 }
+
+/* Ping-pong slide for text wider than its box (MarqueeText); --shift is the overflow. */
+@keyframes marquee-pingpong {
+  0%,
+  15% {
+    transform: translateX(0);
+  }
+  85%,
+  100% {
+    transform: translateX(var(--shift, 0));
+  }
+}
+.animate-marquee-pingpong {
+  animation: marquee-pingpong 5s ease-in-out infinite alternate;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee-pingpong {
+    display: inline;
+    animation: none;
+  }
+}
