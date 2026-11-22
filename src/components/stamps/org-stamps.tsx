@@ -19,8 +19,9 @@ export interface OrgStampData {
 /**
  * ink: crisp hand-drawn line, as if stamped.
  * emboss: pressed into the stock (light edge below, shadow above), for dark or colored paper.
+ * engrave: cut into a foil (dark groove, bright lip below), for the holographic seals.
  */
-export type StampFinish = "ink" | "emboss";
+export type StampFinish = "ink" | "emboss" | "engrave";
 
 interface StampProps {
   data: OrgStampData;
@@ -32,8 +33,13 @@ interface StampProps {
   className?: string;
 }
 
-const EMBOSS =
-  "drop-shadow(0 1px 0 rgb(255 255 255 / 0.22)) drop-shadow(0 -1px 0 rgb(0 0 0 / 0.55))";
+const FINISH: Record<StampFinish, string | undefined> = {
+  ink: undefined,
+  emboss:
+    "drop-shadow(0 1px 0 rgb(255 255 255 / 0.22)) drop-shadow(0 -1px 0 rgb(0 0 0 / 0.55))",
+  engrave:
+    "drop-shadow(0 1px 0 rgb(255 255 255 / 0.75)) drop-shadow(0 -0.5px 0 rgb(0 0 0 / 0.35))",
+};
 
 const round = (n: number) => Math.round(n * 10) / 10;
 
@@ -75,26 +81,50 @@ const gearPath = (seed: number) =>
     return 98 - 11 * notch + wobble(t, seed);
   });
 
-/** Triangle with soft corners; `seed` nudges the corners for the retrace. */
-function triPath(seed: number) {
+/** Polygon with soft corners; `seed` nudges the corners for the retrace. */
+function polyPath(corners: [number, number][], radius: number, seed: number) {
   const j = (k: number) => Math.sin(seed * 3.7 + k) * 1.2;
-  const points: [number, number][] = [
-    [110 + j(1), 10 + j(2)],
-    [212 + j(3), 184 + j(4)],
-    [8 + j(5), 184 + j(6)],
-  ];
-  const radius = 24 + j(7);
+  const points = corners.map(([x, y], i): [number, number] => [
+    x + j(i * 2 + 1),
+    y + j(i * 2 + 2),
+  ]);
+  const r = radius + j(9);
+  const n = points.length;
   const parts = points.map((p, i) => {
-    const prev = points[(i + 2) % 3];
-    const next = points[(i + 1) % 3];
+    const prev = points[(i + n - 1) % n];
+    const next = points[(i + 1) % n];
     const toward = (q: [number, number]) => {
       const len = Math.hypot(q[0] - p[0], q[1] - p[1]);
-      return `${round(p[0] + ((q[0] - p[0]) / len) * radius)} ${round(p[1] + ((q[1] - p[1]) / len) * radius)}`;
+      return `${round(p[0] + ((q[0] - p[0]) / len) * r)} ${round(p[1] + ((q[1] - p[1]) / len) * r)}`;
     };
-    return `${i === 0 ? "M" : "L"}${toward(prev)}Q${p[0]} ${p[1]} ${toward(next)}`;
+    return `${i === 0 ? "M" : "L"}${toward(prev)}Q${round(p[0])} ${round(p[1])} ${toward(next)}`;
   });
   return `${parts.join("")}Z`;
 }
+
+const triPath = (seed: number) =>
+  polyPath(
+    [
+      [110, 10],
+      [212, 184],
+      [8, 184],
+    ],
+    24,
+    seed,
+  );
+
+/** The Blklight mark is nested diamonds: `inset` steps in from the outer one. */
+const diamondPath = (seed: number, inset = 0) =>
+  polyPath(
+    [
+      [110, 6 + inset],
+      [214 - inset, 110],
+      [110, 214 - inset],
+      [6 + inset, 110],
+    ],
+    inset ? 10 : 16,
+    seed,
+  );
 
 /** Monospace glyphs are ~0.62em wide with the tracking: squeeze only when a line would overflow. */
 const textWidth = (text: string, size: number) => text.length * size * 0.68;
@@ -167,7 +197,7 @@ function StampSvg({
       style={{
         color,
         transform: rotate ? `rotate(${rotate}deg)` : undefined,
-        filter: finish === "emboss" ? EMBOSS : undefined,
+        filter: FINISH[finish],
       }}
     >
       <g
@@ -279,6 +309,42 @@ export function GearStamp({ data, ...props }: StampProps) {
   );
 }
 
+const diamond = (y: number, size: number) => (
+  <rect
+    x={110 - size / 2}
+    y={y - size / 2}
+    width={size}
+    height={size}
+    transform={`rotate(45 110 ${y})`}
+    fill="currentColor"
+    stroke="none"
+  />
+);
+
+/** The Blklight mark as a stamp: nested diamonds, a solid diamond at each tip, data in the middle. */
+export function DiamondStamp({ data, ...props }: StampProps) {
+  return (
+    <StampSvg {...props} label={`Carimbo de ${data.name}`}>
+      <Outline d={diamondPath(0)} retrace={diamondPath(2)} />
+      <path d={diamondPath(1, 16)} strokeWidth={1} opacity={0.8} />
+      {diamond(44, 9)}
+      {diamond(176, 9)}
+      <Line y={80} size={10} max={70}>
+        BLKLIGHT
+      </Line>
+      <Line y={106} size={14} max={126}>
+        {data.name}
+      </Line>
+      <Line y={126} size={11} max={118}>
+        {data.date.replace(/·/g, " · ")}
+      </Line>
+      <Line y={146} size={10} max={84}>
+        {data.ref}
+      </Line>
+    </StampSvg>
+  );
+}
+
 /** Ruled postage label: city and date, sender, reference. HTML so it scales with text. */
 export function LabelStamp({
   data,
@@ -299,7 +365,7 @@ export function LabelStamp({
       style={{
         color,
         transform: rotate ? `rotate(${rotate}deg)` : undefined,
-        filter: finish === "emboss" ? EMBOSS : undefined,
+        filter: FINISH[finish],
         ...style,
       }}
     >
@@ -322,66 +388,134 @@ export function LabelStamp({
 const HOLO =
   "conic-gradient(from 210deg at 45% 55%, #f5c6d8, #c8d8ff, #a6f0e0, #fff2b3, #ffc2a8, #d9c2ff, #b8e6ff, #f5c6d8)";
 
-/** Holographic oval sticker: organization on the top arc, date in the middle, ref below. */
+const SHEEN =
+  "linear-gradient(115deg, transparent 30%, rgb(255 255 255 / 0.5) 45%, transparent 60%)";
+
+const foil = (tint?: string) =>
+  tint
+    ? `${SHEEN}, radial-gradient(ellipse at 35% 30%, color-mix(in srgb, ${tint} 55%, white), ${tint} 55%, color-mix(in srgb, ${tint} 75%, black))`
+    : `${SHEEN}, ${HOLO}`;
+
+/** Grooves cut into the foil: dark, translucent, so the foil shows through. */
+const GROOVE = "rgb(38 38 50 / 0.62)";
+
+export const ORG_STAMPS = {
+  triangle: TriangleStamp,
+  wax: WaxStamp,
+  gear: GearStamp,
+  diamond: DiamondStamp,
+} as const;
+
+export type StampShape = keyof typeof ORG_STAMPS;
+
+/** Silhouette of each drawn stamp, used to cut the foil to the same shape. */
+const SILHOUETTE: Record<StampShape, string> = {
+  triangle: `<path transform='translate(0 14)' d='${triPath(0)}'/>`,
+  wax: `<path d='${waxPath(0)}'/>`,
+  gear: `<path d='${gearPath(0)}'/>`,
+  diamond: `<path d='${diamondPath(0)}'/>`,
+};
+
+const maskOf = (shape: StampShape) =>
+  `url("data:image/svg+xml,${encodeURIComponent(
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'>${SILHOUETTE[shape]}</svg>`,
+  )}")`;
+
+/**
+ * Holographic seal: a foil sticker lying flat on the paper, with the stamp
+ * engraved into it. `shape` reuses a stamp's outline; "oval" is the classic
+ * date sticker.
+ */
 export function HoloSeal({
   data,
+  shape = "oval",
   rotate = 0,
   tint,
   className,
 }: Omit<StampProps, "color" | "finish"> & {
-  /** Solid foil (e.g. orange) instead of the rainbow. */
+  shape?: "oval" | StampShape;
+  /** Solid foil (e.g. orange, silver) instead of the rainbow. */
   tint?: string;
 }) {
   const id = useId().replace(/:/g, "");
+  const transform = rotate ? `rotate(${rotate}deg)` : undefined;
+
+  if (shape !== "oval") {
+    const Stamp = ORG_STAMPS[shape];
+    const mask = maskOf(shape);
+    return (
+      <div
+        className={cn("relative aspect-square w-44", className)}
+        style={{ transform }}
+      >
+        {/* Contact shadow only: the sticker is stuck down, not floating. */}
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            background: foil(tint),
+            maskImage: mask,
+            WebkitMaskImage: mask,
+            maskSize: "100% 100%",
+            WebkitMaskSize: "100% 100%",
+            filter: "drop-shadow(0 0.5px 0.5px rgb(0 0 0 / 0.35))",
+          }}
+        />
+        <Stamp
+          data={data}
+          finish="engrave"
+          color={GROOVE}
+          className="relative size-full"
+        />
+      </div>
+    );
+  }
+
   return (
     <div
       role="img"
       aria-label={`Selo holográfico de ${data.name}, ${data.shortDate}, referência ${data.ref}`}
       className={cn(
-        "relative aspect-[1.35] w-44 overflow-hidden rounded-[50%] shadow-[inset_0_2px_3px_rgb(255_255_255/0.7),inset_0_-3px_6px_rgb(0_0_0/0.25),0_6px_14px_-6px_rgb(0_0_0/0.5)]",
+        "relative aspect-[1.35] w-44 overflow-hidden rounded-[50%] shadow-[0_0.5px_1px_rgb(0_0_0/0.35),inset_0_0_0_1px_rgb(0_0_0/0.12),inset_0_1px_1px_rgb(255_255_255/0.6)]",
         className,
       )}
-      style={{
-        background: tint
-          ? `radial-gradient(ellipse at 35% 30%, color-mix(in srgb, ${tint} 55%, white), ${tint} 55%, color-mix(in srgb, ${tint} 70%, black))`
-          : HOLO,
-        transform: rotate ? `rotate(${rotate}deg)` : undefined,
-      }}
+      style={{ background: foil(tint), transform }}
     >
-      <span
-        aria-hidden
-        className="absolute inset-0 bg-[linear-gradient(115deg,transparent_30%,rgb(255_255_255/0.55)_45%,transparent_60%)] mix-blend-overlay"
-      />
       <svg
         viewBox="0 0 270 200"
-        className="relative size-full font-sans"
+        className="relative size-full font-mono uppercase"
         aria-hidden="true"
+        style={{ filter: FINISH.engrave }}
       >
         <defs>
-          <path id={`top-${id}`} d="M40 110 A95 78 0 0 1 230 110" />
-          <path id={`bottom-${id}`} d="M44 106 A91 82 0 0 0 226 106" />
+          <path id={`top-${id}`} d="M52 110 A83 70 0 0 1 218 110" />
+          <path id={`bottom-${id}`} d="M56 104 A79 72 0 0 0 214 104" />
         </defs>
-        <g
-          fill="rgb(40 40 52 / 0.72)"
-          style={{ filter: "drop-shadow(0 1px 0 rgb(255 255 255 / 0.7))" }}
-          fontWeight={700}
-          letterSpacing="0.08em"
-        >
-          <text fontSize={22}>
+        <ellipse
+          cx={135}
+          cy={100}
+          rx={124}
+          ry={88}
+          fill="none"
+          stroke={GROOVE}
+          strokeWidth={1.6}
+        />
+        <g fill={GROOVE} letterSpacing="0.08em">
+          <text fontSize={20}>
             <textPath href={`#top-${id}`} startOffset="50%" textAnchor="middle">
-              {data.name.toUpperCase()}
+              {data.name}
             </textPath>
           </text>
           <text
-            fontSize={46}
+            fontSize={40}
             x={135}
-            y={118}
+            y={116}
             textAnchor="middle"
-            letterSpacing="0"
+            letterSpacing="0.02em"
           >
             {data.shortDate}
           </text>
-          <text fontSize={20}>
+          <text fontSize={18}>
             <textPath
               href={`#bottom-${id}`}
               startOffset="50%"
@@ -390,16 +524,10 @@ export function HoloSeal({
               {`REF: ${data.ref}`}
             </textPath>
           </text>
-          <circle cx={135} cy={52} r={4} />
-          <circle cx={135} cy={144} r={4} />
+          <circle cx={135} cy={60} r={3.5} />
+          <circle cx={135} cy={144} r={3.5} />
         </g>
       </svg>
     </div>
   );
 }
-
-export const ORG_STAMPS = {
-  triangle: TriangleStamp,
-  wax: WaxStamp,
-  gear: GearStamp,
-} as const;

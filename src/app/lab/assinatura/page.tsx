@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { DigitalSignature } from "@/components/digital-signature";
 import {
+  DiamondStamp,
   GearStamp,
   HoloSeal,
   LabelStamp,
@@ -43,6 +44,12 @@ const STOCKS: {
   { id: "laranja", label: "laranja · tinta clara", bg: "#ff6a13", ink: "#fff4ea", finish: "ink" },
   { id: "preto", label: "preto · relevo", bg: "#141414", ink: "#6e6e69", finish: "emboss" },
 ]
+
+const SEAL_STOCKS: { label: string; bg: string; tint?: string }[] = [
+  { label: "holográfico em cartão cinza", bg: "#dcdcd6" },
+  { label: "laranja em grafite", bg: "#2b2b2b", tint: "#ff6a13" },
+  { label: "prata em preto", bg: "#141414", tint: "#b8bcc4" },
+];
 
 const Section = ({
   title,
@@ -106,10 +113,11 @@ export default function SignatureLabPage() {
                 className="background-texture rounded-md"
                 style={{ background: stock.bg, color: stock.ink }}
               >
-                <div className="texture-item grid grid-cols-2 place-items-center gap-6 p-6">
-                  <TriangleStamp data={ORG} finish={stock.finish} className="w-48" />
-                  <WaxStamp data={ORG} finish={stock.finish} rotate={-6} className="w-48" />
-                  <GearStamp data={ORG} finish={stock.finish} rotate={4} className="w-48" />
+                <div className="texture-item grid grid-cols-2 place-items-center gap-6 p-6 sm:grid-cols-3">
+                  <DiamondStamp data={ORG} finish={stock.finish} rotate={-3} className="w-44" />
+                  <TriangleStamp data={ORG} finish={stock.finish} className="w-44" />
+                  <WaxStamp data={ORG} finish={stock.finish} rotate={-6} className="w-44" />
+                  <GearStamp data={ORG} finish={stock.finish} rotate={4} className="w-44" />
                   <LabelStamp data={ORG} finish={stock.finish} className="w-44" />
                 </div>
               </div>
@@ -121,21 +129,26 @@ export default function SignatureLabPage() {
 
       <Section
         title="Selo holográfico"
-        hint="Adesivo com a data de publicação. Bom para destacar documentos oficiais ou verificados; o laranja é a versão de alerta."
+        hint="Folha metálica colada no papel, com o carimbo gravado nela. A forma vem dos carimbos; o oval é o selo de data. Laranja para alerta, prata para documentos internos."
       >
-        <div className="flex flex-wrap items-center gap-10">
-          <figure className="flex flex-col items-center gap-3">
-            <HoloSeal data={ORG} rotate={-4} />
-            <Caption>holográfico</Caption>
-          </figure>
-          <figure className="flex flex-col items-center gap-3">
-            <HoloSeal data={ORG} tint="#ff6a13" rotate={3} />
-            <Caption>laranja</Caption>
-          </figure>
-          <figure className="flex flex-col items-center gap-3">
-            <HoloSeal data={ORG} tint="#9ca3af" />
-            <Caption>prata</Caption>
-          </figure>
+        <div className="flex flex-col gap-6">
+          {SEAL_STOCKS.map((stock) => (
+            <figure key={stock.label} className="flex flex-col gap-3">
+              <div
+                className="background-texture rounded-md"
+                style={{ background: stock.bg }}
+              >
+                <div className="texture-item flex flex-wrap items-center justify-around gap-6 p-6">
+                  <HoloSeal data={ORG} tint={stock.tint} shape="diamond" rotate={-4} className="w-40" />
+                  <HoloSeal data={ORG} tint={stock.tint} shape="wax" rotate={5} className="w-40" />
+                  <HoloSeal data={ORG} tint={stock.tint} shape="gear" rotate={-3} className="w-40" />
+                  <HoloSeal data={ORG} tint={stock.tint} shape="triangle" className="w-40" />
+                  <HoloSeal data={ORG} tint={stock.tint} rotate={3} className="w-40" />
+                </div>
+              </div>
+              <Caption>{stock.label}</Caption>
+            </figure>
+          ))}
         </div>
       </Section>
 
@@ -162,8 +175,9 @@ export default function SignatureLabPage() {
                 <DigitalSignature {...AUTHOR} />
                 <HoloSeal
                   data={ORG}
+                  shape="diamond"
                   rotate={-6}
-                  className="absolute -right-2 -bottom-6 w-32"
+                  className="absolute -right-3 -bottom-10 w-32"
                 />
               </div>
               <div className="flex items-end justify-between gap-4 pt-4">
