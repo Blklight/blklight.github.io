@@ -48,8 +48,8 @@ const ACTION =
   "flex items-center gap-1.5 h-8 px-2 rounded-xs text-xs font-mono uppercase tracking-wider transition-colors hover:bg-black/5 dark:hover:bg-white/10 disabled:opacity-30 disabled:pointer-events-none outline-none focus-visible:ring-2 focus-visible:ring-current [&_svg]:size-4";
 
 /**
- * S-curve joining a raised tab to the lower middle edge. Fixed 48x56 box, so
- * the 20px drop matches the h-14 tabs and the h-9 middle exactly.
+ * S-curve joining a raised tab to the lower middle edge. Fixed 64x64 box, so
+ * the 40px drop matches the h-16 tabs and the h-6 middle exactly.
  */
 const Dip = ({
   fill,
@@ -62,11 +62,11 @@ const Dip = ({
 }) => (
   <svg
     aria-hidden="true"
-    viewBox="0 0 48 56"
-    className={cn("h-14 w-12 shrink-0", flip && "-scale-x-100")}
+    viewBox="0 0 64 64"
+    className={cn("size-16 shrink-0", flip && "-scale-x-100")}
   >
-    <path d="M0 0C24 0 24 20 48 20V56H0Z" fill={fill} />
-    <path d="M0 0.5C24 0.5 24 20.5 48 20.5" fill="none" stroke={stroke} />
+    <path d="M0 0C32 0 32 40 64 40V64H0Z" fill={fill} />
+    <path d="M0 0.5C32 0.5 32 40.5 64 40.5" fill="none" stroke={stroke} />
   </svg>
 );
 
@@ -115,19 +115,19 @@ export function DocumentPaperHeader({
       {/* Raised tabs at both ends, the edge dipping between them (one silhouette). */}
       <div className="flex items-end">
         <div
-          className="flex h-14 shrink-0 items-center rounded-tl-3xl border-t border-l bg-background pr-1 pl-5"
+          className="flex h-16 shrink-0 items-center rounded-tl-3xl border-t border-l bg-background pr-1 pl-5"
           style={surface}
         >
           <span className={cn(chip, typeTheme(type).solid)}>{typeLabel}</span>
         </div>
         <Dip fill={fill} stroke={border} />
         <div
-          className="h-9 min-w-0 flex-1 border-t bg-background"
+          className="h-6 min-w-0 flex-1 border-t bg-background"
           style={surface}
         />
         <Dip fill={fill} stroke={border} flip />
         <div
-          className="flex h-14 shrink-0 items-center gap-2 rounded-tr-3xl border-t border-r bg-background pr-5 pl-1"
+          className="flex h-16 shrink-0 items-center gap-2 rounded-tr-3xl border-t border-r bg-background pr-5 pl-1"
           style={surface}
         >
           {save && saveLabel(save) && (
