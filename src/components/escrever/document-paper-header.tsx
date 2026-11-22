@@ -25,8 +25,10 @@ export interface DocumentPaperHeaderProps {
   status: DocumentStatus;
   type: string;
   typeLabel: string;
-  onOpenTemplates?: () => void;
-  designTrigger?: ReactNode;
+  /** Extra tabs at the right end of the tab row (side panel on narrow screens). */
+  extraTabs?: ReactNode;
+  /** Design mode: the text is read-only, so the formatting tools are off. */
+  locked?: boolean;
 }
 
 const ACTION =
@@ -49,8 +51,8 @@ export function DocumentPaperHeader({
   status,
   type,
   typeLabel,
-  onOpenTemplates,
-  designTrigger,
+  extraTabs,
+  locked = false,
 }: DocumentPaperHeaderProps) {
   const state = useEditorState({
     editor,
@@ -87,11 +89,16 @@ export function DocumentPaperHeader({
         >
           {STATUS_LABEL[status]}
         </span>
+        {extraTabs && <div className="ml-auto">{extraTabs}</div>}
       </div>
       <div
         role="toolbar"
         aria-label="Formatação"
-        className="flex items-center gap-0.5 overflow-x-auto px-2 py-1.5 border-x border-t bg-background shadow-[0_6px_16px_-10px_rgb(0_0_0/0.35)] transition-colors duration-300"
+        inert={locked}
+        className={cn(
+          "flex items-center gap-0.5 overflow-x-auto px-2 py-1.5 border-x border-t bg-background shadow-[0_6px_16px_-10px_rgb(0_0_0/0.35)] transition-[color,background-color,opacity] duration-300",
+          locked && "*:opacity-40",
+        )}
         style={{
           borderColor: border,
           backgroundColor: paperColors?.bg || undefined,
@@ -147,14 +154,6 @@ export function DocumentPaperHeader({
         >
           <Redo />
         </button>
-        <div className="ml-auto flex shrink-0 items-center gap-1">
-          {onOpenTemplates && (
-            <button type="button" onClick={onOpenTemplates} className={ACTION}>
-              Temas
-            </button>
-          )}
-          {designTrigger}
-        </div>
       </div>
     </div>
   );
