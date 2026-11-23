@@ -5,6 +5,7 @@ import type {
   FeedResult,
   ProfileMe,
   ProfilePublic,
+  UpdateProfileRequest,
 } from "@/types/api.types";
 
 /**
@@ -54,3 +55,11 @@ export const getAuthorDocuments = (
 
 export const getCurrentProfile = (): Promise<ProfileMe> =>
   apiClient.get<ApiResponse<ProfileMe>>("/api/v1/profiles/me").then(unwrap);
+
+/** PATCH /api/v1/profiles/me — partial update of the signed-in user's profile. */
+export const updateMyProfile = (
+  body: UpdateProfileRequest,
+): Promise<ProfileMe> =>
+  apiClient
+    .patch<ApiResponse<ProfileMe>>("/api/v1/profiles/me", body)
+    .then(unwrap);

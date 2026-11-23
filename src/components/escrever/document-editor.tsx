@@ -55,6 +55,12 @@ import {
   EditorBlockMenu,
   EditorBubbleMenu,
 } from "@/components/escrever/editor-toolbar";
+import {
+  ImageInsertDialog,
+  imageFiles,
+  pastedImageFiles,
+  uploadAndInsert,
+} from "@/components/escrever/image-insert";
 import { JsonPreviewModal, LinkModal } from "@/components/escrever/modals";
 import { PublishPanel } from "@/components/escrever/publish-panel";
 import {
@@ -343,6 +349,24 @@ export function DocumentEditor({
     editorProps: {
       attributes: {
         class: "focus:outline-none min-h-[50vh] text-foreground",
+      },
+      // Pasted or dropped image files are uploaded instead of embedded as data URLs.
+      handlePaste: (view, event) => {
+        const files = pastedImageFiles(event.clipboardData);
+        if (files.length === 0) return false;
+        for (const file of files) void uploadAndInsert(view, file);
+        return true;
+      },
+      handleDrop: (view, event, _slice, moved) => {
+        const files = moved ? [] : imageFiles(event.dataTransfer?.files);
+        if (files.length === 0) return false;
+        event.preventDefault();
+        const pos = view.posAtCoords({
+          left: event.clientX,
+          top: event.clientY,
+        })?.pos;
+        for (const file of files) void uploadAndInsert(view, file, pos);
+        return true;
       },
     },
     onUpdate: ({ editor: e }) => {
@@ -877,6 +901,7 @@ export function DocumentEditor({
                         <EditorBlockMenu editor={editor} />
                         <BlockHandle editor={editor} />
                         <SlashMenu />
+                        <ImageInsertDialog />
                       </>
                     )}
                   </div>

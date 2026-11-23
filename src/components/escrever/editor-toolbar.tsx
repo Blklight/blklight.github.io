@@ -32,6 +32,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { useImageInsertStore } from "@/components/escrever/image-insert";
 import { cn } from "@/lib/utils";
 
 const PANEL =
@@ -233,10 +234,7 @@ export const MEDIA_BLOCKS: Block[] = [
   {
     label: "Imagem",
     icon: <ImageIcon />,
-    run: (e) => {
-      const url = window.prompt("URL da imagem:");
-      if (url) e.chain().focus().setImage({ src: url }).run();
-    },
+    run: (e) => useImageInsertStore.getState().open(e),
   },
   {
     label: "Linha",

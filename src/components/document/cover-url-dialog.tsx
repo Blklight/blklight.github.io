@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { ImageUp } from "lucide-react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,6 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { IMAGE_ACCEPT, uploadWithToast } from "@/features/uploads/api";
 
 interface CoverUrlDialogProps {
   isOpen: boolean;
@@ -26,6 +28,17 @@ export function CoverUrlDialog({
   initialUrl = "",
 }: CoverUrlDialogProps) {
   const [url, setUrl] = useState(initialUrl);
+  const fileInput = useRef<HTMLInputElement>(null);
+
+  // Covers are stored whole (no crop): the article and every card crop it with CSS.
+  const handleFile = async (file: File) => {
+    onClose();
+    const uploaded = await uploadWithToast(file, "editor", {
+      loading: "Enviando capa…",
+      success: "Capa enviada",
+    });
+    if (uploaded) onSubmit(uploaded.url);
+  };
 
   const handleSubmit = () => {
     if (url.trim()) {
@@ -41,13 +54,35 @@ export function CoverUrlDialog({
         <DialogHeader>
           <DialogTitle>Adicionar imagem de capa</DialogTitle>
           <DialogDescription>
-            Insira a URL de uma imagem para usar como capa do documento.
+            Envie um arquivo (otimizado automaticamente) ou cole a URL de uma
+            imagem para usar como capa do documento.
           </DialogDescription>
         </DialogHeader>
+        <input
+          ref={fileInput}
+          type="file"
+          accept={IMAGE_ACCEPT}
+          hidden
+          onChange={(event) => {
+            const file = event.target.files?.[0];
+            event.target.value = "";
+            if (file) void handleFile(file);
+          }}
+        />
+        <Button variant="outline" onClick={() => fileInput.current?.click()}>
+          <ImageUp className="size-4" />
+          Enviar arquivo
+        </Button>
+        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+          <span className="h-px flex-1 bg-border" />
+          ou
+          <span className="h-px flex-1 bg-border" />
+        </div>
         <Input
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="https://exemplo.com/imagem.jpg"
+          aria-label="URL da capa"
           onKeyDown={(e) => {
             if (e.key === "Enter") handleSubmit();
           }}
