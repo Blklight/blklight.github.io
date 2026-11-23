@@ -2,7 +2,6 @@
 
 import { ImageUp } from "lucide-react";
 import { useRef, useState } from "react";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,7 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { IMAGE_ACCEPT, uploadImage } from "@/features/uploads/api";
+import { IMAGE_ACCEPT, uploadWithToast } from "@/features/uploads/api";
 
 interface CoverUrlDialogProps {
   isOpen: boolean;
@@ -34,17 +33,11 @@ export function CoverUrlDialog({
   // Covers are stored whole (no crop): the article and every card crop it with CSS.
   const handleFile = async (file: File) => {
     onClose();
-    const upload = uploadImage(file, "editor");
-    toast.promise(upload, {
+    const uploaded = await uploadWithToast(file, "editor", {
       loading: "Enviando capa…",
       success: "Capa enviada",
-      error: (error: Error) => error.message,
     });
-    try {
-      onSubmit((await upload).url);
-    } catch {
-      // already reported by the toast
-    }
+    if (uploaded) onSubmit(uploaded.url);
   };
 
   const handleSubmit = () => {

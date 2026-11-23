@@ -4,7 +4,6 @@ import type { EditorView } from "@tiptap/pm/view";
 import type { Editor } from "@tiptap/react";
 import { ImageUp } from "lucide-react";
 import { useRef, useState } from "react";
-import { toast } from "sonner";
 import { create } from "zustand";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +15,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { IMAGE_ACCEPT, uploadImage } from "@/features/uploads/api";
+import { IMAGE_ACCEPT, uploadWithToast } from "@/features/uploads/api";
 
 /** Image files among pasted or dropped files. */
 export function imageFiles(files: FileList | null | undefined): File[] {
@@ -33,23 +32,20 @@ export async function uploadAndInsert(
   view: EditorView,
   file: File,
   pos?: number,
+  alt?: string,
 ) {
-  const upload = uploadImage(file, "editor");
-  toast.promise(upload, {
+  const uploaded = await uploadWithToast(file, "editor", {
     loading: "Enviando imagem…",
     success: "Imagem enviada",
-    error: (error: Error) => error.message,
   });
-  let url: string;
-  try {
-    ({ url } = await upload);
-  } catch {
-    return; // already reported by the toast
-  }
+  if (!uploaded) return;
   if (view.isDestroyed) return;
 
   const { state } = view;
-  const node = state.schema.nodes.image?.create({ src: url });
+  const node = state.schema.nodes.image?.create({
+    src: uploaded.url,
+    alt: alt || null,
+  });
   if (!node) return;
   const at =
     pos === undefined ? undefined : Math.min(pos, state.doc.content.size);
@@ -77,16 +73,23 @@ export const useImageInsertStore = create<ImageInsertState>((set) => ({
 export function ImageInsertDialog() {
   const { editor, close } = useImageInsertStore();
   const [url, setUrl] = useState("");
+  const [alt, setAlt] = useState("");
   const fileInput = useRef<HTMLInputElement>(null);
 
   const finish = () => {
     setUrl("");
+    setAlt("");
     close();
   };
 
   const insertUrl = () => {
     const src = url.trim();
-    if (editor && src) editor.chain().focus().setImage({ src }).run();
+    if (editor && src)
+      editor
+        .chain()
+        .focus()
+        .setImage({ src, alt: alt.trim() || undefined })
+        .run();
     finish();
   };
 
@@ -101,6 +104,13 @@ export function ImageInsertDialog() {
           </DialogDescription>
         </DialogHeader>
 
+        <Input
+          value={alt}
+          onChange={(event) => setAlt(event.target.value)}
+          placeholder="Descrição da imagem (para leitores de tela)"
+          aria-label="Descrição da imagem"
+        />
+
         <input
           ref={fileInput}
           type="file"
@@ -109,7 +119,8 @@ export function ImageInsertDialog() {
           onChange={(event) => {
             const file = event.target.files?.[0];
             event.target.value = "";
-            if (editor && file) void uploadAndInsert(editor.view, file);
+            if (editor && file)
+              void uploadAndInsert(editor.view, file, undefined, alt.trim());
             finish();
           }}
         />

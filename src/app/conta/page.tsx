@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { TextureOverlay } from "@/components/ui/texture-overlay";
 import { updateMyProfile } from "@/features/profile/api";
 import { profileKeys, useCurrentProfile } from "@/features/profile/queries";
-import { IMAGE_ACCEPT, uploadImage } from "@/features/uploads/api";
+import { IMAGE_ACCEPT, uploadWithToast } from "@/features/uploads/api";
 import { logout } from "@/lib/session";
 import { useAuthStore } from "@/store/useAuthStore";
 
@@ -30,13 +30,13 @@ function AvatarSection({ username }: { username: string }) {
   const [busy, setBusy] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
 
-  const save = async (avatarUrl: string | null, success: string) => {
+  const save = async (avatarUrl: string | null, success?: string) => {
     setBusy(true);
     try {
       await updateMyProfile({ avatarUrl });
       await queryClient.invalidateQueries({ queryKey: profileKeys.me() });
       setUrl("");
-      toast.success(success);
+      if (success) toast.success(success);
     } catch {
       toast.error("Não foi possível salvar a foto.");
     } finally {
@@ -46,17 +46,12 @@ function AvatarSection({ username }: { username: string }) {
 
   const upload = async (file: File) => {
     setBusy(true);
-    try {
-      const { url: uploaded } = await uploadImage(file, "avatar");
-      await save(uploaded, "Foto atualizada");
-    } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Não foi possível enviar a imagem.",
-      );
-      setBusy(false);
-    }
+    const uploaded = await uploadWithToast(file, "avatar", {
+      loading: "Enviando foto…",
+      success: "Foto atualizada",
+    });
+    if (uploaded) await save(uploaded.url);
+    else setBusy(false);
   };
 
   const validUrl = /^https?:\/\/\S+$/.test(url.trim());

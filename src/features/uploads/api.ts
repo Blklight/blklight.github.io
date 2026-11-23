@@ -1,4 +1,5 @@
 import { isAxiosError } from "axios";
+import { toast } from "sonner";
 import { apiClient, unwrap } from "@/lib/api-client";
 import type { ApiResponse } from "@/types/api.types";
 
@@ -57,4 +58,25 @@ function uploadErrorMessage(error: unknown): string {
   if (status === 429) return "Muitos envios seguidos. Tente em instantes.";
   if (status === 503) return "Envio de imagens indisponível no momento.";
   return "Não foi possível enviar a imagem.";
+}
+
+/**
+ * uploadImage with a loading/success/error toast. Resolves to null on failure
+ * (the toast already told the user), so callers only handle the happy path.
+ */
+export async function uploadWithToast(
+  file: File,
+  purpose: UploadPurpose,
+  messages: { loading: string; success: string },
+): Promise<UploadedImage | null> {
+  const upload = uploadImage(file, purpose);
+  toast.promise(upload, {
+    ...messages,
+    error: (error: Error) => error.message,
+  });
+  try {
+    return await upload;
+  } catch {
+    return null;
+  }
 }
