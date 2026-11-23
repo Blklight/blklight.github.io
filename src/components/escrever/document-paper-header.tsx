@@ -4,7 +4,6 @@ import type { Editor } from "@tiptap/react";
 import { useEditorState } from "@tiptap/react";
 import { Redo, Undo } from "lucide-react";
 import { Fragment, type ReactNode } from "react";
-import type { PaperColors } from "@/components/document/types";
 import { typeTheme } from "@/components/feed/cards/card-theme";
 import { cn } from "@/lib/utils";
 import type { DocumentStatus } from "@/types/api.types";
@@ -21,7 +20,6 @@ export interface DocumentPaperHeaderProps {
   editor: Editor;
   typography: "sans" | "serif" | "mono";
   onTypographyChange: (typography: "sans" | "serif" | "mono") => void;
-  paperColors: PaperColors | null;
   status: DocumentStatus;
   type: string;
   typeLabel: string;
@@ -29,6 +27,8 @@ export interface DocumentPaperHeaderProps {
   extraTabs?: ReactNode;
   /** Design mode: the text is read-only, so the formatting tools are off. */
   locked?: boolean;
+  /** Document actions (save, publish) at the end of the bar; stay active in design mode. */
+  actions?: ReactNode;
   /** Save state, shown next to the status. */
   save?: { lastSaved: Date | null; isSaving: boolean; dirty: boolean };
 }
@@ -44,30 +44,36 @@ function saveLabel(save: NonNullable<DocumentPaperHeaderProps["save"]>) {
   return save.lastSaved ? `Salvo às ${TIME.format(save.lastSaved)}` : null;
 }
 
-const ACTION =
-  "flex items-center gap-1.5 h-8 px-2 rounded-xs text-xs font-mono uppercase tracking-wider transition-colors hover:bg-black/5 dark:hover:bg-white/10 disabled:opacity-30 disabled:pointer-events-none outline-none focus-visible:ring-2 focus-visible:ring-current [&_svg]:size-4";
+export const ACTION =
+  "flex items-center gap-1.5 h-8 px-2 rounded-xs text-xs font-mono uppercase tracking-wider transition-colors hover:bg-current/10 disabled:opacity-30 disabled:pointer-events-none outline-none focus-visible:ring-2 focus-visible:ring-current [&_svg]:size-4";
 
 /**
- * S-curve joining a raised tab to the lower middle edge. Fixed 56x48 box, so
- * the 32px drop matches the h-12 tabs and the h-4 middle exactly.
+ * The bar is the reverse of the theme (ink on light and book, light on dark),
+ * with the Blklight letterhead grain, which is built for that inverted block.
  */
-const Dip = ({
-  fill,
-  stroke,
-  flip = false,
-}: {
-  fill: string;
-  stroke: string;
-  flip?: boolean;
-}) => (
-  <svg
-    aria-hidden="true"
-    viewBox="0 0 56 48"
-    className={cn("h-12 w-14 shrink-0", flip && "-scale-x-100")}
-  >
-    <path d="M0 0C28 0 28 32 56 32V48H0Z" fill={fill} />
-    <path d="M0 0.5C28 0.5 28 32.5 56 32.5" fill="none" stroke={stroke} />
-  </svg>
+const INK =
+  "relative bg-foreground text-background letterhead-grain-noise letterhead-grain-overlay";
+
+const DIP_MASK = `url("data:image/svg+xml,${encodeURIComponent(
+  "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 48'><path d='M0 0C28 0 28 32 56 32V48H0Z'/></svg>",
+)}")`;
+
+/**
+ * S-curve joining a raised tab to the lower middle edge: the tabs' grained
+ * surface cut by a mask, so the joins match. Fixed 56x48 box, so the 32px
+ * drop matches the h-12 tabs and the h-4 middle exactly.
+ */
+const Dip = ({ flip = false }: { flip?: boolean }) => (
+  <div
+    aria-hidden
+    className={cn("h-12 w-14 shrink-0", INK, flip && "-scale-x-100")}
+    style={{
+      maskImage: DIP_MASK,
+      WebkitMaskImage: DIP_MASK,
+      maskSize: "100% 100%",
+      WebkitMaskSize: "100% 100%",
+    }}
+  />
 );
 
 const Divider = () => (
@@ -84,13 +90,13 @@ export function DocumentPaperHeader({
   editor,
   typography,
   onTypographyChange,
-  paperColors,
   status,
   type,
   typeLabel,
   extraTabs,
   locked = false,
   save,
+  actions,
 }: DocumentPaperHeaderProps) {
   const state = useEditorState({
     editor,
@@ -100,13 +106,6 @@ export function DocumentPaperHeader({
       active: TEXT_BLOCKS.map((block) => block.isActive?.(e) ?? false),
     }),
   });
-  const border = paperColors?.border || "var(--foreground)";
-  const fill = paperColors?.bg || "var(--background)";
-  const surface = {
-    borderColor: border,
-    backgroundColor: paperColors?.bg || undefined,
-    color: paperColors?.text || undefined,
-  };
   const chip =
     "flex h-6 items-center rounded-full px-2.5 font-mono text-[0.7rem] uppercase tracking-wider";
 
@@ -115,20 +114,21 @@ export function DocumentPaperHeader({
       {/* Raised tabs at both ends, the edge dipping between them (one silhouette). */}
       <div className="flex items-end">
         <div
-          className="flex h-12 shrink-0 items-start pt-2 rounded-tl-3xl border-t border-l bg-background pr-1 pl-5"
-          style={surface}
+          className={cn(
+            "flex h-12 shrink-0 items-start pt-2 rounded-tl-3xl pr-1 pl-5",
+            INK,
+          )}
         >
           <span className={cn(chip, typeTheme(type).solid)}>{typeLabel}</span>
         </div>
-        <Dip fill={fill} stroke={border} />
+        <Dip />
+        <div className={cn("h-4 min-w-0 flex-1", INK)} />
+        <Dip flip />
         <div
-          className="h-4 min-w-0 flex-1 border-t bg-background"
-          style={surface}
-        />
-        <Dip fill={fill} stroke={border} flip />
-        <div
-          className="flex h-12 shrink-0 items-start pt-2 gap-2 rounded-tr-3xl border-t border-r bg-background pr-5 pl-1"
-          style={surface}
+          className={cn(
+            "flex h-12 shrink-0 items-start pt-2 gap-2 rounded-tr-3xl pr-5 pl-1",
+            INK,
+          )}
         >
           {save && saveLabel(save) && (
             <span
@@ -154,66 +154,77 @@ export function DocumentPaperHeader({
         </div>
       </div>
       <div
-        role="toolbar"
-        aria-label="Formatação"
-        inert={locked}
         className={cn(
-          "flex flex-wrap items-center gap-0.5 px-2 py-1 border-x border-b bg-background shadow-[0_6px_16px_-10px_rgb(0_0_0/0.35)] transition-[color,background-color,opacity] duration-300",
-          locked && "*:opacity-40",
+          "flex flex-wrap items-center gap-x-1 px-2 pb-1 shadow-[0_6px_16px_-10px_rgb(0_0_0/0.45)]",
+          INK,
         )}
-        style={surface}
       >
-        <TypographySelector
-          value={typography}
-          onChange={(value) =>
-            onTypographyChange(value as "sans" | "serif" | "mono")
-          }
-        />
-        <Divider />
-        {TEXT_BLOCKS.map((block, i) => (
-          <Fragment key={block.label}>
-            {i === 4 && <Divider />}
+        <div
+          role="toolbar"
+          aria-label="Formatação"
+          inert={locked}
+          className={cn(
+            "relative z-1 flex min-w-0 flex-1 flex-wrap items-center gap-0.5",
+            locked && "*:opacity-40",
+          )}
+        >
+          <TypographySelector
+            value={typography}
+            onChange={(value) =>
+              onTypographyChange(value as "sans" | "serif" | "mono")
+            }
+          />
+          <Divider />
+          {TEXT_BLOCKS.map((block, i) => (
+            <Fragment key={block.label}>
+              {i === 4 && <Divider />}
+              <button
+                type="button"
+                title={block.label}
+                aria-label={block.label}
+                aria-pressed={state.active[i]}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => block.run(editor)}
+                className={cn(
+                  ACTION,
+                  "px-1.5",
+                  state.active[i] && "bg-current/20 hover:bg-current/20",
+                )}
+              >
+                {block.icon}
+              </button>
+            </Fragment>
+          ))}
+          <div className="ml-auto flex items-center gap-0.5">
+            <Divider />
             <button
               type="button"
-              title={block.label}
-              aria-label={block.label}
-              aria-pressed={state.active[i]}
-              onMouseDown={(event) => event.preventDefault()}
-              onClick={() => block.run(editor)}
-              className={cn(
-                ACTION,
-                "px-1.5",
-                state.active[i] &&
-                  "bg-current/15 hover:bg-current/15 dark:hover:bg-current/15",
-              )}
+              aria-label="Desfazer"
+              title="Desfazer"
+              disabled={!state.undo}
+              onClick={() => editor.chain().focus().undo().run()}
+              className={ACTION}
             >
-              {block.icon}
+              <Undo />
             </button>
-          </Fragment>
-        ))}
-        <div className="ml-auto flex items-center gap-0.5">
-          <Divider />
-          <button
-            type="button"
-            aria-label="Desfazer"
-            title="Desfazer"
-            disabled={!state.undo}
-            onClick={() => editor.chain().focus().undo().run()}
-            className={ACTION}
-          >
-            <Undo />
-          </button>
-          <button
-            type="button"
-            aria-label="Refazer"
-            title="Refazer"
-            disabled={!state.redo}
-            onClick={() => editor.chain().focus().redo().run()}
-            className={ACTION}
-          >
-            <Redo />
-          </button>
+            <button
+              type="button"
+              aria-label="Refazer"
+              title="Refazer"
+              disabled={!state.redo}
+              onClick={() => editor.chain().focus().redo().run()}
+              className={ACTION}
+            >
+              <Redo />
+            </button>
+          </div>
         </div>
+        {actions && (
+          <div className="relative z-1 flex items-center gap-1">
+            <Divider />
+            {actions}
+          </div>
+        )}
       </div>
     </div>
   );

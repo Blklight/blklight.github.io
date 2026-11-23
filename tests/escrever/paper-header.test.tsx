@@ -18,7 +18,6 @@ const setup = () => {
       editor={editor}
       typography="sans"
       onTypographyChange={() => {}}
-      paperColors={null}
       status="draft"
       type="article"
       typeLabel="Artigo"

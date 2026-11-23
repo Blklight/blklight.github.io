@@ -126,7 +126,7 @@ export function TypographySelector({
         type="button"
         aria-expanded={isOpen}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-40 shrink-0 items-center gap-2 h-8 px-2 rounded-xs text-xs transition-colors hover:bg-black/5 dark:hover:bg-white/10 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-current"
+        className="flex w-40 shrink-0 items-center gap-2 h-8 px-2 rounded-xs text-xs transition-colors hover:bg-current/10 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-current"
       >
         <Type className="w-3.5 h-3.5 shrink-0" />
         <MarqueeText

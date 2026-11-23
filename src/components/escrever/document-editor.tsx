@@ -9,7 +9,7 @@ import TextAlign from "@tiptap/extension-text-align";
 import Typography from "@tiptap/extension-typography";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { Send } from "lucide-react";
+import { FileJson, Save, Send } from "lucide-react";
 import { motion } from "motion/react";
 import {
   useCallback,
@@ -47,12 +47,14 @@ import type {
 import { BlockHandle } from "@/components/escrever/block-handle";
 import type { DesignTab } from "@/components/escrever/design/sidebar";
 import { DocumentPaperFooter } from "@/components/escrever/document-paper-footer";
-import { DocumentPaperHeader } from "@/components/escrever/document-paper-header";
+import {
+  ACTION,
+  DocumentPaperHeader,
+} from "@/components/escrever/document-paper-header";
 import {
   EditorBlockMenu,
   EditorBubbleMenu,
 } from "@/components/escrever/editor-toolbar";
-import { FloatingActionBar } from "@/components/escrever/floating-action-bar";
 import { JsonPreviewModal, LinkModal } from "@/components/escrever/modals";
 import { PublishPanel } from "@/components/escrever/publish-panel";
 import {
@@ -605,7 +607,7 @@ export function DocumentEditor({
         size="sm"
         disabled={!isValid || !title?.trim() || isPublishing}
         data-testid="publish-button"
-        className="font-mono text-xs uppercase tracking-wider"
+        className="h-8 bg-background font-mono text-xs uppercase tracking-wider text-foreground hover:bg-background/90"
       >
         <Send className="w-4 h-4" />
         <span className="ml-2">Publicar</span>
@@ -662,285 +664,308 @@ export function DocumentEditor({
         {/* Editor Styles */}
         <EditorStyles />
 
-        <main className="relative z-10 py-12 bg-background rounded-xs">
-          <div className="mx-auto max-w-3xl px-4 md:px-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="relative"
-            >
-              <DocumentPaperHeader
-                editor={editor}
-                status={documentStatus}
-                typography={typography}
-                onTypographyChange={setTypography}
-                type={kind.type}
-                typeLabel={kind.label}
-                paperColors={paperColors}
-                locked={isDesignMode}
-                save={{ lastSaved, isSaving, dirty: hasUnsavedChanges }}
-                extraTabs={
-                  <SideTabs
-                    open={sidePanel}
-                    onToggle={toggleSidePanel}
-                    className="lg:hidden"
-                  />
-                }
-              />
-
-              {/* Side tabs pinned to the paper's right edge (wide screens);
-                  hidden while the design panels sit in the margins. */}
-              <div
-                className={cn(
-                  "absolute top-24 bottom-0 left-full hidden lg:block",
-                  isDesignMode && isWide && "lg:hidden",
-                )}
-              >
-                <SideTabs
-                  vertical
-                  open={sidePanel}
-                  onToggle={toggleSidePanel}
-                  className="sticky top-32"
-                />
-              </div>
-
-              {/* Document Container */}
-              <PaperSurface
-                paperColors={paperColors}
-                paperTexture={paperTexture}
-                textureStyle={textureStyle}
-                grains={paperStyle.grains}
-                grainSettings={paperStyle.grainSettings}
-                className={
-                  isDesignMode
-                    ? "outline-2 outline-dashed outline-offset-4 outline-foreground/40"
-                    : undefined
-                }
-                contentClassName="md:p-10 p-8"
-              >
-                {/* Paper itself (color, texture, grain): the background of design mode. */}
-                {isDesignMode && (
-                  <button
-                    type="button"
-                    aria-label="Editar papel"
-                    onClick={() => {
-                      // Keep the paper tab already open (texture, grain) instead of jumping back to colors.
-                      const current = isWide ? paperTab : activeTab;
-                      pickRegion(
-                        SURFACE_TABS.includes(current) ? current : "colors",
-                      );
-                    }}
-                    className="absolute inset-0 z-0 cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-current"
-                  />
-                )}
-
-                {/* Header Letterhead */}
-                {documentHeader.enabled && (
-                  <DesignRegion {...region("letterhead")} className="mb-4">
-                    <DocumentHeaderRenderer
-                      header={documentHeader}
-                      textContext={letterheadContext}
-                    />
-                  </DesignRegion>
-                )}
-
-                <DesignRegion {...region("font")} label="Título e fonte">
-                  {/* Title */}
-                  <Controller
-                    name="title"
-                    control={form.control}
-                    render={({ field }) => (
-                      <input
-                        {...field}
-                        type="text"
-                        readOnly={isDesignMode}
-                        placeholder={kind.titlePlaceholder}
-                        data-testid="editor-title-input"
-                        className={`w-full text-4xl md:text-5xl font-bold tracking-tight bg-transparent border-none outline-none mb-4 transition-colors duration-300 ${fontClass}`}
-                        style={{ color: paperColors?.text || undefined }}
-                      />
-                    )}
-                  />
-                  <style>{`
-            input[placeholder={kind.titlePlaceholder}]::placeholder {
-              color: ${paperColors?.muted || "hsl(var(--muted-foreground) / 0.5)"};
-            }
-          `}</style>
-                  {errors.title && (
-                    <p className="text-red-500 text-sm mb-2">
-                      {errors.title.message}
-                    </p>
-                  )}
-
-                  {/* Subtitle */}
-                  <Controller
-                    name="subtitle"
-                    control={form.control}
-                    render={({ field }) => (
-                      <input
-                        {...field}
-                        value={field.value || ""}
-                        type="text"
-                        readOnly={isDesignMode}
-                        placeholder={kind.abstractPlaceholder}
-                        data-testid="editor-subtitle-input"
-                        className={`w-full text-xl bg-transparent border-none outline-none mb-8 transition-colors duration-300 ${fontClass}`}
-                        style={{ color: paperColors?.muted || undefined }}
-                      />
-                    )}
-                  />
-                  <style>{`
-            input[placeholder={kind.abstractPlaceholder}]::placeholder {
-              color: ${paperColors?.muted || "hsl(var(--muted-foreground) / 0.5)"};
-            }
-          `}</style>
-                </DesignRegion>
-
-                {/* Cover Image */}
-                <DesignRegion {...region("cover")} className="mb-10">
-                  <div>
-                    <CoverImageEditor
-                      coverImage={coverImage ?? null}
-                      onCoverChange={handleCoverUpload}
-                      onCoverRemove={() => {
-                        setCoverImage(null);
-                        setCoverSettings({ ...DEFAULT_COVER_SETTINGS });
-                      }}
-                      settings={coverSettings}
-                      onSettingsChange={setCoverSettings}
-                      paperColors={paperColors}
-                    />
-                  </div>
-                </DesignRegion>
-
-                {/* Editor (read-only and faded in design mode) */}
-                <div
-                  data-testid="editor-content"
-                  lang="pt-BR"
-                  inert={isDesignMode}
-                  className={`relative z-10 editor-wrapper doc-prose editor-${typography} ${paperColors ? "custom-paper" : ""} ${isDesignMode ? "pointer-events-none select-none opacity-50 transition-opacity" : ""}`}
-                  style={{
-                    ["--custom-text-color" as string]: paperColors?.text,
-                    ["--custom-muted-color" as string]: paperColors?.muted,
-                  }}
-                >
-                  {isDesignMode && editor.isEmpty && <DesignSample />}
-                  <div hidden={isDesignMode && editor.isEmpty}>
-                    <EditorContent editor={editor} />
-                  </div>
-                  {!isDesignMode && (
-                    <>
-                      <EditorBubbleMenu
-                        editor={editor}
-                        onShowLinkModal={() => setShowLinkModal(true)}
-                      />
-                      <EditorBlockMenu editor={editor} />
-                      <BlockHandle editor={editor} />
-                      <SlashMenu />
-                    </>
-                  )}
-                </div>
-
-                {/* Signature */}
-                {isSignatureVisible(signatureContext) && (
-                  <DesignRegion {...region("signature")} className="mt-12">
-                    <SignatureBlock
-                      context={signatureContext}
-                      color={paperColors?.text}
-                      background={paperColors?.bg}
-                    />
-                  </DesignRegion>
-                )}
-
-                {/* Footer Letterhead */}
-                {documentFooter.enabled && (
-                  <DesignRegion
-                    {...region("letterhead")}
-                    label="Rodapé"
-                    className="mt-4"
-                  >
-                    <DocumentFooterRenderer
-                      footer={documentFooter}
-                      textContext={letterheadContext}
-                    />
-                  </DesignRegion>
-                )}
-              </PaperSurface>
-              {/* Paper status footer */}
-              <DocumentPaperFooter
-                wordCount={wordCount}
-                charCount={charCount}
-                paperColors={paperColors}
-              />
-            </motion.div>
-          </div>
-        </main>
-
-        {/* Design panels in the page margins (xl and up): the paper stays put. */}
-        {isDesignMode && isWide && (
-          <>
-            <aside className={cn(DESIGN_ASIDE, "right-[calc(50%+23.5rem)]")}>
-              <SidePanelFrame
-                title="Papel"
-                closeLabel="Sair do modo design"
-                onClose={() => setSidePanel(null)}
-              >
-                {designPanel(paperTab, setPaperTab, PAPER_TABS)}
-              </SidePanelFrame>
-            </aside>
-            <aside className={cn(DESIGN_ASIDE, "left-[calc(50%+23.5rem)]")}>
-              <SidePanelFrame
-                title="Partes do documento"
-                closeLabel="Sair do modo design"
-                onClose={() => setSidePanel(null)}
-              >
-                {designPanel(partsTab, setPartsTab, PARTS_TABS)}
-              </SidePanelFrame>
-            </aside>
-          </>
-        )}
-
-        {/* Themes: right sheet over the page, as before the side tabs. */}
-        <Sheet
-          open={sidePanel === "themes"}
-          onOpenChange={(open) => !open && setSidePanel(null)}
-        >
-          <SheetContent side="right" className="p-0">
-            <TemplatePicker
-              designStore={designStore}
-              onClose={() => setSidePanel(null)}
-            />
-          </SheetContent>
-        </Sheet>
-
-        <Sheet
-          open={isDesignMode && !isWide}
-          onOpenChange={(open) => !open && setSidePanel(null)}
-        >
-          <SheetContent
-            side="bottom"
-            className="data-[side=bottom]:h-[75dvh] p-0"
-          >
-            <SheetTitle className="sr-only">Design</SheetTitle>
-            <div className="h-full overflow-y-auto pt-10">
-              {designPanel(activeTab, setActiveTab)}
-            </div>
-          </SheetContent>
-        </Sheet>
-
-        {/* Publish flow: trigger (FAB button) + fullscreen panel. */}
+        {/* Publish flow: the trigger sits in the paper bar, the panel opens full screen. */}
         <ExpandableScreen
           layoutId="escrever-publish"
           contentRadius="0px"
           onExpandChange={setIsPublishOpen}
         >
-          <FloatingActionBar
-            isSaving={isSaving}
-            onSave={handleSubmit(onSave)}
-            publishTrigger={publishTrigger}
-            onPreview={onPreview}
-          />
+          <main className="relative z-10 py-12 bg-background rounded-xs">
+            <div className="mx-auto max-w-3xl px-4 md:px-6">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="relative"
+              >
+                <DocumentPaperHeader
+                  editor={editor}
+                  status={documentStatus}
+                  typography={typography}
+                  onTypographyChange={setTypography}
+                  type={kind.type}
+                  typeLabel={kind.label}
+                  locked={isDesignMode}
+                  actions={
+                    <>
+                      <button
+                        type="button"
+                        onClick={handleSubmit(onSave)}
+                        disabled={isSaving}
+                        title="Salvar"
+                        className={ACTION}
+                      >
+                        {isSaving ? (
+                          <span className="size-4 animate-spin border-2 border-current border-t-transparent" />
+                        ) : (
+                          <Save />
+                        )}
+                        <span className="sr-only">Salvar</span>
+                      </button>
+                      {process.env.NODE_ENV === "development" && (
+                        <button
+                          type="button"
+                          onClick={onPreview}
+                          disabled={isSaving}
+                          title="Visualizar payload JSON"
+                          className={ACTION}
+                        >
+                          <FileJson />
+                          <span className="sr-only">Preview</span>
+                        </button>
+                      )}
+                      {publishTrigger}
+                    </>
+                  }
+                  save={{ lastSaved, isSaving, dirty: hasUnsavedChanges }}
+                  extraTabs={
+                    <SideTabs
+                      open={sidePanel}
+                      onToggle={toggleSidePanel}
+                      className="lg:hidden"
+                    />
+                  }
+                />
+
+                {/* Side tabs pinned to the paper's right edge (wide screens);
+                  hidden while the design panels sit in the margins. */}
+                <div
+                  className={cn(
+                    "absolute top-24 bottom-0 left-full hidden lg:block",
+                    isDesignMode && isWide && "lg:hidden",
+                  )}
+                >
+                  <SideTabs
+                    vertical
+                    open={sidePanel}
+                    onToggle={toggleSidePanel}
+                    className="sticky top-32"
+                  />
+                </div>
+
+                {/* Document Container */}
+                <PaperSurface
+                  paperColors={paperColors}
+                  paperTexture={paperTexture}
+                  textureStyle={textureStyle}
+                  grains={paperStyle.grains}
+                  grainSettings={paperStyle.grainSettings}
+                  className={cn(
+                    "border-y-0 shadow-[0_28px_56px_-28px_rgb(0_0_0/0.45),0_2px_8px_-2px_rgb(0_0_0/0.12)]",
+                    isDesignMode &&
+                      "outline-2 outline-dashed outline-offset-4 outline-foreground/40",
+                  )}
+                  contentClassName="md:p-10 p-8"
+                >
+                  {/* Paper itself (color, texture, grain): the background of design mode. */}
+                  {isDesignMode && (
+                    <button
+                      type="button"
+                      aria-label="Editar papel"
+                      onClick={() => {
+                        // Keep the paper tab already open (texture, grain) instead of jumping back to colors.
+                        const current = isWide ? paperTab : activeTab;
+                        pickRegion(
+                          SURFACE_TABS.includes(current) ? current : "colors",
+                        );
+                      }}
+                      className="absolute inset-0 z-0 cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-current"
+                    />
+                  )}
+
+                  {/* Header Letterhead */}
+                  {documentHeader.enabled && (
+                    <DesignRegion {...region("letterhead")} className="mb-4">
+                      <DocumentHeaderRenderer
+                        header={documentHeader}
+                        textContext={letterheadContext}
+                      />
+                    </DesignRegion>
+                  )}
+
+                  <DesignRegion {...region("font")} label="Título e fonte">
+                    {/* Title */}
+                    <Controller
+                      name="title"
+                      control={form.control}
+                      render={({ field }) => (
+                        <input
+                          {...field}
+                          type="text"
+                          readOnly={isDesignMode}
+                          placeholder={kind.titlePlaceholder}
+                          data-testid="editor-title-input"
+                          className={`w-full text-4xl md:text-5xl font-bold tracking-tight bg-transparent border-none outline-none mb-4 transition-colors duration-300 ${fontClass}`}
+                          style={{ color: paperColors?.text || undefined }}
+                        />
+                      )}
+                    />
+                    <style>{`
+            input[placeholder={kind.titlePlaceholder}]::placeholder {
+              color: ${paperColors?.muted || "hsl(var(--muted-foreground) / 0.5)"};
+            }
+          `}</style>
+                    {errors.title && (
+                      <p className="text-red-500 text-sm mb-2">
+                        {errors.title.message}
+                      </p>
+                    )}
+
+                    {/* Subtitle */}
+                    <Controller
+                      name="subtitle"
+                      control={form.control}
+                      render={({ field }) => (
+                        <input
+                          {...field}
+                          value={field.value || ""}
+                          type="text"
+                          readOnly={isDesignMode}
+                          placeholder={kind.abstractPlaceholder}
+                          data-testid="editor-subtitle-input"
+                          className={`w-full text-xl bg-transparent border-none outline-none mb-8 transition-colors duration-300 ${fontClass}`}
+                          style={{ color: paperColors?.muted || undefined }}
+                        />
+                      )}
+                    />
+                    <style>{`
+            input[placeholder={kind.abstractPlaceholder}]::placeholder {
+              color: ${paperColors?.muted || "hsl(var(--muted-foreground) / 0.5)"};
+            }
+          `}</style>
+                  </DesignRegion>
+
+                  {/* Cover Image */}
+                  <DesignRegion {...region("cover")} className="mb-10">
+                    <div>
+                      <CoverImageEditor
+                        coverImage={coverImage ?? null}
+                        onCoverChange={handleCoverUpload}
+                        onCoverRemove={() => {
+                          setCoverImage(null);
+                          setCoverSettings({ ...DEFAULT_COVER_SETTINGS });
+                        }}
+                        settings={coverSettings}
+                        onSettingsChange={setCoverSettings}
+                        paperColors={paperColors}
+                      />
+                    </div>
+                  </DesignRegion>
+
+                  {/* Editor (read-only and faded in design mode) */}
+                  <div
+                    data-testid="editor-content"
+                    lang="pt-BR"
+                    inert={isDesignMode}
+                    className={`relative z-10 editor-wrapper doc-prose editor-${typography} ${paperColors ? "custom-paper" : ""} ${isDesignMode ? "pointer-events-none select-none opacity-50 transition-opacity" : ""}`}
+                    style={{
+                      ["--custom-text-color" as string]: paperColors?.text,
+                      ["--custom-muted-color" as string]: paperColors?.muted,
+                    }}
+                  >
+                    {isDesignMode && editor.isEmpty && <DesignSample />}
+                    <div hidden={isDesignMode && editor.isEmpty}>
+                      <EditorContent editor={editor} />
+                    </div>
+                    {!isDesignMode && (
+                      <>
+                        <EditorBubbleMenu
+                          editor={editor}
+                          onShowLinkModal={() => setShowLinkModal(true)}
+                        />
+                        <EditorBlockMenu editor={editor} />
+                        <BlockHandle editor={editor} />
+                        <SlashMenu />
+                      </>
+                    )}
+                  </div>
+
+                  {/* Signature */}
+                  {isSignatureVisible(signatureContext) && (
+                    <DesignRegion {...region("signature")} className="mt-12">
+                      <SignatureBlock
+                        context={signatureContext}
+                        color={paperColors?.text}
+                        background={paperColors?.bg}
+                      />
+                    </DesignRegion>
+                  )}
+
+                  {/* Footer Letterhead */}
+                  {documentFooter.enabled && (
+                    <DesignRegion
+                      {...region("letterhead")}
+                      label="Rodapé"
+                      className="mt-4"
+                    >
+                      <DocumentFooterRenderer
+                        footer={documentFooter}
+                        textContext={letterheadContext}
+                      />
+                    </DesignRegion>
+                  )}
+                </PaperSurface>
+                {/* Paper status footer */}
+                <DocumentPaperFooter
+                  wordCount={wordCount}
+                  charCount={charCount}
+                />
+              </motion.div>
+            </div>
+          </main>
+
+          {/* Design panels in the page margins (xl and up): the paper stays put. */}
+          {isDesignMode && isWide && (
+            <>
+              <aside className={cn(DESIGN_ASIDE, "right-[calc(50%+23.5rem)]")}>
+                <SidePanelFrame
+                  title="Papel"
+                  closeLabel="Sair do modo design"
+                  onClose={() => setSidePanel(null)}
+                >
+                  {designPanel(paperTab, setPaperTab, PAPER_TABS)}
+                </SidePanelFrame>
+              </aside>
+              <aside className={cn(DESIGN_ASIDE, "left-[calc(50%+23.5rem)]")}>
+                <SidePanelFrame
+                  title="Partes do documento"
+                  closeLabel="Sair do modo design"
+                  onClose={() => setSidePanel(null)}
+                >
+                  {designPanel(partsTab, setPartsTab, PARTS_TABS)}
+                </SidePanelFrame>
+              </aside>
+            </>
+          )}
+
+          {/* Themes: right sheet over the page, as before the side tabs. */}
+          <Sheet
+            open={sidePanel === "themes"}
+            onOpenChange={(open) => !open && setSidePanel(null)}
+          >
+            <SheetContent side="right" className="p-0">
+              <TemplatePicker
+                designStore={designStore}
+                onClose={() => setSidePanel(null)}
+              />
+            </SheetContent>
+          </Sheet>
+
+          <Sheet
+            open={isDesignMode && !isWide}
+            onOpenChange={(open) => !open && setSidePanel(null)}
+          >
+            <SheetContent
+              side="bottom"
+              className="data-[side=bottom]:h-[75dvh] p-0"
+            >
+              <SheetTitle className="sr-only">Design</SheetTitle>
+              <div className="h-full overflow-y-auto pt-10">
+                {designPanel(activeTab, setActiveTab)}
+              </div>
+            </SheetContent>
+          </Sheet>
+
           <ExpandableScreenContent className="bg-background">
             <PublishPanel
               status={documentStatus}
