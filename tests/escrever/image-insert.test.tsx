@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   ImageInsertDialog,
   imageFiles,
+  pastedImageFiles,
   useImageInsertStore,
 } from "@/components/escrever/image-insert";
 import { uploadWithToast } from "@/features/uploads/api";
@@ -133,5 +134,22 @@ describe("imageFiles", () => {
     ] as unknown as FileList;
     expect(imageFiles(list).map((f) => f.name)).toEqual(["a.png"]);
     expect(imageFiles(null)).toEqual([]);
+  });
+});
+
+describe("pastedImageFiles", () => {
+  const image = new File(["a"], "a.png", { type: "image/png" });
+  const clipboard = (text: string) =>
+    ({
+      getData: (type: string) => (type === "text/plain" ? text : ""),
+      files: [image] as unknown as FileList,
+    }) as unknown as DataTransfer;
+
+  it("uploads a pasted image", () => {
+    expect(pastedImageFiles(clipboard(""))).toEqual([image]);
+  });
+
+  it("leaves a paste with text to the editor (Word/Docs add a picture of the selection)", () => {
+    expect(pastedImageFiles(clipboard("Olá mundo"))).toEqual([]);
   });
 });

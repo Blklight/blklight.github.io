@@ -25,6 +25,17 @@ export function imageFiles(files: FileList | null | undefined): File[] {
 }
 
 /**
+ * Image files to upload from a paste. A paste that also carries text is left to
+ * the editor: Word and Google Docs add a picture of the copied selection.
+ */
+export function pastedImageFiles(
+  data: DataTransfer | null | undefined,
+): File[] {
+  if (data?.getData("text/plain")) return [];
+  return imageFiles(data?.files);
+}
+
+/**
  * Upload a file and insert it as an image block, at `pos` (drop point) or at
  * the selection. Shows progress and errors as toasts.
  */

@@ -58,6 +58,7 @@ import {
 import {
   ImageInsertDialog,
   imageFiles,
+  pastedImageFiles,
   uploadAndInsert,
 } from "@/components/escrever/image-insert";
 import { JsonPreviewModal, LinkModal } from "@/components/escrever/modals";
@@ -351,7 +352,7 @@ export function DocumentEditor({
       },
       // Pasted or dropped image files are uploaded instead of embedded as data URLs.
       handlePaste: (view, event) => {
-        const files = imageFiles(event.clipboardData?.files);
+        const files = pastedImageFiles(event.clipboardData);
         if (files.length === 0) return false;
         for (const file of files) void uploadAndInsert(view, file);
         return true;

@@ -48,7 +48,7 @@ function AvatarSection({ username }: { username: string }) {
     setBusy(true);
     const uploaded = await uploadWithToast(file, "avatar", {
       loading: "Enviando foto…",
-      success: "Foto atualizada",
+      success: "Foto enviada",
     });
     if (uploaded) await save(uploaded.url);
     else setBusy(false);
