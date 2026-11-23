@@ -75,6 +75,16 @@ Relatórios completos: `.impeccable/critique/` e `.impeccable/audit/` (última a
 
 - As capas vêm de endereços arbitrários informados pelo autor. Variantes de largura dependem de um serviço de imagens na API, ou de uma lista de domínios permitidos para usar `next/image`.
 
+## Editor (2026-11-21, branch `feat/editor-refino`)
+
+- **Design perdido ao publicar direto:** um documento novo que nunca foi salvo e é publicado direto sai com o estilo padrão (`typography: "serif"`, `paperStyle: {}`). O `POST /api/v1/documents` parece ignorar os campos de estilo; o `PATCH` salva. Caminho: criar e em seguida aplicar o estilo, ou corrigir no backend.
+- Inserir imagem (pelo "+", "/" ou a alça) ainda usa `window.prompt`; trocar por um diálogo como o da capa.
+- O menu de inserção pode ganhar lista de tarefas, embed e tabela (extensões open-source).
+- A alça de bloco some no celular (abaixo de 768px) e em linhas vazias, onde fica o "+".
+- Desfazer volta até antes do rascunho restaurado (o `setContent` do rascunho entra no histórico): Ctrl+Z repetido apaga o texto todo.
+- A hifenização em português não apareceu no Chromium do Playwright; conferir no Chrome do dia a dia.
+- Conta de teste no backend local: `editor_check1@example.test`, com o documento publicado "Teste de tipografia".
+
 ## Prioridade baixa
 
 - O contador "12/22" está dentro do `h2` "Mais recentes" (`src/app/feed/page.tsx`). Tirar do título ou dar um `aria-label`.

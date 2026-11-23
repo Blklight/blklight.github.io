@@ -34,8 +34,6 @@ export function useDocumentDesign(
   const setTypography = store((s) => s.setTypography);
   const setCoverImage = store((s) => s.setCoverImage);
   const setCoverSettings = store((s) => s.setCoverSettings);
-  const headerFooterLinked = store((s) => s.headerFooterLinked);
-  const setHeaderFooterLinked = store((s) => s.setHeaderFooterLinked);
 
   const paperColors = useMemo<PaperColors | null>(() => {
     const style = normalizePaperStyle(paperStyle);
@@ -89,8 +87,6 @@ export function useDocumentDesign(
     setTypography,
     setCoverImage,
     setCoverSettings,
-    headerFooterLinked,
-    setHeaderFooterLinked,
     paperColors,
     fontClass,
     textureStyle,

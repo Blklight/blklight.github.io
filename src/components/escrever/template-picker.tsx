@@ -82,7 +82,7 @@ export function TemplatePicker({ designStore, onClose }: TemplatePickerProps) {
         </SheetDescription>
       </SheetHeader>
 
-      <div className="flex-1 overflow-y-auto px-4 pb-4">
+      <div className="flex-1 overflow-y-auto px-4 pt-2 pb-4">
         {sorted.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-4 py-16 text-center">
             <p className="text-sm font-mono uppercase tracking-wider text-foreground/40">

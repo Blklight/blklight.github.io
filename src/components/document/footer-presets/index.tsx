@@ -148,44 +148,6 @@ export function FooterBlklight({
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-// PRESET: Gov Militar - rodape militar com bordas e gradiente escuro
-// ════════════════════════════════════════════════════════════════════════════
-export function FooterGovMilitar(props: FooterPresetProps) {
-  return (
-    <FooterPresetLayout
-      {...props}
-      style={{
-        background: "linear-gradient(to right, #1B1B2F, #3D405B)",
-        color: "#a3aab8",
-        padding: "8px 16px",
-        borderStyle: "solid",
-        borderWidth: 1,
-        borderColor: "#4b5266",
-      }}
-    />
-  );
-}
-
-// ════════════════════════════════════════════════════════════════════════════
-// PRESET: Academia - rodape institucional academico elegante
-// ════════════════════════════════════════════════════════════════════════════
-export function FooterAcademia(props: FooterPresetProps) {
-  return (
-    <FooterPresetLayout
-      {...props}
-      style={{
-        backgroundColor: "#1B3A4B",
-        color: "#cfc3a8",
-        padding: "10px 20px",
-        borderStyle: "double",
-        borderWidth: 2,
-        borderColor: "#8a7a55",
-      }}
-    />
-  );
-}
-
-// ════════════════════════════════════════════════════════════════════════════
 // PRESET: Corp Moderno - rodape limpo e moderno corporativo
 // ════════════════════════════════════════════════════════════════════════════
 export function FooterCorpModerno(props: FooterPresetProps) {
@@ -222,67 +184,6 @@ export function FooterAlertaVermelho(props: FooterPresetProps) {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-// PRESET: Minimalista - rodape simples e limpo com borda sutil
-// ════════════════════════════════════════════════════════════════════════════
-export function FooterMinimalista(props: FooterPresetProps) {
-  return (
-    <FooterPresetLayout
-      {...props}
-      style={{
-        backgroundColor: "#F5F5F5",
-        color: "#555555",
-        padding: "6px 16px",
-        borderStyle: "solid",
-        borderWidth: 1,
-        borderColor: "#E0E0E0",
-      }}
-    />
-  );
-}
-
-// ════════════════════════════════════════════════════════════════════════════
-// PRESET: Selo Dourado - rodape cerimonial com tons dourados
-// ════════════════════════════════════════════════════════════════════════════
-export function FooterSeloDourado(props: FooterPresetProps) {
-  return (
-    <FooterPresetLayout
-      {...props}
-      texture="dots"
-      textureOpacity={0.07}
-      style={{
-        background: "linear-gradient(to right, #FFB4A2, #FFCDB2)",
-        color: "#5D3A1A",
-        padding: "10px 20px",
-        borderStyle: "double",
-        borderWidth: 2,
-        borderColor: "#C49A6C",
-      }}
-    />
-  );
-}
-
-// ════════════════════════════════════════════════════════════════════════════
-// PRESET: Confidencial - rodape para documentos confidenciais com textura
-// ════════════════════════════════════════════════════════════════════════════
-export function FooterConfidencial(props: FooterPresetProps) {
-  return (
-    <FooterPresetLayout
-      {...props}
-      texture="grid"
-      textureOpacity={0.05}
-      style={{
-        backgroundColor: "#2C2C2C",
-        color: "#8f8f8f",
-        padding: "8px 16px",
-        borderStyle: "dashed",
-        borderWidth: 1,
-        borderColor: "#555555",
-      }}
-    />
-  );
-}
-
-// ════════════════════════════════════════════════════════════════════════════
 // Registry: Map preset IDs to footer components
 // ════════════════════════════════════════════════════════════════════════════
 export const FOOTER_PRESET_COMPONENTS: Record<
@@ -292,13 +193,14 @@ export const FOOTER_PRESET_COMPONENTS: Record<
   // Apelido: documentos salvos com o id antigo renderizam o Blklight.
   "gov-republica": FooterBlklight,
   [BLKLIGHT_PRESET_ID]: FooterBlklight,
-  "gov-militar": FooterGovMilitar,
-  academia: FooterAcademia,
+  // Removed models (2026-11-22): saved documents render the Blklight one.
+  "gov-militar": FooterBlklight,
+  academia: FooterBlklight,
+  minimalista: FooterBlklight,
+  "selo-dourado": FooterBlklight,
+  confidencial: FooterBlklight,
   "corp-moderno": FooterCorpModerno,
   "alerta-vermelho": FooterAlertaVermelho,
-  minimalista: FooterMinimalista,
-  "selo-dourado": FooterSeloDourado,
-  confidencial: FooterConfidencial,
 };
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -313,18 +215,6 @@ export const FOOTER_PRESET_LIST: HeaderPresetMeta[] = [
     defaultLineFormats: BLKLIGHT_FOOTER_LINE_FORMATS,
   },
   {
-    id: "gov-militar",
-    name: "Diretiva Militar",
-    description: "Estilo militar com bordas e gradiente escuro",
-    defaultLines: BLKLIGHT_FOOTER_LINES,
-  },
-  {
-    id: "academia",
-    name: "Academico",
-    description: "Rodape institucional academico elegante",
-    defaultLines: BLKLIGHT_FOOTER_LINES,
-  },
-  {
     id: "corp-moderno",
     name: "Corporativo",
     description: "Rodape limpo e moderno corporativo",
@@ -334,24 +224,6 @@ export const FOOTER_PRESET_LIST: HeaderPresetMeta[] = [
     id: "alerta-vermelho",
     name: "Alerta Vermelho",
     description: "Rodape urgente com gradiente vermelho",
-    defaultLines: BLKLIGHT_FOOTER_LINES,
-  },
-  {
-    id: "minimalista",
-    name: "Minimalista",
-    description: "Rodape simples e limpo com borda sutil",
-    defaultLines: BLKLIGHT_FOOTER_LINES,
-  },
-  {
-    id: "selo-dourado",
-    name: "Selo Dourado",
-    description: "Rodape cerimonial com tons dourados",
-    defaultLines: BLKLIGHT_FOOTER_LINES,
-  },
-  {
-    id: "confidencial",
-    name: "Confidencial",
-    description: "Rodape para documentos confidenciais com textura",
     defaultLines: BLKLIGHT_FOOTER_LINES,
   },
 ];

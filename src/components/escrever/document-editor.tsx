@@ -9,7 +9,7 @@ import TextAlign from "@tiptap/extension-text-align";
 import Typography from "@tiptap/extension-typography";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { Palette, Send } from "lucide-react";
+import { FileJson, Save, Send } from "lucide-react";
 import { motion } from "motion/react";
 import {
   useCallback,
@@ -18,6 +18,7 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
 } from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { toast } from "sonner";
@@ -43,17 +44,27 @@ import type {
   DocumentSignature,
   PaperTexture,
 } from "@/components/document/types";
+import { BlockHandle } from "@/components/escrever/block-handle";
 import type { DesignTab } from "@/components/escrever/design/sidebar";
-import { DesignOverlay } from "@/components/escrever/design-overlay";
 import { DocumentPaperFooter } from "@/components/escrever/document-paper-footer";
-import { DocumentPaperHeader } from "@/components/escrever/document-paper-header";
+import {
+  ACTION,
+  DocumentPaperHeader,
+} from "@/components/escrever/document-paper-header";
 import {
   EditorBlockMenu,
   EditorBubbleMenu,
 } from "@/components/escrever/editor-toolbar";
-import { FloatingActionBar } from "@/components/escrever/floating-action-bar";
 import { JsonPreviewModal, LinkModal } from "@/components/escrever/modals";
 import { PublishPanel } from "@/components/escrever/publish-panel";
+import {
+  DesignPanel,
+  DesignRegion,
+  type SidePanel,
+  SidePanelFrame,
+  SideTabs,
+} from "@/components/escrever/side-panel";
+import { SlashCommand, SlashMenu } from "@/components/escrever/slash-command";
 import { TemplatePicker } from "@/components/escrever/template-picker";
 import { useAutosave } from "@/components/escrever/use-autosave";
 import { useCurrentAuthorContext } from "@/components/escrever/use-current-author-context";
@@ -65,7 +76,7 @@ import {
   ExpandableScreenContent,
   ExpandableScreenTrigger,
 } from "@/components/ui/expandable-screen";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import type { LetterheadTextContext } from "@/features/documents/design/letterhead-text";
 import { PaperSurface } from "@/features/documents/design/paper-surface";
 import type { SignatureContext } from "@/features/documents/design/signature";
@@ -79,6 +90,7 @@ import {
 } from "@/features/documents/queries";
 import { useMyOrganizations } from "@/features/organizations/queries";
 import { documentDesignKey } from "@/lib/user-storage";
+import { cn } from "@/lib/utils";
 import {
   createDocumentDesignStore,
   type DesignInput,
@@ -279,12 +291,27 @@ export function DocumentEditor({
   const [wordCount, setWordCount] = useState(0);
   const [charCount, setCharCount] = useState(0);
 
-  // --- Design overlay / theme sheet / publish (UI only) ---
-  const [isTemplatesOpen, setIsTemplatesOpen] = useState(false);
-  const [isDesignOpen, setIsDesignOpen] = useState(false);
+  // --- Side panel (themes / design mode) and publish (UI only) ---
+  const [sidePanel, setSidePanel] = useState<SidePanel | null>(null);
   const [isPublishOpen, setIsPublishOpen] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
   const [activeTab, setActiveTab] = useState<DesignTab>("colors");
+  const isDesignMode = sidePanel === "design";
+  const isWide = useIsWide();
+  const toggleSidePanel = useCallback(
+    (panel: SidePanel) =>
+      setSidePanel((current) => (current === panel ? null : panel)),
+    [],
+  );
+  // Wide screens split design controls: paper on the left, parts on the right.
+  const [paperTab, setPaperTab] = useState<DesignTab>("colors");
+  const [partsTab, setPartsTab] = useState<DesignTab>("letterhead");
+  const pickRegion = useCallback((tab: DesignTab) => {
+    setActiveTab(tab);
+    if (PAPER_TABS.includes(tab)) setPaperTab(tab);
+    else setPartsTab(tab);
+    setSidePanel("design");
+  }, []);
 
   // --- TipTap Editor ---
   // Seed the initial content only once (mounted instance is keyed by the id
@@ -311,11 +338,11 @@ export function DocumentEditor({
       }),
       Typography,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
+      SlashCommand,
     ],
     editorProps: {
       attributes: {
-        class:
-          "prose prose-lg max-w-none focus:outline-none min-h-[50vh] text-foreground",
+        class: "focus:outline-none min-h-[50vh] text-foreground",
       },
     },
     onUpdate: ({ editor: e }) => {
@@ -348,15 +375,30 @@ export function DocumentEditor({
     setCharCount(text.length);
   }, [draftContent, editor, initialValues]);
 
-  // Step the global navbar out of the way while the theme sheet or an overlay
-  // is open (they render at z-50; the navbar is z-99).
+  // Step the global navbar out of the way while the themes sheet, the design
+  // bottom sheet (narrow screens) or the publish overlay is open (they render at z-50; the navbar is z-99).
   useEffect(() => {
-    const open = isTemplatesOpen || isDesignOpen || isPublishOpen;
+    const open =
+      sidePanel === "themes" || (isDesignMode && !isWide) || isPublishOpen;
     useEditorOverlaysStore.getState().setOverlaysOpen(open);
     return () => {
       useEditorOverlaysStore.getState().setOverlaysOpen(false);
     };
-  }, [isTemplatesOpen, isDesignOpen, isPublishOpen]);
+  }, [sidePanel, isDesignMode, isWide, isPublishOpen]);
+
+  // Design mode shows the paper as it will look: the text is read-only.
+  useEffect(() => {
+    editor?.setEditable(!isDesignMode);
+  }, [editor, isDesignMode]);
+
+  useEffect(() => {
+    if (!sidePanel) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSidePanel(null);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [sidePanel]);
 
   // Activity (cacheComponents) hides the page instead of unmounting it: close on hide.
   useLayoutEffect(() => {
@@ -364,8 +406,7 @@ export function DocumentEditor({
       setShowLinkModal(false);
       setShowCoverUrlInput(false);
       setShowJsonPreview(false);
-      setIsTemplatesOpen(false);
-      setIsDesignOpen(false);
+      setSidePanel(null);
       setIsPublishOpen(false);
     };
   }, []);
@@ -560,30 +601,17 @@ export function DocumentEditor({
     [setCoverImage],
   );
 
-  // The design trigger is hidden while the publish overlay is open so the two
-  // fullscreen ExpandableScreens are mutually exclusive.
-  const designTrigger = isPublishOpen ? null : (
-    <ExpandableScreenTrigger>
-      <button
-        type="button"
-        className="flex items-center gap-1.5 h-8 px-2 rounded-xs text-xs font-mono uppercase tracking-wider transition-colors hover:bg-black/5 dark:hover:bg-white/10 outline-none focus-visible:ring-2 focus-visible:ring-current"
-      >
-        <Palette className="size-3.5" />
-        Editar design
-      </button>
-    </ExpandableScreenTrigger>
-  );
-
   const publishTrigger = (
     <ExpandableScreenTrigger>
       <Button
         size="sm"
         disabled={!isValid || !title?.trim() || isPublishing}
         data-testid="publish-button"
-        className="font-mono text-xs uppercase tracking-wider"
+        aria-label="Publicar"
+        className="ml-1 h-8 bg-background font-mono text-xs uppercase tracking-wider text-foreground hover:bg-background/90"
       >
         <Send className="w-4 h-4" />
-        <span className="ml-2">Publicar</span>
+        <span className="ml-2 hidden sm:inline">Publicar</span>
       </Button>
     </ExpandableScreenTrigger>
   );
@@ -597,256 +625,435 @@ export function DocumentEditor({
     );
   }
 
+  const region = (tab: DesignTab) => ({
+    active: isDesignMode,
+    tab,
+    selected:
+      isDesignMode &&
+      (isWide ? tab === paperTab || tab === partsTab : tab === activeTab),
+    onSelect: pickRegion,
+  });
+
+  const designPanel = (
+    tab: DesignTab,
+    onTabChange: (tab: DesignTab) => void,
+    tabs?: DesignTab[],
+  ) => (
+    <DesignPanel
+      designStore={designStore}
+      tab={tab}
+      onTabChange={onTabChange}
+      tabs={tabs}
+      signatureContext={signatureContext}
+    />
+  );
+
   return (
     <>
       <Navbar />
-      <ExpandableScreen
-        layoutId="escrever-design"
-        contentRadius="0px"
-        onExpandChange={setIsDesignOpen}
-      >
-        <div className={`min-h-screen ${fontClass}`}>
-          {/* Background dots */}
-          <div
-            className="fixed inset-0 opacity-40 pointer-events-none"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle, hsl(var(--foreground) / 0.15) 1px, transparent 1px)",
-              backgroundSize: "24px 24px",
-            }}
-          />
+      <div className={`min-h-screen ${fontClass}`}>
+        {/* Background dots */}
+        <div
+          className="fixed inset-0 opacity-40 pointer-events-none"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle, hsl(var(--foreground) / 0.15) 1px, transparent 1px)",
+            backgroundSize: "24px 24px",
+          }}
+        />
 
-          {/* Editor Styles */}
-          <EditorStyles />
+        {/* Editor Styles */}
+        <EditorStyles />
 
+        {/* Publish flow: the trigger sits in the paper bar, the panel opens full screen. */}
+        <ExpandableScreen
+          layoutId="escrever-publish"
+          contentRadius="0px"
+          onExpandChange={setIsPublishOpen}
+        >
           <main className="relative z-10 py-12 bg-background rounded-xs">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="max-w-3xl mx-auto px-4 md:px-6"
-            >
-              <DocumentPaperHeader
-                editor={editor}
-                status={documentStatus}
-                typography={typography}
-                onTypographyChange={setTypography}
-                type={kind.type}
-                typeLabel={kind.label}
-                paperColors={paperColors}
-                onOpenTemplates={() => setIsTemplatesOpen(true)}
-                designTrigger={designTrigger}
-              />
-              {/* Document Container */}
-              <PaperSurface
-                paperColors={paperColors}
-                paperTexture={paperTexture}
-                textureStyle={textureStyle}
-                grains={paperStyle.grains}
-                grainSettings={paperStyle.grainSettings}
-                contentClassName="md:p-10 p-8"
+            <div className="mx-auto max-w-3xl px-4 md:px-6">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="relative"
               >
-                {/* Header Letterhead */}
-                {documentHeader.enabled && (
-                  <DocumentHeaderRenderer
-                    header={documentHeader}
-                    className="mb-4"
-                    textContext={letterheadContext}
+                <DocumentPaperHeader
+                  editor={editor}
+                  status={documentStatus}
+                  typography={typography}
+                  onTypographyChange={setTypography}
+                  type={kind.type}
+                  typeLabel={kind.label}
+                  locked={isDesignMode}
+                  actions={
+                    <>
+                      <button
+                        type="button"
+                        onClick={handleSubmit(onSave)}
+                        disabled={isSaving}
+                        title="Salvar"
+                        className={cn(ACTION, "px-1.5")}
+                      >
+                        {isSaving ? (
+                          <span className="size-4 animate-spin border-2 border-current border-t-transparent" />
+                        ) : (
+                          <Save />
+                        )}
+                        <span className="sr-only">Salvar</span>
+                      </button>
+                      {process.env.NODE_ENV === "development" && (
+                        <button
+                          type="button"
+                          onClick={onPreview}
+                          disabled={isSaving}
+                          title="Visualizar payload JSON"
+                          className={cn(ACTION, "hidden px-1.5 sm:flex")}
+                        >
+                          <FileJson />
+                          <span className="sr-only">Preview</span>
+                        </button>
+                      )}
+                      {publishTrigger}
+                    </>
+                  }
+                  save={{ lastSaved, isSaving }}
+                  extraTabs={
+                    <SideTabs
+                      open={sidePanel}
+                      onToggle={toggleSidePanel}
+                      className="h-8 items-center lg:hidden"
+                    />
+                  }
+                />
+
+                {/* Side tabs pinned to the paper's right edge (wide screens);
+                  hidden while the design panels sit in the margins. */}
+                <div
+                  className={cn(
+                    "absolute top-24 bottom-0 left-full hidden lg:block",
+                    isDesignMode && isWide && "lg:hidden",
+                  )}
+                >
+                  <SideTabs
+                    vertical
+                    open={sidePanel}
+                    onToggle={toggleSidePanel}
+                    className="sticky top-32"
                   />
-                )}
-                {/* Title */}
-                <Controller
-                  name="title"
-                  control={form.control}
-                  render={({ field }) => (
-                    <input
-                      {...field}
-                      type="text"
-                      placeholder={kind.titlePlaceholder}
-                      data-testid="editor-title-input"
-                      className={`w-full text-4xl md:text-5xl font-bold tracking-tight bg-transparent border-none outline-none mb-4 transition-colors duration-300 ${fontClass}`}
-                      style={{ color: paperColors?.text || undefined }}
+                </div>
+
+                {/* Document Container */}
+                <PaperSurface
+                  paperColors={paperColors}
+                  paperTexture={paperTexture}
+                  textureStyle={textureStyle}
+                  grains={paperStyle.grains}
+                  grainSettings={paperStyle.grainSettings}
+                  className={cn(
+                    "shadow-[0_28px_56px_-28px_rgb(0_0_0/0.45),0_2px_8px_-2px_rgb(0_0_0/0.12)]",
+                    isDesignMode &&
+                      "outline-2 outline-dashed outline-offset-4 outline-foreground/40",
+                  )}
+                  contentClassName="md:p-10 p-8"
+                >
+                  {/* Paper itself (color, texture, grain): the background of design mode. */}
+                  {isDesignMode && (
+                    <button
+                      type="button"
+                      aria-label="Editar papel"
+                      onClick={() => {
+                        // Keep the paper tab already open (texture, grain) instead of jumping back to colors.
+                        const current = isWide ? paperTab : activeTab;
+                        pickRegion(
+                          SURFACE_TABS.includes(current) ? current : "colors",
+                        );
+                      }}
+                      className="absolute inset-0 z-0 cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-current"
                     />
                   )}
-                />
-                <style>{`
+
+                  {/* Header Letterhead */}
+                  {documentHeader.enabled && (
+                    <DesignRegion {...region("letterhead")} className="mb-4">
+                      <DocumentHeaderRenderer
+                        header={documentHeader}
+                        textContext={letterheadContext}
+                      />
+                    </DesignRegion>
+                  )}
+
+                  <DesignRegion {...region("font")} label="Título e fonte">
+                    {/* Title */}
+                    <Controller
+                      name="title"
+                      control={form.control}
+                      render={({ field }) => (
+                        <input
+                          {...field}
+                          type="text"
+                          readOnly={isDesignMode}
+                          placeholder={kind.titlePlaceholder}
+                          data-testid="editor-title-input"
+                          className={`w-full text-4xl md:text-5xl font-bold tracking-tight bg-transparent border-none outline-none mb-4 transition-colors duration-300 ${fontClass}`}
+                          style={{ color: paperColors?.text || undefined }}
+                        />
+                      )}
+                    />
+                    <style>{`
             input[placeholder={kind.titlePlaceholder}]::placeholder {
               color: ${paperColors?.muted || "hsl(var(--muted-foreground) / 0.5)"};
             }
           `}</style>
-                {errors.title && (
-                  <p className="text-red-500 text-sm mb-2">
-                    {errors.title.message}
-                  </p>
-                )}
+                    {errors.title && (
+                      <p className="text-red-500 text-sm mb-2">
+                        {errors.title.message}
+                      </p>
+                    )}
 
-                {/* Subtitle */}
-                <Controller
-                  name="subtitle"
-                  control={form.control}
-                  render={({ field }) => (
-                    <input
-                      {...field}
-                      value={field.value || ""}
-                      type="text"
-                      placeholder={kind.abstractPlaceholder}
-                      data-testid="editor-subtitle-input"
-                      className={`w-full text-xl bg-transparent border-none outline-none mb-8 transition-colors duration-300 ${fontClass}`}
-                      style={{ color: paperColors?.muted || undefined }}
+                    {/* Subtitle */}
+                    <Controller
+                      name="subtitle"
+                      control={form.control}
+                      render={({ field }) => (
+                        <input
+                          {...field}
+                          value={field.value || ""}
+                          type="text"
+                          readOnly={isDesignMode}
+                          placeholder={kind.abstractPlaceholder}
+                          data-testid="editor-subtitle-input"
+                          className={`w-full text-xl bg-transparent border-none outline-none mb-8 transition-colors duration-300 ${fontClass}`}
+                          style={{ color: paperColors?.muted || undefined }}
+                        />
+                      )}
                     />
-                  )}
-                />
-                <style>{`
+                    <style>{`
             input[placeholder={kind.abstractPlaceholder}]::placeholder {
               color: ${paperColors?.muted || "hsl(var(--muted-foreground) / 0.5)"};
             }
           `}</style>
+                  </DesignRegion>
 
-                {/* Cover Image */}
-                <div className="mb-10">
-                  <CoverImageEditor
-                    coverImage={coverImage ?? null}
-                    onCoverChange={handleCoverUpload}
-                    onCoverRemove={() => {
-                      setCoverImage(null);
-                      setCoverSettings({ ...DEFAULT_COVER_SETTINGS });
+                  {/* Cover Image */}
+                  <DesignRegion {...region("cover")} className="mb-10">
+                    <div>
+                      <CoverImageEditor
+                        coverImage={coverImage ?? null}
+                        onCoverChange={handleCoverUpload}
+                        onCoverRemove={() => {
+                          setCoverImage(null);
+                          setCoverSettings({ ...DEFAULT_COVER_SETTINGS });
+                        }}
+                        settings={coverSettings}
+                        onSettingsChange={setCoverSettings}
+                        paperColors={paperColors}
+                      />
+                    </div>
+                  </DesignRegion>
+
+                  {/* Editor (read-only and faded in design mode) */}
+                  <div
+                    data-testid="editor-content"
+                    lang="pt-BR"
+                    inert={isDesignMode}
+                    className={`relative z-10 editor-wrapper doc-prose editor-${typography} ${paperColors ? "custom-paper" : ""} ${isDesignMode ? "pointer-events-none select-none opacity-50 transition-opacity" : ""}`}
+                    style={{
+                      ["--custom-text-color" as string]: paperColors?.text,
+                      ["--custom-muted-color" as string]: paperColors?.muted,
                     }}
-                    settings={coverSettings}
-                    onSettingsChange={setCoverSettings}
-                    paperColors={paperColors}
-                  />
-                </div>
+                  >
+                    {isDesignMode && editor.isEmpty && <DesignSample />}
+                    <div hidden={isDesignMode && editor.isEmpty}>
+                      <EditorContent editor={editor} />
+                    </div>
+                    {!isDesignMode && (
+                      <>
+                        <EditorBubbleMenu
+                          editor={editor}
+                          onShowLinkModal={() => setShowLinkModal(true)}
+                        />
+                        <EditorBlockMenu editor={editor} />
+                        <BlockHandle editor={editor} />
+                        <SlashMenu />
+                      </>
+                    )}
+                  </div>
 
-                {/* Editor */}
-                <div
-                  data-testid="editor-content"
-                  className={`relative editor-wrapper editor-${typography} ${paperColors ? "custom-paper" : ""}`}
-                  style={{
-                    ["--custom-text-color" as string]: paperColors?.text,
-                    ["--custom-muted-color" as string]: paperColors?.muted,
-                  }}
-                >
-                  <EditorContent editor={editor} />
-                  <EditorBubbleMenu
-                    editor={editor}
-                    onShowLinkModal={() => setShowLinkModal(true)}
-                  />
-                  <EditorBlockMenu editor={editor} />
-                </div>
+                  {/* Signature */}
+                  {isSignatureVisible(signatureContext) && (
+                    <DesignRegion {...region("signature")} className="mt-12">
+                      <SignatureBlock
+                        context={signatureContext}
+                        color={paperColors?.text}
+                        background={paperColors?.bg}
+                      />
+                    </DesignRegion>
+                  )}
 
-                {/* Signature */}
-                {isSignatureVisible(signatureContext) && (
-                  <SignatureBlock
-                    context={signatureContext}
-                    color={paperColors?.text}
-                    background={paperColors?.bg}
-                  />
-                )}
-
-                {/* Footer Letterhead */}
-                {documentFooter.enabled && (
-                  <DocumentFooterRenderer
-                    footer={documentFooter}
-                    className="mt-4"
-                    textContext={letterheadContext}
-                  />
-                )}
-              </PaperSurface>
-              {/* Paper status footer */}
-              <DocumentPaperFooter
-                wordCount={wordCount}
-                charCount={charCount}
-                paperColors={paperColors}
-              />
-            </motion.div>
+                  {/* Footer Letterhead */}
+                  {documentFooter.enabled && (
+                    <DesignRegion
+                      {...region("letterhead")}
+                      label="Rodapé"
+                      className="mt-4"
+                    >
+                      <DocumentFooterRenderer
+                        footer={documentFooter}
+                        textContext={letterheadContext}
+                      />
+                    </DesignRegion>
+                  )}
+                </PaperSurface>
+                {/* Paper status footer */}
+                <DocumentPaperFooter
+                  wordCount={wordCount}
+                  charCount={charCount}
+                />
+              </motion.div>
+            </div>
           </main>
 
-          {/* Publish flow: trigger (FAB button) + fullscreen panel. The
-              layoutId is its own screen, mutually exclusive with the design
-              overlay: the design trigger hides while publishing, and the FAB
-              (with the publish trigger) hides while the design overlay is
-              open. */}
-          <ExpandableScreen
-            layoutId="escrever-publish"
-            contentRadius="0px"
-            onExpandChange={setIsPublishOpen}
+          {/* Design panels in the page margins (xl and up): the paper stays put. */}
+          {isDesignMode && isWide && (
+            <>
+              <aside className={cn(DESIGN_ASIDE, "right-[calc(50%+23.5rem)]")}>
+                <SidePanelFrame
+                  title="Papel"
+                  closeLabel="Sair do modo design"
+                  onClose={() => setSidePanel(null)}
+                >
+                  {designPanel(paperTab, setPaperTab, PAPER_TABS)}
+                </SidePanelFrame>
+              </aside>
+              <aside className={cn(DESIGN_ASIDE, "left-[calc(50%+23.5rem)]")}>
+                <SidePanelFrame
+                  title="Partes do documento"
+                  closeLabel="Sair do modo design"
+                  onClose={() => setSidePanel(null)}
+                >
+                  {designPanel(partsTab, setPartsTab, PARTS_TABS)}
+                </SidePanelFrame>
+              </aside>
+            </>
+          )}
+
+          {/* Themes: right sheet over the page, as before the side tabs. */}
+          <Sheet
+            open={sidePanel === "themes"}
+            onOpenChange={(open) => !open && setSidePanel(null)}
           >
-            {!isDesignOpen && (
-              <FloatingActionBar
-                lastSaved={lastSaved}
-                isSaving={isSaving}
-                onSave={handleSubmit(onSave)}
-                publishTrigger={publishTrigger}
-                onPreview={onPreview}
-              />
-            )}
-            <ExpandableScreenContent className="bg-background">
-              <PublishPanel
-                status={documentStatus}
-                hasUnsavedChanges={hasUnsavedChanges || !documentId}
-                isPublishing={isPublishing}
-                initialCategoryId={initialValues?.category?.id ?? null}
-                initialTags={
-                  initialValues?.tags.map((t) => t.name) ?? undefined
-                }
-                organizationId={organizationId}
-                onOrganizationChange={setOrganizationId}
-                onConfirm={handleConfirmPublish}
-              />
-            </ExpandableScreenContent>
-          </ExpandableScreen>
-
-          {/* Modals */}
-          <LinkModal
-            isOpen={showLinkModal}
-            onClose={() => setShowLinkModal(false)}
-            onSubmit={(url: string) => {
-              editor
-                .chain()
-                .focus()
-                .extendMarkRange("link")
-                .setLink({ href: url })
-                .run();
-              setShowLinkModal(false);
-            }}
-            initialUrl={editor.getAttributes("link").href || ""}
-          />
-
-          <CoverUrlDialog
-            isOpen={showCoverUrlInput}
-            onClose={() => setShowCoverUrlInput(false)}
-            onSubmit={handleCoverSubmit}
-          />
-
-          <JsonPreviewModal
-            isOpen={showJsonPreview}
-            onClose={() => setShowJsonPreview(false)}
-            data={jsonPreviewData}
-            action={jsonPreviewAction}
-          />
-
-          {/* Theme picker sheet */}
-          <Sheet open={isTemplatesOpen} onOpenChange={setIsTemplatesOpen}>
             <SheetContent side="right" className="p-0">
               <TemplatePicker
                 designStore={designStore}
-                onClose={() => setIsTemplatesOpen(false)}
+                onClose={() => setSidePanel(null)}
               />
             </SheetContent>
           </Sheet>
 
-          {/* Design editor overlay (rendered after the FAB in DOM order) */}
+          <Sheet
+            open={isDesignMode && !isWide}
+            onOpenChange={(open) => !open && setSidePanel(null)}
+          >
+            <SheetContent
+              side="bottom"
+              className="data-[side=bottom]:h-[75dvh] p-0"
+            >
+              <SheetTitle className="sr-only">Design</SheetTitle>
+              <div className="h-full overflow-y-auto pt-10">
+                {designPanel(activeTab, setActiveTab)}
+              </div>
+            </SheetContent>
+          </Sheet>
+
           <ExpandableScreenContent className="bg-background">
-            <DesignOverlay
-              designStore={designStore}
-              activeTab={activeTab}
-              onActiveTabChange={setActiveTab}
-              letterheadContext={letterheadContext}
-              signatureContext={signatureContext}
+            <PublishPanel
+              status={documentStatus}
+              hasUnsavedChanges={hasUnsavedChanges || !documentId}
+              isPublishing={isPublishing}
+              initialCategoryId={initialValues?.category?.id ?? null}
+              initialTags={initialValues?.tags.map((t) => t.name) ?? undefined}
+              organizationId={organizationId}
+              onOrganizationChange={setOrganizationId}
+              onConfirm={handleConfirmPublish}
             />
           </ExpandableScreenContent>
-        </div>
-      </ExpandableScreen>
+        </ExpandableScreen>
+
+        {/* Modals */}
+        <LinkModal
+          isOpen={showLinkModal}
+          onClose={() => setShowLinkModal(false)}
+          onSubmit={(url: string) => {
+            editor
+              .chain()
+              .focus()
+              .extendMarkRange("link")
+              .setLink({ href: url })
+              .run();
+            setShowLinkModal(false);
+          }}
+          initialUrl={editor.getAttributes("link").href || ""}
+        />
+
+        <CoverUrlDialog
+          isOpen={showCoverUrlInput}
+          onClose={() => setShowCoverUrlInput(false)}
+          onSubmit={handleCoverSubmit}
+        />
+
+        <JsonPreviewModal
+          isOpen={showJsonPreview}
+          onClose={() => setShowJsonPreview(false)}
+          data={jsonPreviewData}
+          action={jsonPreviewAction}
+        />
+      </div>
     </>
+  );
+}
+
+const WIDE_QUERY = "(min-width: 80rem)";
+
+const PAPER_TABS: DesignTab[] = ["colors", "texture", "grain", "font"];
+const SURFACE_TABS: DesignTab[] = ["colors", "texture", "grain"];
+const PARTS_TABS: DesignTab[] = ["letterhead", "cover", "signature"];
+
+// Flush against the paper (45rem wide, 1rem gap), filling the margin up to 22rem.
+const DESIGN_ASIDE =
+  "fixed top-28 bottom-28 z-40 w-[clamp(15rem,calc(50vw-24.5rem),22rem)]";
+
+/** xl and up: design panels fit in the margins beside the paper; below, a bottom sheet. */
+function useIsWide() {
+  return useSyncExternalStore(
+    (onChange) => {
+      const list = window.matchMedia(WIDE_QUERY);
+      list.addEventListener("change", onChange);
+      return () => list.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia(WIDE_QUERY).matches,
+    () => true,
+  );
+}
+
+/** Stand-in body for design mode when the document has no text yet. */
+function DesignSample() {
+  return (
+    <div aria-hidden>
+      <p>
+        Este é um texto de exemplo para você ver o design com conteúdo. A fonte,
+        as cores do papel e a textura aparecem aqui como no texto publicado.
+      </p>
+      <p>
+        Quando você voltar a escrever, o seu texto ocupa este lugar. Cabeçalho,
+        capa, assinatura e rodapé continuam onde estão.
+      </p>
+      <h2>Um intertítulo</h2>
+      <p>
+        Os parágrafos seguem o estilo de livro: recuo na primeira linha, sem
+        espaço entre eles, e o primeiro depois de um título começa sem recuo.
+      </p>
+    </div>
   );
 }

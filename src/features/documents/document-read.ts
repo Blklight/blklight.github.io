@@ -19,6 +19,7 @@ import type {
   PaperTexture,
 } from "@/components/document/types";
 import { normalizeLetterheadStyle } from "@/components/document/types";
+import { linkLetterhead } from "@/features/documents/design/blklight-letterhead";
 import type {
   DocumentFull,
   Typography as TypographyId,
@@ -229,6 +230,14 @@ export function derivePaperDesign(style: {
  * Derive the read-view design tokens (paper colors, font, texture, letterhead,
  * signature, cover) from a DocumentFull's style.
  */
+/** Header and footer of a saved document, sharing one look (see linkLetterhead). */
+function linkedLetterhead(style: DocumentFull["style"]) {
+  return linkLetterhead(
+    toHeader(style.documentHeader),
+    toFooter(style.documentFooter),
+  );
+}
+
 export function deriveReadDesign(document: DocumentFull): ReadDesign {
   const style = document.style;
   const { typography, fontClass, paperColors, paperTexture, textureStyle } =
@@ -240,8 +249,7 @@ export function deriveReadDesign(document: DocumentFull): ReadDesign {
     paperColors,
     paperTexture,
     textureStyle,
-    header: toHeader(style.documentHeader),
-    footer: toFooter(style.documentFooter),
+    ...linkedLetterhead(style),
     signature: toSignature(style.documentSignature),
     coverImage: document.coverImageUrl,
     cover: normalizeCover(style.coverSettings),

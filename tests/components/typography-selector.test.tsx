@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { Activity } from "react";
 import { describe, expect, it } from "vitest";
 import { FONT_OPTIONS } from "@/components/document/constants";
-import { TypographySelector } from "@/components/escrever/toolbar";
+import { MarqueeText, TypographySelector } from "@/components/escrever/toolbar";
 
 function Page({ mode }: { mode: "visible" | "hidden" }) {
   return (
@@ -30,5 +30,34 @@ describe("TypographySelector", () => {
         expanded: false,
       }),
     ).toBeInTheDocument();
+  });
+});
+
+describe("MarqueeText", () => {
+  const sizes = (scroll: number, client: number) => {
+    Object.defineProperty(HTMLElement.prototype, "scrollWidth", {
+      configurable: true,
+      get: () => scroll,
+    });
+    Object.defineProperty(HTMLElement.prototype, "clientWidth", {
+      configurable: true,
+      get: () => client,
+    });
+  };
+
+  it("stays still when the text fits", () => {
+    sizes(80, 100);
+    render(<MarqueeText text="Inter" />);
+    expect(screen.getByText("Inter")).not.toHaveClass(
+      "animate-marquee-pingpong",
+    );
+  });
+
+  it("slides back and forth when the text overflows", () => {
+    sizes(180, 100);
+    render(<MarqueeText text="Uma fonte com nome bem comprido" />);
+    const text = screen.getByText("Uma fonte com nome bem comprido");
+    expect(text).toHaveClass("animate-marquee-pingpong");
+    expect(text.style.getPropertyValue("--shift")).toBe("-80px");
   });
 });

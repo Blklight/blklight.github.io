@@ -53,7 +53,7 @@ export function ColorsPanel({ design, presets }: DesignContext) {
         <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
           Modo de Cor
         </span>
-        <div className="grid grid-cols-3 gap-1">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(7.5rem,1fr))] gap-1">
           <button
             type="button"
             onClick={() => {

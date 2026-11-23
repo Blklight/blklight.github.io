@@ -20,6 +20,7 @@ import {
   List,
   ListOrdered,
   Minus,
+  Pilcrow,
   Plus,
   Quote,
   Strikethrough,
@@ -167,48 +168,68 @@ export function EditorBubbleMenu({
   );
 }
 
-interface Block {
+export interface Block {
   label: string;
   icon: ReactNode;
   run: (editor: Editor) => void;
+  /** Whether the block is the current one (text blocks only). */
+  isActive?: (editor: Editor) => boolean;
 }
 
-const BLOCKS: Block[] = [
+/** Text blocks: they live in the paper's top bar. */
+export const TEXT_BLOCKS: Block[] = [
+  {
+    label: "Parágrafo",
+    icon: <Pilcrow />,
+    run: (e) => e.chain().focus().setParagraph().run(),
+    isActive: (e) => e.isActive("paragraph"),
+  },
   {
     label: "Título 1",
     icon: <Heading1 />,
     run: (e) => e.chain().focus().toggleHeading({ level: 1 }).run(),
+    isActive: (e) => e.isActive("heading", { level: 1 }),
   },
   {
     label: "Título 2",
     icon: <Heading2 />,
     run: (e) => e.chain().focus().toggleHeading({ level: 2 }).run(),
+    isActive: (e) => e.isActive("heading", { level: 2 }),
   },
   {
     label: "Título 3",
     icon: <Heading3 />,
     run: (e) => e.chain().focus().toggleHeading({ level: 3 }).run(),
+    isActive: (e) => e.isActive("heading", { level: 3 }),
   },
   {
     label: "Lista",
     icon: <List />,
     run: (e) => e.chain().focus().toggleBulletList().run(),
+    isActive: (e) => e.isActive("bulletList"),
   },
   {
     label: "Lista numerada",
     icon: <ListOrdered />,
     run: (e) => e.chain().focus().toggleOrderedList().run(),
+    isActive: (e) => e.isActive("orderedList"),
   },
   {
     label: "Citação",
     icon: <Quote />,
     run: (e) => e.chain().focus().toggleBlockquote().run(),
+    isActive: (e) => e.isActive("blockquote"),
   },
   {
     label: "Bloco de código",
     icon: <FileCode2 />,
     run: (e) => e.chain().focus().toggleCodeBlock().run(),
+    isActive: (e) => e.isActive("codeBlock"),
   },
+];
+
+/** Media and special elements: the "+" on an empty line inserts these. */
+export const MEDIA_BLOCKS: Block[] = [
   {
     label: "Imagem",
     icon: <ImageIcon />,
@@ -224,8 +245,82 @@ const BLOCKS: Block[] = [
   },
 ];
 
+export interface BlockGroup {
+  label: string;
+  blocks: Block[];
+}
+
+const byLabel = (label: string) =>
+  [...TEXT_BLOCKS, ...MEDIA_BLOCKS].find(
+    (block) => block.label === label,
+  ) as Block;
+
+/** Everything that can be inserted, grouped: shared by "/" and the "+". */
+export const INSERT_GROUPS: BlockGroup[] = [
+  {
+    label: "Texto",
+    blocks: ["Parágrafo", "Título 1", "Título 2", "Título 3"].map(byLabel),
+  },
+  { label: "Listas", blocks: ["Lista", "Lista numerada"].map(byLabel) },
+  {
+    label: "Blocos",
+    blocks: ["Citação", "Bloco de código", "Linha"].map(byLabel),
+  },
+  { label: "Mídia", blocks: ["Imagem"].map(byLabel) },
+];
+
+/** Grouped block list (the "+" panel and the "/" menu). */
+export function InsertMenuList({
+  groups,
+  selected,
+  onPick,
+}: {
+  groups: BlockGroup[];
+  /** Highlighted block (keyboard navigation in the "/" menu). */
+  selected?: Block;
+  onPick: (block: Block) => void;
+}) {
+  if (groups.length === 0) {
+    return (
+      <p className="px-2 py-1.5 text-sm text-muted-foreground">
+        Nenhum bloco encontrado
+      </p>
+    );
+  }
+  return (
+    <div className="flex flex-col">
+      {groups.map((group) => (
+        <div
+          key={group.label}
+          className="flex flex-col py-1 first:pt-0 last:pb-0"
+        >
+          <p className="px-2 pb-1 font-mono text-[0.65rem] uppercase tracking-wider text-muted-foreground">
+            {group.label}
+          </p>
+          {group.blocks.map((block) => (
+            <button
+              key={block.label}
+              type="button"
+              aria-current={selected === block ? "true" : undefined}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => onPick(block)}
+              className={cn(
+                "flex items-center gap-3 rounded-sm px-2 py-1.5 text-left text-sm outline-none hover:bg-secondary focus-visible:bg-secondary [&_svg]:size-4 [&_svg]:text-muted-foreground",
+                selected === block && "bg-secondary",
+              )}
+            >
+              {block.icon}
+              {block.label}
+            </button>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /**
- * "+" on an empty line: inserts a block, Notion-style. Rendered inside the
+ * "+" on an empty line: opens the grouped insert menu (same as typing "/"). Rendered inside the
  * editor wrapper (position: relative) and placed from the line's coordinates,
  * so it scrolls with the text instead of floating over the viewport.
  */
@@ -290,6 +385,7 @@ export function EditorBlockMenu({ editor }: { editor: Editor }) {
       <button
         type="button"
         aria-label="Inserir bloco"
+        title="Inserir bloco (ou digite /)"
         aria-expanded={open}
         onMouseDown={(event) => event.preventDefault()}
         onClick={(event) => {
@@ -298,8 +394,8 @@ export function EditorBlockMenu({ editor }: { editor: Editor }) {
           setOpen((value) => !value);
         }}
         className={cn(
-          "absolute right-2 top-0 -translate-y-1/2 size-7 inline-flex items-center justify-center rounded-full border border-border bg-popover text-muted-foreground transition-[color,rotate,border-color] hover:text-foreground hover:border-foreground outline-none focus-visible:ring-2 focus-visible:ring-foreground",
-          open && "rotate-45 text-foreground border-foreground",
+          "absolute right-2 top-0 -translate-y-1/2 size-7 inline-flex items-center justify-center rounded-xs border-2 border-foreground bg-background text-foreground transition-[background-color,color] hover:bg-foreground hover:text-background outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2",
+          open && "bg-foreground text-background",
         )}
       >
         <Plus className="size-4" />
@@ -308,25 +404,17 @@ export function EditorBlockMenu({ editor }: { editor: Editor }) {
         <div
           className={cn(
             PANEL,
-            "absolute -left-9 flex-col items-stretch w-52 p-1.5 gap-0",
+            "absolute -left-9 flex-col items-stretch w-56 max-h-80 overflow-y-auto p-1.5 gap-0",
             upward ? "bottom-5" : "top-5",
           )}
         >
-          {BLOCKS.map((block) => (
-            <button
-              key={block.label}
-              type="button"
-              onMouseDown={(event) => event.preventDefault()}
-              onClick={() => {
-                block.run(editor);
-                setOpen(false);
-              }}
-              className="flex items-center gap-3 rounded-sm px-2 py-1.5 text-sm text-left hover:bg-secondary outline-none focus-visible:bg-secondary [&_svg]:size-4 [&_svg]:text-muted-foreground"
-            >
-              {block.icon}
-              {block.label}
-            </button>
-          ))}
+          <InsertMenuList
+            groups={INSERT_GROUPS}
+            onPick={(block) => {
+              block.run(editor);
+              setOpen(false);
+            }}
+          />
         </div>
       )}
     </div>

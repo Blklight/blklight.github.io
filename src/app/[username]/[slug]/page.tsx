@@ -168,14 +168,15 @@ export default async function PublicDocumentPage({
             />
 
             <div
-              className={cn("prose prose-lg max-w-none", fontClass)}
+              lang="pt-BR"
+              className={cn("doc-prose", fontClass)}
               style={proseStyle}
               // biome-ignore lint/security/noDangerouslySetInnerHtml: contentHtml is produced server-side by generateHTML from the document's own TipTap JSON via TipTap's schema-based serializer (not raw user HTML); standard rich-text render path.
               dangerouslySetInnerHTML={{ __html: contentHtml }}
             />
 
             {showSignature && (
-              <div className="mt-8">
+              <div className="mt-12">
                 <SignatureBlock
                   context={signatureContext}
                   color={paperColors?.text}

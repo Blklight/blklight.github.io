@@ -42,3 +42,38 @@ export const BLKLIGHT_FOOTER_LINE_FORMATS: LineFormat[] = [
     letterSpacing: "wider",
   },
 ];
+
+/** Letterhead models offered in the editor. Removed ids render as Blklight. */
+export const LETTERHEAD_PRESET_IDS = [
+  BLKLIGHT_PRESET_ID,
+  "corp-moderno",
+  "alerta-vermelho",
+];
+
+interface LetterheadLook {
+  mode: "preset" | "custom";
+  presetId?: string | null;
+  style?: unknown;
+}
+
+/**
+ * Header and footer always share one look: the footer takes the header's mode,
+ * model and style (its own lines and enabled flag stay). A model that no longer
+ * exists falls back to Blklight, so old documents keep rendering.
+ */
+export function linkLetterhead<
+  H extends LetterheadLook,
+  F extends LetterheadLook,
+>(header: H, footer: F): { header: H; footer: F } {
+  const presetId =
+    header.mode === "preset"
+      ? LETTERHEAD_PRESET_IDS.includes(header.presetId ?? "")
+        ? header.presetId
+        : BLKLIGHT_PRESET_ID
+      : header.presetId;
+  const linked = { ...header, presetId };
+  return {
+    header: linked,
+    footer: { ...footer, mode: linked.mode, presetId, style: linked.style },
+  };
+}

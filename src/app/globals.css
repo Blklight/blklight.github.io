@@ -1227,3 +1227,172 @@
 @utility flipped-x {
   transform: rotateX(180deg);
 }
+
+/*
+ * Reading typography for document bodies, shared by the editor and the
+ * published page so what is written is what gets read. Book-style
+ * paragraphs: first-line indent, no gap, no indent after a heading or break.
+ * Justified only with hyphenation, and left-aligned on narrow screens.
+ * Sources: Bringhurst (measure 45-75ch, indent or space), Butterick (18-21px,
+ * line-height 1.5-1.75), WCAG 1.4.12 (text spacing).
+ */
+@layer components {
+  .doc-prose {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    overflow-wrap: break-word;
+    font-variant-numeric: oldstyle-nums proportional-nums;
+  }
+  @media (min-width: 48rem) {
+    .doc-prose {
+      font-size: 1.1875rem;
+    }
+  }
+  /* Per typeface: EB Garamond has a small x-height (bigger, tighter leading,
+     ~70ch); monospace stays smaller and ragged-right (justifying fixed-width
+     glyphs opens holes between words). */
+  .doc-prose:is(.font-serif, .editor-serif) {
+    font-size: 1.3125rem;
+    line-height: 1.6;
+  }
+  .doc-prose:is(.font-mono, .editor-mono) {
+    font-size: 1rem;
+    line-height: 1.75;
+    letter-spacing: -0.01em;
+  }
+  @media (min-width: 48rem) {
+    .doc-prose:is(.font-serif, .editor-serif) {
+      font-size: 1.375rem;
+    }
+    .doc-prose:is(.font-mono, .editor-mono) {
+      font-size: 1.0625rem;
+    }
+  }
+  .doc-prose p {
+    margin: 0;
+    text-indent: 1.5em;
+    text-align: left;
+    text-wrap: pretty;
+  }
+  @media (min-width: 40rem) {
+    .doc-prose p {
+      text-align: justify;
+      hyphens: auto;
+    }
+  }
+  .doc-prose:is(.font-mono, .editor-mono) p {
+    text-align: left;
+    hyphens: manual;
+  }
+  .doc-prose p:first-child,
+  .doc-prose
+    :is(h1, h2, h3, h4, hr, blockquote, ul, ol, pre, img, figure, div)
+    + p {
+    text-indent: 0;
+  }
+  .doc-prose :is(h1, h2, h3, h4) {
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    margin: 1.8em 0 0.5em;
+  }
+  .doc-prose :is(h1, h2, h3, h4):first-child {
+    margin-top: 0;
+  }
+  .doc-prose h1 {
+    font-size: 2em;
+  }
+  .doc-prose h2 {
+    font-size: 1.5em;
+  }
+  .doc-prose h3 {
+    font-size: 1.25em;
+  }
+  .doc-prose :is(ul, ol) {
+    margin: 1em 0;
+    padding-left: 1.5em;
+  }
+  .doc-prose ul {
+    list-style: disc;
+  }
+  .doc-prose ol {
+    list-style: decimal;
+  }
+  .doc-prose li {
+    margin: 0.25em 0;
+  }
+  .doc-prose li::marker {
+    color: var(--tw-prose-bullets, var(--muted-foreground));
+  }
+  .doc-prose li p {
+    text-indent: 0;
+  }
+  .doc-prose blockquote {
+    margin: 1.5em 0;
+    padding-left: 1.25em;
+    border-left: 2px solid var(--tw-prose-quote-borders, currentColor);
+    font-style: italic;
+    color: var(--tw-prose-quotes, var(--muted-foreground));
+  }
+  .doc-prose blockquote p {
+    text-indent: 0;
+  }
+  .doc-prose a {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+  .doc-prose strong {
+    font-weight: 700;
+  }
+  .doc-prose :not(pre) > code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    padding: 0.1em 0.35em;
+    background: var(--tw-prose-pre-bg, var(--secondary));
+  }
+  .doc-prose pre {
+    margin: 1.5em 0;
+    padding: 1em;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    line-height: 1.6;
+    background: var(--tw-prose-pre-bg, var(--secondary));
+  }
+  .doc-prose hr {
+    width: 6rem;
+    height: 1px;
+    margin: 2em auto;
+    border: 0;
+    background: var(--tw-prose-hr, currentColor);
+    opacity: 0.4;
+  }
+  .doc-prose img {
+    max-width: 100%;
+    height: auto;
+    margin: 1.5em 0;
+  }
+}
+
+/* Ping-pong slide for text wider than its box (MarqueeText); --shift is the overflow. */
+@keyframes marquee-pingpong {
+  0%,
+  15% {
+    transform: translateX(0);
+  }
+  85%,
+  100% {
+    transform: translateX(var(--shift, 0));
+  }
+}
+.animate-marquee-pingpong {
+  animation: marquee-pingpong 5s ease-in-out infinite alternate;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee-pingpong {
+    display: inline;
+    animation: none;
+  }
+}
