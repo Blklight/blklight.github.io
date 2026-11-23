@@ -22,7 +22,7 @@ const ROLE_LABEL: Record<string, string> = {
   user: "Usuário",
 };
 
-/** Profile photo: upload a file (cropped to 512px WebP by the API) or use an external URL. */
+/** Profile photo: upload a file (square WebP of at most 512px, made by the API) or use an external URL. */
 function AvatarSection({ username }: { username: string }) {
   const queryClient = useQueryClient();
   const { data: profile } = useCurrentProfile(true);
