@@ -27,7 +27,7 @@ export interface DocumentPaperHeaderProps {
   extraTabs?: ReactNode;
   /** Design mode: the text is read-only, so the formatting tools are off. */
   locked?: boolean;
-  /** Document actions (save, publish) at the end of the bar; stay active in design mode. */
+  /** Document actions (save, publish) in the right tab; stay active in design mode. */
   actions?: ReactNode;
   /** Save state, shown next to the status. */
   save?: { lastSaved: Date | null; isSaving: boolean; dirty: boolean };
@@ -82,8 +82,9 @@ const Divider = () => (
 
 /**
  * Bar glued to the top of the paper; it sticks under the navbar while writing.
- * Its top edge rises into a tab at each end: the type on the left; status and
- * save state (plus the side tabs on narrow screens) on the right. The bar holds
+ * Its top edge rises into a tab at each end: type and status on the left; save
+ * state and the document actions (plus the side tabs on narrow screens) on
+ * the right. The bar holds
  * the font and the text blocks (media goes through the "+" on an empty line).
  */
 export function DocumentPaperHeader({
@@ -115,32 +116,11 @@ export function DocumentPaperHeader({
       <div className="flex items-end">
         <div
           className={cn(
-            "flex h-12 shrink-0 items-start pt-2 rounded-tl-3xl pr-1 pl-5",
+            "flex h-12 shrink-0 items-start gap-1.5 pt-2 rounded-tl-3xl pr-1 pl-5",
             INK,
           )}
         >
           <span className={cn(chip, typeTheme(type).solid)}>{typeLabel}</span>
-        </div>
-        <Dip />
-        <div className={cn("h-4 min-w-0 flex-1", INK)} />
-        <Dip flip />
-        <div
-          className={cn(
-            "flex h-12 shrink-0 items-start pt-2 gap-2 rounded-tr-3xl pr-5 pl-1",
-            INK,
-          )}
-        >
-          {save && saveLabel(save) && (
-            <span
-              aria-live="polite"
-              className={cn(
-                "hidden font-mono text-[0.7rem] uppercase tracking-wider sm:inline",
-                save.dirty && !save.isSaving ? "opacity-80" : "opacity-55",
-              )}
-            >
-              {saveLabel(save)}
-            </span>
-          )}
           <span
             className={cn(
               chip,
@@ -150,12 +130,36 @@ export function DocumentPaperHeader({
           >
             {STATUS_LABEL[status]}
           </span>
-          {extraTabs}
+        </div>
+        <Dip />
+        <div className={cn("h-4 min-w-0 flex-1", INK)} />
+        <Dip flip />
+        <div
+          className={cn(
+            "flex h-12 shrink-0 items-start gap-1 pt-1.5 rounded-tr-3xl pr-3 pl-1",
+            INK,
+          )}
+        >
+          {save && saveLabel(save) && (
+            <span
+              aria-live="polite"
+              className={cn(
+                "mr-1 hidden h-8 items-center font-mono text-[0.7rem] uppercase tracking-wider sm:flex",
+                save.dirty && !save.isSaving ? "opacity-80" : "opacity-55",
+              )}
+            >
+              {saveLabel(save)}
+            </span>
+          )}
+          {actions}
+          {extraTabs && (
+            <div className="flex h-8 items-center">{extraTabs}</div>
+          )}
         </div>
       </div>
       <div
         className={cn(
-          "flex flex-wrap items-center gap-x-1 px-2 pb-1 shadow-[0_6px_16px_-10px_rgb(0_0_0/0.45)]",
+          "flex flex-wrap items-center gap-x-1 px-2 pb-1 shadow-[0_12px_24px_-10px_rgb(0_0_0/0.6)]",
           INK,
         )}
       >
@@ -219,12 +223,6 @@ export function DocumentPaperHeader({
             </button>
           </div>
         </div>
-        {actions && (
-          <div className="relative z-1 flex items-center gap-1">
-            <Divider />
-            {actions}
-          </div>
-        )}
       </div>
     </div>
   );

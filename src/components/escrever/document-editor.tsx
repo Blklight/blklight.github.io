@@ -607,7 +607,7 @@ export function DocumentEditor({
         size="sm"
         disabled={!isValid || !title?.trim() || isPublishing}
         data-testid="publish-button"
-        className="h-8 bg-background font-mono text-xs uppercase tracking-wider text-foreground hover:bg-background/90"
+        className="ml-1 h-8 bg-background font-mono text-xs uppercase tracking-wider text-foreground hover:bg-background/90"
       >
         <Send className="w-4 h-4" />
         <span className="ml-2">Publicar</span>
@@ -751,7 +751,7 @@ export function DocumentEditor({
                   grains={paperStyle.grains}
                   grainSettings={paperStyle.grainSettings}
                   className={cn(
-                    "border-y-0 shadow-[0_28px_56px_-28px_rgb(0_0_0/0.45),0_2px_8px_-2px_rgb(0_0_0/0.12)]",
+                    "shadow-[0_28px_56px_-28px_rgb(0_0_0/0.45),0_2px_8px_-2px_rgb(0_0_0/0.12)]",
                     isDesignMode &&
                       "outline-2 outline-dashed outline-offset-4 outline-foreground/40",
                   )}

@@ -59,9 +59,14 @@ export function SideTabs({
             vertical
               ? "-ml-px rounded-r-xs px-1.5 py-3 [writing-mode:vertical-rl]"
               : "h-6 rounded-full border-current/25 px-2.5",
+            // Same inverted, grained surface as the paper bars; the open panel's tab flips back.
+            vertical &&
+              "relative letterhead-grain-noise letterhead-grain-overlay",
             open === tab.id
-              ? "bg-foreground text-background"
-              : "bg-background hover:bg-secondary",
+              ? "bg-background text-foreground"
+              : vertical
+                ? "bg-foreground text-background hover:bg-foreground/90"
+                : "hover:bg-current/10",
           )}
         >
           {tab.icon}
