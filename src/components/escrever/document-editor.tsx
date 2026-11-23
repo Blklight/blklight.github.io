@@ -717,7 +717,7 @@ export function DocumentEditor({
                       {publishTrigger}
                     </>
                   }
-                  save={{ lastSaved, isSaving, dirty: hasUnsavedChanges }}
+                  save={{ lastSaved, isSaving }}
                   extraTabs={
                     <SideTabs
                       open={sidePanel}

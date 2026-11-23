@@ -2,8 +2,9 @@
 
 import type { Editor } from "@tiptap/react";
 import { useEditorState } from "@tiptap/react";
-import { Redo, Undo } from "lucide-react";
-import { Fragment, type ReactNode } from "react";
+import { Check, LoaderCircle, Redo, Undo } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { Fragment, type ReactNode, useEffect, useState } from "react";
 import { typeTheme } from "@/components/feed/cards/card-theme";
 import { cn } from "@/lib/utils";
 import type { DocumentStatus } from "@/types/api.types";
@@ -29,20 +30,14 @@ export interface DocumentPaperHeaderProps {
   locked?: boolean;
   /** Document actions (save, publish) in the right tab; stay active in design mode. */
   actions?: ReactNode;
-  /** Save state, shown next to the status. */
-  save?: { lastSaved: Date | null; isSaving: boolean; dirty: boolean };
+  /** Save state, shown as a pill in the gap between the tabs. */
+  save?: { lastSaved: Date | null; isSaving: boolean };
 }
 
 const TIME = new Intl.DateTimeFormat("pt-BR", {
   hour: "2-digit",
   minute: "2-digit",
 });
-
-function saveLabel(save: NonNullable<DocumentPaperHeaderProps["save"]>) {
-  if (save.isSaving) return "Salvando…";
-  if (save.dirty) return "Não salvo";
-  return save.lastSaved ? `Salvo às ${TIME.format(save.lastSaved)}` : null;
-}
 
 export const ACTION =
   "flex items-center gap-1.5 h-8 px-2 rounded-xs text-xs font-mono uppercase tracking-wider transition-colors hover:bg-current/10 disabled:opacity-30 disabled:pointer-events-none outline-none focus-visible:ring-2 focus-visible:ring-current [&_svg]:size-4";
@@ -75,6 +70,68 @@ const Dip = ({ flip = false }: { flip?: boolean }) => (
     }}
   />
 );
+
+/**
+ * Save feedback in the empty gap between the tabs: "Salvando" (blue, spinner),
+ * then "Salvo às 14:32" (ultraviolet), rising from below and fading out. The
+ * 32px slot clips it, so it never spills past the dip.
+ */
+function SavePill({
+  lastSaved,
+  isSaving,
+}: {
+  lastSaved: Date | null;
+  isSaving: boolean;
+}) {
+  const [shown, setShown] = useState<"saving" | "saved" | null>(null);
+  const reduce = useReducedMotion();
+
+  useEffect(() => {
+    if (isSaving) {
+      setShown("saving");
+      return;
+    }
+    if (!lastSaved) return;
+    setShown("saved");
+    const timer = setTimeout(() => setShown(null), 2500);
+    return () => clearTimeout(timer);
+  }, [isSaving, lastSaved]);
+
+  return (
+    <div
+      aria-live="polite"
+      className="flex h-8 items-center justify-center overflow-hidden"
+    >
+      <AnimatePresence mode="wait">
+        {shown && (
+          <motion.span
+            key={shown}
+            initial={{ y: reduce ? 0 : 28, opacity: reduce ? 0 : 1 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.3 } }}
+            transition={{ type: "spring", duration: 0.35, bounce: 0.15 }}
+            className={cn(
+              "flex h-6 items-center gap-1.5 rounded-full px-2.5 font-mono text-[0.7rem] uppercase tracking-wider text-white shadow-[0_4px_10px_-4px_rgb(0_0_0/0.4)]",
+              shown === "saving" ? "bg-bluesky-700" : "bg-blklight-500",
+            )}
+          >
+            {shown === "saving" ? (
+              <>
+                <LoaderCircle aria-hidden className="size-3 animate-spin" />
+                Salvando
+              </>
+            ) : (
+              <>
+                <Check aria-hidden className="size-3" />
+                Salvo às {lastSaved && TIME.format(lastSaved)}
+              </>
+            )}
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 const Divider = () => (
   <span aria-hidden className="mx-1 h-4 w-px shrink-0 bg-current opacity-20" />
@@ -132,7 +189,10 @@ export function DocumentPaperHeader({
           </span>
         </div>
         <Dip />
-        <div className={cn("h-4 min-w-0 flex-1", INK)} />
+        <div className="flex h-12 min-w-0 flex-1 flex-col justify-end">
+          {save && <SavePill {...save} />}
+          <div className={cn("h-4", INK)} />
+        </div>
         <Dip flip />
         <div
           className={cn(
@@ -140,17 +200,6 @@ export function DocumentPaperHeader({
             INK,
           )}
         >
-          {save && saveLabel(save) && (
-            <span
-              aria-live="polite"
-              className={cn(
-                "mr-1 hidden h-8 items-center font-mono text-[0.7rem] uppercase tracking-wider sm:flex",
-                save.dirty && !save.isSaving ? "opacity-80" : "opacity-55",
-              )}
-            >
-              {saveLabel(save)}
-            </span>
-          )}
           {actions}
           {extraTabs && (
             <div className="flex h-8 items-center">{extraTabs}</div>

@@ -8,21 +8,27 @@ import {
   TEXT_BLOCKS,
 } from "@/components/escrever/editor-toolbar";
 
+const header = (
+  editor: Editor,
+  save?: { lastSaved: Date | null; isSaving: boolean },
+) => (
+  <DocumentPaperHeader
+    editor={editor}
+    typography="sans"
+    onTypographyChange={() => {}}
+    status="draft"
+    type="article"
+    typeLabel="Artigo"
+    save={save}
+  />
+);
+
 const setup = () => {
   const editor = new Editor({
     extensions: [StarterKit],
     content: "<h2>Título</h2><p>Texto</p>",
   });
-  render(
-    <DocumentPaperHeader
-      editor={editor}
-      typography="sans"
-      onTypographyChange={() => {}}
-      status="draft"
-      type="article"
-      typeLabel="Artigo"
-    />,
-  );
+  render(header(editor));
   return editor;
 };
 
@@ -47,6 +53,24 @@ describe("paper header", () => {
     );
     fireEvent.click(screen.getByRole("button", { name: "Citação" }));
     expect(editor.isActive("blockquote")).toBe(true);
+  });
+
+  it("shows the save pill while saving, then the saved time", async () => {
+    const editor = new Editor({ extensions: [StarterKit] });
+    const { rerender } = render(
+      header(editor, { lastSaved: null, isSaving: false }),
+    );
+    expect(screen.queryByText(/Salv/)).not.toBeInTheDocument();
+    rerender(header(editor, { lastSaved: null, isSaving: true }));
+    expect(screen.getByText("Salvando")).toBeInTheDocument();
+    rerender(
+      header(editor, {
+        lastSaved: new Date(2026, 10, 22, 14, 32),
+        isSaving: false,
+      }),
+    );
+    // The saving pill exits before the saved one rises in.
+    expect(await screen.findByText(/Salvo às 14:32/)).toBeInTheDocument();
   });
 
   it("leaves only media for the + menu", () => {
