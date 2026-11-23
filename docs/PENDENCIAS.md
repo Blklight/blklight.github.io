@@ -75,7 +75,16 @@ Relatórios completos: `.impeccable/critique/` e `.impeccable/audit/` (última a
 
 - As capas vêm de endereços arbitrários informados pelo autor. Variantes de largura dependem de um serviço de imagens na API, ou de uma lista de domínios permitidos para usar `next/image`.
 - **Atualização (2026-11-23):** a API agora tem upload (`POST /api/v1/uploads`, branch `feat/image-uploads`). Uma capa enviada por upload é salva inteira, com até 1920px de largura. O card exibe essa capa com 160px de altura, mas baixa o arquivo inteiro: na capa de teste, 313 KB.
-- **Caminho:** no upload da capa, gerar também uma versão de ~640px (cerca de 50–70 KB) e usá-la nos cards. Capas por URL externa continuam sem variante.
+- **Por que não basta uma variante "do card":** hoje o feed escolhe o modelo do card sozinho (`toBentoItems`), e o mesmo documento aparece em vários formatos: faixa do feed, metade lateral, banner do destaque, perfil, organização, celular e desktop. Uma versão recortada para um formato fica errada nos outros.
+- **Caminho:** reduzir por largura, sem recortar.
+  - Gerar 2 ou 3 larguras a partir da imagem já enviada (por exemplo 480, 960 e o original), com o mesmo nome e um sufixo: `<id>-480.webp` e `<id>-960.webp`. Não precisa de coluna nova.
+  - Cada card declara `srcset`/`sizes`, e o navegador baixa só a menor largura que basta. O recorte continua no CSS (`object-cover`).
+  - Gerar no upload da capa ou depois, com um script que processa as capas já enviadas. Para capas por URL externa, usar a URL original.
+- **Futuro: etapa de ajuste da publicação.** Quando o autor puder escolher o card, essa etapa pode:
+  - guardar o modelo escolhido e o ponto de foco da capa (ver o item abaixo);
+  - mostrar a prévia do recorte em cada formato em que o card aparece.
+
+  As larguras continuam valendo, porque o card escolhido ainda muda de tamanho entre celular, desktop e o banner do destaque.
 
 ### Posição da capa nos cards
 
