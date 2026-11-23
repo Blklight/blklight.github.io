@@ -174,7 +174,7 @@ export function DocumentPaperHeader({
       <div className="flex items-end">
         <div
           className={cn(
-            "flex h-12 shrink-0 items-start gap-1.5 pt-2 rounded-tl-sm pr-1 pl-2.5",
+            "flex h-12 shrink-0 items-start gap-1.5 pt-2 rounded-tl-xl pr-1 pl-2.5",
             INK,
           )}
         >
@@ -198,7 +198,7 @@ export function DocumentPaperHeader({
         <Dip flip />
         <div
           className={cn(
-            "flex h-12 shrink-0 items-start gap-1 pt-1.5 rounded-tr-sm pr-2.5 pl-1",
+            "flex h-12 shrink-0 items-start gap-1 pt-1.5 rounded-tr-xl pr-2.5 pl-1",
             INK,
           )}
         >
