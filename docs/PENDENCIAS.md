@@ -74,6 +74,17 @@ Relatórios completos: `.impeccable/critique/` e `.impeccable/audit/` (última a
 ### `srcset` das capas
 
 - As capas vêm de endereços arbitrários informados pelo autor. Variantes de largura dependem de um serviço de imagens na API, ou de uma lista de domínios permitidos para usar `next/image`.
+- **Atualização (2026-11-23):** a API agora tem upload (`POST /api/v1/uploads`, branch `feat/image-uploads`). Uma capa enviada por upload é salva inteira, com até 1920px de largura. O card exibe essa capa com 160px de altura, mas baixa o arquivo inteiro: na capa de teste, 313 KB.
+- **Caminho:** no upload da capa, gerar também uma versão de ~640px (cerca de 50–70 KB) e usá-la nos cards. Capas por URL externa continuam sem variante.
+
+### Posição da capa nos cards
+
+- **Problema:** o autor ajusta o ponto de foco da capa (`coverSettings.position`), mas só o artigo e o preview respeitam esse ajuste. Os cards recortam sempre pelo centro (`object-cover` sem `objectPosition`, em `src/components/feed/`), e o rosto ou o assunto pode ficar fora do recorte.
+- **Por que não foi feito:** cada modelo de card tem um formato diferente (faixa de 160px, metade lateral, banner do destaque). Um único ponto de foco pensado para a altura do artigo nem sempre serve para todos.
+- **Caminhos:**
+  - aplicar o mesmo `objectPosition` do artigo em todos os cards. É simples, e para o eixo vertical costuma bastar;
+  - ou guardar um ponto de foco em porcentagem (`x%`, `y%`), escolhido clicando na imagem, que funciona em qualquer proporção de recorte;
+  - o `style` do documento já chega aos cards do feed público e do feed de organização. Os feeds do autor e de quem você segue ainda não trazem esse dado (ver seção "Feed" em `UX-UI-STATUS.md`).
 
 ## Editor (2026-11-21, branch `feat/editor-refino`)
 
