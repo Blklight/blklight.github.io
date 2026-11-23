@@ -48,8 +48,8 @@ const ACTION =
   "flex items-center gap-1.5 h-8 px-2 rounded-xs text-xs font-mono uppercase tracking-wider transition-colors hover:bg-black/5 dark:hover:bg-white/10 disabled:opacity-30 disabled:pointer-events-none outline-none focus-visible:ring-2 focus-visible:ring-current [&_svg]:size-4";
 
 /**
- * S-curve joining a raised tab to the lower middle edge. Fixed 64x64 box, so
- * the 40px drop matches the h-16 tabs and the h-6 middle exactly.
+ * S-curve joining a raised tab to the lower middle edge. Fixed 56x48 box, so
+ * the 32px drop matches the h-12 tabs and the h-4 middle exactly.
  */
 const Dip = ({
   fill,
@@ -62,11 +62,11 @@ const Dip = ({
 }) => (
   <svg
     aria-hidden="true"
-    viewBox="0 0 64 64"
-    className={cn("size-16 shrink-0", flip && "-scale-x-100")}
+    viewBox="0 0 56 48"
+    className={cn("h-12 w-14 shrink-0", flip && "-scale-x-100")}
   >
-    <path d="M0 0C32 0 32 40 64 40V64H0Z" fill={fill} />
-    <path d="M0 0.5C32 0.5 32 40.5 64 40.5" fill="none" stroke={stroke} />
+    <path d="M0 0C28 0 28 32 56 32V48H0Z" fill={fill} />
+    <path d="M0 0.5C28 0.5 28 32.5 56 32.5" fill="none" stroke={stroke} />
   </svg>
 );
 
@@ -108,26 +108,26 @@ export function DocumentPaperHeader({
     color: paperColors?.text || undefined,
   };
   const chip =
-    "flex h-7 items-center rounded-full px-3 font-mono text-xs uppercase tracking-wider";
+    "flex h-6 items-center rounded-full px-2.5 font-mono text-[0.7rem] uppercase tracking-wider";
 
   return (
     <div className="sticky top-12 lg:top-[3.6rem] z-30">
       {/* Raised tabs at both ends, the edge dipping between them (one silhouette). */}
       <div className="flex items-end">
         <div
-          className="flex h-16 shrink-0 items-center rounded-tl-3xl border-t border-l bg-background pr-1 pl-5"
+          className="flex h-12 shrink-0 items-start pt-2 rounded-tl-3xl border-t border-l bg-background pr-1 pl-5"
           style={surface}
         >
           <span className={cn(chip, typeTheme(type).solid)}>{typeLabel}</span>
         </div>
         <Dip fill={fill} stroke={border} />
         <div
-          className="h-6 min-w-0 flex-1 border-t bg-background"
+          className="h-4 min-w-0 flex-1 border-t bg-background"
           style={surface}
         />
         <Dip fill={fill} stroke={border} flip />
         <div
-          className="flex h-16 shrink-0 items-center gap-2 rounded-tr-3xl border-t border-r bg-background pr-5 pl-1"
+          className="flex h-12 shrink-0 items-start pt-2 gap-2 rounded-tr-3xl border-t border-r bg-background pr-5 pl-1"
           style={surface}
         >
           {save && saveLabel(save) && (
@@ -158,7 +158,7 @@ export function DocumentPaperHeader({
         aria-label="Formatação"
         inert={locked}
         className={cn(
-          "flex flex-wrap items-center gap-0.5 px-2 py-1.5 border-x border-b bg-background shadow-[0_6px_16px_-10px_rgb(0_0_0/0.35)] transition-[color,background-color,opacity] duration-300",
+          "flex flex-wrap items-center gap-0.5 px-2 py-1 border-x border-b bg-background shadow-[0_6px_16px_-10px_rgb(0_0_0/0.35)] transition-[color,background-color,opacity] duration-300",
           locked && "*:opacity-40",
         )}
         style={surface}
