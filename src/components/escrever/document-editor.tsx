@@ -607,10 +607,11 @@ export function DocumentEditor({
         size="sm"
         disabled={!isValid || !title?.trim() || isPublishing}
         data-testid="publish-button"
+        aria-label="Publicar"
         className="ml-1 h-8 bg-background font-mono text-xs uppercase tracking-wider text-foreground hover:bg-background/90"
       >
         <Send className="w-4 h-4" />
-        <span className="ml-2">Publicar</span>
+        <span className="ml-2 hidden sm:inline">Publicar</span>
       </Button>
     </ExpandableScreenTrigger>
   );
@@ -693,7 +694,7 @@ export function DocumentEditor({
                         onClick={handleSubmit(onSave)}
                         disabled={isSaving}
                         title="Salvar"
-                        className={ACTION}
+                        className={cn(ACTION, "px-1.5")}
                       >
                         {isSaving ? (
                           <span className="size-4 animate-spin border-2 border-current border-t-transparent" />
@@ -708,7 +709,7 @@ export function DocumentEditor({
                           onClick={onPreview}
                           disabled={isSaving}
                           title="Visualizar payload JSON"
-                          className={ACTION}
+                          className={cn(ACTION, "hidden px-1.5 sm:flex")}
                         >
                           <FileJson />
                           <span className="sr-only">Preview</span>
@@ -722,7 +723,7 @@ export function DocumentEditor({
                     <SideTabs
                       open={sidePanel}
                       onToggle={toggleSidePanel}
-                      className="lg:hidden"
+                      className="h-8 items-center lg:hidden"
                     />
                   }
                 />

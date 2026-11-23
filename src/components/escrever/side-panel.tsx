@@ -70,7 +70,9 @@ export function SideTabs({
           )}
         >
           {tab.icon}
-          {tab.label}
+          <span className={vertical ? undefined : "sr-only sm:not-sr-only"}>
+            {tab.label}
+          </span>
         </button>
       ))}
     </fieldset>

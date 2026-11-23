@@ -50,18 +50,19 @@ const INK =
   "relative bg-foreground text-background letterhead-grain-noise letterhead-grain-overlay";
 
 const DIP_MASK = `url("data:image/svg+xml,${encodeURIComponent(
-  "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 48'><path d='M0 0C28 0 28 32 56 32V48H0Z'/></svg>",
+  "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 48' preserveAspectRatio='none'><path d='M0 0C28 0 28 32 56 32V48H0Z'/></svg>",
 )}")`;
 
 /**
  * S-curve joining a raised tab to the lower middle edge: the tabs' grained
- * surface cut by a mask, so the joins match. Fixed 56x48 box, so the 32px
- * drop matches the h-12 tabs and the h-4 middle exactly.
+ * surface cut by a mask, so the joins match. 48px tall (32px wide below sm,
+ * 56px above; the mask stretches), so the 32px drop matches the h-12 tabs and
+ * the h-4 middle exactly.
  */
 const Dip = ({ flip = false }: { flip?: boolean }) => (
   <div
     aria-hidden
-    className={cn("h-12 w-14 shrink-0", INK, flip && "-scale-x-100")}
+    className={cn("h-12 w-8 shrink-0 sm:w-14", INK, flip && "-scale-x-100")}
     style={{
       maskImage: DIP_MASK,
       WebkitMaskImage: DIP_MASK,
@@ -173,7 +174,7 @@ export function DocumentPaperHeader({
       <div className="flex items-end">
         <div
           className={cn(
-            "flex h-12 shrink-0 items-start gap-1.5 pt-2 rounded-tl-3xl pr-1 pl-5",
+            "flex h-12 shrink-0 items-start gap-1.5 pt-2 rounded-tl-sm pr-1 pl-2.5",
             INK,
           )}
         >
@@ -181,7 +182,8 @@ export function DocumentPaperHeader({
           <span
             className={cn(
               chip,
-              "border border-current/25",
+              // Below sm the tabs run out of room; the status shows in the publish panel.
+              "hidden border border-current/25 sm:flex",
               status === "published" ? "font-bold" : "opacity-80",
             )}
           >
@@ -196,14 +198,12 @@ export function DocumentPaperHeader({
         <Dip flip />
         <div
           className={cn(
-            "flex h-12 shrink-0 items-start gap-1 pt-1.5 rounded-tr-3xl pr-3 pl-1",
+            "flex h-12 shrink-0 items-start gap-1 pt-1.5 rounded-tr-sm pr-2.5 pl-1",
             INK,
           )}
         >
           {actions}
-          {extraTabs && (
-            <div className="flex h-8 items-center">{extraTabs}</div>
-          )}
+          {extraTabs}
         </div>
       </div>
       <div
