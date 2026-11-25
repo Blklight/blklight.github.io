@@ -10,16 +10,35 @@ export interface NoteGroup {
 }
 
 const NEUTRAL = "oklch(0.94 0.012 85)";
+const PILE_W = 144;
+/** Room for the piles: the sheet's width. */
+const ROW_W = 580;
+
+/** Piles share one row; past what fits side by side, they overlap like a fanned hand. */
+const pileStep = (count: number) =>
+  count < 2 ? 0 : Math.min(PILE_W + 20, (ROW_W - PILE_W) / (count - 1));
 const TILTS = [-4, 3, -1.5, 5, -3];
 
-function Pile({ group, index }: { group: NoteGroup; index: number }) {
+function Pile({
+  group,
+  index,
+  step,
+}: {
+  group: NoteGroup;
+  index: number;
+  step: number;
+}) {
   const top = group.notes.at(-1);
   const tilt = TILTS[index % TILTS.length];
   const color = group.color ?? NEUTRAL;
   return (
     <li
-      className="relative h-52 w-40 shrink-0"
-      style={{ transform: `rotate(${tilt}deg)` }}
+      className="relative h-48 shrink-0"
+      style={{
+        width: PILE_W,
+        marginLeft: index === 0 ? 0 : step - PILE_W,
+        transform: `rotate(${tilt}deg)`,
+      }}
     >
       {group.notes.slice(-3, -1).map((n, i) => (
         <span
@@ -88,9 +107,14 @@ export function NotesPocket({
           comentar.
         </p>
       ) : (
-        <ol className="mt-56 flex flex-wrap gap-x-6 gap-y-4 pl-2">
+        <ol className="mt-56 flex pl-2">
           {filled.map((g, i) => (
-            <Pile key={g.id} group={g} index={i} />
+            <Pile
+              key={g.id}
+              group={g}
+              index={i}
+              step={pileStep(filled.length)}
+            />
           ))}
         </ol>
       )}
