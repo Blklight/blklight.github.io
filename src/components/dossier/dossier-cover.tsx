@@ -1,61 +1,94 @@
 import type { DossierCoverData } from "@/features/dossier/types";
+import { cn } from "@/lib/utils";
+
+/** Notch cut on the spine side, like a file folder board. */
+export const BOARD_CLIP =
+  "[clip-path:polygon(0_0,100%_0,100%_100%,0_100%,0_62%,1.1rem_59%,1.1rem_41%,0_38%)]";
 
 export function DossierCover({
   cover,
-  done,
-  total,
+  readFlags,
   onOpen,
 }: {
   cover: DossierCoverData;
-  done: number;
-  total: number;
+  /** One flag per document, in order. */
+  readFlags: boolean[];
   onOpen: () => void;
 }) {
-  const pct = total ? Math.round((done / total) * 100) : 0;
+  const done = readFlags.filter(Boolean).length;
   return (
-    <div className="flex h-full flex-col justify-between p-8 text-background">
-      <div className="flex items-start justify-between font-mono text-xs uppercase tracking-widest">
-        <span>{cover.code}</span>
-        <span className="border border-current px-2 py-0.5">
-          {cover.statusLabel}
-        </span>
+    <div
+      className={cn(
+        "dossier-board flex h-full flex-col gap-6 p-[7%] pl-[9%]",
+        BOARD_CLIP,
+      )}
+    >
+      <div className="flex justify-between font-mono text-[0.65rem] uppercase tracking-[0.2em] opacity-70">
+        <span>Blklight · Arquivo de estudo</span>
+        <span>Uso de leitura</span>
       </div>
-      <div>
-        <h2 className="text-5xl font-semibold tracking-tight">{cover.title}</h2>
-        {cover.subtitle && (
-          <p className="mt-2 font-mono text-xs uppercase tracking-widest opacity-70">
-            {cover.subtitle}
-          </p>
-        )}
+
+      <div className="w-[62%] -rotate-1 bg-[oklch(0.94_0.012_85)] p-3 font-mono text-[0.68rem] text-[oklch(0.2_0_0)] uppercase shadow-[2px_3px_0_rgb(0_0_0/0.35)] background-texture">
+        <div className="flex items-end justify-between border-b border-current pb-2">
+          <span className="font-pixel text-[clamp(1.6rem,3.4vh,2.4rem)] leading-none">
+            {cover.code}
+          </span>
+          <span>N° {String(readFlags.length).padStart(2, "0")}</span>
+        </div>
+        <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 pt-2">
+          <dt className="opacity-60">Título</dt>
+          <dd>{cover.title}</dd>
+          <dt className="opacity-60">Status</dt>
+          <dd>{cover.statusLabel}</dd>
+          {cover.subtitle && (
+            <>
+              <dt className="opacity-60">Conteúdo</dt>
+              <dd>{cover.subtitle}</dd>
+            </>
+          )}
+        </dl>
+        <div
+          aria-hidden
+          className="mt-2 h-6 bg-[repeating-linear-gradient(90deg,currentColor_0_2px,transparent_2px_4px,currentColor_4px_5px,transparent_5px_8px,currentColor_8px_11px,transparent_11px_12px)]"
+        />
       </div>
-      <div className="space-y-4">
-        <div>
-          <div className="mb-1 flex justify-between font-mono text-xs uppercase tracking-widest">
-            <span>Progresso</span>
-            <span>
-              {done}/{total}
-            </span>
-          </div>
-          <div
-            role="progressbar"
-            aria-label="Progresso de leitura"
-            aria-valuemin={0}
-            aria-valuemax={total}
-            aria-valuenow={done}
-            className="h-1.5 bg-background/20"
-          >
-            <div
-              className="h-full bg-background"
-              style={{ width: `${pct}%` }}
+
+      <h2 className="dossier-emboss mt-auto text-[clamp(3rem,10vh,6.5rem)] leading-[0.9] font-bold tracking-tight">
+        {cover.title}
+      </h2>
+
+      <div className="space-y-3">
+        <div className="flex justify-between font-mono text-[0.65rem] uppercase tracking-[0.2em]">
+          <span>Progresso</span>
+          <span>
+            {done}/{readFlags.length}
+          </span>
+        </div>
+        <div
+          role="progressbar"
+          aria-label="Progresso de leitura"
+          aria-valuemin={0}
+          aria-valuemax={readFlags.length}
+          aria-valuenow={done}
+          className="flex gap-1"
+        >
+          {readFlags.map((read, i) => (
+            <span
+              // biome-ignore lint/suspicious/noArrayIndexKey: fixed-length segments
+              key={i}
+              className={cn(
+                "h-2 flex-1 -skew-x-12",
+                read ? "bg-current" : "bg-current/20",
+              )}
             />
-          </div>
+          ))}
         </div>
         <button
           type="button"
           onClick={onOpen}
-          className="w-full border border-current py-2 font-mono text-xs uppercase tracking-widest hover:bg-background hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2"
+          className="mt-2 w-full bg-[oklch(0.94_0.012_85)] py-3 font-mono text-xs font-bold uppercase tracking-[0.25em] text-[oklch(0.2_0_0)] [clip-path:polygon(0.75rem_0,100%_0,100%_calc(100%-0.75rem),calc(100%-0.75rem)_100%,0_100%,0_0.75rem)] hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current"
         >
-          Abrir dossiê
+          Abrir dossiê →
         </button>
       </div>
     </div>

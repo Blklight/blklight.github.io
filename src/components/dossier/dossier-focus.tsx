@@ -1,7 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
-import { type ReactNode, Suspense, use } from "react";
+import { type ReactNode, Suspense, use, useEffect, useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { DossierSheetData } from "@/features/dossier/types";
 import { cn } from "@/lib/utils";
@@ -10,6 +10,7 @@ function Body({ promise }: { promise: Promise<string> }) {
   const html = use(promise);
   return (
     <div
+      lang="pt-BR"
       className="doc-prose font-serif"
       // biome-ignore lint/security/noDangerouslySetInnerHtml: lab mock HTML, authored in mock.ts
       dangerouslySetInnerHTML={{ __html: html }}
@@ -41,50 +42,66 @@ function BodySkeleton({ sheet }: { sheet: DossierSheetData }) {
 }
 
 /**
- * `bodyPromise` must be stable per sheet (cached by the loader), since `use()`
- * suspends on it.
+ * Reading mode: the document in the page flow (the page scrolls), centered
+ * like an article; the index sits to the right. Not a dialog.
+ * `bodyPromise` must be stable per sheet (cached loader), since `use()` suspends on it.
  */
 export function DossierFocus({
   sheet,
   bodyPromise,
+  renderDocument,
   sidebar,
   onClose,
 }: {
   sheet: DossierSheetData;
   bodyPromise: Promise<string>;
+  renderDocument: (parts: { title: ReactNode; body: ReactNode }) => ReactNode;
   sidebar: ReactNode;
   onClose: () => void;
 }) {
+  const titleRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+    titleRef.current?.focus({ preventScroll: true });
+  }, []);
+
   return (
-    <div className="relative z-10 mx-auto grid max-w-6xl gap-10 px-6 py-12 md:grid-cols-[16rem_1fr]">
-      <aside className="md:sticky md:top-8 md:max-h-[calc(100vh-4rem)] md:self-start md:overflow-y-auto">
-        {sidebar}
-      </aside>
-      <article
-        aria-labelledby={`focus-title-${sheet.id}`}
-        className="min-w-0 bg-card p-8 text-card-foreground shadow-xl md:p-12"
-      >
-        <header className="mb-8 flex items-start justify-between gap-4">
-          <h1
-            id={`focus-title-${sheet.id}`}
-            tabIndex={-1}
-            className="text-4xl font-semibold tracking-tight focus:outline-none"
-          >
-            {sheet.title}
-          </h1>
+    <div className="relative z-10 grid gap-8 px-4 pt-6 pb-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,48rem)_minmax(0,1fr)] lg:px-8">
+      <div className="lg:col-start-2">
+        <div className="mb-3 flex justify-end">
           <button
             type="button"
             onClick={onClose}
-            aria-label="Fechar leitura"
-            className="shrink-0 border border-foreground/20 p-2 hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring"
+            className="flex items-center gap-2 bg-foreground px-3 py-1.5 font-mono text-[0.68rem] uppercase tracking-widest text-background hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
           >
-            <X className="size-4" />
+            <X className="size-3.5" aria-hidden />
+            Voltar à pasta
+            <kbd className="opacity-60">Esc</kbd>
           </button>
-        </header>
-        <Suspense fallback={<BodySkeleton sheet={sheet} />}>
-          <Body promise={bodyPromise} />
-        </Suspense>
-      </article>
+        </div>
+        {renderDocument({
+          title: (
+            <h1
+              ref={titleRef}
+              tabIndex={-1}
+              className="text-3xl font-bold tracking-tight focus:outline-none md:text-4xl"
+            >
+              {sheet.title}
+            </h1>
+          ),
+          body: (
+            <Suspense fallback={<BodySkeleton sheet={sheet} />}>
+              <Body promise={bodyPromise} />
+            </Suspense>
+          ),
+        })}
+      </div>
+      <aside className="hidden lg:block">
+        <div className="sticky top-20 h-[calc(100dvh-7rem)] w-full max-w-72">
+          {sidebar}
+        </div>
+      </aside>
     </div>
   );
 }

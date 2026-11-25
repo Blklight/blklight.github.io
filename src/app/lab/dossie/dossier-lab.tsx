@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { ArticleCard } from "@/components/dossier/article-card";
+import { SignatureBlock } from "@/components/document/signature-block";
+import { ARTICLE_TYPE_LABEL, ArticleCard } from "@/components/dossier/article-card";
+import { DocumentPaper } from "@/components/dossier/document-paper";
 import { Dossier } from "@/components/dossier/dossier";
-import { DossierSidebar } from "@/components/dossier/dossier-sidebar";
+import { Navbar } from "@/components/navbar";
 import { loadArticleBody, prefetchArticleBody } from "@/features/dossier/load-body";
 import { ARTICLE_STAMPS, ARTICLES_BY_ID, TRAILS } from "@/features/dossier/mock";
 import { trailToDossier } from "@/features/dossier/trail-adapter";
@@ -11,10 +13,9 @@ import type { DossierTab } from "@/features/dossier/types";
 import { useNotes, useReadProgress } from "@/features/dossier/use-dossier-state";
 import { cn } from "@/lib/utils";
 
-const TABS: DossierTab[] = [
-  { id: "sumario", label: "Sumário" },
-  { id: "anotacoes", label: "Anotações" },
-];
+const TABS: DossierTab[] = [{ id: "anotacoes", label: "Anotações" }];
+const AUTHOR = { displayName: "Equipe Blklight", username: "blklight" };
+const PUBLISHED_AT = "2026-11-20T12:00:00-03:00";
 
 function NoteList({
   title,
@@ -33,14 +34,14 @@ function NoteList({
         if (input.value.trim()) onAdd(input.value.trim());
         input.value = "";
       }}
-      className="space-y-2"
     >
-      <p className="font-mono text-[0.7rem] uppercase tracking-widest text-muted-foreground">
+      <p className="font-mono text-[0.68rem] font-bold uppercase leading-7 tracking-widest">
         {title}
       </p>
-      <ol className="space-y-1 text-sm">
-        {notes.map((n) => (
-          <li key={n.id} className="border-b border-foreground/10 py-1">
+      <ol className="font-serif text-lg leading-7">
+        {notes.map((n, i) => (
+          <li key={n.id}>
+            <span className="mr-2 font-mono text-xs text-muted-foreground">{i + 1}.</span>
             {n.text}
           </li>
         ))}
@@ -48,8 +49,8 @@ function NoteList({
       <input
         name="nota"
         aria-label={`Nova nota: ${title}`}
-        placeholder="Escrever nota…"
-        className="w-full border-b border-foreground/30 bg-transparent py-1 text-sm outline-none focus:border-foreground"
+        placeholder="Escrever nota e Enter…"
+        className="h-7 w-full bg-transparent font-serif text-lg italic outline-none placeholder:text-muted-foreground/60"
       />
     </form>
   );
@@ -61,13 +62,15 @@ export function DossierLab() {
   const dossier = trailToDossier(trail, ARTICLES_BY_ID);
   const { read, markRead } = useReadProgress();
   const notes = useNotes();
+  const sectionTitle = (id?: string) => dossier.sections.find((s) => s.id === id)?.title;
 
   return (
-    <div className="py-10">
+    <>
+      <Navbar />
       <div
         role="group"
-        aria-label="Trilha"
-        className="mb-10 flex justify-center gap-2 font-mono text-xs uppercase tracking-widest"
+        aria-label="Trilha de exemplo"
+        className="fixed right-20 bottom-4 z-60 flex gap-1 font-mono text-[0.65rem] uppercase tracking-widest"
       >
         {TRAILS.map((t) => (
           <button
@@ -76,11 +79,11 @@ export function DossierLab() {
             aria-pressed={t.id === trailId}
             onClick={() => setTrailId(t.id)}
             className={cn(
-              "border px-3 py-1.5",
+              "border border-foreground bg-background px-2 py-1",
               t.id === trailId && "bg-foreground text-background",
             )}
           >
-            {t.code} · {t.title}
+            {t.code}
           </button>
         ))}
       </div>
@@ -97,25 +100,36 @@ export function DossierLab() {
             titleId={ctx.titleId}
             sheet={sheet.data}
             index={ctx.index}
-            sectionTitle={dossier.sections.find((s) => s.id === sheet.sectionId)?.title}
+            sectionTitle={sectionTitle(sheet.sectionId)}
+            author={AUTHOR}
             read={read.has(sheet.id)}
             stamp={ARTICLE_STAMPS[sheet.id]}
             onOpen={ctx.open}
             onPrefetch={() => prefetchArticleBody(sheet.id)}
           />
         )}
-        renderTab={(tabId, ctx) => {
+        renderDocument={(sheet, { title, body }) => {
+          const { article, intro } = sheet.data;
+          const context = { author: AUTHOR, typeLabel: ARTICLE_TYPE_LABEL[article.type] };
+          return (
+            <DocumentPaper as="article" context={context} contentClassName="gap-6 p-8 md:p-10">
+              <p className="font-mono text-[0.68rem] uppercase tracking-widest text-muted-foreground">
+                {trail.code} · {sectionTitle(sheet.sectionId)} · {article.readingTime} min
+              </p>
+              {title}
+              {intro && <p className="text-xl text-muted-foreground">{intro}</p>}
+              <div className="h-px bg-foreground/20" />
+              {body}
+              <div className="mt-6">
+                <SignatureBlock context={{ ...context, publishedAt: PUBLISHED_AT }} />
+              </div>
+            </DocumentPaper>
+          );
+        }}
+        renderTab={(_tabId, ctx) => {
           const current = dossier.sheets[ctx.index];
-          return tabId === "sumario" ? (
-            <DossierSidebar
-              sections={dossier.sections}
-              sheets={dossier.sheets}
-              currentIndex={ctx.index}
-              readIds={read}
-              onSelect={ctx.goTo}
-            />
-          ) : (
-            <div className="space-y-8">
+          return (
+            <div className="space-y-7">
               <NoteList
                 title={`Trilha ${trail.code}`}
                 notes={notes.trailNotes}
@@ -123,7 +137,7 @@ export function DossierLab() {
               />
               {current && (
                 <NoteList
-                  title={`Artigo · ${current.title}`}
+                  title={`Doc. ${String(ctx.index + 1).padStart(2, "0")} · ${current.title}`}
                   notes={notes.articleNotes[current.id] ?? []}
                   onAdd={(text) => notes.addArticleNote(current.id, text)}
                 />
@@ -132,6 +146,6 @@ export function DossierLab() {
           );
         }}
       />
-    </div>
+    </>
   );
 }
