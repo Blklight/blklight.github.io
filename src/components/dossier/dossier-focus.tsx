@@ -63,6 +63,7 @@ export function DossierFocus({
   onClose,
   onOpenIndex,
   aside,
+  actions,
 }: {
   sheet: DossierSheetData;
   bodyPromise: Promise<string>;
@@ -73,6 +74,8 @@ export function DossierFocus({
   onOpenIndex: () => void;
   /** Right column, next to the document; gets the document's root element. */
   aside?: (root: HTMLElement | null) => ReactNode;
+  /** Extra buttons next to "Voltar à pasta". */
+  actions?: ReactNode;
 }) {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const [root, setRoot] = useState<HTMLElement | null>(null);
@@ -98,15 +101,18 @@ export function DossierFocus({
           >
             ☰ Sumário
           </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex items-center gap-2 bg-foreground px-3 py-1.5 font-mono text-[0.68rem] uppercase tracking-widest text-background shadow-md hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-          >
-            <X className="size-3.5" aria-hidden />
-            Voltar à pasta
-            <kbd className="opacity-60">Esc</kbd>
-          </button>
+          <div className="flex gap-2">
+            {actions}
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex items-center gap-2 bg-foreground px-3 py-1.5 font-mono text-[0.68rem] uppercase tracking-widest text-background shadow-md hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            >
+              <X className="size-3.5" aria-hidden />
+              Voltar à pasta
+              <kbd className="hidden opacity-60 sm:inline">Esc</kbd>
+            </button>
+          </div>
         </div>
         <div ref={setRoot}>
           {renderDocument({

@@ -68,6 +68,8 @@ export interface DossierProps<T> {
     sheet: DossierSheetData<T>,
     root: HTMLElement | null,
   ) => ReactNode;
+  /** Reading mode: extra buttons next to "Voltar à pasta". */
+  renderActions?: (sheet: DossierSheetData<T>) => ReactNode;
   /** Pinned next to the index inside the cover (e.g. the reader's badge). */
   coverAttachment?: ReactNode;
   /** Must return the same promise for the same sheet (cached loader). */
@@ -112,6 +114,7 @@ export function Dossier<T>({
   renderDocument,
   renderNotes,
   renderAside,
+  renderActions,
   coverAttachment,
   getBody,
   onFocusChange,
@@ -428,6 +431,7 @@ export function Dossier<T>({
           renderDocument={(parts) => renderDocument(focused, parts)}
           onClose={unfocus}
           onOpenIndex={() => setIndexOpen(true)}
+          actions={renderActions?.(focused)}
           aside={renderAside ? (root) => renderAside(focused, root) : undefined}
           sidebar={index}
         />

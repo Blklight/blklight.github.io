@@ -16,7 +16,7 @@ import { PANEL_PAD_X, SHEET_BOTTOM } from "@/components/dossier/geometry";
 import { Navbar } from "@/components/navbar";
 import { NotesBoard } from "@/components/notes/notes-board";
 import { type NoteGroup, NotesPocket } from "@/components/notes/notes-pocket";
-import { ReadingNotes } from "@/components/notes/reading-notes";
+import { MarkerToggle, ReadingNotes } from "@/components/notes/reading-notes";
 import { HoloSeal } from "@/components/stamps/org-stamps";
 import { loadArticleBody, prefetchArticleBody } from "@/features/dossier/load-body";
 import {
@@ -215,6 +215,9 @@ export function DossierLab() {
             </DocumentPaper>
           );
         }}
+        renderActions={(sheet) => (
+          <MarkerToggle color={sectionColor(sheet.sectionId)} />
+        )}
         renderAside={(sheet, root) => (
           <ReadingNotes
             key={sheet.id}

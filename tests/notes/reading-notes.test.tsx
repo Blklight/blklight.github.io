@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
-import { ReadingNotes } from "@/components/notes/reading-notes";
+import { MarkerToggle, ReadingNotes } from "@/components/notes/reading-notes";
 import { useNotesStore } from "@/features/notes/store";
 
 // jsdom has no layout: ranges measure as empty boxes.
@@ -11,13 +11,16 @@ function setup() {
   root.innerHTML = "<p>Leia com calma e rode cada exemplo.</p>";
   document.body.append(root);
   render(
-    <ReadingNotes
-      root={root}
-      scopeId="trl"
-      docId="doc"
-      color="#58f"
-      label="Doc. 01"
-    />,
+    <>
+      <MarkerToggle color="#58f" />
+      <ReadingNotes
+        root={root}
+        scopeId="trl"
+        docId="doc"
+        color="#58f"
+        label="Doc. 01"
+      />
+    </>,
   );
   return () => {
     const text = root.querySelector("p")?.firstChild as Text;

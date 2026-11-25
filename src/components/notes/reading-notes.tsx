@@ -43,7 +43,6 @@ export function ReadingNotes({
   const update = useNotesStore((s) => s.update);
   const remove = useNotesStore((s) => s.remove);
   const marking = useNotesStore((s) => s.marking);
-  const setMarking = useNotesStore((s) => s.setMarking);
   const notes = useMemo(
     () => all.filter((n) => n.scopeId === scopeId && n.docId === docId),
     [all, scopeId, docId],
@@ -176,25 +175,6 @@ export function ReadingNotes({
 
       <button
         type="button"
-        aria-pressed={marking}
-        onClick={() => setMarking(!marking)}
-        title="Com o marcador ligado, selecione um trecho para marcar ou comentar"
-        className={cn(
-          "fixed right-4 bottom-28 z-30 flex items-center gap-2 border border-foreground px-3 py-1.5 font-mono text-[0.68rem] uppercase tracking-widest shadow-md lg:top-[calc(3.5625rem+1.5rem)] lg:bottom-auto",
-          marking ? "bg-foreground text-background" : "bg-background",
-        )}
-      >
-        <Highlighter className="size-3.5" aria-hidden />
-        Marcador
-        <span
-          aria-hidden
-          className="size-2.5 border border-current"
-          style={{ background: marking ? color : undefined }}
-        />
-      </button>
-
-      <button
-        type="button"
         onClick={() => setDrawer(true)}
         className="fixed right-4 bottom-16 z-30 flex items-center gap-2 border border-foreground bg-background px-3 py-1.5 font-mono text-[0.68rem] uppercase tracking-widest shadow-md lg:hidden"
       >
@@ -250,5 +230,32 @@ export function ReadingNotes({
         </div>
       )}
     </>
+  );
+}
+
+/** Turns the highlighter on and off; while on, selecting text offers to mark it. */
+export function MarkerToggle({ color }: { color?: string }) {
+  const marking = useNotesStore((s) => s.marking);
+  const setMarking = useNotesStore((s) => s.setMarking);
+  return (
+    <button
+      type="button"
+      aria-pressed={marking}
+      aria-label="Marcador"
+      onClick={() => setMarking(!marking)}
+      title="Com o marcador ligado, selecione um trecho para marcar ou comentar"
+      className={cn(
+        "flex items-center gap-2 border border-foreground px-3 py-1.5 font-mono text-[0.68rem] uppercase tracking-widest shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+        marking ? "bg-foreground text-background" : "bg-background",
+      )}
+    >
+      <Highlighter className="size-3.5" aria-hidden />
+      <span className="hidden sm:inline">Marcador</span>
+      <span
+        aria-hidden
+        className="size-2.5 border border-current"
+        style={{ background: marking ? color : undefined }}
+      />
+    </button>
   );
 }
