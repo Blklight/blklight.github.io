@@ -20,6 +20,7 @@ import {
 } from "@/features/dossier/use-dossier-state";
 import { cn } from "@/lib/utils";
 import { DossierCover, DossierProgress } from "./dossier-cover";
+import "./dossier.css";
 import { DossierFocus } from "./dossier-focus";
 import { DossierSheet } from "./dossier-sheet";
 import { DossierSidebar } from "./dossier-sidebar";
@@ -225,7 +226,7 @@ export function Dossier<T>({
                     active={isOpen && state.index === notesIndex}
                     label={cover.code}
                     onClick={() => goTo(notesIndex)}
-                    className="dossier-board"
+                    className="dossier-ear-inside"
                     style={{ zIndex: 1 }}
                   />
                   <div
@@ -308,7 +309,7 @@ export function Dossier<T>({
                         active
                         label={<span className="sr-only">{cover.code}</span>}
                         onClick={() => dispatch({ type: "open" })}
-                        className="dossier-board"
+                        className="dossier-ear-outside"
                       />
                       <div
                         aria-hidden
@@ -364,7 +365,7 @@ export function Dossier<T>({
                         side="left"
                         label={cover.code}
                         onClick={() => dispatch({ type: "close" })}
-                        className="dossier-board"
+                        className="dossier-ear-inside"
                       />
                     </div>
                   </div>

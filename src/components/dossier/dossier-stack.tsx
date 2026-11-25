@@ -11,14 +11,16 @@ const STEP = 1.5;
 const VELOCITY_WINDOW = 100;
 const FLICK_VELOCITY = 0.3;
 const TURN_MS = 520;
+const TUCK_MS = 650;
 const EASE = "cubic-bezier(.22,.8,.3,1)";
 /** Turned sheets lie on the open cover's back, above it (the cover is z-50). */
 const TURNED_Z = 60;
 /** Pages turn on the folder's spine, PANEL_PAD_X left of the sheet. */
 const SPINE = `-${PANEL_PAD_X}px 50%`;
 
-const turn = (deg: number, x = 0, y = 0) =>
-  `translate(${x}px, ${y}px) perspective(2800px) rotateY(${deg}deg)`;
+/* One function list for every state, so transitions interpolate cleanly. */
+const place = ({ x = 0, y = 0, turn = 0, tilt = 0 }) =>
+  `translate(${x}px, ${y}px) perspective(2800px) rotateY(${turn}deg) rotate(${tilt}deg)`;
 
 const SHADOW = {
   top: "0 1px 1px rgb(0 0 0 / 0.2), 4px 8px 18px -4px rgb(0 0 0 / 0.35)",
@@ -26,11 +28,11 @@ const SHADOW = {
 };
 
 /**
- * Sheets fastened on the folder's spine. Drag the top sheet left and it turns
- * like a book page, following the pointer, and lands face down on the cover's
- * back; drag right to turn the last one back. Past a distance or with a flick
- * the turn completes. Dragging never closes the folder.
- * `index === sheets.length` shows what lies under the pile (`bottom`).
+ * Sheets in a pile, after the tally stack: the top sheet follows the pointer;
+ * past a distance or with a flick it is thrown left and slips under the pile
+ * (next), or the last one comes back out from under it (prev). Dragging never
+ * closes the folder. At `index === sheets.length` (the folder's back, `bottom`)
+ * every sheet is turned like a book page and lies face down on the cover.
  */
 export function DossierStack<T>({
   sheets,
@@ -61,6 +63,11 @@ export function DossierStack<T>({
   } | null>(null);
   const samples = useRef<Array<[number, number]>>([]);
   const suppressClick = useRef(false);
+  const thrownFrom = useRef(0);
+  const [seen, setSeen] = useState({ index, from: index });
+  if (seen.index !== index) setSeen({ index, from: seen.index });
+  const from = seen.from;
+  const notes = index === sheets.length;
   const canNext = index < sheets.length;
   const canPrev = index > 0;
   const pull = dx < 0 ? (canNext ? dx : 0) : canPrev ? dx : 0;
@@ -86,12 +93,12 @@ export function DossierStack<T>({
       Math.sign(velocity) === Math.sign(distance);
     setDx(0);
     if (!commit || !(far || flick)) return;
+    thrownFrom.current = distance;
     if (distance < 0 && canNext) onNext();
     else if (distance > 0 && canPrev) onPrev();
   };
 
-  const angle = Math.min(180, (Math.abs(pull) / width) * 180);
-  const rise = pull < 0 ? angle / 180 : 0;
+  const progress = Math.min(1, Math.abs(pull) / width);
 
   return (
     <div
@@ -150,33 +157,52 @@ export function DossierStack<T>({
       <div className="absolute inset-0">{bottom}</div>
       {sheets.map((sheet, i) => {
         const o = i - index;
-        if (o < -DEPTH || o >= DEPTH) return null;
-        const turned = o < 0;
+        const turned = notes && o < 0;
         const top = o === 0;
-        const d = turned ? -o - 1 : Math.max(0, o - rise);
+        const tucking = !notes && o === -1 && from === index - 1;
+        const untucking = top && from === index + 1 && from < sheets.length;
+        if (!(turned ? o >= -DEPTH : o >= 0 && o < DEPTH) && !tucking)
+          return null;
+        const d = turned ? -o - 1 : Math.max(0, o - (top ? 0 : progress));
         let transform: string;
-        if (turned) {
-          const back = o === -1 && pull > 0 ? angle : 0;
-          transform = turn(-180 + back, -d * STEP, d * STEP);
-        } else if (top) {
-          transform = turn(pull < 0 ? -angle : 0);
-        } else {
-          transform = turn(0, d * STEP, d * STEP);
-        }
+        if (turned)
+          transform = place({ x: -d * STEP, y: d * STEP, turn: -180 });
+        else if (top) transform = place({ x: pull, tilt: pull / 40 });
+        else transform = place({ x: d * STEP, y: d * STEP });
+        const tuckVars = tucking
+          ? {
+              "--fx": `${thrownFrom.current}px`,
+              "--fr": `${thrownFrom.current / 40}deg`,
+              "--under": `${DEPTH * STEP}px`,
+            }
+          : untucking
+            ? { "--fx": "0px", "--fr": "0deg", "--under": `${DEPTH * STEP}px` }
+            : {};
         return (
           <div
             key={sheet.id}
             aria-hidden={top ? undefined : true}
             inert={top ? undefined : true}
-            className="absolute inset-0 [transform-style:preserve-3d] motion-reduce:!transition-none"
+            className="absolute inset-0 [transform-style:preserve-3d] motion-reduce:!animate-none motion-reduce:!transition-none"
             style={{
+              ...tuckVars,
               zIndex: turned ? TURNED_Z + i : 20 - o,
               transform,
-              transformOrigin: SPINE,
+              transformOrigin:
+                turned || from === sheets.length
+                  ? SPINE
+                  : top
+                    ? "50% 90%"
+                    : "0 0",
+              animation: tucking
+                ? `dossier-tuck ${TUCK_MS}ms ${EASE} forwards`
+                : untucking
+                  ? `dossier-tuck ${TUCK_MS}ms ${EASE} reverse`
+                  : undefined,
               // a sheet turned back stays above the cover until it lands
               transition: dragging
                 ? "none"
-                : `transform ${TURN_MS}ms ${EASE}, z-index 0s ${top ? TURN_MS : 0}ms`,
+                : `transform ${TURN_MS}ms ${EASE}, z-index 0s ${top && from === sheets.length ? TURN_MS : 0}ms`,
             }}
           >
             <div
