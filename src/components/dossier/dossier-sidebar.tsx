@@ -7,7 +7,6 @@ import type {
   DossierSheetData,
 } from "@/features/dossier/types";
 import { cn } from "@/lib/utils";
-import { PAPER_GRAINS } from "./document-paper";
 
 /** Same width clipped in the cover and as the reading sidebar. */
 export const INDEX_W = "w-72";
@@ -66,8 +65,12 @@ export function DossierSidebar({
       paperColors={null}
       paperTexture={{ type: "none", opacity: 0 }}
       textureStyle={{}}
-      grains={PAPER_GRAINS}
-      className={cn(INDEX_W, "text-foreground shadow-lg", className)}
+      grains={["background-texture"]}
+      className={cn(
+        INDEX_W,
+        "rounded-[1rem] bg-background text-foreground shadow-lg",
+        className,
+      )}
       contentClassName="flex h-full flex-col"
     >
       <header className="px-5 pt-6 pb-3">
@@ -87,12 +90,7 @@ export function DossierSidebar({
         {groups.map((g, gi) => (
           <div key={g.id ?? "_"} className="pt-4">
             {g.section && (
-              <p className="flex items-center gap-2 text-[0.6rem] tracking-[0.2em] text-muted-foreground">
-                <span
-                  aria-hidden
-                  className="h-2 w-3 [clip-path:polygon(0_0,100%_25%,100%_75%,0_100%)]"
-                  style={{ background: g.section.color }}
-                />
+              <p className="text-[0.6rem] tracking-[0.2em] text-muted-foreground">
                 {String(gi + 1).padStart(2, "0")} — {g.section.title}
               </p>
             )}
@@ -106,7 +104,7 @@ export function DossierSidebar({
                       aria-current={current ? "true" : undefined}
                       onClick={() => onSelect(index)}
                       className={cn(
-                        "flex w-full items-end gap-2 border-b-2 border-foreground/20 pt-3 pb-1 text-left tracking-wider shadow-[0_1px_0_rgb(255_255_255/0.5)] hover:border-foreground/50 focus-visible:outline-2 focus-visible:outline-ring dark:shadow-none",
+                        "flex w-full items-baseline gap-2 border-b-2 border-foreground/20 pt-3 pb-1 text-left tracking-wider shadow-[0_1px_0_rgb(255_255_255/0.5)] hover:border-foreground/50 focus-visible:outline-2 focus-visible:outline-ring dark:shadow-none",
                         current
                           ? "border-foreground font-bold"
                           : "text-foreground/75",
