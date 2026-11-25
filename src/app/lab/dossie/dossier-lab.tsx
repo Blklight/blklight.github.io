@@ -14,6 +14,7 @@ import { DocumentPaper } from "@/components/dossier/document-paper";
 import { Dossier } from "@/components/dossier/dossier";
 import { PANEL_PAD_X, SHEET_BOTTOM } from "@/components/dossier/geometry";
 import { Navbar } from "@/components/navbar";
+import { NotesBoard } from "@/components/notes/notes-board";
 import { type NoteGroup, NotesPocket } from "@/components/notes/notes-pocket";
 import { ReadingNotes } from "@/components/notes/reading-notes";
 import { HoloSeal } from "@/components/stamps/org-stamps";
@@ -225,6 +226,14 @@ export function DossierLab() {
           </div>
         )}
       />
+      {boardOpen && (
+        <NotesBoard
+          title={`Quadro · ${trail.code}`}
+          scopeId={trail.id}
+          groups={noteGroups}
+          onClose={() => setBoardOpen(false)}
+        />
+      )}
     </>
   );
 }
