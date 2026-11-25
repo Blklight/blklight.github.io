@@ -11,8 +11,6 @@ export const ARTICLE_TYPE_LABEL: Record<ArticleType, string> = {
   note: "Nota",
 };
 
-const MAX_HEADINGS = 5;
-
 /** Shared with the reading view so the first page and the open document line up. */
 export const DOC_TITLE =
   "w-full text-3xl md:text-4xl font-bold tracking-tight mb-3";
@@ -59,22 +57,20 @@ export function ArticleCard({
           onClick={onOpen}
           onPointerEnter={onPrefetch}
           onFocus={onPrefetch}
-          className="text-left after:absolute after:inset-0 after:z-20 focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:-outline-offset-4 focus-visible:after:outline-ring"
+          className="text-left hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
         >
           {article.title}
         </button>
       </h3>
-      {intro && <p className={DOC_ABSTRACT}>{intro}</p>}
-      <div className="mb-6 h-px bg-foreground/20" />
-
-      <div className="min-h-0 flex-1 overflow-hidden">
+      <div className="-mr-3 min-h-0 flex-1 overflow-y-auto overscroll-contain pr-3 [scrollbar-color:color-mix(in_oklab,currentColor_30%,transparent)_transparent] [scrollbar-width:thin]">
+        {intro && <p className={DOC_ABSTRACT}>{intro}</p>}
+        <div className="mb-6 h-px bg-foreground/20" />
         <p className="mb-2 font-mono text-[0.68rem] uppercase tracking-widest text-muted-foreground">
           Neste documento
         </p>
         <ol className="space-y-1.5 font-mono text-sm">
           {article.headings
             .filter((h) => h.level === 2)
-            .slice(0, MAX_HEADINGS)
             .map((h, i) => (
               <li
                 key={h.id}
@@ -110,6 +106,16 @@ export function ArticleCard({
           )}
         </div>
       </div>
+      <button
+        type="button"
+        onClick={onOpen}
+        onPointerEnter={onPrefetch}
+        onFocus={onPrefetch}
+        className="mt-4 flex w-full items-center justify-between bg-foreground px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.2em] text-background [clip-path:polygon(0.6rem_0,100%_0,100%_calc(100%-0.6rem),calc(100%-0.6rem)_100%,0_100%,0_0.6rem)] hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+      >
+        Abrir documento
+        <span aria-hidden>→</span>
+      </button>
     </DocumentPaper>
   );
 }

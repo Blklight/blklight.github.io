@@ -39,7 +39,6 @@ export function Ear({
       className={cn(
         "absolute flex flex-col items-center justify-center font-mono text-[0.68rem] font-bold uppercase tracking-[0.18em] transition-[width,filter] duration-200 ease-out",
         "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
-        "shadow-[inset_6px_0_8px_-6px_rgb(0_0_0/0.5)]",
         side === "right"
           ? cn("left-full", EAR_CLIP)
           : cn("right-full", EAR_CLIP_LEFT),
@@ -76,7 +75,7 @@ export function DossierTabs({
       {sections.map((s, i) => {
         const active = s.id === activeSectionId;
         const number = String(i + 1).padStart(2, "0");
-        const { top, height } = earSlot(i + 1, total);
+        const { top } = earSlot(i + 1, total);
         return (
           <button
             key={s.id}
@@ -85,24 +84,17 @@ export function DossierTabs({
             aria-label={active ? undefined : `${number} ${s.title}`}
             onClick={() => onSection(s.id)}
             className={cn(
-              "background-texture absolute flex items-center font-mono text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[oklch(0.18_0_0)] transition-[left,filter] duration-300 ease-out",
+              "background-texture absolute flex h-10 items-center gap-2 whitespace-nowrap pr-4 pl-2.5 font-mono text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[oklch(0.18_0_0)] transition-[left,filter] duration-300 ease-out",
               "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+              MARK_CLIP,
               active
-                ? cn(
-                    "z-40 max-w-60 gap-2 py-2.5 pr-5 pl-3 text-left drop-shadow-[2px_3px_3px_rgb(0_0_0/0.35)]",
-                    MARK_CLIP,
-                  )
-                : cn(
-                    "justify-center shadow-[inset_6px_0_8px_-6px_rgb(0_0_0/0.5)] brightness-[0.8] hover:brightness-95",
-                    EAR_CLIP,
-                  ),
+                ? "z-40 drop-shadow-[2px_3px_3px_rgb(0_0_0/0.35)]"
+                : "brightness-[0.8] hover:brightness-95",
             )}
             style={{
               backgroundColor: s.color,
               top,
-              ...(active
-                ? { left: `calc(100% - ${MARK_OVERLAP}px)` }
-                : { left: "100%", height, width: EAR_W - 8 }),
+              left: active ? `calc(100% - ${MARK_OVERLAP}px)` : "100%",
             }}
           >
             <span className={cn(active && "opacity-60")}>{number}</span>

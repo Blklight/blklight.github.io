@@ -27,9 +27,9 @@ export function DossierCover({
         <span>Uso de leitura</span>
       </div>
 
-      <div className="w-[62%] -rotate-1 bg-[oklch(0.94_0.012_85)] p-3 font-mono text-[0.68rem] text-[oklch(0.2_0_0)] uppercase shadow-[2px_3px_0_rgb(0_0_0/0.35)] background-texture">
+      <div className="w-[82%] -rotate-1 bg-[oklch(0.94_0.012_85)] p-4 font-mono text-sm text-[oklch(0.2_0_0)] uppercase shadow-[2px_3px_0_rgb(0_0_0/0.35)] background-texture">
         <div className="flex items-end justify-between border-b border-current pb-2">
-          <span className="font-pixel text-[2.4rem] leading-none">
+          <span className="font-pixel text-[3.4rem] leading-none">
             {cover.code}
           </span>
           <span>N° {String(readFlags.length).padStart(2, "0")}</span>
@@ -48,7 +48,7 @@ export function DossierCover({
         </dl>
         <div
           aria-hidden
-          className="mt-2 h-6 bg-[repeating-linear-gradient(90deg,currentColor_0_2px,transparent_2px_4px,currentColor_4px_5px,transparent_5px_8px,currentColor_8px_11px,transparent_11px_12px)]"
+          className="mt-3 h-9 bg-[repeating-linear-gradient(90deg,currentColor_0_2px,transparent_2px_4px,currentColor_4px_5px,transparent_5px_8px,currentColor_8px_11px,transparent_11px_12px)]"
         />
       </div>
 

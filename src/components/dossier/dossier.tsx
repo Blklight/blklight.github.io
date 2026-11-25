@@ -239,7 +239,7 @@ export function Dossier<T>({
                   >
                     <DossierStack
                       sheets={sheets}
-                      index={state.index}
+                      index={isOpen ? state.index : 0}
                       width={SHEET_W}
                       onNext={() => dispatch({ type: "next" })}
                       onPrev={() => dispatch({ type: "prev" })}

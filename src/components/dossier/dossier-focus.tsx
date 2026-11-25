@@ -71,7 +71,7 @@ export function DossierFocus({
   return (
     <div className="relative z-10 grid gap-8 pb-24 lg:grid-cols-[minmax(18rem,1fr)_45rem_minmax(0,1fr)]">
       <aside className="hidden lg:block">
-        <div className="sticky top-12 h-[calc(100dvh-3rem)] lg:top-[3.5625rem] lg:h-[calc(100dvh-3.5625rem)]">
+        <div className="fixed top-[3.5625rem] bottom-0 left-0 z-20 [&_nav]:overscroll-contain">
           {sidebar}
         </div>
       </aside>

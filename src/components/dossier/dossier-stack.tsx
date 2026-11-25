@@ -1,19 +1,35 @@
 "use client";
 
 import { type ReactNode, useRef, useState } from "react";
+import { PaperSurface } from "@/features/documents/design/paper-surface";
 import type { DossierSheetData } from "@/features/dossier/types";
-import { cn } from "@/lib/utils";
+import { PAPER_GRAINS } from "./document-paper";
+import { PANEL_PAD_X } from "./geometry";
 
 const DEPTH = 6;
-const STEP = 3;
+const STEP = 1.5;
 const VELOCITY_WINDOW = 100;
 const FLICK_VELOCITY = 0.3;
+const TURN_MS = 520;
+const EASE = "cubic-bezier(.22,.8,.3,1)";
+/** Turned sheets lie on the open cover's back, above it (the cover is z-50). */
+const TURNED_Z = 60;
+/** Pages turn on the folder's spine, PANEL_PAD_X left of the sheet. */
+const SPINE = `-${PANEL_PAD_X}px 50%`;
+
+const turn = (deg: number, x = 0, y = 0) =>
+  `translate(${x}px, ${y}px) perspective(2800px) rotateY(${deg}deg)`;
+
+const SHADOW = {
+  top: "0 1px 1px rgb(0 0 0 / 0.2), 4px 8px 18px -4px rgb(0 0 0 / 0.35)",
+  under: "0 1px 1px rgb(0 0 0 / 0.25), 0 2px 4px rgb(0 0 0 / 0.12)",
+};
 
 /**
- * Sheets held in a pile, after the tally stack: drag the top sheet sideways
- * (it follows the pointer); past a distance or with a flick it is thrown off
- * to the left (next) or the previous one is brought back (prev). Sheets below
- * sit tight, a few px apart, and rise as you drag.
+ * Sheets fastened on the folder's spine. Drag the top sheet left and it turns
+ * like a book page, following the pointer, and lands face down on the cover's
+ * back; drag right to turn the last one back. Past a distance or with a flick
+ * the turn completes. Dragging never closes the folder.
  * `index === sheets.length` shows what lies under the pile (`bottom`).
  */
 export function DossierStack<T>({
@@ -45,6 +61,9 @@ export function DossierStack<T>({
   } | null>(null);
   const samples = useRef<Array<[number, number]>>([]);
   const suppressClick = useRef(false);
+  const canNext = index < sheets.length;
+  const canPrev = index > 0;
+  const pull = dx < 0 ? (canNext ? dx : 0) : canPrev ? dx : 0;
 
   const end = (commit: boolean, at: number) => {
     const s = start.current;
@@ -66,13 +85,13 @@ export function DossierStack<T>({
       Math.abs(velocity) > FLICK_VELOCITY &&
       Math.sign(velocity) === Math.sign(distance);
     setDx(0);
-    if (commit && (far || flick)) {
-      if (distance < 0) onNext();
-      else onPrev();
-    }
+    if (!commit || !(far || flick)) return;
+    if (distance < 0 && canNext) onNext();
+    else if (distance > 0 && canPrev) onPrev();
   };
 
-  const progress = Math.min(1, Math.abs(dx) / width);
+  const angle = Math.min(180, (Math.abs(pull) / width) * 180);
+  const rise = pull < 0 ? angle / 180 : 0;
 
   return (
     <div
@@ -131,39 +150,61 @@ export function DossierStack<T>({
       <div className="absolute inset-0">{bottom}</div>
       {sheets.map((sheet, i) => {
         const o = i - index;
-        if (o < -1 || o >= DEPTH) return null;
-        const gone = o < 0;
+        if (o < -DEPTH || o >= DEPTH) return null;
+        const turned = o < 0;
         const top = o === 0;
-        const d = Math.max(0, o - progress);
-        let transform = `translate(${d * STEP}px, ${d * STEP}px)`;
-        if (top) transform = `translateX(${dx}px) rotate(${dx / 40}deg)`;
-        if (gone) transform = "translateX(-115%) rotate(-12deg)";
+        const d = turned ? -o - 1 : Math.max(0, o - rise);
+        let transform: string;
+        if (turned) {
+          const back = o === -1 && pull > 0 ? angle : 0;
+          transform = turn(-180 + back, -d * STEP, d * STEP);
+        } else if (top) {
+          transform = turn(pull < 0 ? -angle : 0);
+        } else {
+          transform = turn(0, d * STEP, d * STEP);
+        }
         return (
           <div
             key={sheet.id}
             aria-hidden={top ? undefined : true}
             inert={top ? undefined : true}
-            className={cn(
-              "absolute inset-0 motion-reduce:!transform-none",
-              gone && "pointer-events-none",
-            )}
+            className="absolute inset-0 [transform-style:preserve-3d] motion-reduce:!transition-none"
             style={{
-              // a thrown sheet flies over the open cover, then fades
-              zIndex: gone ? 60 : 20 - o,
+              zIndex: turned ? TURNED_Z + i : 20 - o,
               transform,
-              transformOrigin: top ? "50% 90%" : "0 0",
-              opacity: gone ? 0 : 1,
-              filter: top
-                ? "drop-shadow(2px 3px 4px rgb(0 0 0 / 0.25)) drop-shadow(6px 10px 16px rgb(0 0 0 / 0.2))"
-                : `brightness(${1 - d * 0.03}) drop-shadow(1px 1px 1px rgb(0 0 0 / 0.3))`,
+              transformOrigin: SPINE,
+              // a sheet turned back stays above the cover until it lands
               transition: dragging
                 ? "none"
-                : gone
-                  ? "transform 320ms cubic-bezier(.22,.8,.3,1), opacity 160ms 220ms"
-                  : "transform 320ms cubic-bezier(.22,.8,.3,1), opacity 120ms, filter 300ms",
+                : `transform ${TURN_MS}ms ${EASE}, z-index 0s ${top ? TURN_MS : 0}ms`,
             }}
           >
-            {renderSheet(sheet, i)}
+            <div
+              className="absolute inset-0 [backface-visibility:hidden]"
+              style={{
+                boxShadow: top ? SHADOW.top : SHADOW.under,
+                filter: top ? undefined : `brightness(${1 - d * 0.035})`,
+              }}
+            >
+              {renderSheet(sheet, i)}
+            </div>
+            <PaperSurface
+              paperColors={null}
+              paperTexture={{ type: "none", opacity: 0 }}
+              textureStyle={{}}
+              grains={PAPER_GRAINS}
+              className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)]"
+              contentClassName="h-full"
+            >
+              <span
+                aria-hidden
+                className="absolute inset-0"
+                style={{
+                  boxShadow: SHADOW.under,
+                  background: `rgb(0 0 0 / ${0.04 + d * 0.03})`,
+                }}
+              />
+            </PaperSurface>
           </div>
         );
       })}

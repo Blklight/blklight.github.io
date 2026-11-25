@@ -35,7 +35,10 @@ const MOCK_MEMBER: BadgeData = {
 function PinnedBadge({ member }: { member: BadgeData }) {
   return (
     <div className="relative h-[20.16rem] w-[14.4rem]">
-      <div inert className="pointer-events-none origin-top-left scale-[0.72]">
+      <div
+        inert
+        className="pointer-events-none w-80 origin-top-left scale-[0.72]"
+      >
         <Badge data={member} />
       </div>
       <HoloSeal
