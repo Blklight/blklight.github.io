@@ -11,6 +11,11 @@ import {
 } from "@/components/dossier/article-card";
 import { DocumentPaper } from "@/components/dossier/document-paper";
 import { Dossier } from "@/components/dossier/dossier";
+import {
+  PANEL_GAP_R,
+  PANEL_PAD_X,
+  SHEET_BOTTOM,
+} from "@/components/dossier/geometry";
 import { Navbar } from "@/components/navbar";
 import { HoloSeal } from "@/components/stamps/org-stamps";
 import { loadArticleBody, prefetchArticleBody } from "@/features/dossier/load-body";
@@ -226,7 +231,12 @@ export function DossierLab() {
             </div>
             <div
               aria-hidden
-              className="dossier-board pointer-events-none absolute inset-x-[-40px] bottom-[-64px] h-[45%] shadow-[0_-8px_18px_rgb(0_0_0/0.4)] [clip-path:polygon(0_30%,42%_0,100%_22%,100%_100%,0_100%)]"
+              className="dossier-board pointer-events-none absolute h-[45%] shadow-[0_-8px_18px_rgb(0_0_0/0.4)] [clip-path:polygon(0_30%,42%_0,100%_22%,100%_100%,0_100%)]"
+              style={{
+                left: -PANEL_PAD_X,
+                right: -PANEL_GAP_R,
+                bottom: -SHEET_BOTTOM,
+              }}
             />
             <p className="dossier-emboss absolute bottom-6 left-0 font-mono text-xs uppercase tracking-[0.3em] text-[oklch(0.92_0.012_85)] opacity-70">
               Bolso de anotações

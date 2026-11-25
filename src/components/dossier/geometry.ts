@@ -5,8 +5,13 @@
  */
 export const SHEET_W = 600;
 export const PANEL_PAD_X = 40;
-export const PANEL_W = SHEET_W + PANEL_PAD_X * 2;
+/** Small gap right of the sheet, so a section ear sits against its document. */
+export const PANEL_GAP_R = 14;
+export const PANEL_W = PANEL_PAD_X + SHEET_W + PANEL_GAP_R;
 export const EAR_W = 44;
+/** Section ear: a title strip tucked under the pile's edge, then the number outside the board. */
+export const TAB_TEXT_W = 24;
+export const TAB_NUM_W = 34;
 /** Room right of the folder: an ear, plus the active one sliding out. */
 const RIGHT_W = EAR_W + 8;
 export const SPREAD_W = EAR_W + PANEL_W * 2 + RIGHT_W;

@@ -68,7 +68,7 @@ export function DossierSidebar({
       grains={["background-texture"]}
       className={cn(
         INDEX_W,
-        "rounded-[1rem] bg-background text-foreground shadow-lg",
+        "rounded-[1rem] border-0 bg-background text-foreground shadow-lg",
         className,
       )}
       contentClassName="flex h-full flex-col"
@@ -90,8 +90,13 @@ export function DossierSidebar({
         {groups.map((g, gi) => (
           <div key={g.id ?? "_"} className="pt-4">
             {g.section && (
-              <p className="text-[0.6rem] tracking-[0.2em] text-muted-foreground">
-                {String(gi + 1).padStart(2, "0")} — {g.section.title}
+              <p className="text-[0.6rem] tracking-[0.2em]">
+                <span
+                  className="px-1 py-0.5 text-[oklch(0.18_0_0)] [box-decoration-break:clone]"
+                  style={{ background: g.section.color }}
+                >
+                  {String(gi + 1).padStart(2, "0")} — {g.section.title}
+                </span>
               </p>
             )}
             <ol>
