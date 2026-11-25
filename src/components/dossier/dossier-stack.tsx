@@ -1,5 +1,6 @@
 "use client";
 
+import { useReducedMotion } from "motion/react";
 import { type ReactNode, useRef, useState } from "react";
 import { PaperSurface } from "@/features/documents/design/paper-surface";
 import type { DossierSheetData } from "@/features/dossier/types";
@@ -65,6 +66,7 @@ export function DossierStack<T>({
   const [seen, setSeen] = useState({ index, from: index });
   if (seen.index !== index) setSeen({ index, from: seen.index });
   const from = seen.from;
+  const reduce = useReducedMotion();
   const canNext = index < sheets.length;
   const canPrev = index > 0;
   const pull = dx < 0 ? (canNext ? dx : 0) : canPrev ? dx : 0;
@@ -154,7 +156,7 @@ export function DossierStack<T>({
       <div className="absolute inset-0">{bottom}</div>
       {sheets.map((sheet, i) => {
         const pose = sheetPose(i, index, from, sheets.length);
-        if (!pose) return null;
+        if (!pose || (reduce && pose.motion === "tuck")) return null;
         const { top, turned } = pose;
         const o = i - index;
         const tucking = pose.motion === "tuck";
@@ -188,7 +190,7 @@ export function DossierStack<T>({
             key={sheet.id}
             aria-hidden={top ? undefined : true}
             inert={top ? undefined : true}
-            className="absolute inset-0 [transform-style:preserve-3d] motion-reduce:!animate-none motion-reduce:!transition-none"
+            className="absolute inset-0 [transform-style:preserve-3d] motion-reduce:!transition-none"
             style={{
               ...tuckVars,
               zIndex: turned ? LAYER.turned + i : LAYER.pile - o,
@@ -199,13 +201,17 @@ export function DossierStack<T>({
                   : top
                     ? "50% 90%"
                     : "0 0",
-              animation: tucking
-                ? `dossier-tuck ${TUCK_MS}ms ${EASE} forwards`
-                : untucking
-                  ? `dossier-tuck ${TUCK_MS}ms ${EASE} reverse`
-                  : unturning
-                    ? `dossier-unturn ${TURN_MS}ms ${EASE} backwards`
-                    : undefined,
+              animation: reduce
+                ? top && from !== index
+                  ? `dossier-fade 180ms ease-out`
+                  : undefined
+                : tucking
+                  ? `dossier-tuck ${TUCK_MS}ms ${EASE} forwards`
+                  : untucking
+                    ? `dossier-tuck ${TUCK_MS}ms ${EASE} reverse`
+                    : unturning
+                      ? `dossier-unturn ${TURN_MS}ms ${EASE} backwards`
+                      : undefined,
               // a sheet turned back stays above the cover until it lands
               transition: dragging
                 ? "none"

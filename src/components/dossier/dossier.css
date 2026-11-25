@@ -106,3 +106,9 @@
     z-index: 60;
   }
 }
+/* Reduced motion: the new top sheet just fades in. */
+@keyframes dossier-fade {
+  from {
+    opacity: 0;
+  }
+}
