@@ -19,7 +19,7 @@ import {
   useDossierState,
 } from "@/features/dossier/use-dossier-state";
 import { cn } from "@/lib/utils";
-import { DossierCover } from "./dossier-cover";
+import { DossierCover, DossierProgress } from "./dossier-cover";
 import { DossierFocus } from "./dossier-focus";
 import { DossierSheet } from "./dossier-sheet";
 import { DossierSidebar } from "./dossier-sidebar";
@@ -106,7 +106,8 @@ export function Dossier<T>({
   const sheet = sheets[state.index];
   const isOpen = state.mode !== "closed";
   const focused = state.mode === "focus" && sheet ? sheet : undefined;
-  const earTotal = sections.length + 2;
+  const earTotal = sections.length + 1;
+  const readFlags = sheets.map((s) => readIds.has(s.id));
 
   const focus = (index: number) => {
     dispatch({ type: "focus", index });
@@ -213,12 +214,19 @@ export function Dossier<T>({
                     activeSectionId={
                       isOpen && sheet ? sheet.sectionId : undefined
                     }
-                    notesActive={isOpen && state.index === notesIndex}
                     onSection={(id) => {
                       const i = sheets.findIndex((s) => s.sectionId === id);
                       if (i >= 0) goTo(i);
                     }}
-                    onNotes={() => goTo(notesIndex)}
+                  />
+                  <Ear
+                    slot={0}
+                    total={earTotal}
+                    active={isOpen && state.index === notesIndex}
+                    label={cover.code}
+                    onClick={() => goTo(notesIndex)}
+                    className="dossier-board"
+                    style={{ zIndex: 1 }}
                   />
                   <div
                     className="absolute"
@@ -291,14 +299,14 @@ export function Dossier<T>({
                     >
                       <DossierCover
                         cover={cover}
-                        readFlags={sheets.map((s) => readIds.has(s.id))}
+                        readFlags={readFlags}
                         onOpen={() => dispatch({ type: "open" })}
                       />
                       <Ear
                         slot={0}
                         total={earTotal}
                         active
-                        label={cover.code}
+                        label={<span className="sr-only">{cover.code}</span>}
                         onClick={() => dispatch({ type: "open" })}
                         className="dossier-board"
                       />
@@ -314,9 +322,14 @@ export function Dossier<T>({
                       inert={isOpen ? undefined : true}
                     >
                       <div className="dossier-board-inside absolute inset-0 overflow-hidden">
+                        <DossierProgress
+                          readFlags={readFlags}
+                          className="absolute top-5 opacity-80"
+                          style={{ left: PANEL_PAD_X, right: PANEL_PAD_X }}
+                        />
                         <div
-                          className="absolute h-[calc(100%-9rem)] -rotate-[0.6deg]"
-                          style={{ top: SHEET_TOP + 8, left: PANEL_PAD_X }}
+                          className="absolute h-[calc(100%-11rem)] -rotate-[0.6deg]"
+                          style={{ top: SHEET_TOP + 48, left: PANEL_PAD_X }}
                         >
                           {index}
                           <HoloSeal
@@ -336,7 +349,7 @@ export function Dossier<T>({
                           />
                         </div>
                         {coverAttachment && (
-                          <div className="absolute top-24 right-10 rotate-[2.5deg]">
+                          <div className="absolute top-32 right-10 rotate-[2.5deg]">
                             {coverAttachment}
                           </div>
                         )}

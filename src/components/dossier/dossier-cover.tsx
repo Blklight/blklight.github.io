@@ -15,7 +15,6 @@ export function DossierCover({
   readFlags: boolean[];
   onOpen: () => void;
 }) {
-  const done = readFlags.filter(Boolean).length;
   return (
     <div
       className={cn(
@@ -53,36 +52,7 @@ export function DossierCover({
         />
       </div>
 
-      <h2 className="dossier-emboss mt-auto text-[7rem] leading-[0.9] font-bold tracking-tight">
-        {cover.title}
-      </h2>
-
-      <div className="space-y-3">
-        <div className="flex justify-between font-mono text-[0.65rem] uppercase tracking-[0.2em]">
-          <span>Progresso</span>
-          <span>
-            {done}/{readFlags.length}
-          </span>
-        </div>
-        <div
-          role="progressbar"
-          aria-label="Progresso de leitura"
-          aria-valuemin={0}
-          aria-valuemax={readFlags.length}
-          aria-valuenow={done}
-          className="flex gap-1"
-        >
-          {readFlags.map((read, i) => (
-            <span
-              // biome-ignore lint/suspicious/noArrayIndexKey: fixed-length segments
-              key={i}
-              className={cn(
-                "h-2 flex-1 -skew-x-12",
-                read ? "bg-current" : "bg-current/20",
-              )}
-            />
-          ))}
-        </div>
+      <div className="mt-auto">
         <button
           type="button"
           onClick={onOpen}
@@ -90,6 +60,48 @@ export function DossierCover({
         >
           Abrir dossiê →
         </button>
+      </div>
+    </div>
+  );
+}
+
+/** Segmented reading progress, one segment per document. */
+export function DossierProgress({
+  readFlags,
+  className,
+  style,
+}: {
+  readFlags: boolean[];
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const done = readFlags.filter(Boolean).length;
+  return (
+    <div className={cn("space-y-2", className)} style={style}>
+      <div className="flex justify-between font-mono text-[0.65rem] uppercase tracking-[0.2em]">
+        <span>Progresso</span>
+        <span>
+          {done}/{readFlags.length}
+        </span>
+      </div>
+      <div
+        role="progressbar"
+        aria-label="Progresso de leitura"
+        aria-valuemin={0}
+        aria-valuemax={readFlags.length}
+        aria-valuenow={done}
+        className="flex gap-1"
+      >
+        {readFlags.map((read, i) => (
+          <span
+            // biome-ignore lint/suspicious/noArrayIndexKey: fixed-length segments
+            key={i}
+            className={cn(
+              "h-2 flex-1 -skew-x-12",
+              read ? "bg-current" : "bg-current/20",
+            )}
+          />
+        ))}
       </div>
     </div>
   );

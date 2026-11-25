@@ -2,15 +2,18 @@
 
 import { type ReactNode, useRef, useState } from "react";
 import type { DossierSheetData } from "@/features/dossier/types";
+import { cn } from "@/lib/utils";
 
-const DEPTH = 3;
+const DEPTH = 6;
+const STEP = 3;
 const VELOCITY_WINDOW = 100;
-const FLICK_VELOCITY = 0.45;
+const FLICK_VELOCITY = 0.3;
 
 /**
  * Sheets held in a pile, after the tally stack: drag the top sheet sideways
- * (it follows the pointer); past a distance or with a flick it is set aside
- * to the left (next) or brought back (prev). Sheets below rise as you drag.
+ * (it follows the pointer); past a distance or with a flick it is thrown off
+ * to the left (next) or the previous one is brought back (prev). Sheets below
+ * sit tight, a few px apart, and rise as you drag.
  * `index === sheets.length` shows what lies under the pile (`bottom`).
  */
 export function DossierStack<T>({
@@ -57,7 +60,7 @@ export function DossierStack<T>({
     const [t0, x0] = recent[0] ?? [at, distance];
     const [t1, x1] = recent.at(-1) ?? [at, distance];
     const velocity = recent.length > 1 ? (x1 - x0) / Math.max(1, t1 - t0) : 0;
-    const far = Math.abs(distance) > width * 0.18;
+    const far = Math.abs(distance) > Math.max(40, width * 0.12);
     const flick =
       Math.abs(distance) > 16 &&
       Math.abs(velocity) > FLICK_VELOCITY &&
@@ -132,24 +135,32 @@ export function DossierStack<T>({
         const gone = o < 0;
         const top = o === 0;
         const d = Math.max(0, o - progress);
-        let transform = `translate(${d * 10}px, ${d * 10}px)`;
-        if (top) transform = `translateX(${dx}px) rotate(${dx / 50}deg)`;
-        if (gone) transform = "translateX(-108%) rotate(-7deg)";
+        let transform = `translate(${d * STEP}px, ${d * STEP}px)`;
+        if (top) transform = `translateX(${dx}px) rotate(${dx / 40}deg)`;
+        if (gone) transform = "translateX(-115%) rotate(-12deg)";
         return (
           <div
             key={sheet.id}
             aria-hidden={top ? undefined : true}
             inert={top ? undefined : true}
-            className="absolute inset-0 motion-reduce:!transform-none"
+            className={cn(
+              "absolute inset-0 motion-reduce:!transform-none",
+              gone && "pointer-events-none",
+            )}
             style={{
-              zIndex: gone ? 30 : 20 - o,
+              // a thrown sheet flies over the open cover, then fades
+              zIndex: gone ? 60 : 20 - o,
               transform,
               transformOrigin: top ? "50% 90%" : "0 0",
               opacity: gone ? 0 : 1,
-              filter: `brightness(${1 - d * 0.05}) drop-shadow(2px 3px 4px rgb(0 0 0 / 0.25)) drop-shadow(6px 10px 16px rgb(0 0 0 / 0.2))`,
+              filter: top
+                ? "drop-shadow(2px 3px 4px rgb(0 0 0 / 0.25)) drop-shadow(6px 10px 16px rgb(0 0 0 / 0.2))"
+                : `brightness(${1 - d * 0.03}) drop-shadow(1px 1px 1px rgb(0 0 0 / 0.3))`,
               transition: dragging
                 ? "none"
-                : "transform 420ms cubic-bezier(.22,.8,.3,1), opacity 420ms, filter 300ms",
+                : gone
+                  ? "transform 320ms cubic-bezier(.22,.8,.3,1), opacity 160ms 220ms"
+                  : "transform 320ms cubic-bezier(.22,.8,.3,1), opacity 120ms, filter 300ms",
             }}
           >
             {renderSheet(sheet, i)}

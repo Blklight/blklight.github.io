@@ -44,7 +44,8 @@ function BodySkeleton({ sheet }: { sheet: DossierSheetData }) {
 
 /**
  * Reading mode: the document in the page flow (the page scrolls), centered
- * like an article (same 720px paper); the index sits to the left. Not a dialog.
+ * like an article (same 720px paper); the index is pinned to the screen's left
+ * edge under the navbar. Not a dialog.
  * `bodyPromise` must be stable per sheet (cached loader), since `use()` suspends on it.
  */
 export function DossierFocus({
@@ -68,16 +69,18 @@ export function DossierFocus({
   }, []);
 
   return (
-    <div className="relative z-10 grid gap-8 px-4 pt-6 pb-24 lg:grid-cols-[minmax(0,1fr)_45rem_minmax(0,1fr)] lg:px-8">
-      <aside className="hidden lg:block lg:justify-self-end">
-        <div className="sticky top-20 h-[calc(100dvh-7rem)]">{sidebar}</div>
+    <div className="relative z-10 grid gap-8 pb-24 lg:grid-cols-[minmax(18rem,1fr)_45rem_minmax(0,1fr)]">
+      <aside className="hidden lg:block">
+        <div className="sticky top-12 h-[calc(100dvh-3rem)] lg:top-[3.5625rem] lg:h-[calc(100dvh-3.5625rem)]">
+          {sidebar}
+        </div>
       </aside>
-      <div className="min-w-0">
-        <div className="mb-3 flex justify-end">
+      <div className="min-w-0 px-4 lg:px-0">
+        <div className="sticky top-12 z-20 flex justify-end pt-6 pb-3 lg:top-[3.5625rem]">
           <button
             type="button"
             onClick={onClose}
-            className="flex items-center gap-2 bg-foreground px-3 py-1.5 font-mono text-[0.68rem] uppercase tracking-widest text-background hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            className="flex items-center gap-2 bg-foreground px-3 py-1.5 font-mono text-[0.68rem] uppercase tracking-widest text-background shadow-md hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
           >
             <X className="size-3.5" aria-hidden />
             Voltar à pasta

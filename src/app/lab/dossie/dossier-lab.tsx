@@ -12,6 +12,7 @@ import {
 import { DocumentPaper } from "@/components/dossier/document-paper";
 import { Dossier } from "@/components/dossier/dossier";
 import { Navbar } from "@/components/navbar";
+import { HoloSeal } from "@/components/stamps/org-stamps";
 import { loadArticleBody, prefetchArticleBody } from "@/features/dossier/load-body";
 import { ARTICLE_STAMPS, ARTICLES_BY_ID, TRAILS } from "@/features/dossier/mock";
 import { trailToDossier } from "@/features/dossier/trail-adapter";
@@ -29,6 +30,32 @@ const MOCK_MEMBER: BadgeData = {
   memberSince: "2026-11-20T12:00:00.000Z",
   memberId: "A1B2C3",
 };
+
+/** The reader's badge, scaled down and held still, sealed to the cover. */
+function PinnedBadge({ member }: { member: BadgeData }) {
+  return (
+    <div className="relative h-[20.16rem] w-[14.4rem]">
+      <div inert className="pointer-events-none origin-top-left scale-[0.72]">
+        <Badge data={member} />
+      </div>
+      <HoloSeal
+        data={{
+          name: member.name,
+          handle: member.handle,
+          city: "Membro",
+          date: "",
+          shortDate: member.memberId,
+          ref: "Leitor",
+          tagline: "",
+          since: "",
+          status: "Leitor",
+        }}
+        rotate={12}
+        className="absolute -top-5 -right-6 z-10 w-28"
+      />
+    </div>
+  );
+}
 
 function NoteCard({
   title,
@@ -52,7 +79,7 @@ function NoteCard({
         if (input.value.trim()) onAdd(input.value.trim());
         input.value = "";
       }}
-      className="paper-grain-overlay dossier-ruled relative isolate w-80 border border-foreground/70 p-5 pt-4 text-foreground shadow-[3px_5px_12px_rgb(0_0_0/0.35)]"
+      className="paper-grain-overlay relative isolate w-68 border border-foreground/70 p-5 pt-4 text-foreground shadow-[3px_5px_12px_rgb(0_0_0/0.35)]"
       style={{ transform: `rotate(${tilt}deg)` }}
     >
       <div className="relative z-10">
@@ -126,7 +153,7 @@ export function DossierLab() {
         key={trail.id}
         {...dossier}
         readIds={read}
-        coverAttachment={<Badge data={member} />}
+        coverAttachment={<PinnedBadge member={member} />}
         getBody={(sheet) => loadArticleBody(sheet.id)}
         onFocusChange={(sheet) => sheet && markRead(sheet.id)}
         renderCard={(sheet, ctx) => (

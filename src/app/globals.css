@@ -1427,14 +1427,6 @@
 .dark .dossier-board-inside {
   background-color: oklch(0.36 0.006 75);
 }
-.dossier-ruled {
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0 1.75rem,
-    color-mix(in oklab, var(--foreground) 16%, transparent) 1.75rem
-      calc(1.75rem + 1px)
-  );
-}
 .dossier-emboss {
   text-shadow:
     0 1px 0 rgb(255 255 255 / 0.12),
