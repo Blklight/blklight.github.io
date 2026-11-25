@@ -72,9 +72,7 @@ export function NotePaper({
         autoFocus={autoFocus}
         defaultValue={note.text}
         placeholder="Comentar…"
-        onBlur={(e) => {
-          if (e.target.value !== note.text) onChange(e.target.value);
-        }}
+        onChange={(e) => onChange(e.target.value)}
         className="mt-2 min-h-8 w-full resize-none bg-transparent font-mono text-[0.8rem] leading-snug outline-none [field-sizing:content] placeholder:text-current/45"
       />
     </article>

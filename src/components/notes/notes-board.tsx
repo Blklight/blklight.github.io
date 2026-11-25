@@ -1,71 +1,145 @@
 "use client";
 
 import { Minus, Plus, X } from "lucide-react";
-import {
-  type PointerEvent as ReactPointerEvent,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useNotesStore } from "@/features/notes/store";
 import type { Annotation } from "@/features/notes/types";
+import { cn } from "@/lib/utils";
 import { type BoardView, initialLayout, toBoard, zoomAt } from "./board-math";
-import { NotePaper } from "./note-paper";
+import { NOTE_MAX_H, NotePaper } from "./note-paper";
 import type { NoteGroup } from "./notes-pocket";
 
 const STEP = 16;
+const CARD_W = 240;
+const MIN_W = 160;
+const MAX_W = 480;
+const MIN_H = 96;
+/** Moves under this many pixels count as a click (opens the note). */
+const CLICK_SLOP = 4;
+const NEUTRAL = "oklch(0.94 0.012 85)";
+
+export interface NoteTab {
+  id: string;
+  title: string;
+  color?: string;
+}
 
 type Drag =
   | { kind: "pan"; sx: number; sy: number; view: BoardView }
-  | { kind: "note"; id: string; sx: number; sy: number; x: number; y: number };
+  | {
+      kind: "move" | "size";
+      id: string;
+      sx: number;
+      sy: number;
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+      moved: boolean;
+    };
+
+/** A paper's preview on the board: drag to move, click to open it. */
+function BoardCard({ note, label }: { note: Annotation; label: string }) {
+  return (
+    <div className="flex h-full flex-col gap-1.5 overflow-hidden p-3 pt-2 text-left">
+      <p className="truncate font-mono text-[0.58rem] font-bold uppercase tracking-[0.18em] opacity-70">
+        {label}
+      </p>
+      {note.anchor && (
+        <p className="line-clamp-4 shrink-0 border-current/40 border-l-2 pl-2 font-mono text-xs leading-snug">
+          “{note.anchor.exact.trim()}”
+        </p>
+      )}
+      {note.text && (
+        <p className="min-h-0 overflow-hidden whitespace-pre-line font-mono text-[0.8rem] leading-snug">
+          {note.text}
+        </p>
+      )}
+    </div>
+  );
+}
 
 /**
  * Every note of the scope spread over a board: drag the background to pan,
- * ctrl/⌘ + wheel (or pinch) to zoom, drag a paper to move it (saved), double
- * click an empty spot for a loose note. Arrow keys move a focused paper.
+ * ctrl/⌘ + wheel (or pinch) to zoom, drag a paper to move it and its corner to
+ * resize it (both saved). Clicking a paper opens it large in the middle;
+ * "Nova nota" (or a double click) opens a new one, which can be filed under a
+ * tab. Arrow keys move a focused paper.
  */
 export function NotesBoard({
   title,
   scopeId,
   groups,
+  tabs,
+  labelOf,
   onClose,
 }: {
   title: string;
   scopeId: string;
+  /** For the first layout: a column per group. */
   groups: NoteGroup[];
+  /** Tabs a loose note can be filed under. */
+  tabs: NoteTab[];
+  labelOf: (note: Annotation) => string;
   onClose: () => void;
 }) {
+  const all = useNotesStore((s) => s.notes);
   const add = useNotesStore((s) => s.add);
   const update = useNotesStore((s) => s.update);
   const remove = useNotesStore((s) => s.remove);
   const move = useNotesStore((s) => s.move);
+  const resize = useNotesStore((s) => s.resize);
   const [view, setView] = useState<BoardView>({ x: 48, y: 48, scale: 1 });
-  const [live, setLive] = useState<{ id: string; x: number; y: number }>();
-  const [fresh, setFresh] = useState<string>();
+  const [live, setLive] = useState<{
+    id: string;
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+  }>();
+  const [openId, setOpenId] = useState<string>();
   const drag = useRef<Drag | null>(null);
   const boardRef = useRef<HTMLDivElement>(null);
 
-  const notes = groups.flatMap((g) =>
-    g.notes.map((n) => ({ note: n, label: g.label })),
-  );
+  const notes = all.filter((n) => n.scopeId === scopeId);
+  const open = notes.find((n) => n.id === openId);
   const layout = useMemo(
     () => initialLayout(groups.filter((g) => g.notes.length > 0)),
     [groups],
   );
-  const at = (n: Annotation) =>
-    live?.id === n.id ? live : (n.board ?? layout[n.id] ?? { x: 0, y: 0 });
+  const maxH = () => window.innerHeight - 80;
+
+  const box = (n: Annotation) => {
+    if (live?.id === n.id) return live;
+    const p = n.board ?? layout[n.id] ?? { x: 0, y: 0 };
+    return { ...p, w: n.size?.w ?? CARD_W, h: n.size?.h ?? 0 };
+  };
+
+  const close = (id: string) => {
+    const note = notes.find((n) => n.id === id);
+    if (note && !note.anchor && !note.text.trim()) remove(id);
+    setOpenId(undefined);
+  };
+
+  const create = (sx: number, sy: number) =>
+    setOpenId(add({ scopeId, text: "", board: toBoard(view, sx, sy) }).id);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !openId) onClose();
+    };
     window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose, openId]);
+
+  useEffect(() => {
     const overflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
-      window.removeEventListener("keydown", onKey);
       document.body.style.overflow = overflow;
     };
-  }, [onClose]);
+  }, []);
 
   useEffect(() => {
     const el = boardRef.current;
@@ -88,11 +162,31 @@ export function NotesBoard({
     return () => el.removeEventListener("wheel", onWheel);
   }, []);
 
-  const zoomBy = (factor: number) => {
+  const center = () => {
     const rect = boardRef.current?.getBoundingClientRect();
-    setView((v) =>
-      zoomAt(v, factor, (rect?.width ?? 0) / 2, (rect?.height ?? 0) / 2),
-    );
+    return [(rect?.width ?? 0) / 2, (rect?.height ?? 0) / 2] as const;
+  };
+
+  const start = (
+    e: React.PointerEvent,
+    kind: "move" | "size",
+    note: Annotation,
+    el: HTMLElement,
+  ) => {
+    e.stopPropagation();
+    const b = box(note);
+    drag.current = {
+      kind,
+      id: note.id,
+      sx: e.clientX,
+      sy: e.clientY,
+      x: b.x,
+      y: b.y,
+      w: el.offsetWidth,
+      h: el.offsetHeight,
+      moved: false,
+    };
+    boardRef.current?.setPointerCapture(e.pointerId);
   };
 
   return (
@@ -108,7 +202,7 @@ export function NotesBoard({
           <button
             type="button"
             aria-label="Diminuir zoom"
-            onClick={() => zoomBy(1 / 1.2)}
+            onClick={() => setView((v) => zoomAt(v, 1 / 1.2, ...center()))}
             className="p-1.5 hover:bg-foreground/10"
           >
             <Minus className="size-3.5" aria-hidden />
@@ -119,7 +213,7 @@ export function NotesBoard({
           <button
             type="button"
             aria-label="Aumentar zoom"
-            onClick={() => zoomBy(1.2)}
+            onClick={() => setView((v) => zoomAt(v, 1.2, ...center()))}
             className="p-1.5 hover:bg-foreground/10"
           >
             <Plus className="size-3.5" aria-hidden />
@@ -127,13 +221,8 @@ export function NotesBoard({
           <button
             type="button"
             onClick={() => {
-              const rect = boardRef.current?.getBoundingClientRect();
-              const p = toBoard(
-                view,
-                (rect?.width ?? 0) / 2 - 120,
-                (rect?.height ?? 0) / 2 - 60,
-              );
-              setFresh(add({ scopeId, text: "", board: p }).id);
+              const [cx, cy] = center();
+              create(cx - CARD_W / 2, cy - 60);
             }}
             className="ml-3 border border-foreground px-2.5 py-1 hover:bg-foreground hover:text-background"
           >
@@ -167,26 +256,39 @@ export function NotesBoard({
           if (!d) return;
           const dx = e.clientX - d.sx;
           const dy = e.clientY - d.sy;
-          if (d.kind === "pan")
+          if (d.kind === "pan") {
             setView({ ...d.view, x: d.view.x + dx, y: d.view.y + dy });
-          else
-            setLive({
-              id: d.id,
-              x: d.x + dx / view.scale,
-              y: d.y + dy / view.scale,
-            });
+            return;
+          }
+          if (Math.abs(dx) + Math.abs(dy) > CLICK_SLOP) d.moved = true;
+          if (!d.moved) return;
+          const k = view.scale;
+          setLive(
+            d.kind === "move"
+              ? { id: d.id, x: d.x + dx / k, y: d.y + dy / k, w: d.w, h: 0 }
+              : {
+                  id: d.id,
+                  x: d.x,
+                  y: d.y,
+                  w: Math.min(MAX_W, Math.max(MIN_W, d.w + dx / k)),
+                  h: Math.min(maxH(), Math.max(MIN_H, d.h + dy / k)),
+                },
+          );
         }}
         onPointerUp={() => {
           const d = drag.current;
           drag.current = null;
-          if (d?.kind === "note" && live) move(live.id, live.x, live.y);
+          if (d && d.kind !== "pan") {
+            if (!d.moved && d.kind === "move") setOpenId(d.id);
+            else if (live && d.kind === "move") move(live.id, live.x, live.y);
+            else if (live) resize(live.id, live.w, live.h);
+          }
           setLive(undefined);
         }}
         onDoubleClick={(e) => {
           if (e.target !== e.currentTarget) return;
           const rect = e.currentTarget.getBoundingClientRect();
-          const p = toBoard(view, e.clientX - rect.left, e.clientY - rect.top);
-          setFresh(add({ scopeId, text: "", board: p }).id);
+          create(e.clientX - rect.left, e.clientY - rect.top);
         }}
       >
         <div
@@ -195,41 +297,23 @@ export function NotesBoard({
             transform: `translate(${view.x}px, ${view.y}px) scale(${view.scale})`,
           }}
         >
-          {notes.map(({ note, label }) => {
-            const p = at(note);
-            const grab = (e: ReactPointerEvent) => {
-              if (
-                (e.target as HTMLElement).closest(
-                  "textarea, button:not([data-grip])",
-                )
-              )
-                return;
-              e.stopPropagation();
-              drag.current = {
-                kind: "note",
-                id: note.id,
-                sx: e.clientX,
-                sy: e.clientY,
-                x: p.x,
-                y: p.y,
-              };
-              boardRef.current?.setPointerCapture(e.pointerId);
-            };
+          {notes.map((note) => {
+            const b = box(note);
+            const sized = live?.id === note.id ? live.h > 0 : !!note.size;
             return (
               <div
                 key={note.id}
-                className="absolute cursor-move"
+                className="group absolute"
                 style={{
-                  left: p.x,
-                  top: p.y,
+                  left: b.x,
+                  top: b.y,
                   zIndex: live?.id === note.id ? 10 : undefined,
                 }}
-                onPointerDown={grab}
               >
                 <button
                   type="button"
-                  data-grip
-                  aria-label={`Mover nota ${label} (setas)`}
+                  aria-label={`Abrir nota ${labelOf(note)}`}
+                  onPointerDown={(e) => start(e, "move", note, e.currentTarget)}
                   onKeyDown={(e) => {
                     const delta = {
                       ArrowLeft: [-STEP, 0],
@@ -239,17 +323,30 @@ export function NotesBoard({
                     }[e.key];
                     if (!delta) return;
                     e.preventDefault();
-                    move(note.id, p.x + delta[0], p.y + delta[1]);
+                    move(note.id, b.x + delta[0], b.y + delta[1]);
                   }}
-                  className="absolute -top-3 left-1/2 z-10 h-3 w-12 -translate-x-1/2 cursor-move rounded-full bg-foreground/30 hover:bg-foreground/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-                />
-                <NotePaper
-                  note={note}
-                  label={label}
-                  autoFocus={note.id === fresh}
-                  onChange={(text) => update(note.id, { text })}
-                  onRemove={() => remove(note.id)}
-                  className="rotate-[-0.5deg]"
+                  onClick={(e) => {
+                    // pointer clicks open on pointerup; this is Enter/Space
+                    if (e.detail === 0) setOpenId(note.id);
+                  }}
+                  className="background-texture block cursor-move text-[oklch(0.18_0_0)] shadow-[2px_4px_10px_rgb(0_0_0/0.25)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+                  style={{
+                    backgroundColor: note.color ?? NEUTRAL,
+                    width: b.w,
+                    height: sized ? b.h : undefined,
+                    maxHeight: NOTE_MAX_H,
+                  }}
+                >
+                  <BoardCard note={note} label={labelOf(note)} />
+                </button>
+                <span
+                  aria-hidden
+                  onPointerDown={(e) => {
+                    const card = e.currentTarget
+                      .previousElementSibling as HTMLElement;
+                    start(e, "size", note, card);
+                  }}
+                  className="absolute right-0 bottom-0 size-4 cursor-se-resize opacity-0 transition-opacity group-hover:opacity-100 [background:linear-gradient(135deg,transparent_55%,rgb(0_0_0/0.35)_55%,rgb(0_0_0/0.35)_62%,transparent_62%,transparent_72%,rgb(0_0_0/0.35)_72%,rgb(0_0_0/0.35)_79%,transparent_79%)]"
                 />
               </div>
             );
@@ -261,6 +358,75 @@ export function NotesBoard({
           </p>
         )}
       </div>
+
+      <Dialog
+        open={!!open}
+        onOpenChange={(o) => {
+          if (!o && openId) close(openId);
+        }}
+      >
+        <DialogContent
+          showCloseButton={false}
+          className="w-auto max-w-[calc(100%-2rem)] gap-3 bg-transparent p-0 ring-0 sm:max-w-none"
+        >
+          <DialogTitle className="sr-only">
+            {open ? labelOf(open) : "Nota"}
+          </DialogTitle>
+          {open && (
+            <>
+              {!open.docId && (
+                <div
+                  role="radiogroup"
+                  aria-label="Aba da nota"
+                  className="flex flex-wrap gap-1.5 font-mono text-[0.6rem] font-bold uppercase tracking-[0.12em]"
+                >
+                  {[{ id: "", title: "Solta", color: undefined }, ...tabs].map(
+                    (t) => {
+                      const on = (open.sectionId ?? "") === t.id;
+                      return (
+                        // biome-ignore lint/a11y/useSemanticElements: chips styled as tabs
+                        <button
+                          key={t.id || "_"}
+                          type="button"
+                          role="radio"
+                          aria-checked={on}
+                          onClick={() =>
+                            update(open.id, {
+                              sectionId: t.id || undefined,
+                              color: t.color,
+                            })
+                          }
+                          className={cn(
+                            "background-texture px-2.5 py-1 text-[oklch(0.18_0_0)] shadow-sm",
+                            on
+                              ? "outline-2 outline-offset-2 outline-[oklch(0.94_0.012_85)]"
+                              : "opacity-70 hover:opacity-100",
+                          )}
+                          style={{ backgroundColor: t.color ?? NEUTRAL }}
+                        >
+                          {t.title}
+                        </button>
+                      );
+                    },
+                  )}
+                </div>
+              )}
+              <NotePaper
+                key={open.id}
+                note={open}
+                label={labelOf(open)}
+                autoFocus
+                onChange={(text) => update(open.id, { text })}
+                onRemove={() => {
+                  remove(open.id);
+                  setOpenId(undefined);
+                }}
+                className="min-h-64 w-[min(32rem,calc(100vw-2rem))] p-5 pt-4 text-base [&_textarea]:text-base"
+              />
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

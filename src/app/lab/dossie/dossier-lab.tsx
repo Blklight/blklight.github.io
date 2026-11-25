@@ -269,6 +269,11 @@ export function DossierLab() {
           title={`Quadro · ${trail.code}`}
           scopeId={trail.id}
           groups={noteGroups}
+          tabs={dossier.sections}
+          labelOf={(n) => {
+            const sheet = dossier.sheets.find((s) => s.id === n.docId);
+            return sheet ? docLabel(sheet) : (sectionTitle(n.sectionId) ?? "Solta");
+          }}
           onClose={() => setBoardOpen(false)}
         />
       )}
