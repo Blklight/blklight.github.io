@@ -63,6 +63,11 @@ export interface DossierProps<T> {
   ) => ReactNode;
   /** The folder's back, under the last sheet: where notes are kept. */
   renderNotes: () => ReactNode;
+  /** Reading mode: right of the document (e.g. margin notes); `root` is the document element. */
+  renderAside?: (
+    sheet: DossierSheetData<T>,
+    root: HTMLElement | null,
+  ) => ReactNode;
   /** Pinned next to the index inside the cover (e.g. the reader's badge). */
   coverAttachment?: ReactNode;
   /** Must return the same promise for the same sheet (cached loader). */
@@ -106,6 +111,7 @@ export function Dossier<T>({
   renderCard,
   renderDocument,
   renderNotes,
+  renderAside,
   coverAttachment,
   getBody,
   onFocusChange,
@@ -422,6 +428,7 @@ export function Dossier<T>({
           renderDocument={(parts) => renderDocument(focused, parts)}
           onClose={unfocus}
           onOpenIndex={() => setIndexOpen(true)}
+          aside={renderAside ? (root) => renderAside(focused, root) : undefined}
           sidebar={index}
         />
       )}

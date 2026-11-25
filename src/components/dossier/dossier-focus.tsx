@@ -1,7 +1,14 @@
 "use client";
 
 import { X } from "lucide-react";
-import { type ReactNode, Suspense, use, useEffect, useRef } from "react";
+import {
+  type ReactNode,
+  Suspense,
+  use,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { DossierSheetData } from "@/features/dossier/types";
 import { cn } from "@/lib/utils";
@@ -55,6 +62,7 @@ export function DossierFocus({
   sidebar,
   onClose,
   onOpenIndex,
+  aside,
 }: {
   sheet: DossierSheetData;
   bodyPromise: Promise<string>;
@@ -63,8 +71,11 @@ export function DossierFocus({
   onClose: () => void;
   /** Small screens: opens the index drawer. */
   onOpenIndex: () => void;
+  /** Right column, next to the document; gets the document's root element. */
+  aside?: (root: HTMLElement | null) => ReactNode;
 }) {
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const [root, setRoot] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
@@ -97,23 +108,26 @@ export function DossierFocus({
             <kbd className="opacity-60">Esc</kbd>
           </button>
         </div>
-        {renderDocument({
-          title: (
-            <h1
-              ref={titleRef}
-              tabIndex={-1}
-              className={cn(DOC_TITLE, "focus:outline-none")}
-            >
-              {sheet.title}
-            </h1>
-          ),
-          body: (
-            <Suspense fallback={<BodySkeleton sheet={sheet} />}>
-              <Body promise={bodyPromise} />
-            </Suspense>
-          ),
-        })}
+        <div ref={setRoot}>
+          {renderDocument({
+            title: (
+              <h1
+                ref={titleRef}
+                tabIndex={-1}
+                className={cn(DOC_TITLE, "focus:outline-none")}
+              >
+                {sheet.title}
+              </h1>
+            ),
+            body: (
+              <Suspense fallback={<BodySkeleton sheet={sheet} />}>
+                <Body promise={bodyPromise} />
+              </Suspense>
+            ),
+          })}
+        </div>
       </div>
+      <div className="relative min-w-0">{aside?.(root)}</div>
     </div>
   );
 }

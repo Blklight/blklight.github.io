@@ -14,6 +14,7 @@ import { DocumentPaper } from "@/components/dossier/document-paper";
 import { Dossier } from "@/components/dossier/dossier";
 import { PANEL_PAD_X, SHEET_BOTTOM } from "@/components/dossier/geometry";
 import { Navbar } from "@/components/navbar";
+import { ReadingNotes } from "@/components/notes/reading-notes";
 import { HoloSeal } from "@/components/stamps/org-stamps";
 import { loadArticleBody, prefetchArticleBody } from "@/features/dossier/load-body";
 import { ARTICLE_STAMPS, ARTICLES_BY_ID, TRAILS } from "@/features/dossier/mock";
@@ -145,6 +146,8 @@ export function DossierLab() {
         memberId: user.id.slice(0, 6).toUpperCase(),
       }
     : MOCK_MEMBER;
+  const sectionColor = (id?: string) =>
+    dossier.sections.find((s) => s.id === id)?.color;
   const sectionTitle = (id?: string) => dossier.sections.find((s) => s.id === id)?.title;
   const noteDoc = dossier.sheets.find((s) => s.id === noteDocId) ?? dossier.sheets[0];
 
@@ -220,6 +223,16 @@ export function DossierLab() {
             </DocumentPaper>
           );
         }}
+        renderAside={(sheet, root) => (
+          <ReadingNotes
+            key={sheet.id}
+            root={root}
+            scopeId={trail.id}
+            docId={sheet.id}
+            color={sectionColor(sheet.sectionId)}
+            label={`Doc. ${String(dossier.sheets.indexOf(sheet) + 1).padStart(2, "0")} · ${sectionTitle(sheet.sectionId) ?? ""}`}
+          />
+        )}
         renderNotes={() => (
           <div className="relative h-full">
             <p className="absolute top-2 left-0 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-[oklch(0.92_0.012_85)] opacity-60">
