@@ -28,6 +28,7 @@ import { DossierTabs, Ear } from "./dossier-tabs";
 import {
   COVER_PAD_X,
   EAR_W,
+  LAYER,
   PANEL_PAD_X,
   PANEL_W,
   SHEET_BOTTOM,
@@ -233,7 +234,7 @@ export function Dossier<T>({
                     label={cover.code}
                     onClick={() => goTo(notesIndex)}
                     className="dossier-ear-inside"
-                    style={{ zIndex: 1 }}
+                    style={{ zIndex: LAYER.board }}
                   />
                   <div
                     className="absolute"
@@ -268,8 +269,12 @@ export function Dossier<T>({
                     />
                   </div>
                   <div
-                    className="absolute bottom-0 z-30 flex h-16 items-center justify-between font-mono text-[0.68rem] uppercase tracking-widest text-[oklch(0.92_0.012_85)]"
-                    style={{ left: PANEL_PAD_X, width: SHEET_W }}
+                    className="absolute bottom-0 flex h-16 items-center justify-between font-mono text-[0.68rem] uppercase tracking-widest text-[oklch(0.92_0.012_85)]"
+                    style={{
+                      left: PANEL_PAD_X,
+                      width: SHEET_W,
+                      zIndex: LAYER.nav,
+                    }}
                   >
                     <button
                       type="button"
@@ -294,10 +299,13 @@ export function Dossier<T>({
 
                   <div
                     className={cn(
-                      "absolute inset-0 z-50 origin-left transition-transform duration-[900ms] [transform-style:preserve-3d] motion-reduce:transition-none",
+                      "absolute inset-0 origin-left transition-transform duration-[900ms] [transform-style:preserve-3d] motion-reduce:transition-none",
                       EASE,
                     )}
-                    style={{ transform: isOpen ? "rotateY(-180deg)" : "none" }}
+                    style={{
+                      zIndex: LAYER.cover,
+                      transform: isOpen ? "rotateY(-180deg)" : "none",
+                    }}
                   >
                     <div
                       className="absolute inset-0 [backface-visibility:hidden]"

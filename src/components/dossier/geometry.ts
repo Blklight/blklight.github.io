@@ -31,3 +31,21 @@ export function earSlot(i: number, total: number) {
   const size = Math.min(18, span / Math.max(total, 1));
   return { top: `${top + i * size}%`, height: `${size - 0.8}%` };
 }
+
+/**
+ * Stacking order inside the folder, bottom to top. The `dossier-tuck` and
+ * `dossier-unturn` keyframes in dossier.css repeat `turned` (60) and 0.
+ */
+export const LAYER = {
+  board: 1,
+  earUnder: 5,
+  /** Top sheet of the pile; each sheet below it is one less. */
+  pile: 20,
+  earActive: 25,
+  nav: 30,
+  cover: 50,
+  /** Section ears turned with the pile, just under the turned sheets. */
+  earTurned: 59,
+  /** Turned sheets, one more per sheet. */
+  turned: 60,
+} as const;

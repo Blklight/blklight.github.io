@@ -4,17 +4,15 @@ import { type ReactNode, useRef, useState } from "react";
 import { PaperSurface } from "@/features/documents/design/paper-surface";
 import type { DossierSheetData } from "@/features/dossier/types";
 import { PAPER_GRAINS } from "./document-paper";
-import { PANEL_PAD_X } from "./geometry";
+import { LAYER, PANEL_PAD_X } from "./geometry";
+import { DEPTH, sheetPose } from "./stack-pose";
 
-const DEPTH = 6;
 const STEP = 1.5;
 const VELOCITY_WINDOW = 100;
 const FLICK_VELOCITY = 0.3;
 export const TURN_MS = 520;
 const TUCK_MS = 650;
 export const EASE = "cubic-bezier(.22,.8,.3,1)";
-/** Turned sheets lie on the open cover's back, above it (the cover is z-50). */
-export const TURNED_Z = 60;
 /** Pages turn on the folder's spine, PANEL_PAD_X left of the sheet. */
 const SPINE = `-${PANEL_PAD_X}px 50%`;
 
@@ -156,15 +154,14 @@ export function DossierStack<T>({
     >
       <div className="absolute inset-0">{bottom}</div>
       {sheets.map((sheet, i) => {
+        const pose = sheetPose(i, index, from, sheets.length);
+        if (!pose) return null;
+        const { top, turned } = pose;
         const o = i - index;
-        const turned = notes && o < 0;
-        const top = o === 0;
-        const tucking = !notes && o === -1 && from === index - 1;
-        const untucking = top && from === index + 1 && from < sheets.length;
-        const unturning = !notes && from === sheets.length && o >= 0;
-        if (!(turned ? o >= -DEPTH : o >= 0 && o < DEPTH) && !tucking)
-          return null;
-        const d = turned ? -o - 1 : Math.max(0, o - (top ? 0 : progress));
+        const tucking = pose.motion === "tuck";
+        const untucking = pose.motion === "untuck";
+        const unturning = pose.motion === "unturn";
+        const d = turned || top ? pose.depth : Math.max(0, o - progress);
         let transform: string;
         if (turned)
           transform = place({ x: -d * STEP, y: d * STEP, turn: -180 });
@@ -195,7 +192,7 @@ export function DossierStack<T>({
             className="absolute inset-0 [transform-style:preserve-3d] motion-reduce:!animate-none motion-reduce:!transition-none"
             style={{
               ...tuckVars,
-              zIndex: turned ? TURNED_Z + i : 20 - o,
+              zIndex: turned ? LAYER.turned + i : LAYER.pile - o,
               transform,
               transformOrigin:
                 turned || from === sheets.length

@@ -1,10 +1,11 @@
 import type { CSSProperties, ReactNode } from "react";
 import type { DossierSection } from "@/features/dossier/types";
 import { cn } from "@/lib/utils";
-import { EASE, TURN_MS, TURNED_Z } from "./dossier-stack";
+import { EASE, TURN_MS } from "./dossier-stack";
 import {
   EAR_W,
   earSlot,
+  LAYER,
   PANEL_W,
   SHEET_BOTTOM,
   TAB_NUM_W,
@@ -104,7 +105,11 @@ export function DossierTabs({
             )}
             style={{
               backgroundColor: s.color,
-              zIndex: turned ? TURNED_Z - 1 : active ? 25 : 5,
+              zIndex: turned
+                ? LAYER.earTurned
+                : active
+                  ? LAYER.earActive
+                  : LAYER.earUnder,
               transform: `perspective(2800px) rotateY(${turned ? -180 : 0}deg)`,
               transformOrigin: `${TAB_TEXT_W - PANEL_W}px 50%`,
               transition: `transform ${TURN_MS}ms ${EASE}, z-index 0s ${turned ? 0 : TURN_MS}ms, filter 300ms`,
