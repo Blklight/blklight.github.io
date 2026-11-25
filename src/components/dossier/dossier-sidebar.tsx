@@ -17,6 +17,7 @@ export const INDEX_W = "w-72";
  */
 export function DossierSidebar({
   code,
+  status,
   sections,
   sheets,
   currentIndex,
@@ -26,6 +27,8 @@ export function DossierSidebar({
   className,
 }: {
   code: string;
+  /** Inked on the header as a small rubber stamp. */
+  status?: string;
   sections: DossierSection[];
   sheets: DossierSheetData[];
   currentIndex: number;
@@ -74,18 +77,25 @@ export function DossierSidebar({
       contentClassName="flex h-full flex-col"
     >
       <header className="px-5 pt-6 pb-3">
-        <p className="text-3xl font-semibold tracking-tight">Sumário</p>
+        <div className="flex items-start justify-between gap-3">
+          <p className="text-3xl font-semibold tracking-tight">Sumário</p>
+          {status && (
+            <span className="mt-1 -rotate-6 rounded-[3px] border-2 border-current px-1.5 py-0.5 font-mono text-[0.55rem] font-bold uppercase tracking-[0.2em] text-[oklch(0.5_0.17_27)] opacity-80 mix-blend-multiply dark:text-[oklch(0.7_0.15_27)] dark:mix-blend-normal">
+              {status}
+            </span>
+          )}
+        </div>
         <div className="mt-3 flex justify-between font-mono text-[0.62rem] uppercase tracking-[0.18em] text-muted-foreground">
           <span>Memo — {code}</span>
           <span>
-            \ {done}/{sheets.length} lidos
+            {done}/{sheets.length} lidos
           </span>
         </div>
       </header>
       <nav
         ref={navRef}
         aria-label="Sumário"
-        className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-8 font-mono text-[0.72rem] uppercase [mask-image:linear-gradient(transparent,#000_0.75rem,#000_calc(100%-2rem),transparent)] [scrollbar-color:color-mix(in_oklab,currentColor_30%,transparent)_transparent] [scrollbar-width:thin]"
+        className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-8 font-mono text-[0.72rem] uppercase [mask-image:linear-gradient(transparent,#000_0.75rem,#000_calc(100%-2rem),transparent)] dossier-scroll"
       >
         {groups.map((g, gi) => (
           <div key={g.id ?? "_"} className="pt-4">

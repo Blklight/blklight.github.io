@@ -154,7 +154,7 @@ export function DossierStack<T>({
         e.stopPropagation();
       }}
     >
-      <div className="absolute inset-0 z-10">{bottom}</div>
+      <div className="absolute inset-0">{bottom}</div>
       {sheets.map((sheet, i) => {
         const o = i - index;
         const turned = notes && o < 0;

@@ -1,7 +1,14 @@
 import type { CSSProperties, ReactNode } from "react";
 import type { DossierSection } from "@/features/dossier/types";
 import { cn } from "@/lib/utils";
-import { EAR_W, earSlot, PANEL_W, TAB_NUM_W, TAB_TEXT_W } from "./geometry";
+import {
+  EAR_W,
+  earSlot,
+  PANEL_W,
+  SHEET_BOTTOM,
+  TAB_NUM_W,
+  TAB_TEXT_W,
+} from "./geometry";
 
 /** Diagonal cut on both ends, like a divider tab. */
 const EAR_CLIP =
@@ -65,7 +72,16 @@ export function DossierTabs({
 }) {
   const total = sections.length + 1;
   return (
-    <nav aria-label="Divisórias" className="contents">
+    <nav
+      aria-label="Divisórias"
+      className="absolute flex flex-col gap-1"
+      style={{
+        top: earSlot(1, total).top,
+        bottom: SHEET_BOTTOM + 12,
+        left: PANEL_W - TAB_TEXT_W,
+        width: TAB_TEXT_W + TAB_NUM_W,
+      }}
+    >
       {sections.map((s, i) => {
         const active = s.id === activeSectionId;
         const number = String(i + 1).padStart(2, "0");
@@ -77,17 +93,12 @@ export function DossierTabs({
             aria-label={`${number} ${s.title}`}
             onClick={() => onSection(s.id)}
             className={cn(
-              "background-texture absolute flex font-mono text-[0.6rem] font-bold uppercase tracking-[0.08em] text-[oklch(0.18_0_0)] transition-[width,filter] duration-300 ease-out",
+              "background-texture relative flex max-h-44 min-h-0 flex-1 font-mono text-[0.6rem] font-bold uppercase tracking-[0.08em] text-[oklch(0.18_0_0)] transition-[filter] duration-300",
               "focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-current",
               EAR_CLIP,
               active ? "z-[25]" : "z-[5] brightness-[0.85] hover:brightness-95",
             )}
-            style={{
-              ...earSlot(i + 1, total),
-              left: PANEL_W - TAB_TEXT_W,
-              width: TAB_TEXT_W + TAB_NUM_W + (active ? 6 : 0),
-              backgroundColor: s.color,
-            }}
+            style={{ backgroundColor: s.color }}
           >
             <span
               aria-hidden

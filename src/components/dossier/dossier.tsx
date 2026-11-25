@@ -8,7 +8,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { HoloSeal } from "@/components/stamps/org-stamps";
 import type {
   DossierCoverData,
   DossierSection,
@@ -27,6 +26,7 @@ import { DossierSidebar } from "./dossier-sidebar";
 import { DossierStack } from "./dossier-stack";
 import { DossierTabs, Ear } from "./dossier-tabs";
 import {
+  COVER_PAD_X,
   EAR_W,
   PANEL_PAD_X,
   PANEL_W,
@@ -155,13 +155,18 @@ export function Dossier<T>({
   const index = (
     <DossierSidebar
       code={cover.code}
+      status={cover.statusLabel}
       sections={sections}
       sheets={sheets}
       currentIndex={state.index}
       readIds={readIds}
       expandCurrent={!!focused}
       onSelect={focused ? focus : goTo}
-      className="h-full"
+      className={cn(
+        "h-full",
+        focused &&
+          "shadow-[0_24px_48px_-16px_rgb(0_0_0/0.5),0_6px_14px_rgb(0_0_0/0.18)]",
+      )}
     />
   );
   const pageLabel =
@@ -326,28 +331,13 @@ export function Dossier<T>({
                         <DossierProgress
                           readFlags={readFlags}
                           className="absolute top-5 opacity-80"
-                          style={{ left: PANEL_PAD_X, right: PANEL_PAD_X }}
+                          style={{ left: COVER_PAD_X, right: COVER_PAD_X }}
                         />
                         <div
                           className="absolute h-[calc(100%-11rem)] -rotate-[0.6deg]"
-                          style={{ top: SHEET_TOP + 48, left: PANEL_PAD_X }}
+                          style={{ top: SHEET_TOP + 48, left: COVER_PAD_X }}
                         >
                           {index}
-                          <HoloSeal
-                            data={{
-                              name: "Blklight",
-                              handle: "blklight",
-                              city: "Arquivo",
-                              date: "",
-                              shortDate: cover.code,
-                              ref: cover.statusLabel,
-                              tagline: "",
-                              since: "",
-                              status: cover.statusLabel,
-                            }}
-                            rotate={-8}
-                            className="absolute -top-8 -right-10 z-20 w-32"
-                          />
                         </div>
                         {coverAttachment && (
                           <div className="absolute top-32 right-10 rotate-[2.5deg]">
@@ -364,7 +354,11 @@ export function Dossier<T>({
                         total={earTotal}
                         side="left"
                         label={cover.code}
-                        onClick={() => dispatch({ type: "close" })}
+                        onClick={() =>
+                          state.index === notesIndex
+                            ? goTo(0)
+                            : dispatch({ type: "close" })
+                        }
                         className="dossier-ear-inside"
                       />
                     </div>
