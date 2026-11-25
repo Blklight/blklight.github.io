@@ -66,28 +66,3 @@ export function useReadProgress() {
   }, []);
   return { read, markRead };
 }
-
-export interface Note {
-  id: string;
-  text: string;
-}
-
-export function useNotes() {
-  const [trailNotes, setTrailNotes] = useState<Note[]>([]);
-  const [articleNotes, setArticleNotes] = useState<Record<string, Note[]>>({});
-
-  const addTrailNote = useCallback((text: string) => {
-    setTrailNotes((prev) => [...prev, { id: crypto.randomUUID(), text }]);
-  }, []);
-  const addArticleNote = useCallback((articleId: string, text: string) => {
-    setArticleNotes((prev) => ({
-      ...prev,
-      [articleId]: [
-        ...(prev[articleId] ?? []),
-        { id: crypto.randomUUID(), text },
-      ],
-    }));
-  }, []);
-
-  return { trailNotes, articleNotes, addTrailNote, addArticleNote };
-}

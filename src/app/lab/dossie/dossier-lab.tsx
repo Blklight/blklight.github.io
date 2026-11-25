@@ -14,12 +14,14 @@ import { DocumentPaper } from "@/components/dossier/document-paper";
 import { Dossier } from "@/components/dossier/dossier";
 import { PANEL_PAD_X, SHEET_BOTTOM } from "@/components/dossier/geometry";
 import { Navbar } from "@/components/navbar";
+import { type NoteGroup, NotesPocket } from "@/components/notes/notes-pocket";
 import { ReadingNotes } from "@/components/notes/reading-notes";
 import { HoloSeal } from "@/components/stamps/org-stamps";
 import { loadArticleBody, prefetchArticleBody } from "@/features/dossier/load-body";
 import { ARTICLE_STAMPS, ARTICLES_BY_ID, TRAILS } from "@/features/dossier/mock";
 import { trailToDossier } from "@/features/dossier/trail-adapter";
-import { useNotes, useReadProgress } from "@/features/dossier/use-dossier-state";
+import { useReadProgress } from "@/features/dossier/use-dossier-state";
+import { useNotesStore } from "@/features/notes/store";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 
@@ -63,55 +65,6 @@ function PinnedBadge({ member }: { member: BadgeData }) {
   );
 }
 
-function NoteCard({
-  title,
-  notes,
-  onAdd,
-  tilt,
-  children,
-}: {
-  title: string;
-  notes: { id: string; text: string }[];
-  onAdd: (text: string) => void;
-  tilt: number;
-  children?: React.ReactNode;
-}) {
-  return (
-    <form
-      data-no-drag
-      onSubmit={(e) => {
-        e.preventDefault();
-        const input = e.currentTarget.elements.namedItem("nota") as HTMLInputElement;
-        if (input.value.trim()) onAdd(input.value.trim());
-        input.value = "";
-      }}
-      className="paper-grain-overlay relative isolate w-68 border border-foreground/70 p-5 pt-4 text-foreground shadow-[3px_5px_12px_rgb(0_0_0/0.35)]"
-      style={{ transform: `rotate(${tilt}deg)` }}
-    >
-      <div className="relative z-10">
-        <p className="font-mono text-[0.65rem] font-bold uppercase leading-7 tracking-widest">
-          {title}
-        </p>
-        {children}
-        <ol className="font-serif text-lg leading-7">
-          {notes.map((n, i) => (
-            <li key={n.id}>
-              <span className="mr-2 font-mono text-xs text-muted-foreground">{i + 1}.</span>
-              {n.text}
-            </li>
-          ))}
-        </ol>
-        <input
-          name="nota"
-          aria-label={`Nova nota: ${title}`}
-          placeholder="Escrever e Enter…"
-          className="h-7 w-full bg-transparent font-serif text-lg italic outline-none placeholder:text-muted-foreground/60"
-        />
-      </div>
-    </form>
-  );
-}
-
 const trailOf = (slug: string | null) =>
   TRAILS.find((t) =>
     t.items.some((it) => ARTICLES_BY_ID.get(it.articleId)?.slug === slug),
@@ -135,8 +88,8 @@ export function DossierLab() {
   const dossier = trailToDossier(trail, ARTICLES_BY_ID);
   const initialIndex = dossier.sheets.findIndex((s) => s.slug === initialDoc);
   const { read, markRead } = useReadProgress();
-  const notes = useNotes();
-  const [noteDocId, setNoteDocId] = useState<string>();
+  const allNotes = useNotesStore((s) => s.notes);
+  const [boardOpen, setBoardOpen] = useState(false);
   const user = useAuthStore((s) => s.user);
   const member: BadgeData = user
     ? {
@@ -149,8 +102,22 @@ export function DossierLab() {
   const sectionColor = (id?: string) =>
     dossier.sections.find((s) => s.id === id)?.color;
   const sectionTitle = (id?: string) => dossier.sections.find((s) => s.id === id)?.title;
-  const noteDoc = dossier.sheets.find((s) => s.id === noteDocId) ?? dossier.sheets[0];
-
+  const docLabel = (sheet: (typeof dossier.sheets)[number]) =>
+    `Doc. ${String(dossier.sheets.indexOf(sheet) + 1).padStart(2, "0")} · ${sectionTitle(sheet.sectionId) ?? ""}`;
+  const trailNotes = allNotes.filter((n) => n.scopeId === trail.id);
+  const noteGroups: NoteGroup[] = [
+    ...dossier.sheets.map((sheet) => ({
+      id: sheet.id,
+      label: docLabel(sheet),
+      color: sectionColor(sheet.sectionId),
+      notes: trailNotes.filter((n) => n.docId === sheet.id),
+    })),
+    {
+      id: "_trail",
+      label: `Trilha ${trail.code}`,
+      notes: trailNotes.filter((n) => !n.docId),
+    },
+  ];
   return (
     <>
       <Navbar />
@@ -230,7 +197,7 @@ export function DossierLab() {
             scopeId={trail.id}
             docId={sheet.id}
             color={sectionColor(sheet.sectionId)}
-            label={`Doc. ${String(dossier.sheets.indexOf(sheet) + 1).padStart(2, "0")} · ${sectionTitle(sheet.sectionId) ?? ""}`}
+            label={docLabel(sheet)}
           />
         )}
         renderNotes={() => (
@@ -238,35 +205,11 @@ export function DossierLab() {
             <p className="absolute top-2 left-0 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-[oklch(0.92_0.012_85)] opacity-60">
               {trail.code} · fundo da pasta
             </p>
-            <div className="absolute inset-x-0 top-12 flex justify-center gap-6">
-              <NoteCard
-                title={`Trilha ${trail.code}`}
-                notes={notes.trailNotes}
-                onAdd={notes.addTrailNote}
-                tilt={-2}
-              />
-              {noteDoc && (
-                <NoteCard
-                  title="Documento"
-                  notes={notes.articleNotes[noteDoc.id] ?? []}
-                  onAdd={(text) => notes.addArticleNote(noteDoc.id, text)}
-                  tilt={1.5}
-                >
-                  <select
-                    aria-label="Documento da nota"
-                    value={noteDoc.id}
-                    onChange={(e) => setNoteDocId(e.target.value)}
-                    className="mb-1 h-7 w-full bg-transparent font-mono text-xs uppercase outline-none"
-                  >
-                    {dossier.sheets.map((s, i) => (
-                      <option key={s.id} value={s.id}>
-                        {String(i + 1).padStart(2, "0")} · {s.title}
-                      </option>
-                    ))}
-                  </select>
-                </NoteCard>
-              )}
-            </div>
+            <NotesPocket
+              className="absolute inset-x-0 top-10"
+              groups={noteGroups}
+              onOpenBoard={() => setBoardOpen(true)}
+            />
             <div
               aria-hidden
               className="dossier-board pointer-events-none absolute h-[45%] shadow-[0_-8px_18px_rgb(0_0_0/0.4)] [clip-path:polygon(0_30%,42%_0,100%_22%,100%_100%,0_100%)]"
