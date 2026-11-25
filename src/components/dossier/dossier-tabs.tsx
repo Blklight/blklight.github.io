@@ -3,6 +3,7 @@ import type { DossierSection } from "@/features/dossier/types";
 import { cn } from "@/lib/utils";
 import { EASE, TURN_MS } from "./dossier-stack";
 import {
+  BOARD_EAR_SLOTS,
   EAR_W,
   earSlot,
   LAYER,
@@ -58,6 +59,27 @@ export function Ear({
   );
 }
 
+/** Up to this many sections, every ear shows (shorter as there are more). */
+export const EARS_SHRINK_MAX = 8;
+/** Past it, ears repeat every this many positions, like a real divider set. */
+export const EARS_CYCLE = 4;
+
+/**
+ * Section indices whose ears show, top to bottom. Past `EARS_SHRINK_MAX`
+ * sections, each of the `EARS_CYCLE` positions shows the next divider in the
+ * pile from the current section; the ones behind it stay hidden.
+ */
+export function visibleEars(count: number, active: number): number[] {
+  const all = Array.from({ length: count }, (_, i) => i);
+  if (count <= EARS_SHRINK_MAX) return all;
+  const from = Math.max(0, active);
+  return Array.from({ length: EARS_CYCLE }, (_, slot) => {
+    const inSlot = all.filter((i) => i % EARS_CYCLE === slot);
+    const ahead = (i: number) => (i - from + count) % count;
+    return inSlot.reduce((a, b) => (ahead(b) < ahead(a) ? b : a));
+  });
+}
+
 /**
  * Section ears, as divider sheets in the pile: the title strip lies under the
  * pile's edge and only the number sticks out of the board. The current one
@@ -75,68 +97,76 @@ export function DossierTabs({
   turned?: boolean;
   onSection: (id: string) => void;
 }) {
-  const total = sections.length + 1;
+  const active = sections.findIndex((s) => s.id === activeSectionId);
   return (
     <nav
       aria-label="Divisórias"
       className="absolute flex flex-col gap-1"
       style={{
-        top: earSlot(1, total).top,
+        top: earSlot(1, BOARD_EAR_SLOTS).top,
         bottom: SHEET_BOTTOM + 12,
         left: PANEL_W - TAB_TEXT_W,
         width: TAB_TEXT_W + TAB_NUM_W,
       }}
     >
-      {sections.map((s, i) => {
-        const active = s.id === activeSectionId;
+      {visibleEars(sections.length, active).map((i, pos, shown) => {
+        const s = sections[i];
+        const current = i === active;
         const number = String(i + 1).padStart(2, "0");
         return (
-          <button
+          <div
             key={s.id}
-            type="button"
-            aria-current={active ? "true" : undefined}
-            aria-label={`${number} ${s.title}`}
-            onClick={() => onSection(s.id)}
-            className={cn(
-              "background-texture relative flex max-h-44 min-h-0 flex-1 font-mono text-[0.6rem] font-bold uppercase tracking-[0.08em] text-[oklch(0.18_0_0)] motion-reduce:!transition-none",
-              "focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-current",
-              EAR_CLIP,
-              !active && "brightness-[0.85] hover:brightness-95",
-            )}
+            className="relative min-h-0 max-h-44 flex-1 motion-reduce:!transition-none"
             style={{
-              backgroundColor: s.color,
               zIndex: turned
                 ? LAYER.earTurned
-                : active
+                : current
                   ? LAYER.earActive
                   : LAYER.earUnder,
               transform: `perspective(2800px) rotateY(${turned ? -180 : 0}deg)`,
               transformOrigin: `${TAB_TEXT_W - PANEL_W}px 50%`,
-              transition: `transform ${TURN_MS}ms ${EASE}, z-index 0s ${turned ? 0 : TURN_MS}ms, filter 300ms`,
+              transition: `transform ${TURN_MS}ms ${EASE}, z-index 0s ${turned ? 0 : TURN_MS}ms`,
             }}
           >
-            <span
-              aria-hidden
+            <button
+              type="button"
+              aria-current={current ? "true" : undefined}
+              aria-label={`${number} ${s.title}`}
+              onClick={() => onSection(s.id)}
               className={cn(
-                "flex min-h-0 shrink-0 justify-center overflow-hidden pt-4 pb-3 transition-opacity duration-300",
-                active && !turned ? "opacity-100" : "opacity-0",
+                "background-texture absolute inset-0 flex flex-col font-mono text-[0.6rem] font-bold text-[oklch(0.18_0_0)] transition-[filter] duration-300",
+                "focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-current",
+                EAR_CLIP,
+                !current && "brightness-[0.85] hover:brightness-95",
               )}
-              style={{ width: TAB_TEXT_W }}
+              style={{ backgroundColor: s.color, paddingLeft: TAB_TEXT_W }}
             >
-              <span className="truncate [writing-mode:vertical-rl]">
-                {s.title}
+              <span
+                aria-hidden
+                className={cn(
+                  "block pt-3.5 text-center transition-opacity",
+                  turned && "opacity-0",
+                )}
+              >
+                {number}
               </span>
-            </span>
-            <span
-              aria-hidden
-              className={cn(
-                "flex-1 pt-3.5 text-center transition-opacity",
-                turned && "opacity-0",
-              )}
-            >
-              {number}
-            </span>
-          </button>
+            </button>
+            {current && !turned && (
+              <span
+                aria-hidden
+                className={cn(
+                  "background-texture pointer-events-none absolute left-0 flex h-44 min-h-full justify-center pt-4 pb-3 font-mono text-[0.6rem] font-bold uppercase tracking-[0.08em] text-[oklch(0.18_0_0)]",
+                  EAR_CLIP_LEFT,
+                  pos < shown.length / 2 ? "top-0" : "bottom-0",
+                )}
+                style={{ width: TAB_TEXT_W, backgroundColor: s.color }}
+              >
+                <span className="truncate [writing-mode:vertical-rl]">
+                  {s.title}
+                </span>
+              </span>
+            )}
+          </div>
         );
       })}
     </nav>

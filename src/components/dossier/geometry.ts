@@ -24,6 +24,9 @@ export const SPREAD_W = EAR_W + PANEL_W * 2 + RIGHT_W;
 export const SHEET_TOP = 40;
 export const SHEET_BOTTOM = 64;
 
+/** Board ears keep one size: the first of five slots. */
+export const BOARD_EAR_SLOTS = 5;
+
 /** Vertical slot of ear `i` out of `total`, as percentages of the board height. */
 export function earSlot(i: number, total: number) {
   const top = 4;

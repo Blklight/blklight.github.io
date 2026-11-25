@@ -26,6 +26,7 @@ import { DossierSidebar } from "./dossier-sidebar";
 import { DossierStack } from "./dossier-stack";
 import { DossierTabs, Ear } from "./dossier-tabs";
 import {
+  BOARD_EAR_SLOTS,
   COVER_PAD_X,
   EAR_W,
   LAYER,
@@ -108,7 +109,6 @@ export function Dossier<T>({
   const sheet = sheets[state.index];
   const isOpen = state.mode !== "closed";
   const focused = state.mode === "focus" && sheet ? sheet : undefined;
-  const earTotal = sections.length + 1;
   const readFlags = sheets.map((s) => readIds.has(s.id));
 
   const focus = (index: number) => {
@@ -229,7 +229,7 @@ export function Dossier<T>({
                   />
                   <Ear
                     slot={0}
-                    total={earTotal}
+                    total={BOARD_EAR_SLOTS}
                     active={isOpen && state.index === notesIndex}
                     label={cover.code}
                     onClick={() => goTo(notesIndex)}
@@ -319,7 +319,7 @@ export function Dossier<T>({
                       />
                       <Ear
                         slot={0}
-                        total={earTotal}
+                        total={BOARD_EAR_SLOTS}
                         active
                         label={<span className="sr-only">{cover.code}</span>}
                         onClick={() => dispatch({ type: "open" })}
@@ -360,7 +360,7 @@ export function Dossier<T>({
                       </div>
                       <Ear
                         slot={0}
-                        total={earTotal}
+                        total={BOARD_EAR_SLOTS}
                         side="left"
                         label={cover.code}
                         onClick={() =>
