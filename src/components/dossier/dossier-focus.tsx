@@ -54,12 +54,15 @@ export function DossierFocus({
   renderDocument,
   sidebar,
   onClose,
+  onOpenIndex,
 }: {
   sheet: DossierSheetData;
   bodyPromise: Promise<string>;
   renderDocument: (parts: { title: ReactNode; body: ReactNode }) => ReactNode;
   sidebar: ReactNode;
   onClose: () => void;
+  /** Small screens: opens the index drawer. */
+  onOpenIndex: () => void;
 }) {
   const titleRef = useRef<HTMLHeadingElement>(null);
 
@@ -76,7 +79,14 @@ export function DossierFocus({
         </div>
       </aside>
       <div className="min-w-0 px-4 lg:px-0">
-        <div className="sticky top-12 z-20 flex justify-end pt-6 pb-3 lg:top-[3.5625rem]">
+        <div className="sticky top-12 z-20 flex justify-between pt-6 pb-3 lg:top-[3.5625rem] lg:justify-end">
+          <button
+            type="button"
+            onClick={onOpenIndex}
+            className="border border-foreground bg-background px-3 py-1.5 font-mono text-[0.68rem] uppercase tracking-widest shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring lg:hidden"
+          >
+            ☰ Sumário
+          </button>
           <button
             type="button"
             onClick={onClose}

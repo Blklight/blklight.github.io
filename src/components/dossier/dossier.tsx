@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils";
 import { DossierCover, DossierProgress } from "./dossier-cover";
 import "./dossier.css";
 import { DossierFocus } from "./dossier-focus";
+import { DossierIndexDrawer } from "./dossier-index-drawer";
 import { DossierSheet } from "./dossier-sheet";
 import { DossierSidebar } from "./dossier-sidebar";
 import { DossierStack } from "./dossier-stack";
@@ -35,6 +36,8 @@ import {
   SHEET_BOTTOM,
   SHEET_TOP,
   SHEET_W,
+  SINGLE_BELOW,
+  SINGLE_W,
   SPREAD_W,
 } from "./geometry";
 
@@ -72,14 +75,19 @@ const EASE = "ease-[cubic-bezier(.25,.8,.25,1)]";
 /** Real size laid out once; scaled as one piece to the stage width, filling its height. */
 function useFit() {
   const ref = useRef<HTMLDivElement>(null);
-  const [fit, setFit] = useState<{ scale: number; height: number }>();
+  const [fit, setFit] = useState<{
+    scale: number;
+    height: number;
+    single: boolean;
+  }>();
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
     const measure = () => {
       const { width, height } = el.getBoundingClientRect();
-      const scale = Math.min(1, width / SPREAD_W);
-      setFit({ scale, height: height / scale });
+      const single = width < SINGLE_BELOW;
+      const scale = Math.min(1, width / (single ? SINGLE_W : SPREAD_W));
+      setFit({ scale, height: height / scale, single });
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -127,6 +135,8 @@ export function Dossier<T>({
     );
   };
   const goTo = (index: number) => dispatch({ type: "goTo", index });
+  const [indexOpen, setIndexOpen] = useState(false);
+  const single = !!fit?.single;
 
   const keyRef = useRef<(e: KeyboardEvent) => void>(() => {});
   keyRef.current = (e) => {
@@ -162,7 +172,10 @@ export function Dossier<T>({
       currentIndex={state.index}
       readIds={readIds}
       expandCurrent={!!focused}
-      onSelect={focused ? focus : goTo}
+      onSelect={(i) => {
+        setIndexOpen(false);
+        (focused ? focus : goTo)(i);
+      }}
       className={cn(
         "h-full",
         focused &&
@@ -187,12 +200,33 @@ export function Dossier<T>({
             "pointer-events-none fixed inset-x-0 top-14 bottom-0 z-0 scale-[0.94] opacity-60 blur-[3px] brightness-75",
         )}
       >
+        {single && isOpen && !focused && (
+          <div className="mb-3 flex justify-between font-mono text-[0.68rem] uppercase tracking-widest">
+            <button
+              type="button"
+              onClick={() => setIndexOpen(true)}
+              className="border border-foreground px-2.5 py-1 focus-visible:outline-2 focus-visible:outline-ring"
+            >
+              ☰ Sumário
+            </button>
+            <button
+              type="button"
+              onClick={() => dispatch({ type: "close" })}
+              className="border border-foreground px-2.5 py-1 focus-visible:outline-2 focus-visible:outline-ring"
+            >
+              Fechar pasta
+            </button>
+          </div>
+        )}
         <div ref={stageRef} className="relative min-h-0 flex-1">
           {fit && (
             <div
-              className="absolute top-0 left-1/2 origin-top"
+              className={cn(
+                "absolute top-0 left-1/2 origin-top",
+                single && "overflow-hidden",
+              )}
               style={{
-                width: SPREAD_W,
+                width: single ? SINGLE_W : SPREAD_W,
                 height: fit.height,
                 transform: `translateX(-50%) scale(${fit.scale})`,
               }}
@@ -203,9 +237,10 @@ export function Dossier<T>({
                   EASE,
                 )}
                 style={{
-                  left: EAR_W,
+                  left: single ? -PANEL_W : EAR_W,
                   width: PANEL_W * 2,
-                  transform: isOpen ? "none" : `translateX(${-PANEL_W / 2}px)`,
+                  transform:
+                    isOpen || single ? "none" : `translateX(${-PANEL_W / 2}px)`,
                 }}
               >
                 <div
@@ -386,9 +421,13 @@ export function Dossier<T>({
           bodyPromise={getBody(focused)}
           renderDocument={(parts) => renderDocument(focused, parts)}
           onClose={unfocus}
+          onOpenIndex={() => setIndexOpen(true)}
           sidebar={index}
         />
       )}
+      <DossierIndexDrawer open={indexOpen} onOpenChange={setIndexOpen}>
+        {index}
+      </DossierIndexDrawer>
     </>
   );
 }

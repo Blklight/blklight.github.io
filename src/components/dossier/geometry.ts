@@ -21,6 +21,10 @@ export const TAB_NUM_W = 34;
 /** Room right of the folder for its ears. */
 const RIGHT_W = EAR_W + 8;
 export const SPREAD_W = EAR_W + PANEL_W * 2 + RIGHT_W;
+/** Small screens show one page at a time: the cover, or the pile with its ears. */
+export const SINGLE_W = PANEL_W + RIGHT_W;
+/** Stage width under which the folder shows one page at a time. */
+export const SINGLE_BELOW = 960;
 export const SHEET_TOP = 40;
 export const SHEET_BOTTOM = 64;
 
