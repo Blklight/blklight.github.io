@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Badge, type BadgeData } from "@/components/badge";
 import { SignatureBlock } from "@/components/document/signature-block";
@@ -110,10 +111,28 @@ function NoteCard({
   );
 }
 
+const trailOf = (slug: string | null) =>
+  TRAILS.find((t) =>
+    t.items.some((it) => ARTICLES_BY_ID.get(it.articleId)?.slug === slug),
+  );
+
+/** `?doc=slug` mirrors the document being read, so a reload opens it again. */
+function setDocParam(slug?: string) {
+  const url = new URL(window.location.href);
+  if (slug) url.searchParams.set("doc", slug);
+  else url.searchParams.delete("doc");
+  window.history.replaceState(null, "", url);
+}
+
 export function DossierLab() {
-  const [trailId, setTrailId] = useState(TRAILS[0].id);
+  const searchParams = useSearchParams();
+  const [initialDoc, setInitialDoc] = useState(() => searchParams.get("doc"));
+  const [trailId, setTrailId] = useState(
+    () => (trailOf(initialDoc) ?? TRAILS[0]).id,
+  );
   const trail = TRAILS.find((t) => t.id === trailId) ?? TRAILS[0];
   const dossier = trailToDossier(trail, ARTICLES_BY_ID);
+  const initialIndex = dossier.sheets.findIndex((s) => s.slug === initialDoc);
   const { read, markRead } = useReadProgress();
   const notes = useNotes();
   const [noteDocId, setNoteDocId] = useState<string>();
@@ -142,7 +161,11 @@ export function DossierLab() {
             key={t.id}
             type="button"
             aria-pressed={t.id === trailId}
-            onClick={() => setTrailId(t.id)}
+            onClick={() => {
+              setDocParam();
+              setInitialDoc(null);
+              setTrailId(t.id);
+            }}
             className={cn(
               "border border-foreground bg-background px-2 py-1",
               t.id === trailId && "bg-foreground text-background",
@@ -159,7 +182,13 @@ export function DossierLab() {
         readIds={read}
         coverAttachment={<PinnedBadge member={member} />}
         getBody={(sheet) => loadArticleBody(sheet.id)}
-        onFocusChange={(sheet) => sheet && markRead(sheet.id)}
+        initialState={
+          initialIndex >= 0 ? { mode: "focus", index: initialIndex } : undefined
+        }
+        onFocusChange={(sheet) => {
+          if (sheet) markRead(sheet.id);
+          setDocParam(sheet?.slug);
+        }}
         renderCard={(sheet, ctx) => (
           <ArticleCard
             titleId={ctx.titleId}
