@@ -149,7 +149,7 @@ export function ReadingNotes({
       className={
         inDrawer
           ? "w-full"
-          : "absolute left-0 max-w-full transition-[top] duration-300"
+          : "absolute left-0 max-w-full transition-[top] duration-300 motion-reduce:transition-none"
       }
       style={
         inDrawer
