@@ -19,7 +19,7 @@ export function DossierCover({
   return (
     <div
       className={cn(
-        "dossier-board flex h-full flex-col gap-6 p-[7%] pl-[9%]",
+        "dossier-board flex h-full flex-col gap-8 p-14 pl-16",
         BOARD_CLIP,
       )}
     >
@@ -30,7 +30,7 @@ export function DossierCover({
 
       <div className="w-[62%] -rotate-1 bg-[oklch(0.94_0.012_85)] p-3 font-mono text-[0.68rem] text-[oklch(0.2_0_0)] uppercase shadow-[2px_3px_0_rgb(0_0_0/0.35)] background-texture">
         <div className="flex items-end justify-between border-b border-current pb-2">
-          <span className="font-pixel text-[clamp(1.6rem,3.4vh,2.4rem)] leading-none">
+          <span className="font-pixel text-[2.4rem] leading-none">
             {cover.code}
           </span>
           <span>N° {String(readFlags.length).padStart(2, "0")}</span>
@@ -53,7 +53,7 @@ export function DossierCover({
         />
       </div>
 
-      <h2 className="dossier-emboss mt-auto text-[clamp(3rem,10vh,6.5rem)] leading-[0.9] font-bold tracking-tight">
+      <h2 className="dossier-emboss mt-auto text-[7rem] leading-[0.9] font-bold tracking-tight">
         {cover.title}
       </h2>
 

@@ -15,7 +15,10 @@ import { cn } from "@/lib/utils";
 const NO_TEXTURE = { type: "none", opacity: 0 };
 export const PAPER_GRAINS = ["background-texture", "texture-item"];
 
-/** The same paper, header and footer as a published document with the default design. */
+/**
+ * The same paper, header and footer (and spacing) as the public document page
+ * with the default design; pass contentClassName="p-8 md:p-10" to match it.
+ */
 export function DocumentPaper({
   context,
   className,
@@ -41,12 +44,14 @@ export function DocumentPaper({
     >
       <HeaderBlklight
         lines={resolveLetterheadLines(BLKLIGHT_HEADER_LINES, context)}
+        className="mb-4"
       />
       {children}
-      <FooterBlklight
-        lines={resolveLetterheadLines(BLKLIGHT_FOOTER_LINES, context)}
-        className="mt-auto"
-      />
+      <div className="mt-auto pt-4">
+        <FooterBlklight
+          lines={resolveLetterheadLines(BLKLIGHT_FOOTER_LINES, context)}
+        />
+      </div>
     </PaperSurface>
   );
 }

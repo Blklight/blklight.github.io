@@ -13,6 +13,13 @@ export const ARTICLE_TYPE_LABEL: Record<ArticleType, string> = {
 
 const MAX_HEADINGS = 5;
 
+/** Shared with the reading view so the first page and the open document line up. */
+export const DOC_TITLE =
+  "w-full text-3xl md:text-4xl font-bold tracking-tight mb-3";
+export const DOC_ABSTRACT = "text-xl mb-6 text-muted-foreground";
+export const DOC_META =
+  "mb-3 font-mono text-[0.68rem] uppercase tracking-widest text-muted-foreground";
+
 /** First page of the document, truncated: letterhead, title, outline, footer. No body. */
 export function ArticleCard({
   titleId,
@@ -39,21 +46,14 @@ export function ArticleCard({
   return (
     <DocumentPaper
       context={{ author, typeLabel: ARTICLE_TYPE_LABEL[article.type] }}
-      className="h-full border-foreground/80"
-      contentClassName="gap-5 p-5"
+      className="h-full"
+      contentClassName="p-8 md:p-10"
     >
-      <div className="flex items-baseline justify-between font-mono text-[0.68rem] uppercase tracking-widest text-muted-foreground">
-        <span>
-          Doc. {String(index + 1).padStart(2, "0")}
-          {sectionTitle && ` · ${sectionTitle}`}
-        </span>
-        <span>{article.readingTime} min de leitura</span>
-      </div>
-
-      <h3
-        id={titleId}
-        className="text-[clamp(1.5rem,2.4vh+0.6rem,2.25rem)] leading-tight font-bold tracking-tight"
-      >
+      <p className={DOC_META}>
+        Doc. {String(index + 1).padStart(2, "0")}
+        {sectionTitle && ` · ${sectionTitle}`} · {article.readingTime} min
+      </p>
+      <h3 id={titleId} className={DOC_TITLE}>
         <button
           type="button"
           onClick={onOpen}
@@ -64,16 +64,10 @@ export function ArticleCard({
           {article.title}
         </button>
       </h3>
+      {intro && <p className={DOC_ABSTRACT}>{intro}</p>}
+      <div className="mb-6 h-px bg-foreground/20" />
 
-      {intro && (
-        <p className="font-serif text-lg leading-snug text-muted-foreground">
-          {intro}
-        </p>
-      )}
-
-      <div className="h-px bg-foreground/20" />
-
-      <div className="min-h-0 overflow-hidden">
+      <div className="min-h-0 flex-1 overflow-hidden">
         <p className="mb-2 font-mono text-[0.68rem] uppercase tracking-widest text-muted-foreground">
           Neste documento
         </p>
@@ -95,7 +89,7 @@ export function ArticleCard({
         </ol>
       </div>
 
-      <div className="flex items-end justify-between gap-4">
+      <div className="flex items-end justify-between gap-4 pt-6">
         <ul className="flex flex-wrap gap-1.5 font-mono text-[0.68rem]">
           {article.tags?.map((tag) => (
             <li

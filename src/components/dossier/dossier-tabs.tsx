@@ -1,84 +1,104 @@
-import type { DossierSection, DossierTab } from "@/features/dossier/types";
+import type { CSSProperties, ReactNode } from "react";
+import type { DossierSection } from "@/features/dossier/types";
 import { cn } from "@/lib/utils";
+import { EAR_W, earSlot } from "./geometry";
 
-const EAR_TEXT =
-  "font-mono text-[0.62rem] font-bold uppercase tracking-[0.18em] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring";
+/** Diagonal cut on both ends, like a divider tab. */
+const EAR_CLIP =
+  "[clip-path:polygon(0_0,100%_0.85rem,100%_calc(100%-0.85rem),0_100%)]";
+const EAR_CLIP_LEFT =
+  "[clip-path:polygon(0_0.85rem,100%_0,100%_100%,0_calc(100%-0.85rem))]";
 
-/**
- * Divider ears on the outer edge and inner tabs on the top edge, both cut on
- * the diagonal. They stick out of the folder, so they show even when closed.
- * shortcut: fixed slots by percentage; the measured side→top rail with "+N" comes in phase 3.
- */
+export function Ear({
+  slot,
+  total,
+  side = "right",
+  active,
+  label,
+  number,
+  className,
+  style,
+  onClick,
+}: {
+  slot: number;
+  total: number;
+  side?: "left" | "right";
+  active?: boolean;
+  label: ReactNode;
+  number?: string;
+  className?: string;
+  style?: CSSProperties;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      aria-current={active ? "true" : undefined}
+      onClick={onClick}
+      className={cn(
+        "group absolute flex flex-col items-center gap-2 py-4 font-mono text-[0.68rem] font-bold uppercase tracking-[0.18em] transition-[width,filter,transform] duration-200 ease-out",
+        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+        "shadow-[inset_6px_0_8px_-6px_rgb(0_0_0/0.5)]",
+        side === "right"
+          ? cn("left-full", EAR_CLIP)
+          : cn("right-full", EAR_CLIP_LEFT),
+        active ? "brightness-100" : "brightness-[0.78] hover:brightness-95",
+        className,
+      )}
+      style={{
+        ...earSlot(slot, total),
+        width: active ? EAR_W : EAR_W - 10,
+        ...style,
+      }}
+    >
+      {number && (
+        <span className="text-[0.6rem] opacity-70 [writing-mode:horizontal-tb]">
+          {number}
+        </span>
+      )}
+      <span className="[writing-mode:vertical-rl]">{label}</span>
+    </button>
+  );
+}
+
+/** Divider ears and the last (notes) ear on the folder's outer edge. The cover's ear lives on the cover. */
 export function DossierTabs({
   sections,
   activeSectionId,
+  notesActive,
   onSection,
-  tabs,
-  activeTab,
-  onTab,
+  onNotes,
 }: {
   sections: DossierSection[];
   activeSectionId?: string;
+  notesActive: boolean;
   onSection: (id: string) => void;
-  tabs: DossierTab[];
-  activeTab?: string;
-  onTab: (id: string) => void;
+  onNotes: () => void;
 }) {
-  const slot = Math.min(13, 84 / Math.max(sections.length, 1));
+  const total = sections.length + 2;
   return (
-    <>
-      <nav aria-label="Divisórias" className="contents">
-        {sections.map((s, i) => {
-          const active = s.id === activeSectionId;
-          return (
-            <button
-              key={s.id}
-              type="button"
-              aria-current={active ? "true" : undefined}
-              onClick={() => onSection(s.id)}
-              className={cn(
-                EAR_TEXT,
-                "background-texture absolute left-full flex items-center justify-center text-[oklch(0.18_0_0)] transition-[width,filter] duration-200 [writing-mode:vertical-rl] [clip-path:polygon(0_0,100%_0.9rem,100%_calc(100%-0.9rem),0_100%)] hover:brightness-110",
-                active ? "w-9" : "w-7 brightness-[0.8]",
-              )}
-              style={{
-                top: `${6 + i * slot}%`,
-                height: `${slot - 1}%`,
-                backgroundColor: s.color,
-              }}
-            >
-              {s.title}
-            </button>
-          );
-        })}
-      </nav>
-      <div
-        role="tablist"
-        aria-label="Abas do dossiê"
-        className="absolute right-[8%] bottom-full flex gap-0.5"
-      >
-        {tabs.map((t) => {
-          const active = t.id === activeTab;
-          return (
-            <button
-              key={t.id}
-              type="button"
-              role="tab"
-              aria-selected={active}
-              onClick={() => onTab(t.id)}
-              className={cn(
-                EAR_TEXT,
-                "px-6 pt-1.5 pb-1 [clip-path:polygon(0.7rem_0,calc(100%-0.7rem)_0,100%_100%,0_100%)]",
-                active
-                  ? "paper-grain-overlay relative isolate text-foreground"
-                  : "dossier-board-inside",
-              )}
-            >
-              <span className="relative z-10">{t.label}</span>
-            </button>
-          );
-        })}
-      </div>
-    </>
+    <nav aria-label="Divisórias" className="contents">
+      {sections.map((s, i) => (
+        <Ear
+          key={s.id}
+          slot={i + 1}
+          total={total}
+          active={s.id === activeSectionId}
+          number={String(i + 1).padStart(2, "0")}
+          label={s.title}
+          onClick={() => onSection(s.id)}
+          className="background-texture text-[oklch(0.18_0_0)]"
+          style={{ backgroundColor: s.color }}
+        />
+      ))}
+      <Ear
+        slot={total - 1}
+        total={total}
+        active={notesActive}
+        label="Anotações"
+        onClick={onNotes}
+        className="background-texture bg-[oklch(0.78_0.06_80)] text-[oklch(0.2_0_0)]"
+      />
+    </nav>
   );
 }

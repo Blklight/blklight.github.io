@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import { PaperSurface } from "@/features/documents/design/paper-surface";
 import type {
   DossierSection,
@@ -6,9 +9,12 @@ import type {
 import { cn } from "@/lib/utils";
 import { PAPER_GRAINS } from "./document-paper";
 
+/** Same width clipped in the cover and as the reading sidebar. */
+export const INDEX_W = "w-72";
+
 /**
- * The index: a narrow sheet. Clipped inside the cover when browsing, and the
- * right-hand sidebar while reading.
+ * The index, set like a memo: big title, mono meta line, numbered ruled rows.
+ * Clipped inside the cover when browsing; the left sidebar while reading.
  */
 export function DossierSidebar({
   code,
@@ -30,6 +36,7 @@ export function DossierSidebar({
   onSelect: (index: number) => void;
   className?: string;
 }) {
+  const navRef = useRef<HTMLElement>(null);
   const groups = [
     ...sections.map((s) => ({
       section: s as DossierSection | undefined,
@@ -46,71 +53,69 @@ export function DossierSidebar({
     .filter((g) => g.items.length > 0);
   const done = sheets.filter((s) => readIds.has(s.id)).length;
 
+  useEffect(() => {
+    const nav = navRef.current;
+    const row = nav?.querySelector<HTMLElement>(`[data-row="${currentIndex}"]`);
+    if (!nav || !row) return;
+    const top = row.offsetTop - nav.clientHeight / 3;
+    nav.scrollTo({ top, behavior: "smooth" });
+  }, [currentIndex]);
+
   return (
     <PaperSurface
       paperColors={null}
       paperTexture={{ type: "none", opacity: 0 }}
       textureStyle={{}}
       grains={PAPER_GRAINS}
-      className={cn(
-        "border-foreground/80 text-foreground shadow-lg",
-        className,
-      )}
+      className={cn(INDEX_W, "text-foreground shadow-lg", className)}
       contentClassName="flex h-full flex-col"
     >
-      <div className="flex items-baseline justify-between border-b border-foreground py-2 pr-4 pl-12 font-mono text-[0.68rem] uppercase tracking-widest">
-        <span className="font-bold">Sumário</span>
-        <span className="text-muted-foreground">{code}</span>
-      </div>
-      <div
-        aria-hidden
-        className="mx-4 mt-2 flex gap-0.5"
-        title={`${done} de ${sheets.length} lidos`}
-      >
-        {sheets.map((s) => (
-          <span
-            key={s.id}
-            className={cn(
-              "h-1 flex-1",
-              readIds.has(s.id) ? "bg-foreground" : "bg-foreground/15",
-            )}
-          />
-        ))}
-      </div>
+      <header className="px-5 pt-6 pb-3">
+        <p className="text-3xl font-semibold tracking-tight">Sumário</p>
+        <div className="mt-3 flex justify-between font-mono text-[0.62rem] uppercase tracking-[0.18em] text-muted-foreground">
+          <span>Memo — {code}</span>
+          <span>
+            \ {done}/{sheets.length} lidos
+          </span>
+        </div>
+      </header>
       <nav
+        ref={navRef}
         aria-label="Sumário"
-        className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-3 font-mono text-[0.78rem]"
+        className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-8 font-mono text-[0.72rem] uppercase [mask-image:linear-gradient(transparent,#000_0.75rem,#000_calc(100%-2rem),transparent)] [scrollbar-color:color-mix(in_oklab,currentColor_30%,transparent)_transparent] [scrollbar-width:thin]"
       >
         {groups.map((g, gi) => (
-          <div key={g.id ?? "_"}>
+          <div key={g.id ?? "_"} className="pt-4">
             {g.section && (
-              <p className="mb-1 flex items-center gap-2 text-[0.65rem] uppercase tracking-widest text-muted-foreground">
+              <p className="flex items-center gap-2 text-[0.6rem] tracking-[0.2em] text-muted-foreground">
                 <span
                   aria-hidden
-                  className="h-2.5 w-2.5 [clip-path:polygon(0_0,100%_0,70%_100%,0_100%)]"
+                  className="h-2 w-3 [clip-path:polygon(0_0,100%_25%,100%_75%,0_100%)]"
                   style={{ background: g.section.color }}
                 />
-                {String(gi + 1).padStart(2, "0")} {g.section.title}
+                {String(gi + 1).padStart(2, "0")} — {g.section.title}
               </p>
             )}
             <ol>
               {g.items.map(({ sheet, index }) => {
                 const current = index === currentIndex;
                 return (
-                  <li key={sheet.id}>
+                  <li key={sheet.id} data-row={index}>
                     <button
                       type="button"
                       aria-current={current ? "true" : undefined}
                       onClick={() => onSelect(index)}
                       className={cn(
-                        "flex w-full gap-2 border-b border-dashed border-foreground/15 py-1.5 text-left hover:bg-foreground/5 focus-visible:outline-2 focus-visible:outline-ring",
-                        current ? "font-bold" : "text-foreground/75",
+                        "flex w-full items-end gap-2 border-b-2 border-foreground/20 pt-3 pb-1 text-left tracking-wider shadow-[0_1px_0_rgb(255_255_255/0.5)] hover:border-foreground/50 focus-visible:outline-2 focus-visible:outline-ring dark:shadow-none",
+                        current
+                          ? "border-foreground font-bold"
+                          : "text-foreground/75",
                       )}
                     >
-                      <span className="w-5 shrink-0 text-muted-foreground">
-                        {String(index + 1).padStart(2, "0")}
+                      <span className="w-6 shrink-0 text-muted-foreground">
+                        {index + 1}.
                       </span>
-                      <span className="flex-1">{sheet.title}</span>
+                      <span className="flex-1 leading-snug">{sheet.title}</span>
                       {readIds.has(sheet.id) && (
                         <span className="shrink-0">
                           <span aria-hidden>✓</span>
@@ -119,7 +124,7 @@ export function DossierSidebar({
                       )}
                     </button>
                     {current && expandCurrent && (
-                      <ol className="my-1 ml-7 space-y-1 border-l border-foreground/20 pl-2 text-[0.72rem]">
+                      <ol className="mt-2 mb-1 ml-8 space-y-1 border-l border-foreground/25 pl-2 text-[0.68rem] normal-case">
                         {sheet.headings.map((h) => (
                           <li
                             key={h.id}

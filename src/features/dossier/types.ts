@@ -73,8 +73,3 @@ export interface DossierCoverData {
   statusLabel: string;
   subtitle?: string;
 }
-
-export interface DossierTab {
-  id: string;
-  label: string;
-}

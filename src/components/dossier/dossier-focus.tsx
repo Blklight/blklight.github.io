@@ -5,6 +5,7 @@ import { type ReactNode, Suspense, use, useEffect, useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { DossierSheetData } from "@/features/dossier/types";
 import { cn } from "@/lib/utils";
+import { DOC_TITLE } from "./article-card";
 
 function Body({ promise }: { promise: Promise<string> }) {
   const html = use(promise);
@@ -43,7 +44,7 @@ function BodySkeleton({ sheet }: { sheet: DossierSheetData }) {
 
 /**
  * Reading mode: the document in the page flow (the page scrolls), centered
- * like an article; the index sits to the right. Not a dialog.
+ * like an article (same 720px paper); the index sits to the left. Not a dialog.
  * `bodyPromise` must be stable per sheet (cached loader), since `use()` suspends on it.
  */
 export function DossierFocus({
@@ -67,8 +68,11 @@ export function DossierFocus({
   }, []);
 
   return (
-    <div className="relative z-10 grid gap-8 px-4 pt-6 pb-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,48rem)_minmax(0,1fr)] lg:px-8">
-      <div className="lg:col-start-2">
+    <div className="relative z-10 grid gap-8 px-4 pt-6 pb-24 lg:grid-cols-[minmax(0,1fr)_45rem_minmax(0,1fr)] lg:px-8">
+      <aside className="hidden lg:block lg:justify-self-end">
+        <div className="sticky top-20 h-[calc(100dvh-7rem)]">{sidebar}</div>
+      </aside>
+      <div className="min-w-0">
         <div className="mb-3 flex justify-end">
           <button
             type="button"
@@ -85,7 +89,7 @@ export function DossierFocus({
             <h1
               ref={titleRef}
               tabIndex={-1}
-              className="text-3xl font-bold tracking-tight focus:outline-none md:text-4xl"
+              className={cn(DOC_TITLE, "focus:outline-none")}
             >
               {sheet.title}
             </h1>
@@ -97,11 +101,6 @@ export function DossierFocus({
           ),
         })}
       </div>
-      <aside className="hidden lg:block">
-        <div className="sticky top-20 h-[calc(100dvh-7rem)] w-full max-w-72">
-          {sidebar}
-        </div>
-      </aside>
     </div>
   );
 }
