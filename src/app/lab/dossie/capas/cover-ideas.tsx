@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { BOARD_CLIP } from "@/components/dossier/dossier-cover";
 import "@/components/dossier/dossier.css";
 import { HoloSeal, TriangleStamp } from "@/components/stamps/org-stamps";
 import { ARTICLES_BY_ID, TRAIL_REACT } from "@/features/dossier/mock";
@@ -56,7 +55,6 @@ function Board({
       <div
         className={cn(
           "absolute inset-0 overflow-hidden shadow-[0_24px_48px_-20px_rgb(0_0_0/0.55)]",
-          BOARD_CLIP,
           className,
         )}
       >

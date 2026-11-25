@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import type { DossierSection } from "@/features/dossier/types";
 import { cn } from "@/lib/utils";
+import { EASE, TURN_MS, TURNED_Z } from "./dossier-stack";
 import {
   EAR_W,
   earSlot,
@@ -59,15 +60,18 @@ export function Ear({
 /**
  * Section ears, as divider sheets in the pile: the title strip lies under the
  * pile's edge and only the number sticks out of the board. The current one
- * comes on top of the pile, against its document, showing its title.
+ * comes on top of the pile, against its document, showing its title. With
+ * the pile turned onto the cover (`turned`), they turn with it.
  */
 export function DossierTabs({
   sections,
   activeSectionId,
+  turned,
   onSection,
 }: {
   sections: DossierSection[];
   activeSectionId?: string;
+  turned?: boolean;
   onSection: (id: string) => void;
 }) {
   const total = sections.length + 1;
@@ -93,18 +97,24 @@ export function DossierTabs({
             aria-label={`${number} ${s.title}`}
             onClick={() => onSection(s.id)}
             className={cn(
-              "background-texture relative flex max-h-44 min-h-0 flex-1 font-mono text-[0.6rem] font-bold uppercase tracking-[0.08em] text-[oklch(0.18_0_0)] transition-[filter] duration-300",
+              "background-texture relative flex max-h-44 min-h-0 flex-1 font-mono text-[0.6rem] font-bold uppercase tracking-[0.08em] text-[oklch(0.18_0_0)] motion-reduce:!transition-none",
               "focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-current",
               EAR_CLIP,
-              active ? "z-[25]" : "z-[5] brightness-[0.85] hover:brightness-95",
+              !active && "brightness-[0.85] hover:brightness-95",
             )}
-            style={{ backgroundColor: s.color }}
+            style={{
+              backgroundColor: s.color,
+              zIndex: turned ? TURNED_Z - 1 : active ? 25 : 5,
+              transform: `perspective(2800px) rotateY(${turned ? -180 : 0}deg)`,
+              transformOrigin: `${TAB_TEXT_W - PANEL_W}px 50%`,
+              transition: `transform ${TURN_MS}ms ${EASE}, z-index 0s ${turned ? 0 : TURN_MS}ms, filter 300ms`,
+            }}
           >
             <span
               aria-hidden
               className={cn(
                 "flex min-h-0 shrink-0 justify-center overflow-hidden pt-4 pb-3 transition-opacity duration-300",
-                active ? "opacity-100" : "opacity-0",
+                active && !turned ? "opacity-100" : "opacity-0",
               )}
               style={{ width: TAB_TEXT_W }}
             >
@@ -112,7 +122,13 @@ export function DossierTabs({
                 {s.title}
               </span>
             </span>
-            <span aria-hidden className="flex-1 pt-3.5 text-center">
+            <span
+              aria-hidden
+              className={cn(
+                "flex-1 pt-3.5 text-center transition-opacity",
+                turned && "opacity-0",
+              )}
+            >
               {number}
             </span>
           </button>

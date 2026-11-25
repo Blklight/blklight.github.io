@@ -220,6 +220,7 @@ export function Dossier<T>({
                     activeSectionId={
                       isOpen && sheet ? sheet.sectionId : undefined
                     }
+                    turned={isOpen && state.index === notesIndex}
                     onSection={(id) => {
                       const i = sheets.findIndex((s) => s.sectionId === id);
                       if (i >= 0) goTo(i);

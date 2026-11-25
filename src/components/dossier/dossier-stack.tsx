@@ -10,11 +10,11 @@ const DEPTH = 6;
 const STEP = 1.5;
 const VELOCITY_WINDOW = 100;
 const FLICK_VELOCITY = 0.3;
-const TURN_MS = 520;
+export const TURN_MS = 520;
 const TUCK_MS = 650;
-const EASE = "cubic-bezier(.22,.8,.3,1)";
+export const EASE = "cubic-bezier(.22,.8,.3,1)";
 /** Turned sheets lie on the open cover's back, above it (the cover is z-50). */
-const TURNED_Z = 60;
+export const TURNED_Z = 60;
 /** Pages turn on the folder's spine, PANEL_PAD_X left of the sheet. */
 const SPINE = `-${PANEL_PAD_X}px 50%`;
 
@@ -161,6 +161,7 @@ export function DossierStack<T>({
         const top = o === 0;
         const tucking = !notes && o === -1 && from === index - 1;
         const untucking = top && from === index + 1 && from < sheets.length;
+        const unturning = !notes && from === sheets.length && o >= 0;
         if (!(turned ? o >= -DEPTH : o >= 0 && o < DEPTH) && !tucking)
           return null;
         const d = turned ? -o - 1 : Math.max(0, o - (top ? 0 : progress));
@@ -177,7 +178,15 @@ export function DossierStack<T>({
             }
           : untucking
             ? { "--fx": "0px", "--fr": "0deg", "--under": `${DEPTH * STEP}px` }
-            : {};
+            : unturning
+              ? {
+                  "--turned": place({
+                    x: -(sheets.length - 1 - i) * STEP,
+                    y: (sheets.length - 1 - i) * STEP,
+                    turn: -180,
+                  }),
+                }
+              : {};
         return (
           <div
             key={sheet.id}
@@ -198,7 +207,9 @@ export function DossierStack<T>({
                 ? `dossier-tuck ${TUCK_MS}ms ${EASE} forwards`
                 : untucking
                   ? `dossier-tuck ${TUCK_MS}ms ${EASE} reverse`
-                  : undefined,
+                  : unturning
+                    ? `dossier-unturn ${TURN_MS}ms ${EASE} backwards`
+                    : undefined,
               // a sheet turned back stays above the cover until it lands
               transition: dragging
                 ? "none"

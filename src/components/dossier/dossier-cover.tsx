@@ -1,10 +1,6 @@
 import type { DossierCoverData } from "@/features/dossier/types";
 import { cn } from "@/lib/utils";
 
-/** Notch cut on the spine side, like a file folder board. */
-export const BOARD_CLIP =
-  "[clip-path:polygon(0_0,100%_0,100%_100%,0_100%,0_62%,1.1rem_59%,1.1rem_41%,0_38%)]";
-
 export function DossierCover({
   cover,
   readFlags,
@@ -16,12 +12,7 @@ export function DossierCover({
   onOpen: () => void;
 }) {
   return (
-    <div
-      className={cn(
-        "dossier-board flex h-full flex-col gap-8 p-14 pl-16",
-        BOARD_CLIP,
-      )}
-    >
+    <div className="dossier-board flex h-full flex-col gap-8 p-14 pl-16">
       <div className="flex justify-between font-mono text-[0.65rem] uppercase tracking-[0.2em] opacity-70">
         <span>Blklight · Arquivo de estudo</span>
         <span>Uso de leitura</span>

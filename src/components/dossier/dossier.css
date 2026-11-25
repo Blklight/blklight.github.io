@@ -99,3 +99,10 @@
     background: color-mix(in oklab, currentColor 30%, transparent);
   }
 }
+/* Leaving the notes: the pile turns back from face down on the cover. */
+@keyframes dossier-unturn {
+  from {
+    transform: var(--turned);
+    z-index: 60;
+  }
+}
