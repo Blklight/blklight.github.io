@@ -65,7 +65,6 @@ export function DossierStack<T>({
   const [seen, setSeen] = useState({ index, from: index });
   if (seen.index !== index) setSeen({ index, from: seen.index });
   const from = seen.from;
-  const notes = index === sheets.length;
   const canNext = index < sheets.length;
   const canPrev = index > 0;
   const pull = dx < 0 ? (canNext ? dx : 0) : canPrev ? dx : 0;
