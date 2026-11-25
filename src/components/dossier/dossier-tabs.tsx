@@ -109,7 +109,7 @@ export function DossierTabs({
         width: TAB_TEXT_W + TAB_NUM_W,
       }}
     >
-      {visibleEars(sections.length, active).map((i, pos, shown) => {
+      {visibleEars(sections.length, active).map((i) => {
         const s = sections[i];
         const current = i === active;
         const number = String(i + 1).padStart(2, "0");
@@ -134,38 +134,35 @@ export function DossierTabs({
               aria-label={`${number} ${s.title}`}
               onClick={() => onSection(s.id)}
               className={cn(
-                "background-texture absolute inset-0 flex flex-col font-mono text-[0.6rem] font-bold text-[oklch(0.18_0_0)] transition-[filter] duration-300",
+                "background-texture absolute inset-0 flex font-mono text-[0.6rem] font-bold uppercase tracking-[0.08em] text-[oklch(0.18_0_0)] transition-[filter] duration-300",
                 "focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-current",
                 EAR_CLIP,
                 !current && "brightness-[0.85] hover:brightness-95",
               )}
-              style={{ backgroundColor: s.color, paddingLeft: TAB_TEXT_W }}
+              style={{ backgroundColor: s.color }}
             >
               <span
                 aria-hidden
                 className={cn(
-                  "block pt-3.5 text-center transition-opacity",
+                  "flex min-h-0 shrink-0 justify-center overflow-hidden pt-4 pb-3 transition-opacity duration-300",
+                  current && !turned ? "opacity-100" : "opacity-0",
+                )}
+                style={{ width: TAB_TEXT_W }}
+              >
+                <span className="truncate [writing-mode:vertical-rl]">
+                  {s.title}
+                </span>
+              </span>
+              <span
+                aria-hidden
+                className={cn(
+                  "flex-1 pt-3.5 text-center transition-opacity",
                   turned && "opacity-0",
                 )}
               >
                 {number}
               </span>
             </button>
-            {current && !turned && (
-              <span
-                aria-hidden
-                className={cn(
-                  "background-texture pointer-events-none absolute left-0 flex h-44 min-h-full justify-center pt-4 pb-3 font-mono text-[0.6rem] font-bold uppercase tracking-[0.08em] text-[oklch(0.18_0_0)]",
-                  EAR_CLIP_LEFT,
-                  pos < shown.length / 2 ? "top-0" : "bottom-0",
-                )}
-                style={{ width: TAB_TEXT_W, backgroundColor: s.color }}
-              >
-                <span className="truncate [writing-mode:vertical-rl]">
-                  {s.title}
-                </span>
-              </span>
-            )}
           </div>
         );
       })}
