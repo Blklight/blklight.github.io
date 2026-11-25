@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge, type BadgeData } from "@/components/badge";
 import { SignatureBlock } from "@/components/document/signature-block";
 import {
@@ -19,7 +19,13 @@ import { type NoteGroup, NotesPocket } from "@/components/notes/notes-pocket";
 import { ReadingNotes } from "@/components/notes/reading-notes";
 import { HoloSeal } from "@/components/stamps/org-stamps";
 import { loadArticleBody, prefetchArticleBody } from "@/features/dossier/load-body";
-import { ARTICLE_STAMPS, ARTICLES_BY_ID, TRAILS } from "@/features/dossier/mock";
+import {
+  ARTICLE_STAMPS,
+  ARTICLES_BY_ID,
+  TRAIL_REACT,
+  TRAILS,
+} from "@/features/dossier/mock";
+import { DEMO_NOTES } from "./demo-notes";
 import { trailToDossier } from "@/features/dossier/trail-adapter";
 import { useReadProgress } from "@/features/dossier/use-dossier-state";
 import { useNotesStore } from "@/features/notes/store";
@@ -79,6 +85,23 @@ function setDocParam(slug?: string) {
   window.history.replaceState(null, "", url);
 }
 
+const DEMO_FLAG = "blklight-notes-demo-v1";
+
+/** Fills the board with sample notes once, so the lab is not empty. */
+function useDemoNotes() {
+  const add = useNotesStore((s) => s.add);
+  useEffect(() => {
+    if (localStorage.getItem(DEMO_FLAG)) return;
+    localStorage.setItem(DEMO_FLAG, "1");
+    for (const { sectionId, ...note } of DEMO_NOTES)
+      add({
+        ...note,
+        scopeId: TRAIL_REACT.id,
+        color: TRAIL_REACT.sections.find((s) => s.id === sectionId)?.color,
+      });
+  }, [add]);
+}
+
 export function DossierLab() {
   const searchParams = useSearchParams();
   const [initialDoc, setInitialDoc] = useState(() => searchParams.get("doc"));
@@ -91,6 +114,7 @@ export function DossierLab() {
   const { read, markRead } = useReadProgress();
   const allNotes = useNotesStore((s) => s.notes);
   const [boardOpen, setBoardOpen] = useState(false);
+  useDemoNotes();
   const user = useAuthStore((s) => s.user);
   const member: BadgeData = user
     ? {

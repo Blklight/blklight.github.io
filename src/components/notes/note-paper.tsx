@@ -62,7 +62,7 @@ export function NotePaper({
         <button
           type="button"
           onClick={onQuoteClick}
-          className="mt-1 line-clamp-4 border-current/40 border-l-2 pl-2 text-left font-serif text-sm italic leading-snug hover:border-current"
+          className="mt-1 line-clamp-4 border-current/40 border-l-2 pl-2 text-left font-mono text-xs leading-snug hover:border-current"
         >
           “{note.anchor.exact.trim()}”
         </button>
@@ -75,7 +75,7 @@ export function NotePaper({
         onBlur={(e) => {
           if (e.target.value !== note.text) onChange(e.target.value);
         }}
-        className="mt-2 min-h-8 w-full resize-none bg-transparent font-serif text-base leading-snug outline-none [field-sizing:content] placeholder:text-current/45"
+        className="mt-2 min-h-8 w-full resize-none bg-transparent font-mono text-[0.8rem] leading-snug outline-none [field-sizing:content] placeholder:text-current/45"
       />
     </article>
   );

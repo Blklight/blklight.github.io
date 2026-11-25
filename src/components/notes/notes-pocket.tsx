@@ -42,12 +42,12 @@ function Pile({ group, index }: { group: NoteGroup; index: number }) {
           <span className="shrink-0 opacity-70">{group.notes.length}</span>
         </p>
         {top?.anchor && (
-          <p className="line-clamp-4 border-current/40 border-l-2 pl-2 font-serif text-sm italic leading-snug">
+          <p className="line-clamp-4 border-current/40 border-l-2 pl-2 font-mono text-[0.7rem] leading-snug">
             “{top.anchor.exact.trim()}”
           </p>
         )}
         {top?.text && (
-          <p className="line-clamp-3 font-serif text-sm leading-snug">
+          <p className="line-clamp-3 whitespace-pre-line font-mono text-[0.75rem] leading-snug">
             {top.text}
           </p>
         )}
@@ -83,7 +83,7 @@ export function NotesPocket({
         </button>
       </div>
       {filled.length === 0 ? (
-        <p className="mt-10 max-w-64 font-serif text-lg text-[oklch(0.92_0.012_85)] italic opacity-70">
+        <p className="mt-10 max-w-64 font-mono text-xs uppercase leading-relaxed tracking-widest text-[oklch(0.92_0.012_85)] opacity-70">
           Nada guardado ainda. Selecione um trecho enquanto lê para marcar ou
           comentar.
         </p>

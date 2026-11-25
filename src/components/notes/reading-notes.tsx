@@ -1,11 +1,12 @@
 "use client";
 
-import { NotebookPen } from "lucide-react";
+import { Highlighter, NotebookPen } from "lucide-react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { quoteFromRange, rangeFromQuote } from "@/features/notes/anchor";
 import { useNotesStore } from "@/features/notes/store";
 import type { Annotation } from "@/features/notes/types";
+import { cn } from "@/lib/utils";
 import { NotePaper } from "./note-paper";
 import { useContentVersion, useTextHighlights } from "./use-text-highlights";
 
@@ -41,6 +42,8 @@ export function ReadingNotes({
   const add = useNotesStore((s) => s.add);
   const update = useNotesStore((s) => s.update);
   const remove = useNotesStore((s) => s.remove);
+  const marking = useNotesStore((s) => s.marking);
+  const setMarking = useNotesStore((s) => s.setMarking);
   const notes = useMemo(
     () => all.filter((n) => n.scopeId === scopeId && n.docId === docId),
     [all, scopeId, docId],
@@ -53,7 +56,10 @@ export function ReadingNotes({
   const [drawer, setDrawer] = useState(false);
 
   useEffect(() => {
-    if (!root) return;
+    if (!root || !marking) {
+      setMenu(undefined);
+      return;
+    }
     const onChange = () => {
       const sel = document.getSelection();
       if (!sel || sel.isCollapsed || !root.contains(sel.anchorNode)) {
@@ -75,7 +81,7 @@ export function ReadingNotes({
       document.removeEventListener("selectionchange", onChange);
       window.removeEventListener("scroll", hide);
     };
-  }, [root]);
+  }, [root, marking]);
 
   const create = (comment: boolean) => {
     if (!root || !menu) return;
@@ -167,6 +173,25 @@ export function ReadingNotes({
       <div ref={columnRef} className="relative hidden h-full lg:block">
         {notes.map((n) => paper(n, false))}
       </div>
+
+      <button
+        type="button"
+        aria-pressed={marking}
+        onClick={() => setMarking(!marking)}
+        title="Com o marcador ligado, selecione um trecho para marcar ou comentar"
+        className={cn(
+          "fixed right-4 bottom-28 z-30 flex items-center gap-2 border border-foreground px-3 py-1.5 font-mono text-[0.68rem] uppercase tracking-widest shadow-md lg:top-[calc(3.5625rem+1.5rem)] lg:bottom-auto",
+          marking ? "bg-foreground text-background" : "bg-background",
+        )}
+      >
+        <Highlighter className="size-3.5" aria-hidden />
+        Marcador
+        <span
+          aria-hidden
+          className="size-2.5 border border-current"
+          style={{ background: marking ? color : undefined }}
+        />
+      </button>
 
       <button
         type="button"

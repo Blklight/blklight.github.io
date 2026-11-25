@@ -6,6 +6,9 @@ type NewAnnotation = Omit<Annotation, "id" | "createdAt" | "updatedAt">;
 
 interface NotesState {
   notes: Annotation[];
+  /** Highlighter on: selecting text offers to mark it. */
+  marking: boolean;
+  setMarking: (on: boolean) => void;
   add: (note: NewAnnotation) => Annotation;
   update: (
     id: string,
@@ -20,6 +23,8 @@ export const useNotesStore = create<NotesState>()(
   persist(
     (set) => ({
       notes: [],
+      marking: false,
+      setMarking: (marking) => set({ marking }),
       add: (input) => {
         const now = new Date().toISOString();
         const note: Annotation = {
