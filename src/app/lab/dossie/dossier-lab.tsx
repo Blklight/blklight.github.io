@@ -12,7 +12,11 @@ import {
 } from "@/components/dossier/article-card";
 import { DocumentPaper } from "@/components/dossier/document-paper";
 import { Dossier } from "@/components/dossier/dossier";
-import { PANEL_PAD_X, SHEET_BOTTOM } from "@/components/dossier/geometry";
+import {
+  PANEL_GAP_R,
+  PANEL_PAD_X,
+  SHEET_BOTTOM,
+} from "@/components/dossier/geometry";
 import { Navbar } from "@/components/navbar";
 import { NotesBoard } from "@/components/notes/notes-board";
 import { type NoteGroup, NotesPocket } from "@/components/notes/notes-pocket";
@@ -29,6 +33,7 @@ import { DEMO_NOTES } from "./demo-notes";
 import { trailToDossier } from "@/features/dossier/trail-adapter";
 import { useReadProgress } from "@/features/dossier/use-dossier-state";
 import { useNotesStore } from "@/features/notes/store";
+import type { Annotation } from "@/features/notes/types";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 
@@ -85,6 +90,9 @@ function setDocParam(slug?: string) {
   window.history.replaceState(null, "", url);
 }
 
+/** Pocket flap height, as % of the notes area. */
+const POCKET_H = 30;
+
 const DEMO_FLAG = "blklight-notes-demo-v1";
 
 /** Fills the board with sample notes once, so the lab is not empty. */
@@ -130,17 +138,19 @@ export function DossierLab() {
   const docLabel = (sheet: (typeof dossier.sheets)[number]) =>
     `Doc. ${String(dossier.sheets.indexOf(sheet) + 1).padStart(2, "0")} · ${sectionTitle(sheet.sectionId) ?? ""}`;
   const trailNotes = allNotes.filter((n) => n.scopeId === trail.id);
+  const sectionOf = (n: Annotation) =>
+    n.sectionId ?? dossier.sheets.find((s) => s.id === n.docId)?.sectionId;
   const noteGroups: NoteGroup[] = [
-    ...dossier.sheets.map((sheet) => ({
-      id: sheet.id,
-      label: docLabel(sheet),
-      color: sectionColor(sheet.sectionId),
-      notes: trailNotes.filter((n) => n.docId === sheet.id),
+    ...dossier.sections.map((section) => ({
+      id: section.id,
+      label: section.title,
+      color: section.color,
+      notes: trailNotes.filter((n) => sectionOf(n) === section.id),
     })),
     {
-      id: "_trail",
-      label: `Trilha ${trail.code}`,
-      notes: trailNotes.filter((n) => !n.docId),
+      id: "_loose",
+      label: "Soltas",
+      notes: trailNotes.filter((n) => !sectionOf(n)),
     },
   ];
   return (
@@ -234,17 +244,18 @@ export function DossierLab() {
               {trail.code} · fundo da pasta
             </p>
             <NotesPocket
-              className="absolute inset-x-0 top-10"
+              pileTop={`calc(${100 - POCKET_H}% + ${SHEET_BOTTOM - 48}px)`}
               groups={noteGroups}
               onOpenBoard={() => setBoardOpen(true)}
             />
             <div
               aria-hidden
-              className="dossier-board pointer-events-none absolute h-[45%] shadow-[0_-8px_18px_rgb(0_0_0/0.4)] [clip-path:polygon(0_30%,42%_0,100%_22%,100%_100%,0_100%)]"
+              className="dossier-board pointer-events-none absolute shadow-[0_-8px_18px_rgb(0_0_0/0.4)] [clip-path:polygon(0_8%,50%_0,100%_8%,100%_100%,0_100%)]"
               style={{
                 left: -PANEL_PAD_X,
-                right: 0,
+                right: -PANEL_GAP_R,
                 bottom: -SHEET_BOTTOM,
+                height: `${POCKET_H}%`,
               }}
             />
             <p className="dossier-emboss absolute bottom-6 left-0 font-mono text-xs uppercase tracking-[0.3em] text-[oklch(0.92_0.012_85)] opacity-70">

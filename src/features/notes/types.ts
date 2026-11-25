@@ -11,6 +11,8 @@ export interface Annotation {
   scopeId: string;
   /** Document it was taken on; absent for a loose note. */
   docId?: string;
+  /** Tab (section) a loose note is filed under; notes on a document follow the document's. */
+  sectionId?: string;
   /** Marked passage; absent for a note without a quote. */
   anchor?: TextQuote;
   text: string;
@@ -18,6 +20,8 @@ export interface Annotation {
   color?: string;
   /** Position on the board, once placed there. */
   board?: { x: number; y: number };
+  /** Size on the board, once resized there. */
+  size?: { w: number; h: number };
   createdAt: string;
   updatedAt: string;
 }

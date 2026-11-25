@@ -12,9 +12,10 @@ interface NotesState {
   add: (note: NewAnnotation) => Annotation;
   update: (
     id: string,
-    patch: Partial<Pick<Annotation, "text" | "color">>,
+    patch: Partial<Pick<Annotation, "text" | "color" | "sectionId">>,
   ) => void;
   move: (id: string, x: number, y: number) => void;
+  resize: (id: string, w: number, h: number) => void;
   remove: (id: string) => void;
 }
 
@@ -48,6 +49,12 @@ export const useNotesStore = create<NotesState>()(
         set((s) => ({
           notes: s.notes.map((n) =>
             n.id === id ? { ...n, board: { x, y } } : n,
+          ),
+        })),
+      resize: (id, w, h) =>
+        set((s) => ({
+          notes: s.notes.map((n) =>
+            n.id === id ? { ...n, size: { w, h } } : n,
           ),
         })),
       remove: (id) =>
