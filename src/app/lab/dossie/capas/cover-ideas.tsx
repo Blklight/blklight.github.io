@@ -2,19 +2,12 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import "@/components/dossier/dossier.css";
 import { HoloSeal, TriangleStamp } from "@/components/stamps/org-stamps";
-import { ARTICLES_BY_ID, TRAIL_REACT } from "@/features/dossier/mock";
+import { TRAIL_REACT } from "@/features/dossier/mock";
 import { cn } from "@/lib/utils";
 
 const T = TRAIL_REACT;
 const DOCS = String(T.items.length).padStart(2, "0");
-const READ = "04";
-const MINUTES = T.items.reduce(
-  (sum, it) => sum + (ARTICLES_BY_ID.get(it.articleId)?.readingTime ?? 0),
-  0,
-);
 const PAPER = "bg-[oklch(0.94_0.012_85)] text-[oklch(0.2_0_0)]";
-const KRAFT =
-  "background-texture bg-[oklch(0.7_0.075_72)] text-[oklch(0.25_0.03_60)]";
 const BARCODE =
   "bg-[repeating-linear-gradient(90deg,currentColor_0_2px,transparent_2px_4px,currentColor_4px_5px,transparent_5px_8px,currentColor_8px_11px,transparent_11px_12px)]";
 const EAR_CLIP =
@@ -90,52 +83,6 @@ function Label({ className }: { className?: string }) {
   );
 }
 
-/** Rubber stamp: the ink breaks up where the pad was dry. */
-function ConfidentialStamp({ className }: { className?: string }) {
-  return (
-    <svg
-      aria-hidden
-      viewBox="0 0 280 86"
-      className={cn("text-[oklch(0.5_0.19_27)] mix-blend-multiply", className)}
-    >
-      <filter id="conf-ink">
-        <feTurbulence
-          type="fractalNoise"
-          baseFrequency="0.7"
-          numOctaves="2"
-          seed="4"
-        />
-        <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.4 1.75" />
-        <feComposite in="SourceGraphic" operator="in" />
-      </filter>
-      <g
-        filter="url(#conf-ink)"
-        fill="currentColor"
-        fontFamily="var(--font-mono), monospace"
-        fontWeight="700"
-        textAnchor="middle"
-      >
-        <rect
-          x="3"
-          y="3"
-          width="274"
-          height="80"
-          rx="6"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="4"
-        />
-        <text x="140" y="47" fontSize="28" letterSpacing="3">
-          CONFIDENCIAL
-        </text>
-        <text x="140" y="69" fontSize="10" letterSpacing="1.5">
-          USO RESTRITO · {T.code} · ARQUIVO
-        </text>
-      </g>
-    </svg>
-  );
-}
-
 const IDEAS: { name: string; note: string; cover: ReactNode }[] = [
   {
     name: "Etiqueta",
@@ -147,86 +94,6 @@ const IDEAS: { name: string; note: string; cover: ReactNode }[] = [
             Blklight · Arquivo de estudo
           </p>
           <Label className="mt-6 w-[82%] -rotate-1" />
-        </div>
-      </Board>
-    ),
-  },
-  {
-    name: "Confidencial",
-    note: "Kraft gasto nas bordas, etiqueta datilografada e grampeada, carimbo de borracha com falhas de tinta e ficha de protocolo.",
-    cover: (
-      <Board className={KRAFT}>
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_40%,transparent_55%,rgb(60_35_10/0.35))]"
-        />
-        <div className="relative flex h-full flex-col p-10 pl-12 font-mono uppercase">
-          <div className="flex justify-between text-[0.6rem] tracking-[0.25em]">
-            <span>Arquivo · Uso interno</span>
-            <span>Via 1/1</span>
-          </div>
-          <dl
-            className={cn(
-              "background-texture relative mt-6 grid w-[74%] rotate-[0.6deg] grid-cols-[5.5rem_1fr] text-[0.68rem] shadow-[1px_2px_0_rgb(0_0_0/0.25)]",
-              PAPER,
-            )}
-          >
-            {[
-              ["Assunto", T.title],
-              ["Ref.", T.code],
-              ["Volume", `${DOCS} documentos`],
-              ["Classif.", "Leitura restrita"],
-            ].map(([k, v]) => (
-              <div key={k} className="contents">
-                <dt className="border-current/30 border-b px-2 py-1.5 opacity-60">
-                  {k}
-                </dt>
-                <dd className="border-current/30 border-b border-l px-2 py-1.5 font-bold">
-                  {v}
-                </dd>
-              </div>
-            ))}
-            {["left-3", "right-3"].map((x) => (
-              <span
-                key={x}
-                aria-hidden
-                className={cn(
-                  "absolute -top-1 h-1 w-5 rounded-full bg-[linear-gradient(oklch(0.85_0_0),oklch(0.55_0_0))] shadow-[0_1px_1px_rgb(0_0_0/0.4)]",
-                  x,
-                )}
-              />
-            ))}
-          </dl>
-          <ConfidentialStamp className="mt-10 w-[64%] -rotate-[7deg] self-center" />
-          <div
-            className={cn(
-              "background-texture mt-auto w-[56%] -rotate-[1.5deg] text-[0.58rem] shadow-[1px_2px_0_rgb(0_0_0/0.25)]",
-              PAPER,
-            )}
-          >
-            <p className="flex justify-between bg-[oklch(0.2_0_0)] px-2 py-1 text-[oklch(0.94_0.012_85)] tracking-[0.2em]">
-              <span>Protocolo</span>
-              <span>Nº 004/26</span>
-            </p>
-            <ol className="divide-y divide-current/20 px-2">
-              {[
-                ["12.11", "Recebido no arquivo", true],
-                ["20.11", "Liberado à equipe", true],
-                ["25.11", "Em leitura", false],
-              ].map(([date, step, done]) => (
-                <li key={String(date)} className="flex items-center gap-2 py-1">
-                  <span className="opacity-60">{date}</span>
-                  <span className="flex-1">{step}</span>
-                  <span
-                    aria-hidden
-                    className="grid size-2.5 place-items-center border border-current text-[0.5rem] leading-none"
-                  >
-                    {done ? "×" : ""}
-                  </span>
-                </li>
-              ))}
-            </ol>
-          </div>
         </div>
       </Board>
     ),
@@ -327,105 +194,6 @@ const IDEAS: { name: string; note: string; cover: ReactNode }[] = [
     ),
   },
   {
-    name: "Cartão perfurado",
-    note: "Cartão de arquivo com uma coluna por documento: cada documento lido vira um furo.",
-    cover: (
-      <Board className="dossier-board">
-        <div className="flex h-full flex-col p-10 pl-12 font-mono uppercase">
-          <div className="flex items-end justify-between">
-            <span className="dossier-emboss font-pixel text-5xl leading-none">
-              {T.code}
-            </span>
-            <span className="text-[0.6rem] tracking-[0.2em] opacity-70">
-              {T.title}
-            </span>
-          </div>
-          <div
-            className={cn(
-              "background-texture mt-auto rotate-[-1deg] p-4 text-[0.55rem] shadow-[2px_3px_0_rgb(0_0_0/0.35)] [clip-path:polygon(1.25rem_0,100%_0,100%_100%,0_100%,0_1.25rem)]",
-              PAPER,
-            )}
-          >
-            <p className="flex justify-between pl-4 tracking-[0.2em]">
-              <span>Cartão de leitura</span>
-              <span>{READ}/{DOCS} perfurados</span>
-            </p>
-            <div className="mt-3 grid grid-cols-12 gap-x-1.5 border-current/30 border-t pt-2 text-center">
-              {T.items.map((it, i) => (
-                <div key={it.articleId} className="flex flex-col items-center gap-1">
-                  <span className="opacity-60">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  {[0, 1, 2, 3, 4, 5].map((row) => (
-                    <span
-                      key={row}
-                      aria-hidden
-                      className={cn(
-                        "h-2.5 w-1.5",
-                        i < Number(READ) && row === i % 6
-                          ? "bg-[oklch(0.2_0_0)] shadow-[inset_0_1px_1px_rgb(0_0_0/0.8)]"
-                          : "text-[0.5rem] leading-none opacity-40",
-                      )}
-                    >
-                      {i < Number(READ) && row === i % 6 ? "" : row}
-                    </span>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </Board>
-    ),
-  },
-  {
-    name: "Recibo",
-    note: "Placa escura com um cupom térmico preso por fita: cada documento com seus minutos e o total da trilha.",
-    cover: (
-      <Board className="dossier-board">
-        <div className="relative flex h-full justify-center pt-12">
-          <div
-            className={cn(
-              "background-texture relative w-[62%] rotate-[1.5deg] self-start px-5 pt-6 pb-10 font-mono text-[0.58rem] uppercase shadow-[2px_4px_0_rgb(0_0_0/0.3)] [clip-path:polygon(0_0,100%_0,100%_calc(100%-6px),95%_100%,90%_calc(100%-6px),85%_100%,80%_calc(100%-6px),75%_100%,70%_calc(100%-6px),65%_100%,60%_calc(100%-6px),55%_100%,50%_calc(100%-6px),45%_100%,40%_calc(100%-6px),35%_100%,30%_calc(100%-6px),25%_100%,20%_calc(100%-6px),15%_100%,10%_calc(100%-6px),5%_100%,0_calc(100%-6px))]",
-              "bg-[oklch(0.97_0.004_90)] text-[oklch(0.25_0_0)]",
-            )}
-          >
-            <p className="text-center font-bold text-sm tracking-[0.3em]">
-              Blklight
-            </p>
-            <p className="text-center tracking-[0.2em] opacity-60">
-              {T.code} · {T.title}
-            </p>
-            <ol className="mt-3 border-current/40 border-y border-dashed py-2">
-              {T.items.slice(0, 7).map((it, i) => {
-                const a = ARTICLES_BY_ID.get(it.articleId);
-                return (
-                  <li key={it.articleId} className="flex gap-2">
-                    <span className="opacity-60">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span className="flex-1 truncate">{a?.title}</span>
-                    <span>{a?.readingTime}min</span>
-                  </li>
-                );
-              })}
-              <li className="opacity-60">… +{T.items.length - 7} itens</li>
-            </ol>
-            <p className="mt-2 flex justify-between font-bold text-xs">
-              <span>Total</span>
-              <span>{MINUTES} min</span>
-            </p>
-            <div aria-hidden className={cn("mt-3 h-7", BARCODE)} />
-          </div>
-          <span
-            aria-hidden
-            className="absolute top-9 h-6 w-24 -rotate-[4deg] bg-[oklch(0.95_0.02_90/0.55)] shadow-[0_1px_2px_rgb(0_0_0/0.25)] backdrop-blur-[1px]"
-          />
-        </div>
-      </Board>
-    ),
-  },
-  {
     name: "Planta técnica",
     note: "Placa azul de desenho técnico com grade, cotas e carimbo de folha no canto.",
     cover: (
@@ -499,39 +267,6 @@ const IDEAS: { name: string; note: string; cover: ReactNode }[] = [
           <p className="mt-4 font-mono text-[0.6rem] uppercase tracking-[0.25em] opacity-70">
             {T.code} / {DOCS} documentos / em curso
           </p>
-        </div>
-      </Board>
-    ),
-  },
-  {
-    name: "Fichário",
-    note: "Furos de arquivo na lombada com reforço, e etiqueta vertical na borda como um arquivo morto.",
-    cover: (
-      <Board className={cn(KRAFT, "text-[oklch(0.22_0.03_60)]")}>
-        <div className="relative h-full">
-          <div className="absolute inset-y-0 left-8 flex flex-col justify-center gap-24">
-            {[0, 1].map((h) => (
-              <span
-                key={h}
-                aria-hidden
-                className="grid size-9 place-items-center rounded-full bg-[oklch(0.85_0.01_85)] shadow-[0_1px_0_rgb(0_0_0/0.25)]"
-              >
-                <span className="size-4 rounded-full bg-[oklch(0.15_0_0)] shadow-[inset_0_2px_3px_rgb(0_0_0/0.8)]" />
-              </span>
-            ))}
-          </div>
-          <div
-            className={cn(
-              "background-texture absolute top-10 right-10 bottom-10 flex w-20 flex-col items-center justify-between border-2 border-current py-5 font-mono uppercase",
-              PAPER,
-            )}
-          >
-            <span className="font-bold text-2xl">04</span>
-            <span className="font-bold text-lg tracking-[0.3em] [writing-mode:vertical-rl]">
-              {T.title} · {T.code}
-            </span>
-            <span className="text-[0.55rem]">{DOCS} docs</span>
-          </div>
         </div>
       </Board>
     ),
