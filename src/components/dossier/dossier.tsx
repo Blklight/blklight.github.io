@@ -130,11 +130,9 @@ export function Dossier<T>({
 
   const focus = (index: number) => {
     dispatch({ type: "focus", index });
-    onFocusChange?.(sheets[index]);
   };
   const unfocus = () => {
     dispatch({ type: "unfocus" });
-    onFocusChange?.(undefined);
     window.scrollTo({ top: 0 });
     requestAnimationFrame(() =>
       document
@@ -144,6 +142,14 @@ export function Dossier<T>({
     );
   };
   const goTo = (index: number) => dispatch({ type: "goTo", index });
+  const focusChange = useRef(onFocusChange);
+  focusChange.current = onFocusChange;
+  const focusedId = focused?.id;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: fire per document, also on mount when it starts focused (e.g. from the URL)
+  useEffect(
+    () => focusChange.current?.(sheets.find((s) => s.id === focusedId)),
+    [focusedId],
+  );
   const [indexOpen, setIndexOpen] = useState(false);
   const single = !!fit?.single;
 
@@ -218,13 +224,23 @@ export function Dossier<T>({
             >
               ☰ Sumário
             </button>
-            <button
-              type="button"
-              onClick={() => dispatch({ type: "close" })}
-              className="border border-foreground px-2.5 py-1 focus-visible:outline-2 focus-visible:outline-ring"
-            >
-              Fechar pasta
-            </button>
+            {state.index === notesIndex ? (
+              <button
+                type="button"
+                onClick={() => goTo(0)}
+                className="border border-foreground px-2.5 py-1 focus-visible:outline-2 focus-visible:outline-ring"
+              >
+                ← Documentos
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => dispatch({ type: "close" })}
+                className="border border-foreground px-2.5 py-1 focus-visible:outline-2 focus-visible:outline-ring"
+              >
+                Fechar pasta
+              </button>
+            )}
           </div>
         )}
         <div ref={stageRef} className="relative min-h-0 flex-1">
@@ -266,6 +282,13 @@ export function Dossier<T>({
                       isOpen && sheet ? sheet.sectionId : undefined
                     }
                     turned={isOpen && state.index === notesIndex}
+                    doneIds={sections
+                      .filter((sec) =>
+                        sheets
+                          .filter((sh) => sh.sectionId === sec.id)
+                          .every((sh) => readIds.has(sh.id)),
+                      )
+                      .map((sec) => sec.id)}
                     onSection={(id) => {
                       const i = sheets.findIndex((s) => s.sectionId === id);
                       if (i >= 0) goTo(i);
@@ -359,6 +382,11 @@ export function Dossier<T>({
                       <DossierCover
                         cover={cover}
                         readFlags={readFlags}
+                        openLabel={
+                          state.index > 0 && state.index < notesIndex
+                            ? `Continuar · Doc. ${String(state.index + 1).padStart(2, "0")} →`
+                            : undefined
+                        }
                         onOpen={() => dispatch({ type: "open" })}
                       />
                       <Ear

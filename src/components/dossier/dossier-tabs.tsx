@@ -90,11 +90,14 @@ export function DossierTabs({
   sections,
   activeSectionId,
   turned,
+  doneIds,
   onSection,
 }: {
   sections: DossierSection[];
   activeSectionId?: string;
   turned?: boolean;
+  /** Sections whose documents are all read: a check under the number. */
+  doneIds?: string[];
   onSection: (id: string) => void;
 }) {
   const active = sections.findIndex((s) => s.id === activeSectionId);
@@ -112,6 +115,7 @@ export function DossierTabs({
       {visibleEars(sections.length, active).map((i) => {
         const s = sections[i];
         const current = i === active;
+        const done = doneIds?.includes(s.id);
         const number = String(i + 1).padStart(2, "0");
         return (
           <div
@@ -131,7 +135,7 @@ export function DossierTabs({
             <button
               type="button"
               aria-current={current ? "true" : undefined}
-              aria-label={`${number} ${s.title}`}
+              aria-label={`${number} ${s.title}${done ? ", concluída" : ""}`}
               onClick={() => onSection(s.id)}
               className={cn(
                 "background-texture absolute inset-0 flex font-mono text-[0.6rem] font-bold uppercase tracking-[0.08em] text-[oklch(0.18_0_0)] transition-[filter] duration-300",
@@ -161,6 +165,11 @@ export function DossierTabs({
                 )}
               >
                 {number}
+                {done && (
+                  <span className="mt-1 block text-[0.7rem] leading-none">
+                    ✓
+                  </span>
+                )}
               </span>
             </button>
           </div>

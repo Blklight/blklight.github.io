@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Badge, type BadgeData } from "@/components/badge";
 import { SignatureBlock } from "@/components/document/signature-block";
 import {
@@ -31,7 +31,7 @@ import {
 } from "@/features/dossier/mock";
 import { DEMO_NOTES } from "./demo-notes";
 import { trailToDossier } from "@/features/dossier/trail-adapter";
-import { useReadProgress } from "@/features/dossier/use-dossier-state";
+import { useProgressStore } from "@/features/dossier/progress-store";
 import { useNotesStore } from "@/features/notes/store";
 import type { Annotation } from "@/features/notes/types";
 import { cn } from "@/lib/utils";
@@ -119,7 +119,15 @@ export function DossierLab() {
   const trail = TRAILS.find((t) => t.id === trailId) ?? TRAILS[0];
   const dossier = trailToDossier(trail, ARTICLES_BY_ID);
   const initialIndex = dossier.sheets.findIndex((s) => s.slug === initialDoc);
-  const { read, markRead } = useReadProgress();
+  // the stores read localStorage only on the client; remount once they have
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
+  const readList = useProgressStore((s) => s.read);
+  const read = useMemo(() => new Set(readList), [readList]);
+  const markRead = useProgressStore((s) => s.markRead);
+  const lastIndex = useProgressStore((s) =>
+    dossier.sheets.findIndex((sheet) => sheet.id === s.last[trail.id]),
+  );
   const allNotes = useNotesStore((s) => s.notes);
   const [boardOpen, setBoardOpen] = useState(false);
   useDemoNotes();
@@ -182,16 +190,18 @@ export function DossierLab() {
       </div>
 
       <Dossier
-        key={trail.id}
+        key={`${trail.id}-${hydrated}`}
         {...dossier}
         readIds={read}
         coverAttachment={<PinnedBadge member={member} />}
         getBody={(sheet) => loadArticleBody(sheet.id)}
         initialState={
-          initialIndex >= 0 ? { mode: "focus", index: initialIndex } : undefined
+          initialIndex >= 0
+            ? { mode: "focus", index: initialIndex }
+            : { mode: "closed", index: Math.max(0, lastIndex) }
         }
         onFocusChange={(sheet) => {
-          if (sheet) markRead(sheet.id);
+          if (sheet) markRead(sheet.id, trail.id);
           setDocParam(sheet?.slug);
         }}
         renderCard={(sheet, ctx) => (

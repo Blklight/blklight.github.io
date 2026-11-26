@@ -1,4 +1,4 @@
-import { useCallback, useReducer, useState } from "react";
+import { useReducer } from "react";
 
 export type DossierMode = "closed" | "open" | "focus";
 
@@ -54,15 +54,4 @@ export function useDossierState(total: number, initial?: DossierState) {
       dossierReducer(state, action, total),
     initial ?? { mode: "closed", index: 0 },
   );
-}
-
-/** shortcut: local state only; swap for API-backed hooks when progress/notes persist. */
-export function useReadProgress() {
-  const [read, setRead] = useState<ReadonlySet<string>>(() => new Set());
-  const markRead = useCallback((articleId: string) => {
-    setRead((prev) =>
-      prev.has(articleId) ? prev : new Set(prev).add(articleId),
-    );
-  }, []);
-  return { read, markRead };
 }

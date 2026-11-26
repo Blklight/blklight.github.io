@@ -39,7 +39,7 @@ export function DocumentPaper({
       paperTexture={NO_TEXTURE}
       textureStyle={{}}
       grains={PAPER_GRAINS}
-      className={cn("text-foreground", className)}
+      className={cn("text-foreground dark:border-foreground/15", className)}
       contentClassName={cn("flex h-full flex-col", contentClassName)}
     >
       <HeaderBlklight

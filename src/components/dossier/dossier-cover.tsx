@@ -4,11 +4,13 @@ import { cn } from "@/lib/utils";
 export function DossierCover({
   cover,
   readFlags,
+  openLabel = "Abrir dossiê →",
   onOpen,
 }: {
   cover: DossierCoverData;
   /** One flag per document, in order. */
   readFlags: boolean[];
+  openLabel?: string;
   onOpen: () => void;
 }) {
   return (
@@ -49,7 +51,7 @@ export function DossierCover({
           onClick={onOpen}
           className="mt-2 w-full bg-[oklch(0.94_0.012_85)] py-3 font-mono text-xs font-bold uppercase tracking-[0.25em] text-[oklch(0.2_0_0)] [clip-path:polygon(0.75rem_0,100%_0,100%_calc(100%-0.75rem),calc(100%-0.75rem)_100%,0_100%,0_0.75rem)] hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current"
         >
-          Abrir dossiê →
+          {openLabel}
         </button>
       </div>
     </div>
