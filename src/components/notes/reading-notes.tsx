@@ -1,0 +1,318 @@
+"use client";
+
+import { Highlighter, NotebookPen } from "lucide-react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { quoteFromRange, rangeFromQuote } from "@/features/notes/anchor";
+import { useNotesStore } from "@/features/notes/store";
+import type { Annotation } from "@/features/notes/types";
+import { cn } from "@/lib/utils";
+import { NotePaper } from "./note-paper";
+import { useContentVersion, useTextHighlights } from "./use-text-highlights";
+
+const GAP = 8;
+
+/** Text position under a point (`caretRangeFromPoint` for Safari). */
+function caretAt(x: number, y: number) {
+  const pos = document.caretPositionFromPoint?.(x, y);
+  if (pos) return pos;
+  const range = document.caretRangeFromPoint?.(x, y);
+  return range
+    ? { offsetNode: range.startContainer, offset: range.startOffset }
+    : null;
+}
+
+function scrollToQuote(root: HTMLElement | null, note: Annotation) {
+  const range = root && note.anchor ? rangeFromQuote(root, note.anchor) : null;
+  if (!range) return;
+  const top = range.getBoundingClientRect().top + window.scrollY - 160;
+  window.scrollTo({ top, behavior: "smooth" });
+}
+
+/**
+ * Notes taken while reading a document: select text to mark it (in `color`)
+ * and optionally comment. Each note is a paper in the margin, level with its
+ * passage and pushed down when they would overlap; on small screens they are
+ * listed in a drawer from the right.
+ */
+export function ReadingNotes({
+  root,
+  scopeId,
+  docId,
+  color,
+  label,
+  revealId,
+}: {
+  root: HTMLElement | null;
+  scopeId: string;
+  docId: string;
+  color?: string;
+  label?: string;
+  /** Note to scroll to and highlight once the text is in. */
+  revealId?: string;
+}) {
+  const all = useNotesStore((s) => s.notes);
+  const add = useNotesStore((s) => s.add);
+  const update = useNotesStore((s) => s.update);
+  const remove = useNotesStore((s) => s.remove);
+  const marking = useNotesStore((s) => s.marking);
+  const notes = useMemo(
+    () => all.filter((n) => n.scopeId === scopeId && n.docId === docId),
+    [all, scopeId, docId],
+  );
+  const version = useContentVersion(root);
+  useTextHighlights(root, notes, version);
+
+  const [menu, setMenu] = useState<{ x: number; y: number; range: Range }>();
+  const [fresh, setFresh] = useState<string>();
+  const [drawer, setDrawer] = useState(false);
+  const [flash, setFlash] = useState<string>();
+
+  useEffect(() => {
+    if (!flash) return;
+    const t = setTimeout(() => setFlash(undefined), 1600);
+    return () => clearTimeout(t);
+  }, [flash]);
+
+  // Clicking a highlighted passage points at its paper.
+  useEffect(() => {
+    if (!root) return;
+    const onClick = (e: MouseEvent) => {
+      if (!document.getSelection()?.isCollapsed) return;
+      const at = caretAt(e.clientX, e.clientY);
+      if (!at) return;
+      const hit = notes.find((n) => {
+        const range = n.anchor ? rangeFromQuote(root, n.anchor) : null;
+        return range?.isPointInRange(at.offsetNode, at.offset);
+      });
+      if (!hit) return;
+      setFlash(hit.id);
+      if (window.matchMedia("(max-width: 1023px)").matches) setDrawer(true);
+    };
+    root.addEventListener("click", onClick);
+    return () => root.removeEventListener("click", onClick);
+  }, [root, notes]);
+
+  const revealed = useRef<string>(undefined);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: retry when the text loads
+  useEffect(() => {
+    const note = notes.find((n) => n.id === revealId);
+    if (!note || revealed.current === revealId) return;
+    const range =
+      root && note.anchor ? rangeFromQuote(root, note.anchor) : null;
+    if (note.anchor && !range) return;
+    revealed.current = revealId;
+    scrollToQuote(root, note);
+    setFlash(note.id);
+  }, [root, revealId, notes, version]);
+
+  useEffect(() => {
+    if (!root || !marking) {
+      setMenu(undefined);
+      return;
+    }
+    const onChange = () => {
+      const sel = document.getSelection();
+      if (!sel || sel.isCollapsed || !root.contains(sel.anchorNode)) {
+        setMenu(undefined);
+        return;
+      }
+      const range = sel.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      setMenu({
+        x: rect.left + rect.width / 2,
+        y: rect.top,
+        range: range.cloneRange(),
+      });
+    };
+    const hide = () => setMenu(undefined);
+    document.addEventListener("selectionchange", onChange);
+    window.addEventListener("scroll", hide, { passive: true });
+    return () => {
+      document.removeEventListener("selectionchange", onChange);
+      window.removeEventListener("scroll", hide);
+    };
+  }, [root, marking]);
+
+  const create = (comment: boolean) => {
+    if (!root || !menu) return;
+    const anchor = quoteFromRange(root, menu.range);
+    if (!anchor) return;
+    const note = add({ scopeId, docId, anchor, color, text: "" });
+    if (comment) {
+      setFresh(note.id);
+      setDrawer(window.matchMedia("(max-width: 1023px)").matches);
+    }
+    document.getSelection()?.removeAllRanges();
+    setMenu(undefined);
+  };
+
+  const columnRef = useRef<HTMLDivElement>(null);
+  const papers = useRef(new Map<string, HTMLElement>());
+  const [tops, setTops] = useState<Record<string, number>>({});
+  const [size, setSize] = useState(0);
+
+  useEffect(() => {
+    if (!root) return;
+    const observer = new ResizeObserver(() => setSize(root.offsetWidth));
+    observer.observe(root);
+    return () => observer.disconnect();
+  }, [root]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: re-lay out when the text loads or reflows
+  useLayoutEffect(() => {
+    const column = columnRef.current;
+    if (!root || !column) return;
+    const base = column.getBoundingClientRect().top;
+    const wanted = notes
+      .map((n) => {
+        const range = n.anchor ? rangeFromQuote(root, n.anchor) : null;
+        return {
+          id: n.id,
+          want: range ? range.getBoundingClientRect().top - base : Infinity,
+        };
+      })
+      .sort((a, b) => a.want - b.want);
+    const next: Record<string, number> = {};
+    let floor = 0;
+    for (const { id, want } of wanted) {
+      const top = Math.max(Number.isFinite(want) ? want : floor, floor);
+      next[id] = top;
+      floor = top + (papers.current.get(id)?.offsetHeight ?? 120) + GAP;
+    }
+    setTops(next);
+  }, [root, notes, version, size]);
+
+  const paper = (n: Annotation, inDrawer: boolean) => (
+    <NotePaper
+      key={n.id}
+      note={n}
+      label={label}
+      lost={
+        !!root && !!n.anchor && version > 0 && !rangeFromQuote(root, n.anchor)
+      }
+      autoFocus={n.id === fresh}
+      onChange={(text) => update(n.id, { text })}
+      onRemove={() => remove(n.id)}
+      onQuoteClick={() => {
+        setDrawer(false);
+        scrollToQuote(root, n);
+      }}
+      ref={
+        inDrawer
+          ? undefined
+          : (el) => {
+              if (el) papers.current.set(n.id, el);
+              else papers.current.delete(n.id);
+            }
+      }
+      className={cn(
+        inDrawer
+          ? "w-full"
+          : "absolute left-0 max-w-full transition-[top] duration-300 motion-reduce:transition-none",
+        n.id === flash &&
+          "outline-2 outline-offset-4 outline-foreground motion-safe:animate-pulse",
+      )}
+      style={
+        inDrawer
+          ? undefined
+          : {
+              top: tops[n.id] ?? 0,
+              opacity: n.id in tops ? undefined : 0,
+            }
+      }
+    />
+  );
+
+  return (
+    <>
+      <div ref={columnRef} className="relative hidden h-full lg:block">
+        {notes.map((n) => paper(n, false))}
+      </div>
+
+      <button
+        type="button"
+        onClick={() => setDrawer(true)}
+        className="fixed right-4 bottom-16 z-30 flex items-center gap-2 border border-foreground bg-background px-3 py-1.5 font-mono text-[0.68rem] uppercase tracking-widest shadow-md lg:hidden"
+      >
+        <NotebookPen className="size-3.5" aria-hidden />
+        Notas {notes.length > 0 && `(${notes.length})`}
+      </button>
+      <Sheet open={drawer} onOpenChange={setDrawer}>
+        <SheetContent
+          side="right"
+          showCloseButton={false}
+          className="gap-3 overflow-y-auto border-0 bg-transparent p-2 pt-[calc(3.5625rem+0.5rem)] shadow-none data-[side=right]:w-72 data-[side=right]:data-ending-style:translate-x-full data-[side=right]:data-starting-style:translate-x-full"
+        >
+          <SheetTitle className="sr-only">Notas do documento</SheetTitle>
+          {notes.length === 0 && (
+            <p className="bg-background p-3 font-mono text-xs uppercase tracking-widest">
+              Selecione um trecho para marcar.
+            </p>
+          )}
+          {notes.map((n) => paper(n, true))}
+        </SheetContent>
+      </Sheet>
+
+      {menu && (
+        <div
+          role="toolbar"
+          aria-label="Anotar trecho"
+          className="fixed z-50 flex -translate-x-1/2 -translate-y-[calc(100%+8px)] bg-foreground font-mono text-[0.68rem] uppercase tracking-widest text-background shadow-lg"
+          style={{ left: menu.x, top: menu.y }}
+        >
+          {(
+            [
+              ["Marcar", false],
+              ["Comentar", true],
+            ] as const
+          ).map(([text, comment]) => (
+            <button
+              key={text}
+              type="button"
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => create(comment)}
+              className="flex items-center gap-1.5 px-3 py-1.5 hover:bg-background/15 focus-visible:outline-2 focus-visible:outline-current"
+            >
+              {!comment && (
+                <span
+                  aria-hidden
+                  className="size-2.5"
+                  style={{ background: color }}
+                />
+              )}
+              {text}
+            </button>
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
+/** Turns the highlighter on and off; while on, selecting text offers to mark it. */
+export function MarkerToggle({ color }: { color?: string }) {
+  const marking = useNotesStore((s) => s.marking);
+  const setMarking = useNotesStore((s) => s.setMarking);
+  return (
+    <button
+      type="button"
+      aria-pressed={marking}
+      aria-label="Marcador"
+      onClick={() => setMarking(!marking)}
+      title="Com o marcador ligado, selecione um trecho para marcar ou comentar"
+      className={cn(
+        "flex items-center gap-2 border border-foreground px-3 py-1.5 font-mono text-[0.68rem] uppercase tracking-widest shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+        marking ? "bg-foreground text-background" : "bg-background",
+      )}
+    >
+      <Highlighter className="size-3.5" aria-hidden />
+      <span className="hidden sm:inline">Marcador</span>
+      <span
+        aria-hidden
+        className="size-2.5 border border-current"
+        style={{ background: marking ? color : undefined }}
+      />
+    </button>
+  );
+}
