@@ -11,7 +11,13 @@ export interface NoteGroup {
 
 const NEUTRAL = "oklch(0.94 0.012 85)";
 
-function Pile({ group, onOpen }: { group: NoteGroup; onOpen: () => void }) {
+function Pile({
+  group,
+  onOpen,
+}: {
+  group: NoteGroup;
+  onOpen: (groupId: string) => void;
+}) {
   const color = group.color ?? NEUTRAL;
   const under = Math.min(group.notes.length - 1, 2);
   return (
@@ -32,7 +38,7 @@ function Pile({ group, onOpen }: { group: NoteGroup; onOpen: () => void }) {
       ))}
       <button
         type="button"
-        onClick={onOpen}
+        onClick={() => onOpen(group.id)}
         aria-label={`${group.label}: ${group.notes.length} notas, abrir no quadro`}
         className="background-texture absolute inset-0 flex items-start justify-between gap-2 px-2.5 pt-2 font-mono text-[0.58rem] font-bold uppercase tracking-[0.08em] text-[oklch(0.18_0_0)] shadow-[0_-1px_3px_rgb(0_0_0/0.3)] hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[oklch(0.92_0.012_85)] motion-safe:transition-transform"
         style={{ backgroundColor: color }}
@@ -58,7 +64,8 @@ export function NotesPocket({
 }: {
   groups: NoteGroup[];
   pileTop: string;
-  onOpenBoard: () => void;
+  /** With a group id when a pile was clicked. */
+  onOpenBoard: (groupId?: string) => void;
 }) {
   const filled = groups.filter((g) => g.notes.length > 0);
   const total = filled.reduce((n, g) => n + g.notes.length, 0);
@@ -70,7 +77,7 @@ export function NotesPocket({
         </span>
         <button
           type="button"
-          onClick={onOpenBoard}
+          onClick={() => onOpenBoard()}
           className="bg-[oklch(0.94_0.012_85)] px-3 py-1.5 font-bold text-[oklch(0.2_0_0)] shadow-[2px_3px_0_rgb(0_0_0/0.35)] hover:brightness-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
         >
           Abrir quadro →

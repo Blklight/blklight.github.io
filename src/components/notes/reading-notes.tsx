@@ -12,6 +12,16 @@ import { useContentVersion, useTextHighlights } from "./use-text-highlights";
 
 const GAP = 8;
 
+/** Text position under a point (`caretRangeFromPoint` for Safari). */
+function caretAt(x: number, y: number) {
+  const pos = document.caretPositionFromPoint?.(x, y);
+  if (pos) return pos;
+  const range = document.caretRangeFromPoint?.(x, y);
+  return range
+    ? { offsetNode: range.startContainer, offset: range.startOffset }
+    : null;
+}
+
 function scrollToQuote(root: HTMLElement | null, note: Annotation) {
   const range = root && note.anchor ? rangeFromQuote(root, note.anchor) : null;
   if (!range) return;
@@ -31,12 +41,15 @@ export function ReadingNotes({
   docId,
   color,
   label,
+  revealId,
 }: {
   root: HTMLElement | null;
   scopeId: string;
   docId: string;
   color?: string;
   label?: string;
+  /** Note to scroll to and highlight once the text is in. */
+  revealId?: string;
 }) {
   const all = useNotesStore((s) => s.notes);
   const add = useNotesStore((s) => s.add);
@@ -53,6 +66,45 @@ export function ReadingNotes({
   const [menu, setMenu] = useState<{ x: number; y: number; range: Range }>();
   const [fresh, setFresh] = useState<string>();
   const [drawer, setDrawer] = useState(false);
+  const [flash, setFlash] = useState<string>();
+
+  useEffect(() => {
+    if (!flash) return;
+    const t = setTimeout(() => setFlash(undefined), 1600);
+    return () => clearTimeout(t);
+  }, [flash]);
+
+  // Clicking a highlighted passage points at its paper.
+  useEffect(() => {
+    if (!root) return;
+    const onClick = (e: MouseEvent) => {
+      if (!document.getSelection()?.isCollapsed) return;
+      const at = caretAt(e.clientX, e.clientY);
+      if (!at) return;
+      const hit = notes.find((n) => {
+        const range = n.anchor ? rangeFromQuote(root, n.anchor) : null;
+        return range?.isPointInRange(at.offsetNode, at.offset);
+      });
+      if (!hit) return;
+      setFlash(hit.id);
+      if (window.matchMedia("(max-width: 1023px)").matches) setDrawer(true);
+    };
+    root.addEventListener("click", onClick);
+    return () => root.removeEventListener("click", onClick);
+  }, [root, notes]);
+
+  const revealed = useRef<string>(undefined);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: retry when the text loads
+  useEffect(() => {
+    const note = notes.find((n) => n.id === revealId);
+    if (!note || revealed.current === revealId) return;
+    const range =
+      root && note.anchor ? rangeFromQuote(root, note.anchor) : null;
+    if (note.anchor && !range) return;
+    revealed.current = revealId;
+    scrollToQuote(root, note);
+    setFlash(note.id);
+  }, [root, revealId, notes, version]);
 
   useEffect(() => {
     if (!root || !marking) {
@@ -136,6 +188,9 @@ export function ReadingNotes({
       key={n.id}
       note={n}
       label={label}
+      lost={
+        !!root && !!n.anchor && version > 0 && !rangeFromQuote(root, n.anchor)
+      }
       autoFocus={n.id === fresh}
       onChange={(text) => update(n.id, { text })}
       onRemove={() => remove(n.id)}
@@ -151,11 +206,13 @@ export function ReadingNotes({
               else papers.current.delete(n.id);
             }
       }
-      className={
+      className={cn(
         inDrawer
           ? "w-full"
-          : "absolute left-0 max-w-full transition-[top] duration-300 motion-reduce:transition-none"
-      }
+          : "absolute left-0 max-w-full transition-[top] duration-300 motion-reduce:transition-none",
+        n.id === flash &&
+          "outline-2 outline-offset-4 outline-foreground motion-safe:animate-pulse",
+      )}
       style={
         inDrawer
           ? undefined

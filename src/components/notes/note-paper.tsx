@@ -18,6 +18,7 @@ export function NotePaper({
   onChange,
   onRemove,
   onQuoteClick,
+  lost,
   ref,
   className,
   style,
@@ -29,6 +30,8 @@ export function NotePaper({
   onChange: (text: string) => void;
   onRemove: () => void;
   onQuoteClick?: () => void;
+  /** The quoted passage is no longer in the document. */
+  lost?: boolean;
   ref?: Ref<HTMLElement>;
   className?: string;
   style?: CSSProperties;
@@ -66,6 +69,11 @@ export function NotePaper({
         >
           “{note.anchor.exact.trim()}”
         </button>
+      )}
+      {lost && (
+        <p className="mt-1 font-mono text-[0.6rem] uppercase tracking-widest opacity-70">
+          Trecho não encontrado no texto
+        </p>
       )}
       <textarea
         aria-label="Comentário"

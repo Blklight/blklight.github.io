@@ -121,6 +121,7 @@ export function DossierLab() {
   const initialIndex = dossier.sheets.findIndex((s) => s.slug === initialDoc);
   // the stores read localStorage only on the client; remount once they have
   const [hydrated, setHydrated] = useState(false);
+  const [reveal, setReveal] = useState<{ noteId: string; nonce: number }>();
   useEffect(() => setHydrated(true), []);
   const readList = useProgressStore((s) => s.read);
   const read = useMemo(() => new Set(readList), [readList]);
@@ -129,7 +130,7 @@ export function DossierLab() {
     dossier.sheets.findIndex((sheet) => sheet.id === s.last[trail.id]),
   );
   const allNotes = useNotesStore((s) => s.notes);
-  const [boardOpen, setBoardOpen] = useState(false);
+  const [boardOpen, setBoardOpen] = useState<{ tab?: string }>();
   useDemoNotes();
   const user = useAuthStore((s) => s.user);
   const member: BadgeData = user
@@ -190,7 +191,7 @@ export function DossierLab() {
       </div>
 
       <Dossier
-        key={`${trail.id}-${hydrated}`}
+        key={`${trail.id}-${hydrated}-${reveal?.nonce ?? 0}`}
         {...dossier}
         readIds={read}
         coverAttachment={<PinnedBadge member={member} />}
@@ -246,6 +247,7 @@ export function DossierLab() {
             docId={sheet.id}
             color={sectionColor(sheet.sectionId)}
             label={docLabel(sheet)}
+            revealId={reveal?.noteId}
           />
         )}
         renderNotes={() => (
@@ -256,7 +258,9 @@ export function DossierLab() {
             <NotesPocket
               pileTop={`calc(${100 - POCKET_H}% + ${SHEET_BOTTOM - 48}px)`}
               groups={noteGroups}
-              onOpenBoard={() => setBoardOpen(true)}
+              onOpenBoard={(id) =>
+                setBoardOpen({ tab: id === "_loose" ? "" : id })
+              }
             />
             <div
               aria-hidden
@@ -280,11 +284,20 @@ export function DossierLab() {
           scopeId={trail.id}
           groups={noteGroups}
           tabs={dossier.sections}
+          initialTab={boardOpen.tab}
+          tabOf={(n) => sectionOf(n) ?? ""}
           labelOf={(n) => {
             const sheet = dossier.sheets.find((s) => s.id === n.docId);
             return sheet ? docLabel(sheet) : (sectionTitle(n.sectionId) ?? "Solta");
           }}
-          onClose={() => setBoardOpen(false)}
+          onOpenDoc={(n) => {
+            const sheet = dossier.sheets.find((s) => s.id === n.docId);
+            if (!sheet) return;
+            setBoardOpen(undefined);
+            setInitialDoc(sheet.slug);
+            setReveal((r) => ({ noteId: n.id, nonce: (r?.nonce ?? 0) + 1 }));
+          }}
+          onClose={() => setBoardOpen(undefined)}
         />
       )}
     </>

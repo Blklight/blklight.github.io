@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   COLUMN_W,
+  fitView,
   initialLayout,
   MAX_SCALE,
   ROW_H,
@@ -29,5 +30,13 @@ describe("board math", () => {
       c: { x: 0, y: ROW_H },
       d: { x: COLUMN_W, y: 0 },
     });
+  });
+});
+
+describe("fitView", () => {
+  it("centers and scales boxes into the viewport", () => {
+    const view = fitView([{ x: 0, y: 0, w: 1000, h: 200 }], 600, 400, 50);
+    expect(view.scale).toBe(0.5);
+    expect(toBoard(view, 300, 200)).toEqual({ x: 500, y: 100 });
   });
 });

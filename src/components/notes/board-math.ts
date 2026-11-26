@@ -42,3 +42,26 @@ export function initialLayout(
   });
   return out;
 }
+
+/** View that frames every box in a `w`×`h` viewport, with `pad` around (never zooms past 100%). */
+export function fitView(
+  boxes: { x: number; y: number; w: number; h: number }[],
+  w: number,
+  h: number,
+  pad = 48,
+): BoardView {
+  if (boxes.length === 0) return { x: pad, y: pad, scale: 1 };
+  const left = Math.min(...boxes.map((b) => b.x));
+  const top = Math.min(...boxes.map((b) => b.y));
+  const right = Math.max(...boxes.map((b) => b.x + b.w));
+  const bottom = Math.max(...boxes.map((b) => b.y + b.h));
+  const scale = Math.max(
+    MIN_SCALE,
+    Math.min(1, (w - pad * 2) / (right - left), (h - pad * 2) / (bottom - top)),
+  );
+  return {
+    scale,
+    x: (w - (right - left) * scale) / 2 - left * scale,
+    y: (h - (bottom - top) * scale) / 2 - top * scale,
+  };
+}

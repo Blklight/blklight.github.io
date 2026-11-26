@@ -6,7 +6,13 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useNotesStore } from "@/features/notes/store";
 import type { Annotation } from "@/features/notes/types";
 import { cn } from "@/lib/utils";
-import { type BoardView, initialLayout, toBoard, zoomAt } from "./board-math";
+import {
+  type BoardView,
+  fitView,
+  initialLayout,
+  toBoard,
+  zoomAt,
+} from "./board-math";
 import { NOTE_MAX_H, NotePaper } from "./note-paper";
 import type { NoteGroup } from "./notes-pocket";
 
@@ -73,6 +79,9 @@ export function NotesBoard({
   groups,
   tabs,
   labelOf,
+  initialTab,
+  tabOf,
+  onOpenDoc,
   onClose,
 }: {
   title: string;
@@ -82,6 +91,12 @@ export function NotesBoard({
   /** Tabs a loose note can be filed under. */
   tabs: NoteTab[];
   labelOf: (note: Annotation) => string;
+  /** Tab whose notes show first ("" for loose notes); all when absent. */
+  initialTab?: string;
+  /** Tab a note is filed under ("" when loose). */
+  tabOf: (note: Annotation) => string;
+  /** Opens the note's document at its passage. */
+  onOpenDoc?: (note: Annotation) => void;
   onClose: () => void;
 }) {
   const all = useNotesStore((s) => s.notes);
@@ -102,7 +117,15 @@ export function NotesBoard({
   const drag = useRef<Drag | null>(null);
   const boardRef = useRef<HTMLDivElement>(null);
 
-  const notes = all.filter((n) => n.scopeId === scopeId);
+  const [filter, setFilter] = useState(initialTab);
+  const [front, setFront] = useState<string[]>([]);
+  const raise = (id: string) =>
+    setFront((f) => [...f.filter((x) => x !== id), id]);
+  const notes = all.filter(
+    (n) =>
+      n.scopeId === scopeId &&
+      (filter === undefined || tabOf(n) === filter || n.id === openId),
+  );
   const open = notes.find((n) => n.id === openId);
   const layout = useMemo(
     () => initialLayout(groups.filter((g) => g.notes.length > 0)),
@@ -122,8 +145,18 @@ export function NotesBoard({
     setOpenId(undefined);
   };
 
-  const create = (sx: number, sy: number) =>
-    setOpenId(add({ scopeId, text: "", board: toBoard(view, sx, sy) }).id);
+  const create = (sx: number, sy: number) => {
+    const tab = tabs.find((t) => t.id === filter);
+    setOpenId(
+      add({
+        scopeId,
+        text: "",
+        board: toBoard(view, sx, sy),
+        sectionId: tab?.id,
+        color: tab?.color,
+      }).id,
+    );
+  };
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -167,6 +200,31 @@ export function NotesBoard({
     return [(rect?.width ?? 0) / 2, (rect?.height ?? 0) / 2] as const;
   };
 
+  const fit = () => {
+    const el = boardRef.current;
+    if (!el) return;
+    const cards = [...el.querySelectorAll<HTMLElement>("[data-note]")];
+    setView(
+      fitView(
+        notes.map((n) => {
+          const b = box(n);
+          const card = cards.find((c) => c.dataset.note === n.id);
+          return {
+            ...b,
+            w: card?.offsetWidth ?? b.w,
+            h: card?.offsetHeight ?? 120,
+          };
+        }),
+        el.clientWidth,
+        el.clientHeight,
+      ),
+    );
+  };
+  // biome-ignore lint/correctness/useExhaustiveDependencies: frame the notes when the filter changes
+  useEffect(() => {
+    requestAnimationFrame(fit);
+  }, [filter]);
+
   const start = (
     e: React.PointerEvent,
     kind: "move" | "size",
@@ -174,6 +232,7 @@ export function NotesBoard({
     el: HTMLElement,
   ) => {
     e.stopPropagation();
+    raise(note.id);
     const b = box(note);
     drag.current = {
       kind,
@@ -197,7 +256,44 @@ export function NotesBoard({
       className="fixed inset-x-0 top-14 bottom-0 z-40 flex flex-col bg-background/75 backdrop-blur-[3px]"
     >
       <div className="flex items-center justify-between gap-4 border-foreground/20 border-b px-4 py-2 font-mono text-[0.68rem] uppercase tracking-widest">
-        <span className="font-bold">{title}</span>
+        <div className="flex min-w-0 items-center gap-3">
+          <span className="shrink-0 font-bold">{title}</span>
+          <div
+            role="radiogroup"
+            aria-label="Filtrar por aba"
+            className="flex flex-wrap gap-1 text-[0.6rem]"
+          >
+            {[
+              { id: undefined, title: "Todas", color: undefined },
+              ...tabs,
+              { id: "", title: "Soltas", color: undefined },
+            ].map((t) => (
+              // biome-ignore lint/a11y/useSemanticElements: chips styled as tabs
+              <button
+                key={t.id ?? "_all"}
+                type="button"
+                role="radio"
+                aria-checked={filter === t.id}
+                onClick={() => setFilter(t.id)}
+                className={cn(
+                  "flex items-center gap-1.5 px-2 py-0.5",
+                  filter === t.id
+                    ? "bg-foreground text-background"
+                    : "hover:bg-foreground/10",
+                )}
+              >
+                {t.color && (
+                  <span
+                    aria-hidden
+                    className="size-2"
+                    style={{ background: t.color }}
+                  />
+                )}
+                {t.title}
+              </button>
+            ))}
+          </div>
+        </div>
         <div className="flex items-center gap-1">
           <button
             type="button"
@@ -217,6 +313,13 @@ export function NotesBoard({
             className="p-1.5 hover:bg-foreground/10"
           >
             <Plus className="size-3.5" aria-hidden />
+          </button>
+          <button
+            type="button"
+            onClick={fit}
+            className="ml-1 px-2 py-1 hover:bg-foreground/10"
+          >
+            Ajustar
           </button>
           <button
             type="button"
@@ -307,11 +410,13 @@ export function NotesBoard({
                 style={{
                   left: b.x,
                   top: b.y,
-                  zIndex: live?.id === note.id ? 10 : undefined,
+                  zIndex:
+                    live?.id === note.id ? 999 : front.indexOf(note.id) + 1,
                 }}
               >
                 <button
                   type="button"
+                  data-note={note.id}
                   aria-label={`Abrir nota ${labelOf(note)}`}
                   onPointerDown={(e) => start(e, "move", note, e.currentTarget)}
                   onKeyDown={(e) => {
@@ -410,6 +515,15 @@ export function NotesBoard({
                     },
                   )}
                 </div>
+              )}
+              {open.docId && onOpenDoc && (
+                <button
+                  type="button"
+                  onClick={() => onOpenDoc(open)}
+                  className="self-start bg-foreground px-3 py-1.5 font-mono text-[0.68rem] uppercase tracking-widest text-background shadow-md hover:opacity-90"
+                >
+                  Abrir no documento →
+                </button>
               )}
               <NotePaper
                 key={open.id}
