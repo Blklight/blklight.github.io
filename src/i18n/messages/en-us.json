@@ -1,0 +1,84 @@
+{
+  "language": {
+    "label": "Language",
+    "pt-br": "Português",
+    "en-us": "English"
+  },
+  "theme": {
+    "toggle": "Toggle light and dark modes",
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "book": "Book",
+    "system": "System"
+  },
+  "nav": {
+    "navigation": "Navigation",
+    "feed": "Feed",
+    "feedHint": "What was published",
+    "write": "Write",
+    "writeHint": "Start a text"
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "signUp": "Create account",
+    "headline": "Write. Shape the paper. Publish.",
+    "lead": "A document editor with its own identity, from draft to your public profile.",
+    "soon": "Notes, journals and books are coming soon."
+  },
+  "footer": {
+    "tagline": "Write, shape the paper and publish on your profile.",
+    "read": "Read",
+    "account": "Account",
+    "comingSoon": "Coming soon",
+    "articles": "Articles",
+    "tutorials": "Tutorials",
+    "projects": "Projects",
+    "notes": "Notes",
+    "journals": "Journals",
+    "books": "Books",
+    "motto": "Write · Shape · Publish",
+    "madeIn": "Made in Brazil"
+  },
+  "profile": {
+    "menuOf": "Account menu for {name}",
+    "account": "Account",
+    "dashboard": "Dashboard",
+    "myProfile": "My profile",
+    "admin": "Administration",
+    "signOutLabel": "Sign out: hold to confirm",
+    "keepHolding": "Keep holding…",
+    "holdToSignOut": "Hold to sign out"
+  },
+  "commandBar": {
+    "label": "Search or go to",
+    "placeholder": "Search texts or go to…",
+    "empty": "Nothing found for “{query}”.",
+    "docs": "Texts",
+    "searching": "Searching…",
+    "goTo": "Go to",
+    "explore": "Explore",
+    "appearance": "Appearance",
+    "navigate": "navigate",
+    "open": "open",
+    "close": "close",
+    "feedHint": "What the community published",
+    "write": "Write",
+    "writeHint": "Pick the kind of text",
+    "dashboardHint": "Your texts and apps",
+    "myProfile": "My profile",
+    "account": "Account",
+    "accountHint": "Account details and session",
+    "articles": "Articles",
+    "articlesHint": "Only articles in the feed",
+    "tutorials": "Tutorials",
+    "tutorialsHint": "Only tutorials in the feed",
+    "projects": "Projects",
+    "projectsHint": "Only projects in the feed",
+    "themeLight": "Light theme",
+    "themeDark": "Dark theme",
+    "themeBook": "Book theme",
+    "themeBookHint": "Sepia paper for long reading",
+    "themeSystem": "System theme"
+  }
+}

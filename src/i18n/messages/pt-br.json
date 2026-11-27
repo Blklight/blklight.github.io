@@ -1,0 +1,84 @@
+{
+  "language": {
+    "label": "Idioma",
+    "pt-br": "Português",
+    "en-us": "English"
+  },
+  "theme": {
+    "toggle": "Alternar modos de luz e escuro",
+    "label": "Tema",
+    "light": "Claro",
+    "dark": "Escuro",
+    "book": "Livro",
+    "system": "Sistema"
+  },
+  "nav": {
+    "navigation": "Navegação",
+    "feed": "Feed",
+    "feedHint": "O que foi publicado",
+    "write": "Escrever",
+    "writeHint": "Começar um texto"
+  },
+  "auth": {
+    "signIn": "Entrar",
+    "signUp": "Criar conta",
+    "headline": "Escreva. Dê forma ao papel. Publique.",
+    "lead": "Um editor de documentos com identidade própria, do rascunho ao seu perfil público.",
+    "soon": "Notas, journals e livros chegam em breve."
+  },
+  "footer": {
+    "tagline": "Escreva, dê forma ao papel e publique no seu perfil.",
+    "read": "Ler",
+    "account": "Conta",
+    "comingSoon": "Em breve",
+    "articles": "Artigos",
+    "tutorials": "Tutoriais",
+    "projects": "Projetos",
+    "notes": "Notas",
+    "journals": "Journals",
+    "books": "Livros",
+    "motto": "Escreva · Dê forma · Publique",
+    "madeIn": "Feito no Brasil"
+  },
+  "profile": {
+    "menuOf": "Menu da conta de {name}",
+    "account": "Conta",
+    "dashboard": "Dashboard",
+    "myProfile": "Meu perfil",
+    "admin": "Administração",
+    "signOutLabel": "Sair: segure para confirmar",
+    "keepHolding": "Continue segurando…",
+    "holdToSignOut": "Segure para sair"
+  },
+  "commandBar": {
+    "label": "Buscar ou ir para",
+    "placeholder": "Buscar textos ou ir para…",
+    "empty": "Nada encontrado para “{query}”.",
+    "docs": "Textos",
+    "searching": "Buscando…",
+    "goTo": "Ir para",
+    "explore": "Explorar",
+    "appearance": "Aparência",
+    "navigate": "navegar",
+    "open": "abrir",
+    "close": "fechar",
+    "feedHint": "O que a comunidade publicou",
+    "write": "Escrever",
+    "writeHint": "Escolher o tipo de texto",
+    "dashboardHint": "Seus textos e apps",
+    "myProfile": "Meu perfil",
+    "account": "Conta",
+    "accountHint": "Dados da conta e sessão",
+    "articles": "Artigos",
+    "articlesHint": "Só artigos no feed",
+    "tutorials": "Tutoriais",
+    "tutorialsHint": "Só tutoriais no feed",
+    "projects": "Projetos",
+    "projectsHint": "Só projetos no feed",
+    "themeLight": "Tema claro",
+    "themeDark": "Tema escuro",
+    "themeBook": "Tema livro",
+    "themeBookHint": "Papel sépia para leitura longa",
+    "themeSystem": "Tema do sistema"
+  }
+}
