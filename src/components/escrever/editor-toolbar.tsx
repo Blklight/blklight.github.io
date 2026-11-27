@@ -25,6 +25,7 @@ import {
   Quote,
   Strikethrough,
 } from "lucide-react";
+import { type Messages, useTranslations } from "next-intl";
 import {
   type ReactNode,
   useEffect,
@@ -82,6 +83,7 @@ export function EditorBubbleMenu({
   editor: Editor;
   onShowLinkModal: () => void;
 }) {
+  const t = useTranslations("format");
   const state = useEditorState({
     editor,
     selector: ({ editor: e }) => ({
@@ -106,60 +108,64 @@ export function EditorBubbleMenu({
       className={cn(PANEL, "z-[60]")}
     >
       <MenuButton
-        label="Negrito"
+        label={t("bold")}
         active={state.bold}
         onClick={() => run().toggleBold().run()}
       >
         <Bold />
       </MenuButton>
       <MenuButton
-        label="Itálico"
+        label={t("italic")}
         active={state.italic}
         onClick={() => run().toggleItalic().run()}
       >
         <Italic />
       </MenuButton>
       <MenuButton
-        label="Riscado"
+        label={t("strike")}
         active={state.strike}
         onClick={() => run().toggleStrike().run()}
       >
         <Strikethrough />
       </MenuButton>
       <MenuButton
-        label="Destacar"
+        label={t("highlight")}
         active={state.highlight}
         onClick={() => run().toggleHighlight().run()}
       >
         <Highlighter />
       </MenuButton>
       <MenuButton
-        label="Código"
+        label={t("code")}
         active={state.code}
         onClick={() => run().toggleCode().run()}
       >
         <Code />
       </MenuButton>
-      <MenuButton label="Link" active={state.link} onClick={onShowLinkModal}>
+      <MenuButton
+        label={t("link")}
+        active={state.link}
+        onClick={onShowLinkModal}
+      >
         <LinkIcon />
       </MenuButton>
       <Divider />
       <MenuButton
-        label="Alinhar à esquerda"
+        label={t("alignLeft")}
         active={state.left}
         onClick={() => run().setTextAlign("left").run()}
       >
         <AlignLeft />
       </MenuButton>
       <MenuButton
-        label="Centralizar"
+        label={t("alignCenter")}
         active={state.center}
         onClick={() => run().setTextAlign("center").run()}
       >
         <AlignCenter />
       </MenuButton>
       <MenuButton
-        label="Alinhar à direita"
+        label={t("alignRight")}
         active={state.right}
         onClick={() => run().setTextAlign("right").run()}
       >
@@ -169,8 +175,11 @@ export function EditorBubbleMenu({
   );
 }
 
+export type BlockId = keyof Messages["blocks"]["items"];
+
 export interface Block {
-  label: string;
+  /** Text in `blocks.items.<id>`. */
+  id: BlockId;
   icon: ReactNode;
   run: (editor: Editor) => void;
   /** Whether the block is the current one (text blocks only). */
@@ -180,49 +189,49 @@ export interface Block {
 /** Text blocks: they live in the paper's top bar. */
 export const TEXT_BLOCKS: Block[] = [
   {
-    label: "Parágrafo",
+    id: "paragraph",
     icon: <Pilcrow />,
     run: (e) => e.chain().focus().setParagraph().run(),
     isActive: (e) => e.isActive("paragraph"),
   },
   {
-    label: "Título 1",
+    id: "heading1",
     icon: <Heading1 />,
     run: (e) => e.chain().focus().toggleHeading({ level: 1 }).run(),
     isActive: (e) => e.isActive("heading", { level: 1 }),
   },
   {
-    label: "Título 2",
+    id: "heading2",
     icon: <Heading2 />,
     run: (e) => e.chain().focus().toggleHeading({ level: 2 }).run(),
     isActive: (e) => e.isActive("heading", { level: 2 }),
   },
   {
-    label: "Título 3",
+    id: "heading3",
     icon: <Heading3 />,
     run: (e) => e.chain().focus().toggleHeading({ level: 3 }).run(),
     isActive: (e) => e.isActive("heading", { level: 3 }),
   },
   {
-    label: "Lista",
+    id: "bulletList",
     icon: <List />,
     run: (e) => e.chain().focus().toggleBulletList().run(),
     isActive: (e) => e.isActive("bulletList"),
   },
   {
-    label: "Lista numerada",
+    id: "orderedList",
     icon: <ListOrdered />,
     run: (e) => e.chain().focus().toggleOrderedList().run(),
     isActive: (e) => e.isActive("orderedList"),
   },
   {
-    label: "Citação",
+    id: "blockquote",
     icon: <Quote />,
     run: (e) => e.chain().focus().toggleBlockquote().run(),
     isActive: (e) => e.isActive("blockquote"),
   },
   {
-    label: "Bloco de código",
+    id: "codeBlock",
     icon: <FileCode2 />,
     run: (e) => e.chain().focus().toggleCodeBlock().run(),
     isActive: (e) => e.isActive("codeBlock"),
@@ -232,39 +241,40 @@ export const TEXT_BLOCKS: Block[] = [
 /** Media and special elements: the "+" on an empty line inserts these. */
 export const MEDIA_BLOCKS: Block[] = [
   {
-    label: "Imagem",
+    id: "image",
     icon: <ImageIcon />,
     run: (e) => useImageInsertStore.getState().open(e),
   },
   {
-    label: "Linha",
+    id: "rule",
     icon: <Minus />,
     run: (e) => e.chain().focus().setHorizontalRule().run(),
   },
 ];
 
 export interface BlockGroup {
-  label: string;
+  /** Text in `blocks.groups.<id>`. */
+  id: keyof Messages["blocks"]["groups"];
   blocks: Block[];
 }
 
-const byLabel = (label: string) =>
-  [...TEXT_BLOCKS, ...MEDIA_BLOCKS].find(
-    (block) => block.label === label,
-  ) as Block;
+const byId = (id: BlockId) =>
+  [...TEXT_BLOCKS, ...MEDIA_BLOCKS].find((block) => block.id === id) as Block;
 
 /** Everything that can be inserted, grouped: shared by "/" and the "+". */
 export const INSERT_GROUPS: BlockGroup[] = [
   {
-    label: "Texto",
-    blocks: ["Parágrafo", "Título 1", "Título 2", "Título 3"].map(byLabel),
+    id: "text",
+    blocks: (["paragraph", "heading1", "heading2", "heading3"] as const).map(
+      byId,
+    ),
   },
-  { label: "Listas", blocks: ["Lista", "Lista numerada"].map(byLabel) },
+  { id: "lists", blocks: (["bulletList", "orderedList"] as const).map(byId) },
   {
-    label: "Blocos",
-    blocks: ["Citação", "Bloco de código", "Linha"].map(byLabel),
+    id: "blocks",
+    blocks: (["blockquote", "codeBlock", "rule"] as const).map(byId),
   },
-  { label: "Mídia", blocks: ["Imagem"].map(byLabel) },
+  { id: "media", blocks: (["image"] as const).map(byId) },
 ];
 
 /** Grouped block list (the "+" panel and the "/" menu). */
@@ -278,26 +288,22 @@ export function InsertMenuList({
   selected?: Block;
   onPick: (block: Block) => void;
 }) {
+  const t = useTranslations("blocks");
   if (groups.length === 0) {
     return (
-      <p className="px-2 py-1.5 text-sm text-muted-foreground">
-        Nenhum bloco encontrado
-      </p>
+      <p className="px-2 py-1.5 text-sm text-muted-foreground">{t("none")}</p>
     );
   }
   return (
     <div className="flex flex-col">
       {groups.map((group) => (
-        <div
-          key={group.label}
-          className="flex flex-col py-1 first:pt-0 last:pb-0"
-        >
+        <div key={group.id} className="flex flex-col py-1 first:pt-0 last:pb-0">
           <p className="px-2 pb-1 font-mono text-[0.65rem] uppercase tracking-wider text-muted-foreground">
-            {group.label}
+            {t(`groups.${group.id}`)}
           </p>
           {group.blocks.map((block) => (
             <button
-              key={block.label}
+              key={block.id}
               type="button"
               aria-current={selected === block ? "true" : undefined}
               onMouseDown={(event) => event.preventDefault()}
@@ -308,7 +314,7 @@ export function InsertMenuList({
               )}
             >
               {block.icon}
-              {block.label}
+              {t(`items.${block.id}`)}
             </button>
           ))}
         </div>
@@ -323,6 +329,7 @@ export function InsertMenuList({
  * so it scrolls with the text instead of floating over the viewport.
  */
 export function EditorBlockMenu({ editor }: { editor: Editor }) {
+  const t = useTranslations("blocks");
   const [open, setOpen] = useState(false);
   // Open upward when the line is too close to the bottom of the screen.
   const [upward, setUpward] = useState(false);
@@ -382,8 +389,8 @@ export function EditorBlockMenu({ editor }: { editor: Editor }) {
     >
       <button
         type="button"
-        aria-label="Inserir bloco"
-        title="Inserir bloco (ou digite /)"
+        aria-label={t("insert")}
+        title={t("insertHint")}
         aria-expanded={open}
         onMouseDown={(event) => event.preventDefault()}
         onClick={(event) => {

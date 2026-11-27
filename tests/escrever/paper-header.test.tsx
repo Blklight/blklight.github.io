@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, screen } from "@testing-library/react";
 import { Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { describe, expect, it } from "vitest";
@@ -7,6 +7,8 @@ import {
   MEDIA_BLOCKS,
   TEXT_BLOCKS,
 } from "@/components/escrever/editor-toolbar";
+import ptBr from "@/i18n/messages/pt-br.json";
+import { renderWithIntl as render } from "../utils/render";
 
 const header = (
   editor: Editor,
@@ -39,7 +41,7 @@ describe("paper header", () => {
     expect(screen.getByText("Rascunho")).toBeInTheDocument();
     for (const block of TEXT_BLOCKS) {
       expect(
-        screen.getByRole("button", { name: block.label }),
+        screen.getByRole("button", { name: ptBr.blocks.items[block.id] }),
       ).toBeInTheDocument();
     }
   });
@@ -74,6 +76,6 @@ describe("paper header", () => {
   });
 
   it("leaves only media for the + menu", () => {
-    expect(MEDIA_BLOCKS.map((b) => b.label)).toEqual(["Imagem", "Linha"]);
+    expect(MEDIA_BLOCKS.map((b) => b.id)).toEqual(["image", "rule"]);
   });
 });

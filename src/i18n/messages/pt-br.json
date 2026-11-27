@@ -396,7 +396,12 @@
     "sample1": "Este é um texto de exemplo para você ver o design com conteúdo. A fonte, as cores do papel e a textura aparecem aqui como no texto publicado.",
     "sample2": "Quando você voltar a escrever, o seu texto ocupa este lugar. Cabeçalho, capa, assinatura e rodapé continuam onde estão.",
     "sampleHeading": "Um intertítulo",
-    "sample3": "Os parágrafos seguem o estilo de livro: recuo na primeira linha, sem espaço entre eles, e o primeiro depois de um título começa sem recuo."
+    "sample3": "Os parágrafos seguem o estilo de livro: recuo na primeira linha, sem espaço entre eles, e o primeiro depois de um título começa sem recuo.",
+    "savingPill": "Salvando",
+    "savedAt": "Salvo às {time}",
+    "formatting": "Formatação",
+    "undo": "Desfazer",
+    "redo": "Refazer"
   },
   "admin": {
     "crumbOverview": "admin / visão geral",
@@ -618,5 +623,46 @@
     "private": "Privada",
     "loadError": "Não foi possível carregar os documentos da organização.",
     "noDocs": "Nenhum documento publicado por esta organização."
+  },
+  "blocks": {
+    "items": {
+      "paragraph": "Parágrafo",
+      "heading1": "Título 1",
+      "heading2": "Título 2",
+      "heading3": "Título 3",
+      "bulletList": "Lista",
+      "orderedList": "Lista numerada",
+      "blockquote": "Citação",
+      "codeBlock": "Bloco de código",
+      "image": "Imagem",
+      "rule": "Linha"
+    },
+    "groups": {
+      "text": "Texto",
+      "lists": "Listas",
+      "blocks": "Blocos",
+      "media": "Mídia"
+    },
+    "none": "Nenhum bloco encontrado",
+    "insert": "Inserir bloco",
+    "insertHint": "Inserir bloco (ou digite /)",
+    "handleLabel": "Arrastar ou abrir opções do bloco",
+    "handleHint": "Arraste para mover · clique para opções",
+    "options": "Opções do bloco",
+    "turnInto": "Transformar em",
+    "duplicate": "Duplicar",
+    "copyText": "Copiar texto",
+    "delete": "Excluir"
+  },
+  "format": {
+    "bold": "Negrito",
+    "italic": "Itálico",
+    "strike": "Riscado",
+    "highlight": "Destacar",
+    "code": "Código",
+    "link": "Link",
+    "alignLeft": "Alinhar à esquerda",
+    "alignCenter": "Centralizar",
+    "alignRight": "Alinhar à direita"
   }
 }

@@ -3,7 +3,10 @@
 import { Extension, type Range } from "@tiptap/core";
 import type { Editor } from "@tiptap/react";
 import Suggestion, { type SuggestionProps } from "@tiptap/suggestion";
+import { useTranslations } from "next-intl";
 import { useSyncExternalStore } from "react";
+import enUs from "@/i18n/messages/en-us.json";
+import ptBr from "@/i18n/messages/pt-br.json";
 import {
   type Block,
   type BlockGroup,
@@ -17,6 +20,12 @@ const normalize = (text: string) =>
     .replace(/\p{Diacritic}/gu, "")
     .toLowerCase();
 
+// The suggestion plugin runs outside React, so it matches the query against
+// every locale's names: "/titulo" and "/heading" both find the headings.
+const NAMES = [ptBr.blocks, enUs.blocks];
+const matches = (q: string, pick: (blocks: typeof ptBr.blocks) => string) =>
+  NAMES.some((blocks) => normalize(pick(blocks)).includes(q));
+
 /** Groups whose blocks match the typed query (accent- and case-insensitive). */
 export function filterGroups(query: string): BlockGroup[] {
   const q = normalize(query.trim());
@@ -24,8 +33,8 @@ export function filterGroups(query: string): BlockGroup[] {
     ...group,
     blocks: group.blocks.filter(
       (block) =>
-        normalize(block.label).includes(q) ||
-        normalize(group.label).includes(q),
+        matches(q, (b) => b.items[block.id]) ||
+        matches(q, (b) => b.groups[group.id]),
     ),
   })).filter((group) => group.blocks.length > 0);
 }
@@ -118,6 +127,7 @@ const subscribe = (listener: () => void) => {
 
 /** Floating menu for the "/" command, placed under the caret. */
 export function SlashMenu() {
+  const t = useTranslations("blocks");
   const menu = useSyncExternalStore(
     subscribe,
     () => state,
@@ -129,7 +139,7 @@ export function SlashMenu() {
   return (
     <div
       role="listbox"
-      aria-label="Inserir bloco"
+      aria-label={t("insert")}
       className="fixed z-50 w-56 max-h-80 overflow-y-auto rounded-md border-2 border-foreground bg-popover p-1.5 text-popover-foreground shadow-[0_8px_24px_-12px_rgb(0_0_0/0.45)]"
       style={{
         left: menu.rect.left,

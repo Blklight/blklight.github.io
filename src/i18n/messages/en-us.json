@@ -396,7 +396,12 @@
     "sample1": "This is sample text so you can see the design with content. The font, paper colors and texture show here as in the published text.",
     "sample2": "When you go back to writing, your text takes this place. Header, cover, signature and footer stay where they are.",
     "sampleHeading": "A subheading",
-    "sample3": "Paragraphs follow book style: first-line indent, no space between them, and the first one after a heading starts without indent."
+    "sample3": "Paragraphs follow book style: first-line indent, no space between them, and the first one after a heading starts without indent.",
+    "savingPill": "Saving",
+    "savedAt": "Saved at {time}",
+    "formatting": "Formatting",
+    "undo": "Undo",
+    "redo": "Redo"
   },
   "admin": {
     "crumbOverview": "admin / overview",
@@ -618,5 +623,46 @@
     "private": "Private",
     "loadError": "Couldn't load the organization's documents.",
     "noDocs": "No documents published by this organization."
+  },
+  "blocks": {
+    "items": {
+      "paragraph": "Paragraph",
+      "heading1": "Heading 1",
+      "heading2": "Heading 2",
+      "heading3": "Heading 3",
+      "bulletList": "List",
+      "orderedList": "Numbered list",
+      "blockquote": "Quote",
+      "codeBlock": "Code block",
+      "image": "Image",
+      "rule": "Divider"
+    },
+    "groups": {
+      "text": "Text",
+      "lists": "Lists",
+      "blocks": "Blocks",
+      "media": "Media"
+    },
+    "none": "No blocks found",
+    "insert": "Insert block",
+    "insertHint": "Insert block (or type /)",
+    "handleLabel": "Drag or open block options",
+    "handleHint": "Drag to move · click for options",
+    "options": "Block options",
+    "turnInto": "Turn into",
+    "duplicate": "Duplicate",
+    "copyText": "Copy text",
+    "delete": "Delete"
+  },
+  "format": {
+    "bold": "Bold",
+    "italic": "Italic",
+    "strike": "Strikethrough",
+    "highlight": "Highlight",
+    "code": "Code",
+    "link": "Link",
+    "alignLeft": "Align left",
+    "alignCenter": "Center",
+    "alignRight": "Align right"
   }
 }
