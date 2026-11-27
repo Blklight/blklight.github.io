@@ -1,17 +1,12 @@
 import { Heart } from "lucide-react";
 import Link from "next/link";
+import { useFormatter, useTranslations } from "next-intl";
 import { createContext, type ReactNode, useContext } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { Corner } from "@/components/ui/chamfer-utils";
 import { cn } from "@/lib/utils";
 import type { DocumentCard } from "@/types/api.types";
-import { typeTheme } from "./card-theme";
-
-const DATE = new Intl.DateTimeFormat("pt-BR", {
-  day: "2-digit",
-  month: "short",
-  timeZone: "UTC",
-});
+import { typeKey, typeTheme } from "./card-theme";
 
 export const docHref = (doc: DocumentCard) =>
   `/${doc.author.username}/${doc.slug}`;
@@ -26,10 +21,20 @@ const FONT: Record<string, string> = {
 export const cardFont = (doc: DocumentCard) =>
   FONT[doc.style?.typography ?? "sans"] ?? "font-sans";
 
-export const formatDate = (value: string) => {
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? value : DATE.format(date);
-};
+/** Card date in the reader's locale ("12 de nov." / "Nov 12"). */
+export function useFormatDate() {
+  const format = useFormatter();
+  return (value: string) => {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime())
+      ? value
+      : format.dateTime(date, {
+          day: "2-digit",
+          month: "short",
+          timeZone: "UTC",
+        });
+  };
+}
 
 /**
  * True while the feed is filtered to one type: only then does the type ink
@@ -62,6 +67,7 @@ export function TypeTab({
   inset?: boolean;
   className?: string;
 }) {
+  const tk = useTranslations("kinds");
   const lit = useContext(TypeInkContext);
   const theme = typeTheme(type);
   const Icon = theme.icon;
@@ -80,7 +86,7 @@ export function TypeTab({
       )}
     >
       <Icon aria-hidden className="size-3.5" />
-      {theme.label}
+      {tk(`${typeKey(type)}.label`)}
     </span>
   );
 }
@@ -142,6 +148,8 @@ export function CardMeta({
   className?: string;
   muted?: string;
 }) {
+  const t = useTranslations("feedCard");
+  const formatDate = useFormatDate();
   const name = doc.author.displayName || doc.author.username;
   return (
     <div className={cn("flex items-center gap-2 text-xs", className)}>
@@ -163,7 +171,7 @@ export function CardMeta({
       <span className={cn("ml-auto flex shrink-0 items-center gap-1", muted)}>
         <Heart className="size-3.5" aria-hidden />
         {doc.likesCount}
-        <span className="sr-only">curtidas</span>
+        <span className="sr-only">{t("likes")}</span>
       </span>
     </div>
   );

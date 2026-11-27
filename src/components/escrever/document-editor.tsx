@@ -11,6 +11,7 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { FileJson, Save, Send } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslations } from "next-intl";
 import {
   useCallback,
   useEffect,
@@ -180,10 +181,18 @@ export function DocumentEditor({
   initialValues,
   kind: newKind,
 }: DocumentEditorProps) {
+  const t = useTranslations("editor");
+  const tk = useTranslations("kinds");
   const kind = initialValues
     ? kindByType(initialValues.typeName)
     : (newKind ?? kindByType("article"));
   const docType = kind.type;
+  const typeLabel = tk(`${kind.type}.label`);
+  const titlePlaceholder = tk(`${kind.type}.titlePlaceholder`);
+  const abstractPlaceholder = tk(`${kind.type}.abstractPlaceholder`);
+  // Read by the Tiptap placeholder on each render, so a language switch shows up without rebuilding the editor.
+  const contentPlaceholder = useRef("");
+  contentPlaceholder.current = tk(`${kind.type}.contentPlaceholder`);
   const [mounted, setMounted] = useState(false);
 
   // --- Form (RHF — content only) ---
@@ -261,10 +270,10 @@ export function DocumentEditor({
     return {
       author: currentAuthor,
       organization: organizationName ? { name: organizationName } : null,
-      typeLabel: kind.label,
+      typeLabel,
     };
   }, [
-    kind.label,
+    typeLabel,
     organizationId,
     myOrganizations,
     initialValues?.organization,
@@ -328,7 +337,7 @@ export function DocumentEditor({
       (initialValues?.content as Content | null | undefined) ?? undefined,
     extensions: [
       StarterKit.configure({ heading: { levels: [1, 2, 3] }, link: false }),
-      Placeholder.configure({ placeholder: kind.contentPlaceholder }),
+      Placeholder.configure({ placeholder: () => contentPlaceholder.current }),
       ImageExtension.configure({
         HTMLAttributes: { class: "max-w-full h-auto my-6" },
       }),
@@ -513,15 +522,14 @@ export function DocumentEditor({
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Erro ao salvar documento:", error);
-        toast.error(
-          "Falha ao salvar o documento. Suas alterações ainda não foram salvas.",
-        );
+        toast.error(t("saveError"));
         return false;
       } finally {
         setIsSaving(false);
       }
     },
     [
+      t,
       buildSavePayload,
       editor,
       form,
@@ -571,24 +579,25 @@ export function DocumentEditor({
         // organization link.
         if (documentStatus === "published") {
           setLastSaved(new Date());
-          toast.success("Artigo atualizado com sucesso");
+          toast.success(t("updated"));
           return;
         }
 
         await publishMutation.mutateAsync(targetId);
         setDocumentStatus("published");
         setLastSaved(new Date());
-        toast.success("Artigo publicado com sucesso");
+        toast.success(t("published"));
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Erro ao publicar documento:", error);
-        toast.error("Falha ao publicar o artigo");
+        toast.error(t("publishError"));
         throw error;
       } finally {
         setIsPublishing(false);
       }
     },
     [
+      t,
       buildSavePayload,
       documentStatus,
       editor,
@@ -631,11 +640,11 @@ export function DocumentEditor({
         size="sm"
         disabled={!isValid || !title?.trim() || isPublishing}
         data-testid="publish-button"
-        aria-label="Publicar"
+        aria-label={t("publish")}
         className="ml-1 h-8 bg-background font-mono text-xs uppercase tracking-wider text-foreground hover:bg-background/90"
       >
         <Send className="w-4 h-4" />
-        <span className="ml-2 hidden sm:inline">Publicar</span>
+        <span className="ml-2 hidden sm:inline">{t("publish")}</span>
       </Button>
     </ExpandableScreenTrigger>
   );
@@ -709,7 +718,7 @@ export function DocumentEditor({
                   typography={typography}
                   onTypographyChange={setTypography}
                   type={kind.type}
-                  typeLabel={kind.label}
+                  typeLabel={typeLabel}
                   locked={isDesignMode}
                   actions={
                     <>
@@ -717,7 +726,7 @@ export function DocumentEditor({
                         type="button"
                         onClick={handleSubmit(onSave)}
                         disabled={isSaving}
-                        title="Salvar"
+                        title={t("save")}
                         className={cn(ACTION, "px-1.5")}
                       >
                         {isSaving ? (
@@ -732,7 +741,7 @@ export function DocumentEditor({
                           type="button"
                           onClick={onPreview}
                           disabled={isSaving}
-                          title="Visualizar payload JSON"
+                          title={t("previewJson")}
                           className={cn(ACTION, "hidden px-1.5 sm:flex")}
                         >
                           <FileJson />
@@ -786,7 +795,7 @@ export function DocumentEditor({
                   {isDesignMode && (
                     <button
                       type="button"
-                      aria-label="Editar papel"
+                      aria-label={t("editPaper")}
                       onClick={() => {
                         // Keep the paper tab already open (texture, grain) instead of jumping back to colors.
                         const current = isWide ? paperTab : activeTab;
@@ -808,7 +817,7 @@ export function DocumentEditor({
                     </DesignRegion>
                   )}
 
-                  <DesignRegion {...region("font")} label="Título e fonte">
+                  <DesignRegion {...region("font")} label={t("titleAndFont")}>
                     {/* Title */}
                     <Controller
                       name="title"
@@ -818,7 +827,7 @@ export function DocumentEditor({
                           {...field}
                           type="text"
                           readOnly={isDesignMode}
-                          placeholder={kind.titlePlaceholder}
+                          placeholder={titlePlaceholder}
                           data-testid="editor-title-input"
                           className={`w-full text-4xl md:text-5xl font-bold tracking-tight bg-transparent border-none outline-none mb-4 transition-colors duration-300 ${fontClass}`}
                           style={{ color: paperColors?.text || undefined }}
@@ -826,7 +835,7 @@ export function DocumentEditor({
                       )}
                     />
                     <style>{`
-            input[placeholder={kind.titlePlaceholder}]::placeholder {
+            input[placeholder="${titlePlaceholder}"]::placeholder {
               color: ${paperColors?.muted || "hsl(var(--muted-foreground) / 0.5)"};
             }
           `}</style>
@@ -846,7 +855,7 @@ export function DocumentEditor({
                           value={field.value || ""}
                           type="text"
                           readOnly={isDesignMode}
-                          placeholder={kind.abstractPlaceholder}
+                          placeholder={abstractPlaceholder}
                           data-testid="editor-subtitle-input"
                           className={`w-full text-xl bg-transparent border-none outline-none mb-8 transition-colors duration-300 ${fontClass}`}
                           style={{ color: paperColors?.muted || undefined }}
@@ -854,7 +863,7 @@ export function DocumentEditor({
                       )}
                     />
                     <style>{`
-            input[placeholder={kind.abstractPlaceholder}]::placeholder {
+            input[placeholder="${abstractPlaceholder}"]::placeholder {
               color: ${paperColors?.muted || "hsl(var(--muted-foreground) / 0.5)"};
             }
           `}</style>
@@ -921,7 +930,7 @@ export function DocumentEditor({
                   {documentFooter.enabled && (
                     <DesignRegion
                       {...region("letterhead")}
-                      label="Rodapé"
+                      label={t("footer")}
                       className="mt-4"
                     >
                       <DocumentFooterRenderer
@@ -945,8 +954,8 @@ export function DocumentEditor({
             <>
               <aside className={cn(DESIGN_ASIDE, "right-[calc(50%+23.5rem)]")}>
                 <SidePanelFrame
-                  title="Papel"
-                  closeLabel="Sair do modo design"
+                  title={t("paper")}
+                  closeLabel={t("exitDesign")}
                   onClose={() => setSidePanel(null)}
                 >
                   {designPanel(paperTab, setPaperTab, PAPER_TABS)}
@@ -954,8 +963,8 @@ export function DocumentEditor({
               </aside>
               <aside className={cn(DESIGN_ASIDE, "left-[calc(50%+23.5rem)]")}>
                 <SidePanelFrame
-                  title="Partes do documento"
-                  closeLabel="Sair do modo design"
+                  title={t("parts")}
+                  closeLabel={t("exitDesign")}
                   onClose={() => setSidePanel(null)}
                 >
                   {designPanel(partsTab, setPartsTab, PARTS_TABS)}
@@ -1064,21 +1073,13 @@ function useIsWide() {
 
 /** Stand-in body for design mode when the document has no text yet. */
 function DesignSample() {
+  const t = useTranslations("editor");
   return (
     <div aria-hidden>
-      <p>
-        Este é um texto de exemplo para você ver o design com conteúdo. A fonte,
-        as cores do papel e a textura aparecem aqui como no texto publicado.
-      </p>
-      <p>
-        Quando você voltar a escrever, o seu texto ocupa este lugar. Cabeçalho,
-        capa, assinatura e rodapé continuam onde estão.
-      </p>
-      <h2>Um intertítulo</h2>
-      <p>
-        Os parágrafos seguem o estilo de livro: recuo na primeira linha, sem
-        espaço entre eles, e o primeiro depois de um título começa sem recuo.
-      </p>
+      <p>{t("sample1")}</p>
+      <p>{t("sample2")}</p>
+      <h2>{t("sampleHeading")}</h2>
+      <p>{t("sample3")}</p>
     </div>
   );
 }

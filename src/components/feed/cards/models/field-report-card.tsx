@@ -1,8 +1,9 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
-import { typeTheme } from "../card-theme";
-import { CardMeta, CardTitle, cardFont, formatDate } from "../parts";
+import { typeKey } from "../card-theme";
+import { CardMeta, CardTitle, cardFont, useFormatDate } from "../parts";
 import { type CardProps, Shell, surfaceOf, tall } from "../shell";
 
 // Thin column rules, like a layout grid left visible.
@@ -11,8 +12,10 @@ const COLUMNS =
 
 /** Field report: visible columns, a numbered disc, a huge title, a status bar. */
 export function FieldReportCard({ data, size }: CardProps) {
+  const tk = useTranslations("kinds");
+  const t = useTranslations("feedCard");
+  const formatDate = useFormatDate();
   const surface = surfaceOf(data.id);
-  const theme = typeTheme(data.typeName);
   const day = new Date(data.publishedAt).getUTCDate() || 1;
   return (
     <Shell
@@ -53,7 +56,7 @@ export function FieldReportCard({ data, size }: CardProps) {
                   surface.solid,
                 )}
               >
-                {theme.label} / sinal
+                {tk(`${typeKey(data.typeName)}.label`)} / {t("signal")}
               </span>
             )}
           </div>
@@ -87,11 +90,11 @@ export function FieldReportCard({ data, size }: CardProps) {
           muted="text-muted-foreground"
         />
         <div className="-mx-5 flex justify-between gap-2 bg-foreground px-5 py-1.5 font-mono text-[0.7rem] uppercase tracking-wider text-background">
-          <span>{theme.label}</span>
+          <span>{tk(`${typeKey(data.typeName)}.label`)}</span>
           <span aria-hidden>/</span>
           <span>{formatDate(data.publishedAt)}</span>
           <span aria-hidden>/</span>
-          <span>Status: ativo</span>
+          <span>{t("statusActive")}</span>
         </div>
       </div>
     </Shell>

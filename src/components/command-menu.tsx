@@ -31,7 +31,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { typeTheme } from "@/components/feed/cards/card-theme";
+import { typeKey, typeTheme } from "@/components/feed/cards/card-theme";
 import { Kbd } from "@/components/ui/kbd";
 import { getPublicFeed } from "@/features/documents/api";
 import { kindByType } from "@/features/documents/document-kinds";
@@ -111,6 +111,7 @@ function Group({
 export function CommandBar({ className }: { className?: string }) {
   const t = useTranslations("commandBar");
   const tAuth = useTranslations("auth");
+  const tk = useTranslations("kinds");
   const router = useRouter();
   const pathname = usePathname();
   const { setTheme } = useTheme();
@@ -190,8 +191,8 @@ export function CommandBar({ className }: { className?: string }) {
             const kind = kindByType(type);
             return {
               id: `new-${kind.slug}`,
-              title: kind.newLabel,
-              hint: kind.description,
+              title: tk(`${type}.newLabel`),
+              hint: tk(`${type}.description`),
               icon: <PenLine />,
               tile: typeTheme(type).solid,
               keywords: ["novo", "criar", "escrever"],
@@ -407,7 +408,7 @@ export function CommandBar({ className }: { className?: string }) {
                               {doc.title}
                             </span>
                             <span className="block truncate text-xs text-muted-foreground">
-                              {typeTheme(doc.typeName).label} ·{" "}
+                              {tk(`${typeKey(doc.typeName)}.label`)} ·{" "}
                               {doc.author.displayName || doc.author.username}
                             </span>
                           </span>

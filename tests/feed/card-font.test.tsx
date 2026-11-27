@@ -1,7 +1,8 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TextCard } from "@/components/feed/cards/feed-cards";
 import type { DocumentCard } from "@/types/api.types";
+import { renderWithIntl as render } from "../utils/render";
 
 const doc = (typography: "sans" | "serif" | "mono"): DocumentCard => ({
   id: "doc-1",

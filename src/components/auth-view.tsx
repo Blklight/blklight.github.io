@@ -59,6 +59,7 @@ function AuthTabs() {
 
 function BrandPanel() {
   const t = useTranslations("auth");
+  const tCap = useTranslations("capabilities");
   const reduceMotion = useReducedMotion();
 
   return (
@@ -120,11 +121,13 @@ function BrandPanel() {
           </p>
 
           <dl className="grid grid-cols-2 gap-x-8 gap-y-6 border-t border-light/25 pt-8">
-            {CAPABILITIES.map((item) => (
-              <div key={item.title}>
-                <dt className="text-sm font-bold mb-1">{item.title}</dt>
+            {CAPABILITIES.map((key) => (
+              <div key={key}>
+                <dt className="text-sm font-bold mb-1">
+                  {tCap(`${key}.title`)}
+                </dt>
                 <dd className="text-sm text-light/75 leading-snug">
-                  {item.text}
+                  {tCap(`${key}.text`)}
                 </dd>
               </div>
             ))}

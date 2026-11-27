@@ -1,11 +1,12 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { type OrgStampData, WaxStamp } from "@/components/stamps/org-stamps";
 import { formatSignatureDate } from "@/features/documents/design/signature";
 import { cn } from "@/lib/utils";
 import type { DocumentCard } from "@/types/api.types";
-import { typeTheme } from "../card-theme";
+import { typeKey } from "../card-theme";
 import { AuthorLink, CardTitle, cardFont, TypeTab } from "../parts";
 import { type CardProps, Shell, tall, wide } from "../shell";
 
@@ -13,7 +14,10 @@ const PAPER = "#dcdcd6";
 const INK = "#4b4b47";
 
 /** The document as a postmark: the organization (or Blklight) stamps the publication date. */
-export const documentStamp = (doc: DocumentCard): OrgStampData => {
+export const documentStamp = (
+  doc: DocumentCard,
+  text: { typeLabel: string; status: string },
+): OrgStampData => {
   const date = formatSignatureDate(doc.publishedAt);
   return {
     name: doc.organization?.name ?? "Blklight",
@@ -22,9 +26,9 @@ export const documentStamp = (doc: DocumentCard): OrgStampData => {
     date: date.replace(/\//g, "·"),
     shortDate: date.replace(/(\d{2})\/(\d{2})\/\d{2}(\d{2})/, "$1/$2/$3"),
     ref: doc.authorship?.publicIdentifier ?? doc.slug,
-    tagline: typeTheme(doc.typeName).label,
+    tagline: text.typeLabel,
     since: date.slice(-4),
-    status: "Publicado",
+    status: text.status,
   };
 };
 
@@ -39,7 +43,12 @@ const Field = ({ label, children }: { label: string; children: ReactNode }) => (
 
 /** Postal: grey card stock, a perforation under the title, address fields and a wax postmark. */
 export function PostalCard({ data, size }: CardProps) {
-  const stamp = documentStamp(data);
+  const t = useTranslations("feedCard");
+  const tk = useTranslations("kinds");
+  const stamp = documentStamp(data, {
+    typeLabel: tk(`${typeKey(data.typeName)}.label`),
+    status: t("published"),
+  });
   const name = data.author.displayName || data.author.username;
   return (
     <Shell
@@ -88,13 +97,15 @@ export function PostalCard({ data, size }: CardProps) {
               !tall(size) && "flex-1 self-start",
             )}
           >
-            <Field label="De">
+            <Field label={t("from")}>
               <AuthorLink doc={data}>{name}</AuthorLink>
             </Field>
             {(wide(size) || tall(size)) && (
               <Field label="Re">{data.category?.name ?? stamp.tagline}</Field>
             )}
-            <Field label="Em">{formatSignatureDate(data.publishedAt)}</Field>
+            <Field label={t("on")}>
+              {formatSignatureDate(data.publishedAt)}
+            </Field>
           </dl>
           <WaxStamp
             data={stamp}

@@ -1,8 +1,9 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
-import { typeTheme } from "../card-theme";
-import { CardMeta, CardTitle, cardFont, formatDate } from "../parts";
+import { typeKey } from "../card-theme";
+import { CardMeta, CardTitle, cardFont, useFormatDate } from "../parts";
 import { type CardProps, Shell, tall } from "../shell";
 
 const Plus = ({ className }: { className: string }) => (
@@ -14,7 +15,9 @@ const Plus = ({ className }: { className: string }) => (
 
 /** Instrument readout: the cover as a scan with corner telemetry, the title huge beneath. */
 export function HudCard({ data, size }: CardProps) {
-  const theme = typeTheme(data.typeName);
+  const tk = useTranslations("kinds");
+  const t = useTranslations("feedCard");
+  const formatDate = useFormatDate();
   return (
     <Shell
       card="hud"
@@ -36,9 +39,9 @@ export function HudCard({ data, size }: CardProps) {
           <div className="relative flex h-full flex-col justify-between p-4 font-mono text-[0.65rem] uppercase tracking-wider [text-shadow:0_1px_2px_rgb(0_0_0/0.8)]">
             <div className="flex justify-between gap-3">
               <span>
-                Sys: {theme.label}
+                Sys: {tk(`${typeKey(data.typeName)}.label`)}
                 <br />
-                {data.category?.name ?? "Sem categoria"}
+                {data.category?.name ?? t("noCategory")}
               </span>
               <span className="text-right">
                 {formatDate(data.publishedAt)}

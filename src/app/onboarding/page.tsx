@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import * as React from "react";
 import { AppsStep } from "@/components/onboarding/apps-step";
 import { ConfirmStep } from "@/components/onboarding/confirm-step";
@@ -22,6 +23,8 @@ export type Step = "welcome" | "apps" | "done";
 const ORDER: Step[] = ["welcome", "apps", "done"];
 
 export default function OnboardingPage() {
+  const t = useTranslations("onboarding");
+  const tc = useTranslations("common");
   const router = useRouter();
   const reduceMotion = useReducedMotion();
   // Direction (1 forward, -1 back) travels with the step so the exit and enter slide the same way.
@@ -87,7 +90,7 @@ export default function OnboardingPage() {
         {statusQuery.isPending && (
           <div className="flex-1 flex items-center justify-center px-6 py-16">
             <p className="text-sm text-muted-foreground animate-pulse">
-              Carregando sua conta…
+              {t("loadingAccount")}
             </p>
           </div>
         )}
@@ -95,10 +98,10 @@ export default function OnboardingPage() {
           <div className="flex-1 flex items-center justify-center px-6 py-16">
             <div className="border border-border rounded-xs p-8 max-w-md w-full">
               <p className="text-sm text-muted-foreground mb-6">
-                Não foi possível carregar seu onboarding.
+                {t("loadError")}
               </p>
               <Button variant="outline" onClick={() => statusQuery.refetch()}>
-                Tentar novamente
+                {tc("retry")}
               </Button>
             </div>
           </div>
@@ -132,7 +135,7 @@ export default function OnboardingPage() {
                   {appsQuery.isPending && (
                     <div className="flex-1 flex items-center justify-center px-6 py-16">
                       <p className="text-sm text-muted-foreground animate-pulse">
-                        Carregando apps…
+                        {t("loadingApps")}
                       </p>
                     </div>
                   )}
@@ -140,13 +143,13 @@ export default function OnboardingPage() {
                     <div className="flex-1 flex items-center justify-center px-6 py-16">
                       <div className="border border-border rounded-xs p-8 max-w-md w-full">
                         <p className="text-sm text-muted-foreground mb-6">
-                          Não foi possível carregar os apps.
+                          {t("appsError")}
                         </p>
                         <Button
                           variant="outline"
                           onClick={() => appsQuery.refetch()}
                         >
-                          Tentar novamente
+                          {tc("retry")}
                         </Button>
                       </div>
                     </div>

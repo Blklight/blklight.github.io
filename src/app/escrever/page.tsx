@@ -9,6 +9,7 @@ import {
   StickyNote,
 } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { TYPE_THEME } from "@/components/feed/cards/card-theme";
 import { Navbar } from "@/components/navbar";
@@ -42,6 +43,7 @@ function KindLink({
   kind: DocumentKind;
   className?: string;
 }) {
+  const t = useTranslations("kinds");
   return (
     <Link
       href={`/escrever/${kind.slug}`}
@@ -54,11 +56,13 @@ function KindLink({
         {ICONS[kind.type]}
       </span>
       <span className="mt-auto font-sans text-3xl font-bold tracking-tight">
-        {kind.label}
+        {t(`${kind.type}.label`)}
       </span>
-      <span className="text-sm opacity-80 max-w-xs">{kind.description}</span>
+      <span className="text-sm opacity-80 max-w-xs">
+        {t(`${kind.type}.description`)}
+      </span>
       <span className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider">
-        {kind.newLabel}
+        {t(`${kind.type}.newLabel`)}
         <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
       </span>
     </Link>
@@ -66,15 +70,13 @@ function KindLink({
 }
 
 function Choose() {
+  const t = useTranslations("write");
   return (
     <div className="px-4 md:px-8 py-10 animate-fade-in">
       <h1 className="font-sans text-5xl md:text-7xl font-bold tracking-tighter leading-[0.95]">
-        O que você vai escrever?
+        {t("title")}
       </h1>
-      <p className="mt-4 max-w-xl text-muted-foreground">
-        Cada tipo abre o mesmo editor, preparado para ele. Artigos, tutoriais e
-        projetos vão para o feed.
-      </p>
+      <p className="mt-4 max-w-xl text-muted-foreground">{t("lead")}</p>
 
       <ul className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4">
         <li className="min-h-72">
@@ -116,7 +118,7 @@ function Choose() {
       </ul>
 
       <h2 className="mt-12 mb-4 font-sans text-xl font-bold tracking-tight pb-2 border-b-2 border-foreground">
-        Fora do feed
+        {t("outsideFeed")}
       </h2>
       <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {OTHER_KINDS.map((kind) => (

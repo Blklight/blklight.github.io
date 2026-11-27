@@ -9,7 +9,6 @@ import {
 import type { DocumentType } from "@/types/api.types";
 
 interface TypeTheme {
-  label: string;
   /** Non-color cue: the type stays identifiable when its ink is off. */
   icon: LucideIcon;
   /** Accent text on neutral surfaces (light and dark). */
@@ -27,7 +26,6 @@ interface TypeTheme {
 export const TYPE_THEME: Record<DocumentType, TypeTheme> = {
   article: {
     icon: Newspaper,
-    label: "Artigo",
     text: "text-cyber-yellow-700 dark:text-cyber-yellow-400",
     solid: "bg-cyber-yellow-400 text-dark",
     wash: "bg-cyber-yellow-50 dark:bg-cyber-yellow-400/10",
@@ -36,7 +34,6 @@ export const TYPE_THEME: Record<DocumentType, TypeTheme> = {
   },
   tutorial: {
     icon: BookOpen,
-    label: "Tutorial",
     text: "text-orange-500 dark:text-orange-400",
     solid: "bg-orange-400 text-dark",
     wash: "bg-orange-50 dark:bg-orange-400/10",
@@ -45,7 +42,6 @@ export const TYPE_THEME: Record<DocumentType, TypeTheme> = {
   },
   project: {
     icon: Hammer,
-    label: "Projeto",
     text: "text-magenta-500 dark:text-magenta-400",
     solid: "bg-magenta-400 text-dark",
     wash: "bg-magenta-50 dark:bg-magenta-400/10",
@@ -54,7 +50,6 @@ export const TYPE_THEME: Record<DocumentType, TypeTheme> = {
   },
   contract: {
     icon: FileSignature,
-    label: "Contrato",
     text: "text-crimson-500 dark:text-crimson-400",
     solid: "bg-crimson-400 text-dark",
     wash: "bg-crimson-500/10 dark:bg-crimson-400/10",
@@ -63,7 +58,6 @@ export const TYPE_THEME: Record<DocumentType, TypeTheme> = {
   },
   note: {
     icon: StickyNote,
-    label: "Nota",
     text: "text-bluesky-500 dark:text-bluesky-400",
     solid: "bg-bluesky-400 text-dark",
     wash: "bg-bluesky-500/10 dark:bg-bluesky-400/10",
@@ -75,8 +69,11 @@ export const TYPE_THEME: Record<DocumentType, TypeTheme> = {
 /** Types the public feed exposes (TCC: artigo amarelo, tutorial laranja, projeto magenta). */
 export const FEED_TYPES = ["article", "tutorial", "project"] as const;
 
-export const typeTheme = (type: string): TypeTheme =>
-  TYPE_THEME[type as DocumentType] ?? TYPE_THEME.article;
+/** Known type for `type`, falling back to article like `typeTheme`; use it to pick `kinds.<type>` messages. */
+export const typeKey = (type: string): DocumentType =>
+  type in TYPE_THEME ? (type as DocumentType) : "article";
+
+export const typeTheme = (type: string): TypeTheme => TYPE_THEME[typeKey(type)];
 
 export interface Surface {
   id: string;

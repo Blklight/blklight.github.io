@@ -3,6 +3,7 @@
 import { ArrowRight } from "lucide-react";
 import { MotionConfig, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { CAPABILITIES } from "@/components/capabilities";
 import {
   DocumentFooterRenderer,
@@ -32,7 +33,6 @@ const CTA = "group font-mono text-xs uppercase tracking-wider rounded-xs px-5";
 
 const MOCK_CONTEXT = {
   author: { displayName: "Marina Alves", username: "marina" },
-  typeLabel: "Ensaio",
   authorship: { publicIdentifier: "PLT-8edf2701.d29c4b90" },
   // Fixed date: the landing is prerendered (cacheComponents).
   publishedAt: "2026-11-20T12:00:00.000Z",
@@ -40,6 +40,8 @@ const MOCK_CONTEXT = {
 
 /** A document in the default design: letterhead, text, signature, footer. */
 function PaperMock() {
+  const t = useTranslations("home");
+  const context = { ...MOCK_CONTEXT, typeLabel: t("mockType") };
   return (
     <div className="relative w-full max-w-lg xl:max-w-xl rotate-[-2deg] shadow-[0_24px_60px_-20px_rgb(0_0_0/0.55)]">
       <PaperSurface
@@ -53,32 +55,26 @@ function PaperMock() {
         <DocumentHeaderRenderer
           header={defaultDesignDocumentHeader}
           className="mb-4"
-          textContext={MOCK_CONTEXT}
+          textContext={context}
         />
         <p className="font-sans text-2xl xl:text-3xl font-bold tracking-tight leading-tight mb-1">
-          Sobre escrever devagar
+          {t("mockTitle")}
         </p>
         <p className="font-sans text-sm xl:text-base text-muted-foreground mb-4">
-          Um texto pede tempo antes de pedir leitores.
+          {t("mockLead")}
         </p>
         <div className="h-px bg-foreground/20 mb-4" />
         <div className="space-y-3 font-sans text-sm xl:text-base leading-relaxed text-foreground/85">
-          <p>
-            Primeiro o rascunho, depois o papel, por fim o lugar onde ele vai
-            morar.
-          </p>
-          <p className="hidden sm:block">
-            Escolher a fonte e a textura é parte da escrita, não um enfeite
-            posto no fim.
-          </p>
+          <p>{t("mockP1")}</p>
+          <p className="hidden sm:block">{t("mockP2")}</p>
         </div>
         <div className="mt-5">
-          <SignatureBlock context={MOCK_CONTEXT} />
+          <SignatureBlock context={context} />
         </div>
         <DocumentFooterRenderer
           footer={defaultDesignDocumentFooter}
           className="mt-3"
-          textContext={MOCK_CONTEXT}
+          textContext={context}
         />
       </PaperSurface>
     </div>
@@ -86,6 +82,8 @@ function PaperMock() {
 }
 
 export default function Home() {
+  const t = useTranslations("home");
+  const tCap = useTranslations("capabilities");
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const reduceMotion = useReducedMotion();
   useRedirectIfAuthenticated();
@@ -106,18 +104,18 @@ export default function Home() {
               </p>
               <h1 className="font-sans mb-8">
                 <TextAnimate
-                  text="Crie."
+                  text={t("heroCreate")}
                   type="fadeInUp"
                   className="block text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight"
                 />
                 <TextAnimate
-                  text="Escreva."
+                  text={t("heroWrite")}
                   type="fadeInUp"
                   delay={0.1}
                   className="block text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight"
                 />
                 <TextAnimate
-                  text="Compartilhe."
+                  text={t("heroShare")}
                   type="fadeInUp"
                   delay={0.2}
                   className="block text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight text-blklight-500 dark:text-blklight-400"
@@ -130,8 +128,7 @@ export default function Home() {
                 transition={{ delay: 0.4, duration: 0.6, ease: EASE_OUT }}
                 className="text-base md:text-lg text-muted-foreground max-w-xl mb-10 leading-relaxed"
               >
-                Um editor de documentos com identidade própria: escolha fonte,
-                papel e timbre, assine e publique no seu perfil.
+                {t("lead")}
               </motion.p>
 
               <motion.div
@@ -144,7 +141,7 @@ export default function Home() {
                   href="/auth?mode=register"
                   className={cn(buttonVariants({ size: "lg" }), CTA)}
                 >
-                  Criar conta grátis
+                  {t("signUpFree")}
                   <ArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
                 </Link>
                 <Link
@@ -155,7 +152,7 @@ export default function Home() {
                     "bg-transparent",
                   )}
                 >
-                  Ler o feed
+                  {t("readFeed")}
                 </Link>
               </motion.div>
             </div>
@@ -192,16 +189,16 @@ export default function Home() {
               id="recursos"
               className="font-sans text-3xl md:text-4xl font-bold tracking-tight max-w-sm"
             >
-              Do rascunho ao seu perfil público.
+              {t("featuresTitle")}
             </h2>
             <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-10">
-              {CAPABILITIES.map((item) => (
-                <div key={item.title} className="border-t border-border pt-5">
+              {CAPABILITIES.map((key) => (
+                <div key={key} className="border-t border-border pt-5">
                   <dt className="font-sans text-xl font-bold mb-2">
-                    {item.title}
+                    {tCap(`${key}.title`)}
                   </dt>
                   <dd className="text-muted-foreground leading-relaxed">
-                    {item.text}
+                    {tCap(`${key}.text`)}
                   </dd>
                 </div>
               ))}
@@ -213,11 +210,9 @@ export default function Home() {
           <div className="rounded-xs bg-dark text-light px-8 py-14 md:px-14 flex flex-col md:flex-row md:items-center justify-between gap-8">
             <div>
               <h2 className="font-sans text-3xl md:text-4xl font-bold tracking-tight mb-3">
-                Seu primeiro texto começa aqui.
+                {t("ctaTitle")}
               </h2>
-              <p className="text-light/70">
-                Crie a conta, escolha seus apps e abra o editor.
-              </p>
+              <p className="text-light/70">{t("ctaLead")}</p>
             </div>
             <div className="flex flex-wrap items-center gap-4">
               <Link
@@ -228,14 +223,14 @@ export default function Home() {
                   "bg-light text-dark hover:bg-light/90",
                 )}
               >
-                Criar conta
+                {t("signUp")}
                 <ArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
               </Link>
               <Link
                 href="/auth"
                 className="text-sm text-light/80 hover:text-light underline underline-offset-4 rounded-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-light"
               >
-                Já tenho conta
+                {t("haveAccount")}
               </Link>
             </div>
           </div>

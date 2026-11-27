@@ -1,8 +1,9 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
-import { typeTheme } from "../card-theme";
-import { CardMeta, CardTitle, cardFont, formatDate } from "../parts";
+import { typeKey } from "../card-theme";
+import { CardMeta, CardTitle, cardFont, useFormatDate } from "../parts";
 import { type CardProps, Shell, tall } from "../shell";
 
 const GRID =
@@ -12,6 +13,8 @@ const CHECKER =
 
 /** Newspaper front page: ruled masthead, graph-paper body, title in an ink block. */
 export function JornalCard({ data, size }: CardProps) {
+  const tk = useTranslations("kinds");
+  const formatDate = useFormatDate();
   return (
     <Shell
       card="jornal"
@@ -22,7 +25,7 @@ export function JornalCard({ data, size }: CardProps) {
       <div className="h-full flex flex-col p-5">
         <div className="flex items-center justify-between gap-3 border-y border-dark py-1 font-mono text-[0.65rem] uppercase tracking-wider">
           <span className="truncate">
-            {typeTheme(data.typeName).label} ·{" "}
+            {tk(`${typeKey(data.typeName)}.label`)} ·{" "}
             {data.category?.name ?? "Blklight"}
           </span>
           <span className="shrink-0">{formatDate(data.publishedAt)}</span>

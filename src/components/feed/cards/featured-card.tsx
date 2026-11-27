@@ -2,21 +2,24 @@
 
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { FilletCard } from "@/components/ui/fillet-card";
 import { PaperSurface } from "@/features/documents/design/paper-surface";
 import { derivePaperDesign } from "@/features/documents/document-read";
 import { cn } from "@/lib/utils";
 import type { DocumentCard } from "@/types/api.types";
-import { typeTheme } from "./card-theme";
+import { typeKey } from "./card-theme";
 import { CardMeta, CardTags, CardTitle, cardFont, TypeTab } from "./parts";
 
 function ReadCue({ type }: { type: string }) {
+  const t = useTranslations("feedCard");
+  const tk = useTranslations("kinds");
   return (
     <span
       aria-hidden
       className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider"
     >
-      Ler {typeTheme(type).label.toLowerCase()}
+      {t("read", { type: tk(`${typeKey(type)}.label`).toLowerCase() })}
       <ArrowRight className="size-4 transition-transform group-hover/card:translate-x-1" />
     </span>
   );
@@ -99,6 +102,7 @@ function CoverBanner({ doc }: { doc: DocumentCard }) {
 
 /** No cover: the author's page on the left, the reading cue on the right. */
 function PaperSpread({ doc }: { doc: DocumentCard }) {
+  const t = useTranslations("feedCard");
   const design = derivePaperDesign(
     doc.style ?? { typography: "sans", paperStyle: null, paperTexture: null },
   );
@@ -137,7 +141,7 @@ function PaperSpread({ doc }: { doc: DocumentCard }) {
       {/* Not positioned: the stretched title link anchors to the whole card. */}
       <div className="flex flex-col p-6 md:p-8 bg-card">
         <p className="text-sm font-medium mb-3 text-muted-foreground">
-          Em destaque
+          {t("featured")}
         </p>
         <CardTitle
           doc={doc}

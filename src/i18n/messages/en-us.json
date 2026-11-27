@@ -83,5 +83,220 @@
     "themeBook": "Book theme",
     "themeBookHint": "Sepia paper for long reading",
     "themeSystem": "System theme"
+  },
+  "documentStatus": {
+    "draft": "Draft",
+    "published": "Published",
+    "archived": "Archived"
+  },
+  "dashboard": {
+    "keepWriting": "Keep writing",
+    "editedOn": "Edited on {date}",
+    "continue": "Continue",
+    "blankPage": "Blank page",
+    "firstTextTop": "Your first text",
+    "firstTextBottom": "starts here.",
+    "openEditor": "Open the editor",
+    "hello": "Hello,",
+    "newText": "New text",
+    "yourTexts": "Your texts",
+    "loadError": "Couldn't load your texts.",
+    "noOtherTexts": "No other texts yet.",
+    "noTexts": "You haven't written anything yet.",
+    "editedOnLower": "edited on {date}",
+    "viewProfile": "View my public profile",
+    "yourApps": "Your apps",
+    "noApps": "No active apps.",
+    "fromFeed": "From the feed",
+    "openFeed": "Open the feed"
+  },
+  "common": {
+    "untitled": "Untitled",
+    "retry": "Try again",
+    "loading": "Loading…",
+    "documentLoadError": "Couldn't load the document."
+  },
+  "account": {
+    "photoSaveError": "Couldn't save the photo.",
+    "photoUploading": "Uploading photo…",
+    "photoUploaded": "Photo uploaded",
+    "saving": "Saving…",
+    "uploadPhoto": "Upload photo",
+    "photoRemoved": "Photo removed",
+    "remove": "Remove",
+    "urlPlaceholder": "or paste a URL (https://i.imgur.com/...)",
+    "urlLabel": "Photo URL",
+    "photoUpdated": "Photo updated",
+    "useUrl": "Use URL",
+    "photoHint": "JPEG, PNG, WebP, AVIF or GIF, up to 10 MB. The photo is cropped square.",
+    "username": "Username",
+    "email": "Email",
+    "roleLabel": "Role",
+    "onboarding": "Onboarding",
+    "done": "Complete",
+    "pending": "Pending",
+    "session": "Session",
+    "sessionActive": "Active in this browser",
+    "title": "Account",
+    "lead": "Your account details and current session.",
+    "signOut": "Sign out of this account",
+    "role": {
+      "admin": "Administrator",
+      "user": "User"
+    }
+  },
+  "kinds": {
+    "article": {
+      "label": "Article",
+      "newLabel": "New article",
+      "description": "Essays, analysis and opinion, on the paper you choose.",
+      "titlePlaceholder": "Article title",
+      "abstractPlaceholder": "Summary in one sentence",
+      "contentPlaceholder": "Start writing…"
+    },
+    "tutorial": {
+      "label": "Tutorial",
+      "newLabel": "New tutorial",
+      "description": "Step by step to teach something from start to finish.",
+      "titlePlaceholder": "What does this tutorial teach?",
+      "abstractPlaceholder": "Who it's for and what they'll be able to do",
+      "contentPlaceholder": "Start with the first step…"
+    },
+    "project": {
+      "label": "Project",
+      "newLabel": "New project",
+      "description": "Show something you built: process, images and result.",
+      "titlePlaceholder": "Project name",
+      "abstractPlaceholder": "The project in one sentence",
+      "contentPlaceholder": "Tell how the project began…"
+    },
+    "note": {
+      "label": "Note",
+      "newLabel": "New note",
+      "description": "A short record. Doesn't appear in the feed.",
+      "titlePlaceholder": "Note title",
+      "abstractPlaceholder": "Summary (optional)",
+      "contentPlaceholder": "Jot it down…"
+    },
+    "contract": {
+      "label": "Contract",
+      "newLabel": "New contract",
+      "description": "Terms and agreements with signature. Doesn't appear in the feed.",
+      "titlePlaceholder": "Contract title",
+      "abstractPlaceholder": "Parties and subject, in one sentence",
+      "contentPlaceholder": "Clause 1…"
+    }
+  },
+  "feed": {
+    "allCategories": "All categories",
+    "lead": "Articles, tutorials and projects from the community, each with the paper and typography its author chose.",
+    "searchPlaceholder": "Search by title or summary",
+    "searchLabel": "Search documents",
+    "featured": "Featured",
+    "results": "Results",
+    "latest": "Latest",
+    "filterByType": "Filter by type",
+    "filterByCategory": "Filter by category",
+    "loadError": "Couldn't load the feed",
+    "loadErrorHint": "The request to the server failed. Try again in a moment.",
+    "emptyTitle": "No documents found",
+    "emptyFiltered": "No published document matches these filters.",
+    "emptyAll": "There are no published documents yet.",
+    "clearFilters": "Clear filters",
+    "loadMore": "Load more",
+    "end": "You've reached the end of the feed.",
+    "loadingDocs": "Loading documents"
+  },
+  "write": {
+    "title": "What are you going to write?",
+    "lead": "Each type opens the same editor, set up for it. Articles, tutorials and projects go to the feed.",
+    "outsideFeed": "Outside the feed"
+  },
+  "home": {
+    "mockTitle": "On writing slowly",
+    "mockType": "Essay",
+    "mockLead": "A text asks for time before it asks for readers.",
+    "mockP1": "First the draft, then the paper, and finally the place where it will live.",
+    "mockP2": "Choosing the font and texture is part of writing, not a decoration added at the end.",
+    "heroCreate": "Create.",
+    "heroWrite": "Write.",
+    "heroShare": "Share.",
+    "lead": "A document editor with its own identity: pick the font, paper and letterhead, sign and publish on your profile.",
+    "signUpFree": "Create a free account",
+    "readFeed": "Read the feed",
+    "featuresTitle": "From draft to your public profile.",
+    "ctaTitle": "Your first text starts here.",
+    "ctaLead": "Create the account, pick your apps and open the editor.",
+    "signUp": "Create account",
+    "haveAccount": "I have an account"
+  },
+  "capabilities": {
+    "editor": {
+      "title": "Editor",
+      "text": "Typography, cover and paper texture picked by you."
+    },
+    "letterhead": {
+      "title": "Letterhead",
+      "text": "Header, footer and digital signature on every document."
+    },
+    "publishing": {
+      "title": "Publishing",
+      "text": "Your texts in the feed and on your public profile."
+    },
+    "organizations": {
+      "title": "Organizations",
+      "text": "A space to publish on behalf of a group."
+    }
+  },
+  "onboarding": {
+    "loadingAccount": "Loading your account…",
+    "loadError": "Couldn't load your onboarding.",
+    "loadingApps": "Loading apps…",
+    "appsError": "Couldn't load the apps."
+  },
+  "notFound": {
+    "profileKicker": "Profile not found",
+    "profileTitle": "This profile doesn't exist",
+    "profileText": "The user may have changed their name or been removed. A private profile is still reachable here — it only hides the bio and documents.",
+    "seeFeed": "See the feed",
+    "documentKicker": "Document not found",
+    "documentTitle": "This document isn't available",
+    "documentText": "The document may have been removed or unpublished, or its author may no longer exist.",
+    "backHome": "Back to home"
+  },
+  "feedCard": {
+    "likes": "likes",
+    "read": "Read {type}",
+    "featured": "Featured",
+    "noCategory": "No category",
+    "signal": "signal",
+    "statusActive": "Status: active",
+    "type": "Type",
+    "author": "Author",
+    "date": "Date",
+    "category": "Category",
+    "likesTitle": "Likes",
+    "published": "Published",
+    "from": "From",
+    "on": "On"
+  },
+  "editor": {
+    "saveError": "Couldn't save the document. Your changes haven't been saved yet.",
+    "updated": "Document updated",
+    "published": "Document published",
+    "publishError": "Couldn't publish the document",
+    "publish": "Publish",
+    "save": "Save",
+    "previewJson": "Preview JSON payload",
+    "editPaper": "Edit paper",
+    "titleAndFont": "Title and font",
+    "footer": "Footer",
+    "paper": "Paper",
+    "exitDesign": "Exit design mode",
+    "parts": "Document parts",
+    "sample1": "This is sample text so you can see the design with content. The font, paper colors and texture show here as in the published text.",
+    "sample2": "When you go back to writing, your text takes this place. Header, cover, signature and footer stay where they are.",
+    "sampleHeading": "A subheading",
+    "sample3": "Paragraphs follow book style: first-line indent, no space between them, and the first one after a heading starts without indent."
   }
 }

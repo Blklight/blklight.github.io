@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { DocumentEditor } from "@/components/escrever/document-editor";
 import { RequireAuth } from "@/components/require-auth";
 import { useMyDocument } from "@/features/documents/queries";
@@ -16,6 +17,7 @@ export default function EscreverDocumentPage() {
 // Rendered only for authenticated visitors: the document query must not run
 // for an anonymous one (and the editor must not flash before the redirect).
 function EscreverDocument() {
+  const t = useTranslations("common");
   const params = useParams<{ id: string }>();
   const id = params.id;
   const { data, isPending, isError, error, refetch } = useMyDocument(
@@ -36,7 +38,7 @@ function EscreverDocument() {
     // inventing a new one.
     const message =
       (error as { response?: { data?: { message?: string } } })?.response?.data
-        ?.message ?? "Nao foi possivel carregar o documento.";
+        ?.message ?? t("documentLoadError");
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
         <div className="w-6 h-6 border-2 border-foreground border-t-transparent" />
@@ -48,7 +50,7 @@ function EscreverDocument() {
           onClick={() => refetch()}
           className="text-xs font-mono uppercase tracking-widest border border-foreground/20 px-4 py-2 hover:border-accent/60 transition-colors cursor-pointer"
         >
-          Tentar novamente
+          {t("retry")}
         </button>
       </div>
     );

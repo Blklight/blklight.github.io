@@ -83,5 +83,220 @@
     "themeBook": "Tema livro",
     "themeBookHint": "Papel sépia para leitura longa",
     "themeSystem": "Tema do sistema"
+  },
+  "documentStatus": {
+    "draft": "Rascunho",
+    "published": "Publicado",
+    "archived": "Arquivado"
+  },
+  "dashboard": {
+    "keepWriting": "Continuar escrevendo",
+    "editedOn": "Editado em {date}",
+    "continue": "Continuar",
+    "blankPage": "Página em branco",
+    "firstTextTop": "Seu primeiro texto",
+    "firstTextBottom": "começa aqui.",
+    "openEditor": "Abrir o editor",
+    "hello": "Olá,",
+    "newText": "Novo texto",
+    "yourTexts": "Seus textos",
+    "loadError": "Não foi possível carregar seus textos.",
+    "noOtherTexts": "Nenhum outro texto por enquanto.",
+    "noTexts": "Você ainda não escreveu nada.",
+    "editedOnLower": "editado em {date}",
+    "viewProfile": "Ver meu perfil público",
+    "yourApps": "Seus apps",
+    "noApps": "Nenhum app ativo.",
+    "fromFeed": "Do feed",
+    "openFeed": "Abrir o feed"
+  },
+  "common": {
+    "untitled": "Sem título",
+    "retry": "Tentar novamente",
+    "loading": "Carregando…",
+    "documentLoadError": "Não foi possível carregar o documento."
+  },
+  "account": {
+    "photoSaveError": "Não foi possível salvar a foto.",
+    "photoUploading": "Enviando foto…",
+    "photoUploaded": "Foto enviada",
+    "saving": "Salvando…",
+    "uploadPhoto": "Enviar foto",
+    "photoRemoved": "Foto removida",
+    "remove": "Remover",
+    "urlPlaceholder": "ou cole uma URL (https://i.imgur.com/...)",
+    "urlLabel": "URL da foto",
+    "photoUpdated": "Foto atualizada",
+    "useUrl": "Usar URL",
+    "photoHint": "JPEG, PNG, WebP, AVIF ou GIF, até 10 MB. A foto é recortada em quadrado.",
+    "username": "Usuário",
+    "email": "E-mail",
+    "roleLabel": "Papel",
+    "onboarding": "Onboarding",
+    "done": "Concluído",
+    "pending": "Pendente",
+    "session": "Sessão",
+    "sessionActive": "Ativa neste navegador",
+    "title": "Conta",
+    "lead": "Dados da sua conta e da sessão atual.",
+    "signOut": "Sair desta conta",
+    "role": {
+      "admin": "Administrador",
+      "user": "Usuário"
+    }
+  },
+  "kinds": {
+    "article": {
+      "label": "Artigo",
+      "newLabel": "Novo artigo",
+      "description": "Ensaios, análises e opinião, com o papel que você escolher.",
+      "titlePlaceholder": "Título do artigo",
+      "abstractPlaceholder": "Resumo em uma frase",
+      "contentPlaceholder": "Comece a escrever…"
+    },
+    "tutorial": {
+      "label": "Tutorial",
+      "newLabel": "Novo tutorial",
+      "description": "Passo a passo para ensinar algo do começo ao fim.",
+      "titlePlaceholder": "O que este tutorial ensina?",
+      "abstractPlaceholder": "Para quem é e o que a pessoa vai conseguir fazer",
+      "contentPlaceholder": "Comece pelo primeiro passo…"
+    },
+    "project": {
+      "label": "Projeto",
+      "newLabel": "Novo projeto",
+      "description": "Mostre algo que você construiu: processo, imagens e resultado.",
+      "titlePlaceholder": "Nome do projeto",
+      "abstractPlaceholder": "O projeto em uma frase",
+      "contentPlaceholder": "Conte como o projeto nasceu…"
+    },
+    "note": {
+      "label": "Nota",
+      "newLabel": "Nova nota",
+      "description": "Um registro curto. Não aparece no feed.",
+      "titlePlaceholder": "Título da nota",
+      "abstractPlaceholder": "Resumo (opcional)",
+      "contentPlaceholder": "Anote…"
+    },
+    "contract": {
+      "label": "Contrato",
+      "newLabel": "Novo contrato",
+      "description": "Termos e acordos com assinatura. Não aparece no feed.",
+      "titlePlaceholder": "Título do contrato",
+      "abstractPlaceholder": "Partes e objeto, em uma frase",
+      "contentPlaceholder": "Cláusula 1…"
+    }
+  },
+  "feed": {
+    "allCategories": "Todas as categorias",
+    "lead": "Artigos, tutoriais e projetos da comunidade, cada um com o papel e a tipografia que o autor escolheu.",
+    "searchPlaceholder": "Buscar por título ou resumo",
+    "searchLabel": "Buscar documentos",
+    "featured": "Em destaque",
+    "results": "Resultados",
+    "latest": "Mais recentes",
+    "filterByType": "Filtrar por tipo",
+    "filterByCategory": "Filtrar por categoria",
+    "loadError": "Não foi possível carregar o feed",
+    "loadErrorHint": "A requisição ao servidor falhou. Tente novamente em instantes.",
+    "emptyTitle": "Nenhum documento encontrado",
+    "emptyFiltered": "Nenhum documento publicado corresponde a esses filtros.",
+    "emptyAll": "Ainda não há documentos publicados.",
+    "clearFilters": "Limpar filtros",
+    "loadMore": "Carregar mais",
+    "end": "Você chegou ao fim do feed.",
+    "loadingDocs": "Carregando documentos"
+  },
+  "write": {
+    "title": "O que você vai escrever?",
+    "lead": "Cada tipo abre o mesmo editor, preparado para ele. Artigos, tutoriais e projetos vão para o feed.",
+    "outsideFeed": "Fora do feed"
+  },
+  "home": {
+    "mockTitle": "Sobre escrever devagar",
+    "mockType": "Ensaio",
+    "mockLead": "Um texto pede tempo antes de pedir leitores.",
+    "mockP1": "Primeiro o rascunho, depois o papel, por fim o lugar onde ele vai morar.",
+    "mockP2": "Escolher a fonte e a textura é parte da escrita, não um enfeite posto no fim.",
+    "heroCreate": "Crie.",
+    "heroWrite": "Escreva.",
+    "heroShare": "Compartilhe.",
+    "lead": "Um editor de documentos com identidade própria: escolha fonte, papel e timbre, assine e publique no seu perfil.",
+    "signUpFree": "Criar conta grátis",
+    "readFeed": "Ler o feed",
+    "featuresTitle": "Do rascunho ao seu perfil público.",
+    "ctaTitle": "Seu primeiro texto começa aqui.",
+    "ctaLead": "Crie a conta, escolha seus apps e abra o editor.",
+    "signUp": "Criar conta",
+    "haveAccount": "Já tenho conta"
+  },
+  "capabilities": {
+    "editor": {
+      "title": "Editor",
+      "text": "Tipografia, capa e textura de papel escolhidas por você."
+    },
+    "letterhead": {
+      "title": "Papel timbrado",
+      "text": "Cabeçalho, rodapé e assinatura digital em cada documento."
+    },
+    "publishing": {
+      "title": "Publicação",
+      "text": "Seus textos no feed e no seu perfil público."
+    },
+    "organizations": {
+      "title": "Organizações",
+      "text": "Um espaço para publicar em nome de um grupo."
+    }
+  },
+  "onboarding": {
+    "loadingAccount": "Carregando sua conta…",
+    "loadError": "Não foi possível carregar seu onboarding.",
+    "loadingApps": "Carregando apps…",
+    "appsError": "Não foi possível carregar os apps."
+  },
+  "notFound": {
+    "profileKicker": "Perfil não encontrado",
+    "profileTitle": "Este perfil não existe",
+    "profileText": "O usuário pode ter mudado de nome ou sido removido. Um perfil privado continua acessível aqui — ele apenas oculta bio e documentos.",
+    "seeFeed": "Ver o feed",
+    "documentKicker": "Documento não encontrado",
+    "documentTitle": "Este documento não está disponível",
+    "documentText": "O documento pode ter sido removido, não publicado ou o autor pode não existir mais.",
+    "backHome": "Voltar ao início"
+  },
+  "feedCard": {
+    "likes": "curtidas",
+    "read": "Ler {type}",
+    "featured": "Em destaque",
+    "noCategory": "Sem categoria",
+    "signal": "sinal",
+    "statusActive": "Status: ativo",
+    "type": "Tipo",
+    "author": "Autor",
+    "date": "Data",
+    "category": "Categoria",
+    "likesTitle": "Curtidas",
+    "published": "Publicado",
+    "from": "De",
+    "on": "Em"
+  },
+  "editor": {
+    "saveError": "Falha ao salvar o documento. Suas alterações ainda não foram salvas.",
+    "updated": "Documento atualizado com sucesso",
+    "published": "Documento publicado com sucesso",
+    "publishError": "Falha ao publicar o documento",
+    "publish": "Publicar",
+    "save": "Salvar",
+    "previewJson": "Visualizar payload JSON",
+    "editPaper": "Editar papel",
+    "titleAndFont": "Título e fonte",
+    "footer": "Rodapé",
+    "paper": "Papel",
+    "exitDesign": "Sair do modo design",
+    "parts": "Partes do documento",
+    "sample1": "Este é um texto de exemplo para você ver o design com conteúdo. A fonte, as cores do papel e a textura aparecem aqui como no texto publicado.",
+    "sample2": "Quando você voltar a escrever, o seu texto ocupa este lugar. Cabeçalho, capa, assinatura e rodapé continuam onde estão.",
+    "sampleHeading": "Um intertítulo",
+    "sample3": "Os parágrafos seguem o estilo de livro: recuo na primeira linha, sem espaço entre eles, e o primeiro depois de um título começa sem recuo."
   }
 }
