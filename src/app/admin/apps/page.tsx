@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useLocale, useTranslations } from "next-intl";
 import { useLayoutEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
@@ -46,6 +47,8 @@ import {
 } from "@/types/form.schemas";
 
 export default function AdminAppsPage() {
+  const t = useTranslations("admin");
+  const locale = useLocale();
   const { data: apps, isPending, isError, refetch } = useAdminApps();
   const createApp = useCreatePlatformApp();
 
@@ -119,7 +122,9 @@ export default function AdminAppsPage() {
           admin / apps
         </div>
         <div className="text-[10px] md:text-xs uppercase tracking-widest text-muted-foreground">
-          {isPending ? "[ carregando... ]" : `[ ${apps?.length ?? 0} apps ]`}
+          {isPending
+            ? t("loading")
+            : t("appsCount", { count: apps?.length ?? 0 })}
         </div>
       </div>
 
@@ -137,15 +142,15 @@ export default function AdminAppsPage() {
               />
             }
           >
-            [ novo app ]
+            {t("newApp")}
           </DialogTrigger>
           <DialogContent className="max-w-2xl rounded-none border hairline shadow-none bg-transparent">
             <DialogHeader>
               <DialogTitle className="text-xs uppercase tracking-widest text-muted-foreground">
-                criar app
+                {t("createApp")}
               </DialogTitle>
               <DialogDescription className="text-xs uppercase tracking-widest text-muted-foreground">
-                preencha os campos abaixo. slug deve ser único e kebab-case.
+                {t("createAppHint")}
               </DialogDescription>
             </DialogHeader>
             <Form {...createForm}>
@@ -164,7 +169,7 @@ export default function AdminAppsPage() {
                         render={
                           <Input
                             {...field}
-                            placeholder="meu-app"
+                            placeholder={t("slugPlaceholder")}
                             className="rounded-none border hairline bg-transparent"
                           />
                         }
@@ -181,13 +186,13 @@ export default function AdminAppsPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-xs uppercase tracking-widest text-muted-foreground">
-                        nome
+                        {t("name")}
                       </FormLabel>
                       <FormControl
                         render={
                           <Input
                             {...field}
-                            placeholder="Meu App"
+                            placeholder={t("namePlaceholder")}
                             className="rounded-none border hairline bg-transparent"
                           />
                         }
@@ -204,13 +209,13 @@ export default function AdminAppsPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-xs uppercase tracking-widest text-muted-foreground">
-                        descrição
+                        {t("description")}
                       </FormLabel>
                       <FormControl
                         render={
                           <Input
                             {...field}
-                            placeholder="Descrição do app"
+                            placeholder={t("descriptionPlaceholder")}
                             className="rounded-none border hairline bg-transparent"
                           />
                         }
@@ -227,7 +232,7 @@ export default function AdminAppsPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-xs uppercase tracking-widest text-muted-foreground">
-                        modo de acesso
+                        {t("accessMode")}
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
@@ -238,7 +243,7 @@ export default function AdminAppsPage() {
                             <SelectTrigger className="rounded-none border hairline" />
                           }
                         >
-                          <SelectValue placeholder="selecionar" />
+                          <SelectValue placeholder={t("select")} />
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="open">open</SelectItem>
@@ -257,13 +262,13 @@ export default function AdminAppsPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-xs uppercase tracking-widest text-muted-foreground">
-                        ícone (url)
+                        {t("iconUrl")}
                       </FormLabel>
                       <FormControl
                         render={
                           <Input
                             {...field}
-                            placeholder="https://exemplo.com/icon.png"
+                            placeholder={t("iconPlaceholder")}
                             className="rounded-none border hairline bg-transparent"
                           />
                         }
@@ -286,7 +291,7 @@ export default function AdminAppsPage() {
                         render={
                           <Input
                             {...field}
-                            placeholder="Uma frase curta"
+                            placeholder={t("taglinePlaceholder")}
                             className="rounded-none border hairline bg-transparent"
                           />
                         }
@@ -303,13 +308,13 @@ export default function AdminAppsPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-xs uppercase tracking-widest text-muted-foreground">
-                        categoria (livre)
+                        {t("categoryFree")}
                       </FormLabel>
                       <FormControl
                         render={
                           <Input
                             {...field}
-                            placeholder="produtividade, desenvolvimento, etc"
+                            placeholder={t("categoryPlaceholder")}
                             className="rounded-none border hairline bg-transparent"
                           />
                         }
@@ -325,14 +330,14 @@ export default function AdminAppsPage() {
                     className="rounded-none border hairline"
                     onClick={() => setCreateDialogOpen(false)}
                   >
-                    cancelar
+                    {t("cancelLower")}
                   </Button>
                   <Button
                     type="submit"
                     disabled={createApp.isPending}
                     className="rounded-none border hairline"
                   >
-                    {createApp.isPending ? "[ criando... ]" : "[ criar ]"}
+                    {createApp.isPending ? t("creating") : t("create")}
                   </Button>
                 </DialogFooter>
               </form>
@@ -346,11 +351,11 @@ export default function AdminAppsPage() {
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="buscar por nome, slug ou categoria"
+          placeholder={t("appsSearch")}
           className="max-w-xs rounded-none border hairline bg-transparent"
         />
         <Select
-          items={{ all: "todos", open: "open", beta: "beta" }}
+          items={{ all: t("all"), open: "open", beta: "beta" }}
           value={accessMode}
           onValueChange={(v) => setAccessMode(v as "open" | "beta" | "all")}
         >
@@ -358,13 +363,13 @@ export default function AdminAppsPage() {
             <SelectValue placeholder="access mode" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">todos</SelectItem>
+            <SelectItem value="all">{t("all")}</SelectItem>
             <SelectItem value="open">open</SelectItem>
             <SelectItem value="beta">beta</SelectItem>
           </SelectContent>
         </Select>
         <Select
-          items={{ all: "todos", true: "ativos", false: "inativos" }}
+          items={{ all: t("all"), true: t("active"), false: t("inactive") }}
           value={isActive}
           onValueChange={(v) => setIsActive(v as "true" | "false" | "all")}
         >
@@ -372,30 +377,30 @@ export default function AdminAppsPage() {
             <SelectValue placeholder="status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">todos</SelectItem>
-            <SelectItem value="true">ativos</SelectItem>
-            <SelectItem value="false">inativos</SelectItem>
+            <SelectItem value="all">{t("all")}</SelectItem>
+            <SelectItem value="true">{t("active")}</SelectItem>
+            <SelectItem value="false">{t("inactive")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       {isPending && (
         <div className="text-xs uppercase tracking-widest text-muted-foreground animate-pulse">
-          [ carregando apps... ]
+          {t("loadingApps")}
         </div>
       )}
 
       {isError && (
         <div className="border hairline p-8 max-w-md">
           <p className="text-xs uppercase tracking-widest text-muted-foreground mb-6">
-            {"// falha ao carregar apps"}
+            {t("appsError")}
           </p>
           <button
             type="button"
             onClick={() => refetch()}
             className="text-xs uppercase tracking-widest border hairline px-4 py-2 hover:bg-ink hover:text-background transition-colors"
           >
-            [ tentar novamente ]
+            {t("retry")}
           </button>
         </div>
       )}
@@ -406,9 +411,9 @@ export default function AdminAppsPage() {
             <TableRow>
               <TableHead>App</TableHead>
               <TableHead>Access Mode</TableHead>
-              <TableHead>Categoria</TableHead>
-              <TableHead>Ativo</TableHead>
-              <TableHead>Criado em</TableHead>
+              <TableHead>{t("colCategory")}</TableHead>
+              <TableHead>{t("colActive")}</TableHead>
+              <TableHead>{t("colCreated")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -440,11 +445,11 @@ export default function AdminAppsPage() {
                     variant={app.isActive ? "default" : "destructive"}
                     className="rounded-none border hairline"
                   >
-                    {app.isActive ? "sim" : "não"}
+                    {app.isActive ? t("yes") : t("no")}
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  {new Date(app.createdAt).toLocaleDateString("pt-BR")}
+                  {new Date(app.createdAt).toLocaleDateString(locale)}
                 </TableCell>
               </TableRow>
             ))}
@@ -454,7 +459,7 @@ export default function AdminAppsPage() {
 
       {filteredApps.length === 0 && !isPending && !isError && (
         <div className="text-xs uppercase tracking-widest text-muted-foreground">
-          [ nenhum app encontrado ]
+          {t("noApps")}
         </div>
       )}
     </section>

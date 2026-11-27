@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import { useLayoutEffect, useState } from "react";
 import {
   AlertDialog,
@@ -29,6 +30,8 @@ import {
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function AdminUserDetailPage() {
+  const t = useTranslations("admin");
+  const locale = useLocale();
   const params = useParams<{ id: string }>();
   const id = params.id;
   const { data, isPending, isError, refetch } = useAdminUserDetail(
@@ -56,26 +59,26 @@ export default function AdminUserDetailPage() {
       <TextureOverlay texture={"grid"} className="mix-blend-overlay" />
 
       <div className="text-[10px] md:text-xs uppercase tracking-[0.3em] text-muted-foreground mb-8">
-        admin / usuários / detalhe
+        {t("crumbUserDetail")}
       </div>
 
       {isPending && (
         <div className="text-xs uppercase tracking-widest text-muted-foreground animate-pulse">
-          [ carregando usuário... ]
+          {t("loadingUser")}
         </div>
       )}
 
       {isError && (
         <div className="border hairline p-8 max-w-md">
           <p className="text-xs uppercase tracking-widest text-muted-foreground mb-6">
-            {"// falha ao carregar usuário"}
+            {t("userError")}
           </p>
           <button
             type="button"
             onClick={() => refetch()}
             className="text-xs uppercase tracking-widest border hairline px-4 py-2 hover:bg-ink hover:text-background transition-colors"
           >
-            [ tentar novamente ]
+            {t("retry")}
           </button>
         </div>
       )}
@@ -99,7 +102,7 @@ export default function AdminUserDetailPage() {
                 variant="destructive"
                 className="rounded-none border hairline"
               >
-                deletado
+                {t("deleted")}
               </Badge>
             )}
           </div>
@@ -136,9 +139,7 @@ export default function AdminUserDetailPage() {
 
               {selfDemotionBlocked && (
                 <p className="mt-2 text-xs uppercase tracking-widest text-destructive">
-                  {
-                    "// você é o admin logado — não é possível se auto-rebaixar."
-                  }
+                  {t("selfDemotion")}
                 </p>
               )}
             </CardContent>
@@ -146,71 +147,74 @@ export default function AdminUserDetailPage() {
 
           {/* sessões de dados */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <DataCard title="usuário">
+            <DataCard title={t("cardUser")}>
               <Row k="id" v={data.user.id} />
               <Row k="email" v={data.user.email} />
               <Row
-                k="email verificado"
-                v={data.user.emailVerified ? "sim" : "não"}
+                k={t("emailVerified")}
+                v={data.user.emailVerified ? t("yes") : t("no")}
               />
               <Row
                 k="onboarding"
-                v={data.user.onboardingComplete ? "completo" : "pendente"}
+                v={data.user.onboardingComplete ? t("complete") : t("pending")}
               />
               <Row
-                k="criado em"
-                v={new Date(data.user.createdAt).toLocaleDateString("pt-BR")}
+                k={t("createdOn")}
+                v={new Date(data.user.createdAt).toLocaleDateString(locale)}
               />
               {data.user.deletedAt && (
                 <Row
-                  k="deletado em"
-                  v={new Date(data.user.deletedAt).toLocaleDateString("pt-BR")}
+                  k={t("deletedOn")}
+                  v={new Date(data.user.deletedAt).toLocaleDateString(locale)}
                 />
               )}
             </DataCard>
 
-            <DataCard title="perfil">
+            <DataCard title={t("cardProfile")}>
               {data.profile ? (
                 <>
                   <Row k="displayName" v={data.profile.displayName ?? "—"} />
                   <Row k="bio" v={data.profile.bio ?? "—"} />
-                  <Row k="privado" v={data.profile.isPrivate ? "sim" : "não"} />
+                  <Row
+                    k={t("private")}
+                    v={data.profile.isPrivate ? t("yes") : t("no")}
+                  />
                 </>
               ) : (
-                <Row k="sem perfil" v="—" />
+                <Row k={t("noProfile")} v="—" />
               )}
             </DataCard>
 
-            <DataCard title="apps ativados">
+            <DataCard title={t("cardApps")}>
               {data.apps.length > 0 ? (
                 data.apps.map((a) => <Row key={a.slug} k={a.slug} v={a.name} />)
               ) : (
-                <Row k="nenhum app" v="—" />
+                <Row k={t("noApp")} v="—" />
               )}
             </DataCard>
 
-            <DataCard title="servidores">
+            <DataCard title={t("statServers")}>
               {data.servers.length > 0 ? (
                 data.servers.map((s) => (
                   <Row key={`${s.name}-${s.role}`} k={s.name} v={s.role} />
                 ))
               ) : (
-                <Row k="nenhum servidor" v="—" />
+                <Row k={t("noServer")} v="—" />
               )}
             </DataCard>
 
             <DataCard title="workspace">
               {data.workspace ? (
                 <>
-                  <Row k="nome" v={data.workspace.name} />
-                  <Row k="tipo" v={data.workspace.type} />
+                  <Row k={t("name")} v={data.workspace.name} />
+                  <Row k={t("type")} v={data.workspace.type} />
                 </>
               ) : (
-                <Row k="sem workspace" v="—" />
+                <Row k={t("noWorkspace")} v="—" />
               )}
             </DataCard>
 
-            <DataCard title="assinatura">
+            <DataCard title={t("cardSignature")}>
               {data.signature ? (
                 <>
                   <Row
@@ -218,14 +222,14 @@ export default function AdminUserDetailPage() {
                     v={`${data.signature.userHash.slice(0, 16)}…`}
                   />
                   <Row
-                    k="criada em"
+                    k={t("createdOnFem")}
                     v={new Date(data.signature.createdAt).toLocaleDateString(
-                      "pt-BR",
+                      locale,
                     )}
                   />
                 </>
               ) : (
-                <Row k="sem assinatura" v="—" />
+                <Row k={t("noSignature")} v="—" />
               )}
             </DataCard>
           </div>
@@ -239,10 +243,13 @@ export default function AdminUserDetailPage() {
           >
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Alterar role</AlertDialogTitle>
+                <AlertDialogTitle>{t("changeRole")}</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Confirmar troca de role de {data.user.username} para{" "}
-                  <span className="font-bold">{pendingRole}</span>?
+                  {t.rich("confirmRole", {
+                    user: data.user.username,
+                    role: pendingRole ?? "",
+                    b: (chunks) => <span className="font-bold">{chunks}</span>,
+                  })}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -253,7 +260,7 @@ export default function AdminUserDetailPage() {
                   }}
                   disabled={updateRole.isPending}
                 >
-                  Cancelar
+                  {t("cancel")}
                 </AlertDialogCancel>
                 <AlertDialogAction
                   onClick={() => {
@@ -272,7 +279,7 @@ export default function AdminUserDetailPage() {
                   }}
                   disabled={updateRole.isPending}
                 >
-                  {updateRole.isPending ? "[ salvando... ]" : "Confirmar"}
+                  {updateRole.isPending ? t("saving") : t("confirm")}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
