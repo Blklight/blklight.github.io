@@ -3,6 +3,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { ImageUp, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { Navbar } from "@/components/navbar";
@@ -13,22 +14,23 @@ import { Input } from "@/components/ui/input";
 import { TextureOverlay } from "@/components/ui/texture-overlay";
 import { updateMyProfile } from "@/features/profile/api";
 import { profileKeys, useCurrentProfile } from "@/features/profile/queries";
-import { IMAGE_ACCEPT, uploadWithToast } from "@/features/uploads/api";
+import {
+  IMAGE_ACCEPT,
+  uploadWithToast,
+  useUploadToast,
+} from "@/features/uploads/api";
 import { logout } from "@/lib/session";
 import { useAuthStore } from "@/store/useAuthStore";
 
-const ROLE_LABEL: Record<string, string> = {
-  admin: "Administrador",
-  user: "Usuário",
-};
-
 /** Profile photo: upload a file (square WebP of at most 512px, made by the API) or use an external URL. */
 function AvatarSection({ username }: { username: string }) {
+  const t = useTranslations("account");
   const queryClient = useQueryClient();
   const { data: profile } = useCurrentProfile(true);
   const [url, setUrl] = useState("");
   const [busy, setBusy] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
+  const uploadToast = useUploadToast("photo");
 
   const save = async (avatarUrl: string | null, success?: string) => {
     setBusy(true);
@@ -38,7 +40,7 @@ function AvatarSection({ username }: { username: string }) {
       setUrl("");
       if (success) toast.success(success);
     } catch {
-      toast.error("Não foi possível salvar a foto.");
+      toast.error(t("photoSaveError"));
     } finally {
       setBusy(false);
     }
@@ -46,10 +48,7 @@ function AvatarSection({ username }: { username: string }) {
 
   const upload = async (file: File) => {
     setBusy(true);
-    const uploaded = await uploadWithToast(file, "avatar", {
-      loading: "Enviando foto…",
-      success: "Foto enviada",
-    });
+    const uploaded = await uploadWithToast(file, "avatar", uploadToast);
     if (uploaded) await save(uploaded.url);
     else setBusy(false);
   };
@@ -89,16 +88,16 @@ function AvatarSection({ username }: { username: string }) {
             onClick={() => fileInput.current?.click()}
           >
             <ImageUp className="size-4" />
-            {busy ? "Salvando…" : "Enviar foto"}
+            {busy ? t("saving") : t("uploadPhoto")}
           </Button>
           {profile?.avatarUrl && (
             <Button
               variant="ghost"
               className="rounded-xs"
               disabled={busy}
-              onClick={() => void save(null, "Foto removida")}
+              onClick={() => void save(null, t("photoRemoved"))}
             >
-              Remover
+              {t("remove")}
             </Button>
           )}
         </div>
@@ -106,49 +105,50 @@ function AvatarSection({ username }: { username: string }) {
           <Input
             value={url}
             onChange={(event) => setUrl(event.target.value)}
-            placeholder="ou cole uma URL (https://i.imgur.com/...)"
-            aria-label="URL da foto"
+            placeholder={t("urlPlaceholder")}
+            aria-label={t("urlLabel")}
             disabled={busy}
           />
           <Button
             variant="outline"
             className="rounded-xs"
             disabled={busy || !validUrl}
-            onClick={() => void save(url.trim(), "Foto atualizada")}
+            onClick={() => void save(url.trim(), t("photoUpdated"))}
           >
-            Usar URL
+            {t("useUrl")}
           </Button>
         </div>
-        <p className="text-xs text-muted-foreground">
-          JPEG, PNG, WebP, AVIF ou GIF, até 10 MB. A foto é recortada em
-          quadrado.
-        </p>
+        <p className="text-xs text-muted-foreground">{t("photoHint")}</p>
       </div>
     </div>
   );
 }
 
 function Account() {
+  const t = useTranslations("account");
   const router = useRouter();
   const user = useAuthStore((s) => s.user);
   if (!user) return null;
 
   const rows: Array<[string, string]> = [
-    ["Usuário", `@${user.username}`],
-    ["E-mail", user.email],
-    ["Papel", ROLE_LABEL[user.role] ?? user.role],
-    ["Onboarding", user.onboardingComplete ? "Concluído" : "Pendente"],
-    ["Sessão", "Ativa neste navegador"],
+    [t("username"), `@${user.username}`],
+    [t("email"), user.email],
+    [
+      t("roleLabel"),
+      user.role === "admin" || user.role === "user"
+        ? t(`role.${user.role}`)
+        : user.role,
+    ],
+    [t("onboarding"), user.onboardingComplete ? t("done") : t("pending")],
+    [t("session"), t("sessionActive")],
   ];
 
   return (
     <div className="max-w-2xl mx-auto px-6 md:px-10 py-12 animate-fade-in">
       <h1 className="font-sans text-4xl font-bold tracking-tight mb-2">
-        Conta
+        {t("title")}
       </h1>
-      <p className="text-muted-foreground mb-10">
-        Dados da sua conta e da sessão atual.
-      </p>
+      <p className="text-muted-foreground mb-10">{t("lead")}</p>
 
       <AvatarSection username={user.username} />
 
@@ -173,7 +173,7 @@ function Account() {
         }}
       >
         <LogOut className="size-4" />
-        Sair desta conta
+        {t("signOut")}
       </Button>
     </div>
   );

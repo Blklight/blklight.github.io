@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { Editor } from "@tiptap/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -9,10 +9,12 @@ import {
   useImageInsertStore,
 } from "@/components/escrever/image-insert";
 import { uploadWithToast } from "@/features/uploads/api";
+import { renderWithIntl as render } from "../utils/render";
 
 vi.mock("@/features/uploads/api", () => ({
   IMAGE_ACCEPT: "image/*",
   uploadWithToast: vi.fn(),
+  useUploadToast: () => ({ loading: "", success: "", error: () => "" }),
 }));
 
 function fakeEditor() {

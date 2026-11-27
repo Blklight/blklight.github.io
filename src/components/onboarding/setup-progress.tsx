@@ -2,6 +2,7 @@
 
 import { Check, Loader2, X } from "lucide-react";
 import { useReducedMotion } from "motion/react";
+import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,7 @@ const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 /** Runs the real setup calls in order, one row per call, and resumes from the failed row on retry. */
 export const SetupProgress = ({ tasks, onDone, describeError }: Props) => {
+  const t = useTranslations("onboarding");
   const reduceMotion = useReducedMotion();
   const [rows, setRows] = useState<RowState[]>(() =>
     tasks.map(() => "pending"),
@@ -39,6 +41,8 @@ export const SetupProgress = ({ tasks, onDone, describeError }: Props) => {
   const tasksRef = useRef(tasks);
   const onDoneRef = useRef(onDone);
   const describeRef = useRef(describeError);
+  const fallbackRef = useRef("");
+  fallbackRef.current = t("stepError");
   useEffect(() => {
     tasksRef.current = tasks;
     onDoneRef.current = onDone;
@@ -62,9 +66,7 @@ export const SetupProgress = ({ tasks, onDone, describeError }: Props) => {
           set(i, "done");
         } catch (cause) {
           set(i, "error");
-          setError(
-            describeRef.current?.(cause) ?? "Algo deu errado nesta etapa.",
-          );
+          setError(describeRef.current?.(cause) ?? fallbackRef.current);
           return;
         }
       }
@@ -112,15 +114,7 @@ export const SetupProgress = ({ tasks, onDone, describeError }: Props) => {
                 )}
               </span>
               <span>{task.label}</span>
-              <span className="sr-only">
-                {state === "done"
-                  ? "concluído"
-                  : state === "running"
-                    ? "em andamento"
-                    : state === "error"
-                      ? "falhou"
-                      : "aguardando"}
-              </span>
+              <span className="sr-only">{t(`taskState.${state}`)}</span>
             </li>
           );
         })}
@@ -136,7 +130,7 @@ export const SetupProgress = ({ tasks, onDone, describeError }: Props) => {
             onClick={retry}
             className="font-mono text-xs uppercase tracking-wider rounded-xs"
           >
-            Tentar de novo
+            {t("tryAgain")}
           </Button>
         </div>
       )}

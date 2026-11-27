@@ -1,6 +1,7 @@
 "use client";
 
 import { FileText, Lock } from "lucide-react";
+import { useFormatter, useTranslations } from "next-intl";
 import { useMemo } from "react";
 import { DocumentFeedCard } from "@/components/feed/document-feed-card";
 import { Button } from "@/components/ui/button";
@@ -10,21 +11,15 @@ import type { ProfilePublic } from "@/types/api.types";
 
 const PAGE_SIZE = 6;
 
-const JOINED_FORMAT = new Intl.DateTimeFormat("pt-BR", {
-  month: "long",
-  year: "numeric",
-  timeZone: "UTC",
-});
-
 /**
  * The backend redacts a private profile by nulling bio/socialLinks and
  * stamping createdAt with the epoch, so a 1970 "member since" is the tell for
  * "this copy is redacted", never a real join date.
  */
-function formatJoinedAt(createdAt: string): string | null {
+function joinedDate(createdAt: string): Date | null {
   const time = Date.parse(createdAt);
   if (Number.isNaN(time) || time <= 0) return null;
-  return JOINED_FORMAT.format(new Date(time));
+  return new Date(time);
 }
 
 interface ProfileViewProps {
@@ -34,6 +29,9 @@ interface ProfileViewProps {
 }
 
 export function ProfileView({ username, initialProfile }: ProfileViewProps) {
+  const t = useTranslations("profile");
+  const tc = useTranslations("common");
+  const format = useFormatter();
   const { data: profile, isFetching } = useProfile(username, {
     initialData: initialProfile,
   });
@@ -80,7 +78,14 @@ export function ProfileView({ username, initialProfile }: ProfileViewProps) {
     return <AccessSkeleton />;
   }
 
-  const joinedAt = formatJoinedAt(profile.createdAt);
+  const joined = joinedDate(profile.createdAt);
+  const joinedAt = joined
+    ? format.dateTime(joined, {
+        month: "long",
+        year: "numeric",
+        timeZone: "UTC",
+      })
+    : null;
   const label = profile.displayName || profile.username;
 
   return (
@@ -107,12 +112,12 @@ export function ProfileView({ username, initialProfile }: ProfileViewProps) {
             <h1 className="text-2xl font-medium tracking-tight">{label}</h1>
             {profile.followStatus === "accepted" ? (
               <span className="border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                Seguindo
+                {t("following")}
               </span>
             ) : null}
             {profile.followStatus === "pending" ? (
               <span className="border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                Solicitação pendente
+                {t("requestPending")}
               </span>
             ) : null}
           </div>
@@ -129,7 +134,7 @@ export function ProfileView({ username, initialProfile }: ProfileViewProps) {
 
           {joinedAt ? (
             <p className="text-xs text-muted-foreground">
-              Membro desde {joinedAt}
+              {t("memberSince", { date: joinedAt })}
             </p>
           ) : null}
         </div>
@@ -141,17 +146,14 @@ export function ProfileView({ username, initialProfile }: ProfileViewProps) {
         <section className="flex flex-col items-start gap-2 border border-border p-6">
           <span className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted-foreground">
             <Lock className="h-4 w-4" aria-hidden />
-            Perfil privado
+            {t("private")}
           </span>
-          <p className="text-sm text-muted-foreground">
-            Este perfil é privado. Bio e documentos só são visíveis para quem
-            ele aprova como seguidor.
-          </p>
+          <p className="text-sm text-muted-foreground">{t("privateText")}</p>
         </section>
       ) : (
         <section className="flex flex-col gap-4">
           <h2 className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-            Documentos publicados
+            {tc("publishedDocs")}
           </h2>
 
           {isDocumentsPending ? (
@@ -159,13 +161,12 @@ export function ProfileView({ username, initialProfile }: ProfileViewProps) {
           ) : items.length === 0 ? (
             <p className="flex items-center gap-2 text-sm text-muted-foreground">
               <FileText className="h-4 w-4" aria-hidden />
-              Nenhum documento publicado.
+              {t("noDocs")}
             </p>
           ) : (
             <>
               <p className="font-mono text-xs text-muted-foreground">
-                {items.length} de {total}{" "}
-                {total === 1 ? "documento" : "documentos"}
+                {tc("docsCount", { shown: items.length, total })}
               </p>
               <ul className="flex flex-col gap-4">
                 {items.map((document) => (
@@ -182,11 +183,11 @@ export function ProfileView({ username, initialProfile }: ProfileViewProps) {
                     onClick={() => void fetchNextPage()}
                     disabled={isFetchingNextPage}
                   >
-                    {isFetchingNextPage ? "Carregando..." : "Carregar mais"}
+                    {isFetchingNextPage ? tc("loading") : tc("loadMore")}
                   </Button>
                 ) : (
                   <p className="font-mono text-xs text-muted-foreground">
-                    Você chegou ao fim.
+                    {tc("reachedEnd")}
                   </p>
                 )}
               </div>
@@ -208,9 +209,10 @@ function AccessSkeleton() {
 }
 
 function DocumentsSkeleton() {
+  const tc = useTranslations("common");
   return (
     <div className="flex flex-col gap-4" aria-busy="true" aria-live="polite">
-      <span className="sr-only">Carregando documentos</span>
+      <span className="sr-only">{tc("loadingDocs")}</span>
       {["doc-1", "doc-2"].map((key) => (
         <div
           key={key}

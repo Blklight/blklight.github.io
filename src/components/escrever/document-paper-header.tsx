@@ -4,18 +4,13 @@ import type { Editor } from "@tiptap/react";
 import { useEditorState } from "@tiptap/react";
 import { Check, LoaderCircle, Redo, Undo } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { useFormatter, useTranslations } from "next-intl";
 import { Fragment, type ReactNode, useEffect, useState } from "react";
 import { typeTheme } from "@/components/feed/cards/card-theme";
 import { cn } from "@/lib/utils";
 import type { DocumentStatus } from "@/types/api.types";
 import { TEXT_BLOCKS } from "./editor-toolbar";
 import { TypographySelector } from "./toolbar";
-
-const STATUS_LABEL: Record<DocumentStatus, string> = {
-  draft: "Rascunho",
-  published: "Publicado",
-  archived: "Arquivado",
-};
 
 export interface DocumentPaperHeaderProps {
   editor: Editor;
@@ -34,10 +29,7 @@ export interface DocumentPaperHeaderProps {
   save?: { lastSaved: Date | null; isSaving: boolean };
 }
 
-const TIME = new Intl.DateTimeFormat("pt-BR", {
-  hour: "2-digit",
-  minute: "2-digit",
-});
+const TIME = { hour: "2-digit", minute: "2-digit" } as const;
 
 export const ACTION =
   "flex items-center gap-1.5 h-8 px-2 rounded-xs text-xs font-mono uppercase tracking-wider transition-colors hover:bg-current/10 disabled:opacity-30 disabled:pointer-events-none outline-none focus-visible:ring-2 focus-visible:ring-current [&_svg]:size-4";
@@ -84,6 +76,8 @@ function SavePill({
   lastSaved: Date | null;
   isSaving: boolean;
 }) {
+  const t = useTranslations("editor");
+  const format = useFormatter();
   const [shown, setShown] = useState<"saving" | "saved" | null>(null);
   const reduce = useReducedMotion();
 
@@ -119,12 +113,13 @@ function SavePill({
             {shown === "saving" ? (
               <>
                 <LoaderCircle aria-hidden className="size-3 animate-spin" />
-                Salvando
+                {t("savingPill")}
               </>
             ) : (
               <>
                 <Check aria-hidden className="size-3" />
-                Salvo às {lastSaved && TIME.format(lastSaved)}
+                {lastSaved &&
+                  t("savedAt", { time: format.dateTime(lastSaved, TIME) })}
               </>
             )}
           </motion.span>
@@ -157,6 +152,9 @@ export function DocumentPaperHeader({
   save,
   actions,
 }: DocumentPaperHeaderProps) {
+  const t = useTranslations("editor");
+  const tb = useTranslations("blocks");
+  const tStatus = useTranslations("documentStatus");
   const state = useEditorState({
     editor,
     selector: ({ editor: e }) => ({
@@ -187,7 +185,7 @@ export function DocumentPaperHeader({
               status === "published" ? "font-bold" : "opacity-80",
             )}
           >
-            {STATUS_LABEL[status]}
+            {tStatus(status)}
           </span>
         </div>
         <Dip />
@@ -214,7 +212,7 @@ export function DocumentPaperHeader({
       >
         <div
           role="toolbar"
-          aria-label="Formatação"
+          aria-label={t("formatting")}
           inert={locked}
           className={cn(
             "relative z-1 flex min-w-0 flex-1 flex-wrap items-center gap-0.5",
@@ -229,12 +227,12 @@ export function DocumentPaperHeader({
           />
           <Divider />
           {TEXT_BLOCKS.map((block, i) => (
-            <Fragment key={block.label}>
+            <Fragment key={block.id}>
               {i === 4 && <Divider />}
               <button
                 type="button"
-                title={block.label}
-                aria-label={block.label}
+                title={tb(`items.${block.id}`)}
+                aria-label={tb(`items.${block.id}`)}
                 aria-pressed={state.active[i]}
                 onMouseDown={(event) => event.preventDefault()}
                 onClick={() => block.run(editor)}
@@ -252,8 +250,8 @@ export function DocumentPaperHeader({
             <Divider />
             <button
               type="button"
-              aria-label="Desfazer"
-              title="Desfazer"
+              aria-label={t("undo")}
+              title={t("undo")}
               disabled={!state.undo}
               onClick={() => editor.chain().focus().undo().run()}
               className={ACTION}
@@ -262,8 +260,8 @@ export function DocumentPaperHeader({
             </button>
             <button
               type="button"
-              aria-label="Refazer"
-              title="Refazer"
+              aria-label={t("redo")}
+              title={t("redo")}
               disabled={!state.redo}
               onClick={() => editor.chain().focus().redo().run()}
               className={ACTION}

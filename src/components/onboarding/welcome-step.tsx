@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { Badge } from "@/components/badge";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
@@ -34,26 +35,14 @@ interface Props {
   };
 }
 
-const errorMessages: Record<string, string> = {
-  required: "Campo obrigatório",
-  too_short: "Use pelo menos 3 caracteres",
-  too_long: "Use no máximo 30 caracteres",
-  invalid_format: "Apenas letras, números e underscore",
-};
+const USERNAME_ERRORS = [
+  "required",
+  "too_short",
+  "too_long",
+  "invalid_format",
+] as const;
 
-const t = (key: string) => errorMessages[key] ?? key;
-
-const ROADMAP = [
-  {
-    title: "Crachá",
-    text: "Seu nome e endereço público. Clique nele para ver o verso.",
-  },
-  {
-    title: "Apps",
-    text: "As ferramentas que entram no seu menu e no dashboard.",
-  },
-  { title: "Confirmação", text: "Você revisa, a gente ativa tudo." },
-];
+const ROADMAP = ["badge", "apps", "confirm"] as const;
 
 export const WelcomeStep = ({
   username,
@@ -61,6 +50,11 @@ export const WelcomeStep = ({
   needsUsername = false,
   badge,
 }: Props) => {
+  const t = useTranslations("onboarding");
+  const usernameError = (key?: string) =>
+    USERNAME_ERRORS.find((k) => k === key)
+      ? t(`usernameErrors.${key as (typeof USERNAME_ERRORS)[number]}`)
+      : (key ?? "");
   const setUser = useAuthStore((state) => state.setUser);
 
   const form = useForm<OnboardingFormData>({
@@ -69,7 +63,7 @@ export const WelcomeStep = ({
   });
   const typed = form.watch("username");
   const handle = needsUsername
-    ? typed || "seu_usuario"
+    ? typed || t("usernamePlaceholder")
     : (badge?.handle ?? username);
 
   const mutation = useMutation({
@@ -97,7 +91,7 @@ export const WelcomeStep = ({
         return;
       }
       form.setError("root", {
-        message: body?.message ?? "Não foi possível salvar o username.",
+        message: body?.message ?? t("usernameSaveError"),
       });
     },
   });
@@ -107,7 +101,7 @@ export const WelcomeStep = ({
       <div className={BADGE_LAYOUT}>
         <div>
           <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.02] mb-6 wrap-anywhere">
-            {needsUsername ? "Boas-vindas ao " : "Olá, "}
+            {needsUsername ? t("welcomeTo") : t("hello")}
             <span className="text-blklight-500 dark:text-blklight-400">
               {needsUsername ? "Blklight" : username}
             </span>
@@ -115,9 +109,7 @@ export const WelcomeStep = ({
           </h1>
 
           <p className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-xl mb-10">
-            {needsUsername
-              ? "Antes de começar, escolha o username do seu perfil e dos seus textos publicados. Ele já aparece no crachá ao lado."
-              : "Este é o seu crachá na plataforma. Falta escolher os apps que entram nele; depois é só confirmar."}
+            {needsUsername ? t("leadNeedsUsername") : t("lead")}
           </p>
 
           {needsUsername ? (
@@ -129,12 +121,12 @@ export const WelcomeStep = ({
               <Field
                 data-invalid={form.formState.errors.username ? true : undefined}
               >
-                <FieldLabel htmlFor="username">Username</FieldLabel>
+                <FieldLabel htmlFor="username">{t("username")}</FieldLabel>
                 <InputGroup>
                   <InputGroupInput
                     {...form.register("username")}
                     id="username"
-                    placeholder="seu_usuario"
+                    placeholder={t("usernamePlaceholder")}
                     autoComplete="username"
                     aria-invalid={!!form.formState.errors.username}
                   />
@@ -144,8 +136,8 @@ export const WelcomeStep = ({
                   <FieldError
                     errors={[
                       {
-                        message: t(
-                          form.formState.errors.username.message ?? "",
+                        message: usernameError(
+                          form.formState.errors.username.message,
                         ),
                       },
                     ]}
@@ -163,15 +155,16 @@ export const WelcomeStep = ({
 
           <ol className="mt-12 grid max-w-xl gap-4 border-t border-border pt-6 sm:grid-cols-3">
             {ROADMAP.map((item, i) => (
-              <li
-                key={item.title}
-                className={cn(i > 0 && "text-muted-foreground")}
-              >
+              <li key={item} className={cn(i > 0 && "text-muted-foreground")}>
                 <p className="font-mono text-xs">
                   {String(i + 1).padStart(2, "0")}
                 </p>
-                <p className="mt-1 font-sans text-sm font-bold">{item.title}</p>
-                <p className="mt-1 text-xs leading-relaxed">{item.text}</p>
+                <p className="mt-1 font-sans text-sm font-bold">
+                  {t(`roadmap.${item}.title`)}
+                </p>
+                <p className="mt-1 text-xs leading-relaxed">
+                  {t(`roadmap.${item}.text`)}
+                </p>
               </li>
             ))}
           </ol>
@@ -200,11 +193,11 @@ export const WelcomeStep = ({
       {needsUsername ? (
         <StepFooter
           form="username-form"
-          label={mutation.isPending ? "Salvando…" : "Salvar e continuar"}
+          label={mutation.isPending ? t("saving") : t("saveAndContinue")}
           disabled={mutation.isPending}
         />
       ) : (
-        <StepFooter label="Começar" onNext={onNext} />
+        <StepFooter label={t("start")} onNext={onNext} />
       )}
     </div>
   );

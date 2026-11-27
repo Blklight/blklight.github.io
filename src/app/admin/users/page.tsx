@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import { useDeferredValue, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -35,6 +36,8 @@ import type { AdminUsersQueryParams } from "@/types/api.types";
 const LIMIT = 20;
 
 export default function AdminUsersPage() {
+  const t = useTranslations("admin");
+  const locale = useLocale();
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [role, setRole] = useState<"user" | "admin" | "all">("all");
@@ -60,17 +63,17 @@ export default function AdminUsersPage() {
 
       <div className="flex items-center justify-between mb-8">
         <div className="text-[10px] md:text-xs uppercase tracking-[0.3em] text-muted-foreground">
-          admin / usuários
+          {t("crumbUsers")}
         </div>
         <div className="text-[10px] md:text-xs uppercase tracking-widest text-muted-foreground">
           {isFetching
-            ? "[ carregando... ]"
-            : `[ ${data?.total ?? 0} usuários ]`}
+            ? t("loading")
+            : t("usersCount", { count: data?.total ?? 0 })}
         </div>
       </div>
 
       <h1 className="text-4xl md:text-5xl font-bold tracking-tight uppercase leading-[0.95] mb-8">
-        Usuários
+        {t("usersTitle")}
         <span className="inline-block border-b-2 border-ink pb-1">.</span>
       </h1>
 
@@ -82,11 +85,11 @@ export default function AdminUsersPage() {
             setSearch(e.target.value);
             setPage(1);
           }}
-          placeholder="buscar por username, email ou displayName"
+          placeholder={t("usersSearch")}
           className="max-w-xs rounded-none border hairline bg-transparent"
         />
         <Select
-          items={{ all: "todas", user: "user", admin: "admin" }}
+          items={{ all: t("allRoles"), user: "user", admin: "admin" }}
           value={role}
           onValueChange={(v) => {
             setRole(v as "user" | "admin" | "all");
@@ -97,13 +100,13 @@ export default function AdminUsersPage() {
             <SelectValue placeholder="role" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">todas</SelectItem>
+            <SelectItem value="all">{t("allRoles")}</SelectItem>
             <SelectItem value="user">user</SelectItem>
             <SelectItem value="admin">admin</SelectItem>
           </SelectContent>
         </Select>
         <Select
-          items={{ false: "não deletados", true: "deletados" }}
+          items={{ false: t("notDeleted"), true: t("deletedPlural") }}
           value={deleted}
           onValueChange={(v) => {
             setDeleted(v as "false" | "true");
@@ -111,32 +114,32 @@ export default function AdminUsersPage() {
           }}
         >
           <SelectTrigger className="rounded-none border hairline">
-            <SelectValue placeholder="deletados" />
+            <SelectValue placeholder={t("deletedPlural")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="false">não deletados</SelectItem>
-            <SelectItem value="true">deletados</SelectItem>
+            <SelectItem value="false">{t("notDeleted")}</SelectItem>
+            <SelectItem value="true">{t("deletedPlural")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       {isPending && (
         <div className="text-xs uppercase tracking-widest text-muted-foreground animate-pulse">
-          [ carregando usuários... ]
+          {t("loadingUsers")}
         </div>
       )}
 
       {isError && (
         <div className="border hairline p-8 max-w-md">
           <p className="text-xs uppercase tracking-widest text-muted-foreground mb-6">
-            {"// falha ao carregar usuários"}
+            {t("usersError")}
           </p>
           <button
             type="button"
             onClick={() => refetch()}
             className="text-xs uppercase tracking-widest border hairline px-4 py-2 hover:bg-ink hover:text-background transition-colors"
           >
-            [ tentar novamente ]
+            {t("retry")}
           </button>
         </div>
       )}
@@ -145,12 +148,12 @@ export default function AdminUsersPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Usuário</TableHead>
+              <TableHead>{t("colUser")}</TableHead>
               <TableHead>Role</TableHead>
-              <TableHead>Verificado</TableHead>
+              <TableHead>{t("colVerified")}</TableHead>
               <TableHead>Onboarding</TableHead>
-              <TableHead>Criado em</TableHead>
-              <TableHead>Deletado</TableHead>
+              <TableHead>{t("colCreated")}</TableHead>
+              <TableHead>{t("colDeleted")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -177,14 +180,14 @@ export default function AdminUsersPage() {
                     variant={u.emailVerified ? "default" : "outline"}
                     className="rounded-none border hairline"
                   >
-                    {u.emailVerified ? "sim" : "não"}
+                    {u.emailVerified ? t("yes") : t("no")}
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  {u.onboardingComplete ? "completo" : "pendente"}
+                  {u.onboardingComplete ? t("complete") : t("pending")}
                 </TableCell>
                 <TableCell>
-                  {new Date(u.createdAt).toLocaleDateString("pt-BR")}
+                  {new Date(u.createdAt).toLocaleDateString(locale)}
                 </TableCell>
                 <TableCell>
                   {u.deletedAt ? (
@@ -192,7 +195,7 @@ export default function AdminUsersPage() {
                       variant="destructive"
                       className="rounded-none border hairline"
                     >
-                      deletado
+                      {t("deleted")}
                     </Badge>
                   ) : (
                     "—"
@@ -206,7 +209,7 @@ export default function AdminUsersPage() {
 
       {data && data.items.length === 0 && (
         <div className="text-xs uppercase tracking-widest text-muted-foreground">
-          [ nenhum usuário encontrado ]
+          {t("noUsers")}
         </div>
       )}
 
@@ -215,6 +218,7 @@ export default function AdminUsersPage() {
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
+              text={t("previous")}
               aria-disabled={page <= 1}
               onClick={(e) => {
                 e.preventDefault();
@@ -227,6 +231,7 @@ export default function AdminUsersPage() {
 
           <PaginationItem>
             <PaginationNext
+              text={t("next")}
               aria-disabled={page >= totalPages}
               onClick={(e) => {
                 e.preventDefault();

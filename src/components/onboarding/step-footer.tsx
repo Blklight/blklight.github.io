@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { type ReactNode, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ChamferButton } from "@/components/ui/chamfer-button";
@@ -24,12 +25,13 @@ const SKIP_ENTER =
 export const StepFooter = ({
   status,
   onBack,
-  backLabel = "Voltar",
+  backLabel,
   label,
   onNext,
   form,
   disabled = false,
 }: Props) => {
+  const t = useTranslations("onboarding");
   useEffect(() => {
     if (disabled || form) return;
     const onKey = (e: KeyboardEvent) => {
@@ -52,7 +54,7 @@ export const StepFooter = ({
             onClick={onBack}
             className="-ml-3 font-mono text-xs uppercase tracking-wider rounded-xs"
           >
-            {backLabel}
+            {backLabel ?? t("back")}
           </Button>
         )}
         {status && (
@@ -64,7 +66,7 @@ export const StepFooter = ({
       <div className="flex items-center gap-4">
         {!form && (
           <p className="hidden sm:flex items-center gap-2 text-xs text-muted-foreground">
-            ou <Kbd className="border">Enter</Kbd>
+            {t("or")} <Kbd className="border">Enter</Kbd>
           </p>
         )}
         <ChamferButton

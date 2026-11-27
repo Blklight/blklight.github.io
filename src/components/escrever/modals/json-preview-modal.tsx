@@ -2,6 +2,7 @@
 
 import { X } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 
 export function JsonPreviewModal({
@@ -15,6 +16,7 @@ export function JsonPreviewModal({
   data: object | null;
   action: "save" | "publish";
 }) {
+  const t = useTranslations("editor");
   if (!isOpen || !data) return null;
 
   return (
@@ -40,8 +42,8 @@ export function JsonPreviewModal({
             />
             <h3 className="font-mono text-sm uppercase tracking-wider">
               {action === "publish"
-                ? "Preview de Publicacao"
-                : "Preview de Salvamento"}
+                ? t("jsonPublishTitle")
+                : t("jsonSaveTitle")}
             </h3>
           </div>
           <button
@@ -65,7 +67,7 @@ export function JsonPreviewModal({
         {/* Modal Footer */}
         <div className="flex items-center justify-between px-6 py-4 border-t border-border bg-secondary/30">
           <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">
-            Este JSON seria enviado para o banco de dados
+            {t("jsonHint")}
           </p>
           <div className="flex items-center gap-2">
             <Button
@@ -76,14 +78,14 @@ export function JsonPreviewModal({
               }}
               className="font-mono text-xs uppercase tracking-wider"
             >
-              Copiar JSON
+              {t("copyJson")}
             </Button>
             <Button
               size="sm"
               onClick={onClose}
               className="font-mono text-xs uppercase tracking-wider"
             >
-              Fechar
+              {t("close")}
             </Button>
           </div>
         </div>

@@ -3,7 +3,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, FileText, PenLine } from "lucide-react";
 import Link from "next/link";
-import { typeTheme } from "@/components/feed/cards/card-theme";
+import { useFormatter, useTranslations } from "next-intl";
+import { typeKey, typeTheme } from "@/components/feed/cards/card-theme";
 import { Navbar } from "@/components/navbar";
 import { AppTile } from "@/components/onboarding/app-tile";
 import { DitherSpotlight } from "@/components/onboarding/dither-spotlight";
@@ -28,21 +29,8 @@ type MyApp = Pick<PlatformApp, "slug" | "name" | "description"> & {
   id: string;
 };
 
-const STATUS_LABEL: Record<DocumentStatus, string> = {
-  draft: "Rascunho",
-  published: "Publicado",
-  archived: "Arquivado",
-};
-
-const SHORT_DATE = new Intl.DateTimeFormat("pt-BR", {
-  day: "2-digit",
-  month: "short",
-});
-const TODAY = new Intl.DateTimeFormat("pt-BR", {
-  weekday: "long",
-  day: "numeric",
-  month: "long",
-});
+const SHORT_DATE = { day: "2-digit", month: "short" } as const;
+const TODAY = { weekday: "long", day: "numeric", month: "long" } as const;
 
 const CTA = "group font-mono text-xs uppercase tracking-wider rounded-xs";
 
@@ -58,6 +46,7 @@ function SectionTitle({ id, children }: { id: string; children: string }) {
 }
 
 function StatusChip({ status }: { status: DocumentStatus }) {
+  const t = useTranslations("documentStatus");
   return (
     <span
       className={cn(
@@ -67,13 +56,17 @@ function StatusChip({ status }: { status: DocumentStatus }) {
           : "border-dashed border-foreground/50 text-muted-foreground",
       )}
     >
-      {STATUS_LABEL[status]}
+      {t(status)}
     </span>
   );
 }
 
 /** The newest draft, big, so the next session starts where the last one ended. */
 function ContinueCard({ doc }: { doc: DocumentSummary }) {
+  const t = useTranslations("dashboard");
+  const tc = useTranslations("common");
+  const tk = useTranslations("kinds");
+  const format = useFormatter();
   const theme = typeTheme(doc.typeName);
   return (
     <FilletCard
@@ -86,14 +79,14 @@ function ContinueCard({ doc }: { doc: DocumentSummary }) {
       <DitherSpotlight radius={180} className={theme.text} />
       <div className="relative h-full min-h-[inherit] flex flex-col p-6 md:p-8 pointer-events-none">
         <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
-          Continuar escrevendo · {theme.label}
+          {t("keepWriting")} · {tk(`${typeKey(doc.typeName)}.label`)}
         </p>
         <h3 className="mt-3 font-sans text-3xl md:text-4xl font-bold tracking-tight leading-[1.05] text-balance">
           <Link
             href={`/editar/${doc.id}`}
             className="pointer-events-auto outline-none after:absolute after:inset-0 focus-visible:after:ring-2 focus-visible:after:ring-inset focus-visible:after:ring-current hover:underline underline-offset-4 decoration-2"
           >
-            {doc.title || "Sem título"}
+            {doc.title || tc("untitled")}
           </Link>
         </h3>
         {doc.abstract && (
@@ -103,10 +96,12 @@ function ContinueCard({ doc }: { doc: DocumentSummary }) {
         )}
         <div className="mt-auto pt-6 flex items-center justify-between gap-4">
           <span className="text-xs text-muted-foreground">
-            Editado em {SHORT_DATE.format(new Date(doc.updatedAt))}
+            {t("editedOn", {
+              date: format.dateTime(new Date(doc.updatedAt), SHORT_DATE),
+            })}
           </span>
           <span className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider">
-            Continuar
+            {t("continue")}
             <ArrowRight className="size-4 transition-transform group-hover/card:translate-x-1" />
           </span>
         </div>
@@ -116,6 +111,7 @@ function ContinueCard({ doc }: { doc: DocumentSummary }) {
 }
 
 function StartCard() {
+  const t = useTranslations("dashboard");
   return (
     <FilletCard
       corners={["tr", "bl"]}
@@ -127,12 +123,12 @@ function StartCard() {
     >
       <div className="h-full min-h-[inherit] flex flex-col p-6 md:p-8">
         <p className="font-mono text-xs uppercase tracking-wider text-light/60">
-          Página em branco
+          {t("blankPage")}
         </p>
         <p className="mt-3 font-sans text-4xl md:text-5xl font-black uppercase tracking-tighter leading-[0.9] text-cyber-yellow-400">
-          Seu primeiro texto
+          {t("firstTextTop")}
           <br />
-          começa aqui.
+          {t("firstTextBottom")}
         </p>
         <Link
           href="/escrever"
@@ -142,7 +138,7 @@ function StartCard() {
             "mt-auto self-start bg-light text-dark hover:bg-light/90",
           )}
         >
-          Abrir o editor
+          {t("openEditor")}
           <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
         </Link>
       </div>
@@ -151,6 +147,10 @@ function StartCard() {
 }
 
 function Dashboard() {
+  const t = useTranslations("dashboard");
+  const tk = useTranslations("kinds");
+  const tc = useTranslations("common");
+  const format = useFormatter();
   const user = useAuthStore((s) => s.user);
   const { data: profile } = useCurrentProfile(true);
   const docs = useMyDocuments({ limit: 8 });
@@ -174,10 +174,10 @@ function Dashboard() {
       <header className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end mb-10">
         <div>
           <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground first-letter:uppercase">
-            {TODAY.format(new Date())}
+            {format.dateTime(new Date(), TODAY)}
           </p>
           <h1 className="mt-2 font-sans text-5xl md:text-7xl font-bold tracking-tighter leading-[0.95] wrap-anywhere">
-            Olá,{" "}
+            {t("hello")}{" "}
             <span className="text-blklight-500 dark:text-blklight-400">
               {name}
             </span>
@@ -190,7 +190,7 @@ function Dashboard() {
             className={cn(buttonVariants({ size: "lg" }), CTA, "h-10")}
           >
             <PenLine className="size-4" />
-            Novo texto
+            {t("newText")}
           </Link>
         </div>
       </header>
@@ -207,12 +207,12 @@ function Dashboard() {
 
           <section aria-labelledby="textos">
             <div className="flex items-baseline justify-between gap-4">
-              <SectionTitle id="textos">Seus textos</SectionTitle>
+              <SectionTitle id="textos">{t("yourTexts")}</SectionTitle>
             </div>
             {docs.isError ? (
               <div className="flex items-center gap-4">
                 <p className="text-sm text-muted-foreground">
-                  Não foi possível carregar seus textos.
+                  {t("loadError")}
                 </p>
                 <button
                   type="button"
@@ -222,15 +222,13 @@ function Dashboard() {
                     "rounded-xs",
                   )}
                 >
-                  Tentar novamente
+                  {tc("retry")}
                 </button>
               </div>
             ) : rest.length === 0 && !docs.isPending ? (
               <p className="flex items-center gap-3 text-sm text-muted-foreground">
                 <FileText className="size-4" />
-                {draft
-                  ? "Nenhum outro texto por enquanto."
-                  : "Você ainda não escreveu nada."}
+                {draft ? t("noOtherTexts") : t("noTexts")}
               </p>
             ) : (
               <ul className="divide-y divide-border">
@@ -249,11 +247,16 @@ function Dashboard() {
                       />
                       <span className="min-w-0 flex-1">
                         <span className="block truncate font-medium group-hover:underline underline-offset-4">
-                          {doc.title || "Sem título"}
+                          {doc.title || tc("untitled")}
                         </span>
                         <span className="block text-xs text-muted-foreground">
-                          {typeTheme(doc.typeName).label} · editado em{" "}
-                          {SHORT_DATE.format(new Date(doc.updatedAt))}
+                          {tk(`${typeKey(doc.typeName)}.label`)} ·{" "}
+                          {t("editedOnLower", {
+                            date: format.dateTime(
+                              new Date(doc.updatedAt),
+                              SHORT_DATE,
+                            ),
+                          })}
                         </span>
                       </span>
                       <StatusChip status={doc.status} />
@@ -267,7 +270,7 @@ function Dashboard() {
                 href={`/${user.username}`}
                 className="mt-4 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
               >
-                Ver meu perfil público
+                {t("viewProfile")}
                 <ArrowRight className="size-3.5" />
               </Link>
             )}
@@ -276,7 +279,7 @@ function Dashboard() {
 
         <aside className="flex flex-col gap-10 min-w-0">
           <section aria-labelledby="apps">
-            <SectionTitle id="apps">Seus apps</SectionTitle>
+            <SectionTitle id="apps">{t("yourApps")}</SectionTitle>
             {apps.data && apps.data.length > 0 ? (
               <ul className="grid grid-cols-2 gap-3">
                 {apps.data.map((app) => (
@@ -290,13 +293,13 @@ function Dashboard() {
               </ul>
             ) : (
               <p className="text-sm text-muted-foreground">
-                {apps.isPending ? "Carregando…" : "Nenhum app ativo."}
+                {apps.isPending ? tc("loading") : t("noApps")}
               </p>
             )}
           </section>
 
           <section aria-labelledby="do-feed">
-            <SectionTitle id="do-feed">Do feed</SectionTitle>
+            <SectionTitle id="do-feed">{t("fromFeed")}</SectionTitle>
             <ul className="flex flex-col gap-1">
               {feed.data?.items.map((doc) => (
                 <li key={doc.id}>
@@ -325,7 +328,7 @@ function Dashboard() {
               href="/feed"
               className="mt-3 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider hover:underline underline-offset-4"
             >
-              Abrir o feed
+              {t("openFeed")}
               <ArrowRight className="size-3.5" />
             </Link>
           </section>

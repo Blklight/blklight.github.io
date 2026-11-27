@@ -1,8 +1,9 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { HoloSeal } from "@/components/stamps/org-stamps";
 import { cn } from "@/lib/utils";
-import { typeTheme } from "../card-theme";
+import { typeKey } from "../card-theme";
 import { CardMeta, CardTitle, cardFont } from "../parts";
 import { type CardProps, Shell, tall, wide } from "../shell";
 import { documentStamp } from "./postal-card";
@@ -33,7 +34,10 @@ const Flap = ({ className }: { className: string }) => (
 
 /** Envelope: charcoal stock, the flap pressed in, sealed with a foil Blklight diamond. */
 export function EnvelopeCard({ data, size }: CardProps) {
-  const stamp = documentStamp(data);
+  const t = useTranslations("feedCard");
+  const tk = useTranslations("kinds");
+  const typeLabel = tk(`${typeKey(data.typeName)}.label`);
+  const stamp = documentStamp(data, { typeLabel, status: t("published") });
   const big = wide(size) || tall(size);
   return (
     <Shell
@@ -53,7 +57,7 @@ export function EnvelopeCard({ data, size }: CardProps) {
           )}
         />
         <p className="absolute top-4 left-5 font-mono text-[0.6rem] uppercase tracking-wider opacity-60">
-          {typeTheme(data.typeName).label}
+          {typeLabel}
         </p>
         {big && (
           <p className="absolute top-4 right-5 font-mono text-[0.6rem] uppercase tracking-wider opacity-60">

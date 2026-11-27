@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AuthView } from "@/components/auth-view";
+import { I18nProvider } from "@/components/i18n-provider";
 
 const replace = vi.fn();
 let search = "";
@@ -16,9 +17,11 @@ vi.mock("@/lib/api-client", () => ({ apiClient: { post: vi.fn() } }));
 
 function renderView() {
   return render(
-    <QueryClientProvider client={new QueryClient()}>
-      <AuthView />
-    </QueryClientProvider>,
+    <I18nProvider>
+      <QueryClientProvider client={new QueryClient()}>
+        <AuthView />
+      </QueryClientProvider>
+    </I18nProvider>,
   );
 }
 

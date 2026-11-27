@@ -1,36 +1,42 @@
 "use client";
 
 import { BookOpen, Laptop, Moon, Sun } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useRef } from "react";
 import { flushSync } from "react-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { useLanguageStore } from "@/store/useLanguageStore";
+import { type Language, useLanguageStore } from "@/store/useLanguageStore";
 
 type Theme = "light" | "dark" | "book" | "system";
 
-const OPTIONS: { theme: Theme; label: string; Icon: typeof Sun }[] = [
-  { theme: "light", label: "Claro", Icon: Sun },
-  { theme: "dark", label: "Escuro", Icon: Moon },
-  { theme: "book", label: "Livro", Icon: BookOpen },
-  { theme: "system", label: "Sistema", Icon: Laptop },
+const OPTIONS: { theme: Theme; Icon: typeof Sun }[] = [
+  { theme: "light", Icon: Sun },
+  { theme: "dark", Icon: Moon },
+  { theme: "book", Icon: BookOpen },
+  { theme: "system", Icon: Laptop },
 ];
+
+const LANGUAGES: Language[] = ["pt-br", "en-us"];
 
 export const AnimatedThemeToggler = ({ className }: { className?: string }) => {
   const { setTheme } = useTheme();
+  const t = useTranslations();
   const language = useLanguageStore((s) => s.language);
+  const setLanguage = useLanguageStore((s) => s.setLanguage);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-
-  const label =
-    language === "en-us"
-      ? "Toggle light and dark modes"
-      : "Alternar modos de luz e escuro";
+  const label = t("theme.toggle");
 
   const handleChangeTheme = async (theme: Theme) => {
     if (!buttonRef.current || !document.startViewTransition) {
@@ -103,16 +109,35 @@ export const AnimatedThemeToggler = ({ className }: { className?: string }) => {
         align="end"
         className="w-auto rounded-xs border-[#252525] dark:border-[#eaeaea]"
       >
-        {OPTIONS.map(({ theme, label: optionLabel, Icon }) => (
+        {OPTIONS.map(({ theme, Icon }) => (
           <DropdownMenuItem
             key={theme}
             className="cursor-pointer rounded-xs"
             onClick={() => handleChangeTheme(theme)}
           >
             <Icon className="mr-1 h-4 w-4" />
-            {optionLabel}
+            {t(`theme.${theme}`)}
           </DropdownMenuItem>
         ))}
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>{t("language.label")}</DropdownMenuLabel>
+          <DropdownMenuRadioGroup
+            value={language}
+            onValueChange={(value) => setLanguage(value as Language)}
+          >
+            {LANGUAGES.map((lang) => (
+              <DropdownMenuRadioItem
+                key={lang}
+                value={lang}
+                lang={lang}
+                className="cursor-pointer rounded-xs"
+              >
+                {t(`language.${lang}`)}
+              </DropdownMenuRadioItem>
+            ))}
+          </DropdownMenuRadioGroup>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );

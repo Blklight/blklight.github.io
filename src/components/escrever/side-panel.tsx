@@ -1,6 +1,7 @@
 "use client";
 
 import { Palette, SwatchBook, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import type { StoreApi, UseBoundStore } from "zustand";
 import { useDocumentDesign } from "@/components/document/use-document-design";
@@ -23,9 +24,9 @@ import type { DocumentDesignStore } from "@/store/create-document-design-store";
 
 export type SidePanel = "themes" | "design";
 
-const SIDE_TABS: { id: SidePanel; label: string; icon: ReactNode }[] = [
-  { id: "themes", label: "Temas", icon: <SwatchBook /> },
-  { id: "design", label: "Design", icon: <Palette /> },
+const SIDE_TABS: { id: SidePanel; icon: ReactNode }[] = [
+  { id: "themes", icon: <SwatchBook /> },
+  { id: "design", icon: <Palette /> },
 ];
 
 /**
@@ -43,9 +44,10 @@ export function SideTabs({
   vertical?: boolean;
   className?: string;
 }) {
+  const t = useTranslations("design");
   return (
     <fieldset
-      aria-label="Painel lateral"
+      aria-label={t("sidePanel")}
       className={cn("flex gap-1", vertical && "flex-col", className)}
     >
       {SIDE_TABS.map((tab) => (
@@ -71,7 +73,7 @@ export function SideTabs({
         >
           {tab.icon}
           <span className={vertical ? undefined : "sr-only sm:not-sr-only"}>
-            {tab.label}
+            {t(`sideTabs.${tab.id}`)}
           </span>
         </button>
       ))}
@@ -82,7 +84,7 @@ export function SideTabs({
 /** Shell of the side panel: title, close button and a scrolling body. */
 export function SidePanelFrame({
   title,
-  closeLabel = "Fechar painel",
+  closeLabel,
   onClose,
   children,
 }: {
@@ -91,6 +93,7 @@ export function SidePanelFrame({
   onClose: () => void;
   children: ReactNode;
 }) {
+  const t = useTranslations("design");
   return (
     <section
       aria-label={title}
@@ -100,8 +103,8 @@ export function SidePanelFrame({
         <h2 className="font-mono text-xs uppercase tracking-wider">{title}</h2>
         <button
           type="button"
-          aria-label={closeLabel}
-          title={closeLabel}
+          aria-label={closeLabel ?? t("closePanel")}
+          title={closeLabel ?? t("closePanel")}
           onClick={onClose}
           className="inline-flex size-7 items-center justify-center rounded-xs hover:bg-secondary outline-none focus-visible:ring-2 focus-visible:ring-foreground"
         >
@@ -130,6 +133,7 @@ export function DesignPanel({
   tabs?: DesignTab[];
   signatureContext?: SignatureContext | null;
 }) {
+  const t = useTranslations("design");
   const design = useDocumentDesign(designStore);
   const presets = useSavedPresets();
   const ctx: DesignContext = {
@@ -160,7 +164,7 @@ export function DesignPanel({
   return (
     <div className="flex flex-col">
       <nav
-        aria-label="Partes do documento"
+        aria-label={t("parts")}
         className="flex flex-wrap gap-1 border-b border-border p-3"
       >
         {DESIGN_TABS.filter((item) => !tabs || tabs.includes(item.id)).map(
@@ -178,7 +182,7 @@ export function DesignPanel({
               )}
             >
               {item.icon}
-              {item.label}
+              {t(`tabs.${item.id}`)}
             </button>
           ),
         )}
@@ -188,10 +192,6 @@ export function DesignPanel({
   );
 }
 
-const TAB_LABEL = Object.fromEntries(
-  DESIGN_TABS.map((item) => [item.id, item.label]),
-) as Record<DesignTab, string>;
-
 /**
  * A part of the paper that can be picked in design mode: dashed outline and
  * label on hover, solid when it is the part being edited. Outside design mode
@@ -200,7 +200,7 @@ const TAB_LABEL = Object.fromEntries(
 export function DesignRegion({
   active,
   tab,
-  label = TAB_LABEL[tab],
+  label: labelProp,
   selected,
   onSelect,
   className,
@@ -214,13 +214,15 @@ export function DesignRegion({
   className?: string;
   children?: ReactNode;
 }) {
+  const t = useTranslations("design");
   if (!active) return <div className={className}>{children}</div>;
+  const label = labelProp ?? t(`tabs.${tab}`);
   return (
     <div className={cn("group/region relative", className)}>
       {children}
       <button
         type="button"
-        aria-label={`Editar ${label.toLowerCase()}`}
+        aria-label={t("editRegion", { part: label.toLowerCase() })}
         aria-pressed={selected}
         onClick={() => onSelect(tab)}
         className={cn(

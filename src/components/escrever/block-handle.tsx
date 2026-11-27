@@ -3,6 +3,7 @@
 import { NodeSelection } from "@tiptap/pm/state";
 import type { Editor } from "@tiptap/react";
 import { Copy, CopyPlus, GripVertical, Trash2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { TEXT_BLOCKS } from "./editor-toolbar";
@@ -22,6 +23,7 @@ const ITEM =
  * wrapper (position: relative), like the "+".
  */
 export function BlockHandle({ editor }: { editor: Editor }) {
+  const t = useTranslations("blocks");
   const [hovered, setHovered] = useState<Hovered | null>(null);
   const [menu, setMenu] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -113,9 +115,9 @@ export function BlockHandle({ editor }: { editor: Editor }) {
       <button
         type="button"
         draggable
-        aria-label="Arrastar ou abrir opções do bloco"
+        aria-label={t("handleLabel")}
         aria-expanded={menu}
-        title="Arraste para mover · clique para opções"
+        title={t("handleHint")}
         onMouseDown={(event) => event.stopPropagation()}
         onClick={() => setMenu((value) => !value)}
         onDragStart={(event) => {
@@ -140,15 +142,15 @@ export function BlockHandle({ editor }: { editor: Editor }) {
       {menu && (
         <div
           role="menu"
-          aria-label="Opções do bloco"
+          aria-label={t("options")}
           className="absolute top-4 left-0 z-30 w-56 rounded-md border-2 border-foreground bg-popover p-1.5 text-popover-foreground shadow-[0_8px_24px_-12px_rgb(0_0_0/0.45)]"
         >
           <p className="px-2 pb-1 font-mono text-[0.65rem] uppercase tracking-wider text-muted-foreground">
-            Transformar em
+            {t("turnInto")}
           </p>
           {TEXT_BLOCKS.map((block) => (
             <button
-              key={block.label}
+              key={block.id}
               type="button"
               role="menuitem"
               className={ITEM}
@@ -159,7 +161,7 @@ export function BlockHandle({ editor }: { editor: Editor }) {
               }}
             >
               {block.icon}
-              {block.label}
+              {t(`items.${block.id}`)}
             </button>
           ))}
           <span aria-hidden className="my-1 block h-px bg-border" />
@@ -177,7 +179,7 @@ export function BlockHandle({ editor }: { editor: Editor }) {
             }}
           >
             <CopyPlus />
-            Duplicar
+            {t("duplicate")}
           </button>
           <button
             type="button"
@@ -189,7 +191,7 @@ export function BlockHandle({ editor }: { editor: Editor }) {
             }}
           >
             <Copy />
-            Copiar texto
+            {t("copyText")}
           </button>
           <button
             type="button"
@@ -208,7 +210,7 @@ export function BlockHandle({ editor }: { editor: Editor }) {
             }}
           >
             <Trash2 />
-            Excluir
+            {t("delete")}
           </button>
         </div>
       )}

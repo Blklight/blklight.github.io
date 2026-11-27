@@ -2,6 +2,7 @@
 
 import { ArrowLeft, Eye, Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useLayoutEffect, useState } from "react";
 import type { StoreApi, UseBoundStore } from "zustand";
 import { EditorStyles } from "@/components/document/editor-styles";
@@ -45,6 +46,7 @@ export function DesignLayout({
   onRename,
   onSave,
 }: DesignLayoutProps) {
+  const t = useTranslations("templates");
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<DesignTab>("colors");
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -112,7 +114,7 @@ export function DesignLayout({
             className="flex items-center gap-2 text-sm text-foreground/60 hover:text-foreground transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Galeria
+            {t("gallery")}
           </button>
           <div className="flex items-center gap-2 min-w-0">
             <h1 className="text-sm font-semibold uppercase tracking-widest truncate">
@@ -120,7 +122,7 @@ export function DesignLayout({
             </h1>
             <button
               type="button"
-              title="Renomear template"
+              title={t("renameTitle")}
               onClick={() => setIsRenameOpen(true)}
               className="p-1 text-foreground/60 hover:text-foreground transition-colors"
             >
@@ -129,7 +131,7 @@ export function DesignLayout({
           </div>
           <div className="flex items-center gap-2">
             <Button size="sm" variant="outline" onClick={onSave}>
-              Salvar
+              {t("save")}
             </Button>
             <Button
               size="sm"
@@ -138,7 +140,7 @@ export function DesignLayout({
                 router.push("/escrever");
               }}
             >
-              Salvar e Ir para o Editor
+              {t("saveAndEdit")}
             </Button>
           </div>
         </div>
@@ -162,7 +164,7 @@ export function DesignLayout({
             <div className="flex items-center gap-2">
               <Eye className="w-3.5 h-3.5 text-foreground/60" />
               <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-                Documento completo
+                {t("fullDocument")}
               </span>
             </div>
             <button
@@ -170,7 +172,7 @@ export function DesignLayout({
               onClick={() => setIsPreviewOpen(true)}
               className="text-xs font-mono uppercase tracking-wider text-foreground/60 hover:text-foreground transition-colors underline underline-offset-2"
             >
-              Ver preview
+              {t("seePreview")}
             </button>
           </div>
 

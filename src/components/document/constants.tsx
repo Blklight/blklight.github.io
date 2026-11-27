@@ -11,31 +11,27 @@ export const PAPER_THEME_PRESETS = PAPER_THEMES.map((theme) => ({
   description: theme.description,
 }));
 
+/** Names live in `design.textures.<id>`. */
 export const TEXTURE_PRESETS: {
   id: TextureType;
-  name: string;
   icon: React.ReactNode;
 }[] = [
-  { id: "none", name: "Nenhuma", icon: <FileText className="w-4 h-4" /> },
-  {
-    id: "dots",
-    name: "Bullet Journal",
-    icon: <CircleDot className="w-4 h-4" />,
-  },
-  { id: "grid", name: "Quadriculado", icon: <Grid3X3 className="w-4 h-4" /> },
+  { id: "none", icon: <FileText className="w-4 h-4" /> },
+  { id: "dots", icon: <CircleDot className="w-4 h-4" /> },
+  { id: "grid", icon: <Grid3X3 className="w-4 h-4" /> },
 ];
 
-// Gradient presets for letterhead backgrounds
+// Gradient presets for letterhead backgrounds; names live in `letterhead.gradients.<id>`.
 export const GRADIENT_PRESETS = [
-  { id: "sunset", name: "Por do Sol", from: "#FF6B35", to: "#F7C948" },
-  { id: "ocean", name: "Oceano", from: "#0077B6", to: "#00B4D8" },
-  { id: "forest", name: "Floresta", from: "#2D6A4F", to: "#95D5B2" },
-  { id: "lavender", name: "Lavanda", from: "#7B2D8E", to: "#D4A5E5" },
-  { id: "ember", name: "Brasa", from: "#9D0208", to: "#E85D04" },
-  { id: "midnight", name: "Meia-Noite", from: "#1B1B2F", to: "#3D405B" },
-  { id: "peach", name: "Pessego", from: "#FFB4A2", to: "#FFCDB2" },
-  { id: "steel", name: "Aco", from: "#6C757D", to: "#ADB5BD" },
-];
+  { id: "sunset", from: "#FF6B35", to: "#F7C948" },
+  { id: "ocean", from: "#0077B6", to: "#00B4D8" },
+  { id: "forest", from: "#2D6A4F", to: "#95D5B2" },
+  { id: "lavender", from: "#7B2D8E", to: "#D4A5E5" },
+  { id: "ember", from: "#9D0208", to: "#E85D04" },
+  { id: "midnight", from: "#1B1B2F", to: "#3D405B" },
+  { id: "peach", from: "#FFB4A2", to: "#FFCDB2" },
+  { id: "steel", from: "#6C757D", to: "#ADB5BD" },
+] as const;
 
 // CSS pattern presets for letterhead image backgrounds
 export const IMAGE_PATTERN_PRESETS = [

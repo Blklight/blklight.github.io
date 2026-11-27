@@ -2,6 +2,7 @@ import { GeistPixelCircle, GeistPixelSquare } from "geist/font/pixel";
 import type { Metadata } from "next";
 import { EB_Garamond, Inter, JetBrains_Mono } from "next/font/google";
 import { Html } from "@/components/html";
+import { I18nProvider } from "@/components/i18n-provider";
 import { LayoutBase } from "@/components/layout-base";
 import { QueryProvider } from "@/components/query-provider";
 import { SessionBootstrap } from "@/components/session-bootstrap";
@@ -61,13 +62,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           enableSystem
           disableTransitionOnChange
         >
-          <QueryProvider>
-            <SessionBootstrap />
-            <TooltipProvider>
-              <LayoutBase>{children}</LayoutBase>
-            </TooltipProvider>
-            <Toaster />
-          </QueryProvider>
+          <I18nProvider>
+            <QueryProvider>
+              <SessionBootstrap />
+              <TooltipProvider>
+                <LayoutBase>{children}</LayoutBase>
+              </TooltipProvider>
+              <Toaster />
+            </QueryProvider>
+          </I18nProvider>
         </ThemeProvider>
       </body>
     </Html>

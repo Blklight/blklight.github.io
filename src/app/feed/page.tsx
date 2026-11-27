@@ -2,6 +2,7 @@
 
 import { FileSearch, Search } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { BentoGrid } from "@/components/bento/bento-grid";
 import { FEED_TYPES, TYPE_THEME } from "@/components/feed/cards/card-theme";
@@ -63,6 +64,9 @@ const CARDS = {
 const TYPES = FEED_TYPES.map((id) => [id, TYPE_THEME[id]] as const);
 
 export default function FeedPage() {
+  const t = useTranslations("feed");
+  const tk = useTranslations("kinds");
+  const tc = useTranslations("common");
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState(ANY_CATEGORY);
   const typeParam = useSearchParams().get("type");
@@ -102,13 +106,13 @@ export default function FeedPage() {
   const { data: categories } = useCategories();
   const categoryItems = useMemo(
     () => [
-      { value: ANY_CATEGORY, label: "Todas as categorias" },
+      { value: ANY_CATEGORY, label: t("allCategories") },
       ...(categories ?? []).map((item) => ({
         value: item.slug,
         label: item.name,
       })),
     ],
-    [categories],
+    [categories, t],
   );
 
   // Defensive dedupe by id. The cursor is a keyset on (sort value, id), but a
@@ -158,10 +162,7 @@ export default function FeedPage() {
             <h1 className="font-sans text-6xl md:text-8xl font-bold tracking-tighter leading-[0.9]">
               Feed
             </h1>
-            <p className="mt-4 max-w-xl text-muted-foreground">
-              Artigos, tutoriais e projetos da comunidade, cada um com o papel e
-              a tipografia que o autor escolheu.
-            </p>
+            <p className="mt-4 max-w-xl text-muted-foreground">{t("lead")}</p>
           </div>
           <div className="relative">
             <Search
@@ -171,8 +172,8 @@ export default function FeedPage() {
             <Input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Buscar por título ou resumo"
-              aria-label="Buscar documentos"
+              placeholder={t("searchPlaceholder")}
+              aria-label={t("searchLabel")}
               data-testid="feed-search-input"
               className="h-12 pl-12 rounded-xs border-2 border-foreground bg-card text-base"
             />
@@ -180,14 +181,14 @@ export default function FeedPage() {
         </header>
 
         {featured && !isPending && !isError && (
-          <section aria-label="Em destaque" data-card-frame className="mb-10">
+          <section aria-label={t("featured")} data-card-frame className="mb-10">
             <FeaturedCard doc={featured} />
           </section>
         )}
 
         <div className="lg:sticky lg:top-[3.6rem] z-30 -mx-4 md:-mx-8 px-4 md:px-8 py-3 mb-6 bg-background/90 backdrop-blur-sm border-y-2 border-foreground flex flex-col lg:flex-row gap-3 lg:items-center">
           <h2 className="font-sans text-2xl font-bold tracking-tight lg:mr-4">
-            {hasActiveFilter ? "Resultados" : "Mais recentes"}
+            {hasActiveFilter ? t("results") : t("latest")}
             {!isPending && !isError && total > 0 && (
               <span className="ml-3 align-middle font-mono text-xs font-normal text-muted-foreground">
                 {items.length}/{total}
@@ -196,7 +197,7 @@ export default function FeedPage() {
           </h2>
 
           <fieldset className="flex flex-wrap gap-1.5 border-0 p-0 m-0 min-w-0">
-            <legend className="sr-only">Filtrar por tipo</legend>
+            <legend className="sr-only">{t("filterByType")}</legend>
             {TYPES.map(([id, theme]) => {
               const active = type === id;
               return (
@@ -221,7 +222,7 @@ export default function FeedPage() {
                   >
                     <theme.icon className="size-3" />
                   </span>
-                  {theme.label}
+                  {tk(`${id}.label`)}
                 </button>
               );
             })}
@@ -234,12 +235,12 @@ export default function FeedPage() {
           >
             <SelectTrigger
               className="w-full lg:w-60 lg:ml-auto h-9 rounded-xs"
-              aria-label="Filtrar por categoria"
+              aria-label={t("filterByCategory")}
             >
-              <SelectValue placeholder="Todas as categorias" />
+              <SelectValue placeholder={t("allCategories")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={ANY_CATEGORY}>Todas as categorias</SelectItem>
+              <SelectItem value={ANY_CATEGORY}>{t("allCategories")}</SelectItem>
               {categories?.map((item) => (
                 <SelectItem key={item.id} value={item.slug}>
                   {item.name}
@@ -257,13 +258,11 @@ export default function FeedPage() {
               <EmptyMedia variant="icon">
                 <FileSearch />
               </EmptyMedia>
-              <EmptyTitle>Não foi possível carregar o feed</EmptyTitle>
-              <EmptyDescription>
-                A requisição ao servidor falhou. Tente novamente em instantes.
-              </EmptyDescription>
+              <EmptyTitle>{t("loadError")}</EmptyTitle>
+              <EmptyDescription>{t("loadErrorHint")}</EmptyDescription>
             </EmptyHeader>
             <Button variant="outline" onClick={() => void refetch()}>
-              Tentar novamente
+              {tc("retry")}
             </Button>
           </Empty>
         ) : items.length === 0 ? (
@@ -272,16 +271,14 @@ export default function FeedPage() {
               <EmptyMedia variant="icon">
                 <FileSearch />
               </EmptyMedia>
-              <EmptyTitle>Nenhum documento encontrado</EmptyTitle>
+              <EmptyTitle>{t("emptyTitle")}</EmptyTitle>
               <EmptyDescription>
-                {hasActiveFilter
-                  ? "Nenhum documento publicado corresponde a esses filtros."
-                  : "Ainda não há documentos publicados."}
+                {hasActiveFilter ? t("emptyFiltered") : t("emptyAll")}
               </EmptyDescription>
             </EmptyHeader>
             {hasActiveFilter ? (
               <Button variant="outline" onClick={clearFilters}>
-                Limpar filtros
+                {t("clearFilters")}
               </Button>
             ) : null}
           </Empty>
@@ -299,11 +296,11 @@ export default function FeedPage() {
                   onClick={() => void fetchNextPage()}
                   disabled={isFetchingNextPage}
                 >
-                  {isFetchingNextPage ? "Carregando..." : "Carregar mais"}
+                  {isFetchingNextPage ? tc("loading") : t("loadMore")}
                 </Button>
               ) : (
                 <p className="font-mono text-xs text-muted-foreground">
-                  Você chegou ao fim do feed.
+                  {t("end")}
                 </p>
               )}
             </div>
@@ -327,9 +324,10 @@ const SKELETON_CELLS = [
 ] as const;
 
 function FeedSkeleton() {
+  const t = useTranslations("feed");
   return (
     <div aria-busy="true" aria-live="polite">
-      <span className="sr-only">Carregando documentos</span>
+      <span className="sr-only">{t("loadingDocs")}</span>
       <Skeleton className="h-[26rem] w-full mb-4 chamfer chamfer-tl chamfer-br chamfer-xl" />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 grid-flow-dense auto-rows-[15rem] gap-4">
         {SKELETON_CELLS.map((cell, i) => (

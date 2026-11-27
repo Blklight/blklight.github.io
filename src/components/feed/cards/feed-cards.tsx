@@ -10,8 +10,8 @@ import {
   CardTags,
   CardTitle,
   cardFont,
-  formatDate,
   TypeTab,
+  useFormatDate,
 } from "./parts";
 import {
   type CardProps,
@@ -267,6 +267,7 @@ const STAMP_MASK =
 
 /** A postage stamp on a flat envelope. */
 export function StampCard({ data, size }: CardProps) {
+  const formatDate = useFormatDate();
   const surface = surfaceOf(data.id);
   const side = wide(size);
   return (

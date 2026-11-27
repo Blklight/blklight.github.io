@@ -1,26 +1,11 @@
+"use client";
 import { Heart } from "lucide-react";
 import Link from "next/link";
+import { useFormatter, useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { DocumentCard, DocumentType } from "@/types/api.types";
-
-const DATE_FORMAT = new Intl.DateTimeFormat("pt-BR", {
-  dateStyle: "medium",
-  timeZone: "UTC",
-});
-
-const TYPE_LABEL: Record<DocumentType, string> = {
-  article: "Artigo",
-  tutorial: "Tutorial",
-  contract: "Contrato",
-  project: "Projeto",
-  note: "Nota",
-};
-
-function formatDate(value: string): string {
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? value : DATE_FORMAT.format(date);
-}
+import type { DocumentCard } from "@/types/api.types";
+import { typeKey } from "./cards/card-theme";
 
 function authorLabel(document: DocumentCard): string {
   return document.author.displayName || document.author.username;
@@ -36,6 +21,9 @@ interface DocumentFeedCardProps {
  * shows the total only and never claims the viewer liked it.
  */
 export function DocumentFeedCard({ document }: DocumentFeedCardProps) {
+  const tk = useTranslations("kinds");
+  const format = useFormatter();
+  const published = new Date(document.publishedAt);
   const href = `/${document.author.username}/${document.slug}`;
 
   return (
@@ -55,7 +43,7 @@ export function DocumentFeedCard({ document }: DocumentFeedCardProps) {
             variant="outline"
             className="font-mono text-xs uppercase tracking-widest"
           >
-            {TYPE_LABEL[document.typeName] ?? document.typeName}
+            {tk(`${typeKey(document.typeName)}.label`)}
           </Badge>
           {document.category ? (
             <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
@@ -114,7 +102,12 @@ export function DocumentFeedCard({ document }: DocumentFeedCardProps) {
           <span className="font-mono">@{document.author.username}</span>
           <span aria-hidden>·</span>
           <time dateTime={document.publishedAt}>
-            {formatDate(document.publishedAt)}
+            {Number.isNaN(published.getTime())
+              ? document.publishedAt
+              : format.dateTime(published, {
+                  dateStyle: "medium",
+                  timeZone: "UTC",
+                })}
           </time>
           <span className="ml-auto flex items-center gap-1.5">
             <Heart className="h-4 w-4" aria-hidden />

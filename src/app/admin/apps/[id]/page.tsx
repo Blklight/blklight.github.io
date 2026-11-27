@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import { useLayoutEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
@@ -56,6 +57,8 @@ import {
 } from "@/types/form.schemas";
 
 export default function AdminAppDetailPage() {
+  const t = useTranslations("admin");
+  const locale = useLocale();
   const params = useParams<{ id: string }>();
   const id = params.id;
 
@@ -149,7 +152,7 @@ export default function AdminAppDetailPage() {
       <section className="bg-light book:bg-sepia dark:bg-dark background-texture rounded-xs relative p-5 z-0">
         <TextureOverlay texture={"grid"} className="mix-blend-overlay" />
         <div className="text-xs uppercase tracking-widest text-muted-foreground animate-pulse">
-          [ carregando app... ]
+          {t("loadingApp")}
         </div>
       </section>
     );
@@ -161,14 +164,14 @@ export default function AdminAppDetailPage() {
         <TextureOverlay texture={"grid"} className="mix-blend-overlay" />
         <div className="border hairline p-8 max-w-md">
           <p className="text-xs uppercase tracking-widest text-muted-foreground mb-6">
-            {"// falha ao carregar app"}
+            {t("appError")}
           </p>
           <button
             type="button"
             onClick={() => refetchApps()}
             className="text-xs uppercase tracking-widest border hairline px-4 py-2 hover:bg-ink hover:text-background transition-colors"
           >
-            [ tentar novamente ]
+            {t("retry")}
           </button>
         </div>
       </section>
@@ -180,7 +183,7 @@ export default function AdminAppDetailPage() {
       <TextureOverlay texture={"grid"} className="mix-blend-overlay" />
 
       <div className="text-[10px] md:text-xs uppercase tracking-[0.3em] text-muted-foreground mb-8">
-        admin / apps / detalhe
+        {t("crumbAppDetail")}
       </div>
 
       <div className="flex items-center gap-3 mb-8">
@@ -198,7 +201,7 @@ export default function AdminAppDetailPage() {
           variant={app.isActive ? "default" : "destructive"}
           className="rounded-none border hairline"
         >
-          {app.isActive ? "ativo" : "inativo"}
+          {app.isActive ? t("activeOne") : t("inactiveOne")}
         </Badge>
       </div>
 
@@ -206,7 +209,7 @@ export default function AdminAppDetailPage() {
       <Card className="rounded-none border hairline shadow-none bg-transparent mb-8 max-w-3xl">
         <CardHeader>
           <CardTitle className="text-xs uppercase tracking-widest text-muted-foreground">
-            editar app
+            {t("editApp")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -218,7 +221,7 @@ export default function AdminAppDetailPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-xs uppercase tracking-widest text-muted-foreground">
-                      nome
+                      {t("name")}
                     </FormLabel>
                     <FormControl
                       render={
@@ -238,7 +241,7 @@ export default function AdminAppDetailPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-xs uppercase tracking-widest text-muted-foreground">
-                      descrição
+                      {t("description")}
                     </FormLabel>
                     <FormControl
                       render={
@@ -258,7 +261,7 @@ export default function AdminAppDetailPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-xs uppercase tracking-widest text-muted-foreground">
-                      modo de acesso
+                      {t("accessMode")}
                     </FormLabel>
                     <Select
                       onValueChange={field.onChange}
@@ -269,7 +272,7 @@ export default function AdminAppDetailPage() {
                           <SelectTrigger className="rounded-none border hairline" />
                         }
                       >
-                        <SelectValue placeholder="selecionar" />
+                        <SelectValue placeholder={t("select")} />
                       </FormControl>
                       <SelectContent>
                         <SelectItem value="open">open</SelectItem>
@@ -286,7 +289,7 @@ export default function AdminAppDetailPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-xs uppercase tracking-widest text-muted-foreground">
-                      ícone (url)
+                      {t("iconUrl")}
                     </FormLabel>
                     <FormControl
                       render={
@@ -326,7 +329,7 @@ export default function AdminAppDetailPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-xs uppercase tracking-widest text-muted-foreground">
-                      categoria (livre)
+                      {t("categoryFree")}
                     </FormLabel>
                     <FormControl
                       render={
@@ -346,7 +349,7 @@ export default function AdminAppDetailPage() {
                 render={({ field }) => (
                   <FormItem className="flex items-center gap-3">
                     <FormLabel className="text-xs uppercase tracking-widest text-muted-foreground flex-1">
-                      ativo
+                      {t("activeOne")}
                     </FormLabel>
                     <FormControl
                       render={
@@ -366,7 +369,7 @@ export default function AdminAppDetailPage() {
                   disabled={updateApp.isPending}
                   className="rounded-none border hairline"
                 >
-                  {updateApp.isPending ? "[ salvando... ]" : "[ salvar ]"}
+                  {updateApp.isPending ? t("saving") : t("save")}
                 </Button>
               </div>
             </form>
@@ -391,15 +394,15 @@ export default function AdminAppDetailPage() {
                   />
                 }
               >
-                [ convidar ]
+                {t("invite")}
               </DialogTrigger>
               <DialogContent className="max-w-md rounded-none border hairline shadow-none bg-transparent">
                 <DialogHeader>
                   <DialogTitle className="text-xs uppercase tracking-widest text-muted-foreground">
-                    criar convite
+                    {t("createInvite")}
                   </DialogTitle>
                   <DialogDescription className="text-xs uppercase tracking-widest text-muted-foreground">
-                    digite o Profile ID do usuário (veja em Admin → Usuários).
+                    {t("inviteHint")}
                   </DialogDescription>
                 </DialogHeader>
                 <Form {...inviteForm}>
@@ -432,16 +435,14 @@ export default function AdminAppDetailPage() {
                         className="rounded-none border hairline"
                         onClick={() => setInviteDialogOpen(false)}
                       >
-                        cancelar
+                        {t("cancelLower")}
                       </Button>
                       <Button
                         type="submit"
                         disabled={createInvite.isPending}
                         className="rounded-none border hairline"
                       >
-                        {createInvite.isPending
-                          ? "[ criando... ]"
-                          : "[ convidar ]"}
+                        {createInvite.isPending ? t("creating") : t("invite")}
                       </Button>
                     </DialogFooter>
                   </form>
@@ -452,7 +453,7 @@ export default function AdminAppDetailPage() {
 
           {invitesPending && (
             <div className="text-xs uppercase tracking-widest text-muted-foreground animate-pulse">
-              [ carregando convites... ]
+              {t("loadingInvites")}
             </div>
           )}
 
@@ -460,10 +461,10 @@ export default function AdminAppDetailPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Usuário</TableHead>
+                  <TableHead>{t("colUser")}</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Criado em</TableHead>
-                  <TableHead>Decidido em</TableHead>
+                  <TableHead>{t("colCreated")}</TableHead>
+                  <TableHead>{t("colDecided")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -490,11 +491,11 @@ export default function AdminAppDetailPage() {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      {new Date(invite.createdAt).toLocaleDateString("pt-BR")}
+                      {new Date(invite.createdAt).toLocaleDateString(locale)}
                     </TableCell>
                     <TableCell>
                       {invite.decidedAt
-                        ? new Date(invite.decidedAt).toLocaleDateString("pt-BR")
+                        ? new Date(invite.decidedAt).toLocaleDateString(locale)
                         : "—"}
                     </TableCell>
                   </TableRow>
@@ -505,7 +506,7 @@ export default function AdminAppDetailPage() {
 
           {invites && invites.length === 0 && !invitesPending && (
             <div className="text-xs uppercase tracking-widest text-muted-foreground">
-              [ nenhum convite ]
+              {t("noInvites")}
             </div>
           )}
         </>

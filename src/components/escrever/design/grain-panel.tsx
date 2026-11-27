@@ -1,6 +1,7 @@
 "use client";
 
 import { Sparkles } from "lucide-react";
+import { type Messages, useTranslations } from "next-intl";
 import {
   Select,
   SelectContent,
@@ -21,12 +22,12 @@ import { useAuthStore } from "@/store/useAuthStore";
 import type { DesignContext } from "./layout";
 import { SliderField } from "./slider-field";
 
-const TONE_LABELS: Record<PaperTone, string> = {
-  light: "Papel claro",
-  dark: "Papel escuro",
-};
+type GrainId = keyof Messages["design"]["grainDescriptions"];
 
 export function GrainPanel({ design }: DesignContext) {
+  const t = useTranslations("design");
+  const grainName = (grain: PaperGrain) =>
+    t("grainName", { n: PAPER_GRAINS.indexOf(grain) + 1 });
   const { paperStyle, setPaperStyle } = design;
   const current = paperStyle.grains ?? [];
   const isAdmin = useAuthStore((s) => s.user?.role === "admin");
@@ -72,14 +73,14 @@ export function GrainPanel({ design }: DesignContext) {
       <div className="flex flex-col gap-3 p-2 border border-border rounded-xs">
         <div className="flex items-center justify-between">
           <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-            Avançado — {grain.name}
+            {t("advanced", { name: grainName(grain) })}
           </span>
           <button
             type="button"
             onClick={() => resetGrain(grain.id)}
             className="text-xs font-mono uppercase tracking-wider text-foreground/60 hover:text-foreground transition-colors underline underline-offset-2"
           >
-            Restaurar padrões
+            {t("restoreDefaults")}
           </button>
         </div>
         {(["light", "dark"] as const).map((tone) => {
@@ -88,7 +89,7 @@ export function GrainPanel({ design }: DesignContext) {
           return (
             <div key={tone} className="flex flex-col gap-2">
               <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-                {TONE_LABELS[tone]}
+                {t(`tones.${tone}`)}
               </span>
               <div className="flex flex-col gap-1">
                 <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
@@ -119,7 +120,7 @@ export function GrainPanel({ design }: DesignContext) {
                 </Select>
               </div>
               <SliderField
-                label="Opacidade"
+                label={t("opacity")}
                 value={opacity}
                 onChange={(value) =>
                   updateTone(grain.id, tone, { opacity: value })
@@ -141,13 +142,12 @@ export function GrainPanel({ design }: DesignContext) {
       <div className="flex items-center gap-2">
         <Sparkles className="w-4 h-4 text-foreground/60" />
         <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-          Granulação do Papel
+          {t("paperGrain")}
         </span>
       </div>
 
       <p className="text-xs font-mono text-foreground/60 leading-relaxed">
-        Efeitos de grão aplicados ao fundo do papel, por baixo do conteúdo.
-        Podem ser combinados.
+        {t("paperGrainHint")}
       </p>
 
       <div className="flex flex-col gap-1.5">
@@ -156,10 +156,10 @@ export function GrainPanel({ design }: DesignContext) {
             <div className="flex items-center justify-between p-2 border border-border rounded-xs">
               <div className="flex flex-col gap-0.5">
                 <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-                  {grain.name}
+                  {grainName(grain)}
                 </span>
                 <span className="text-xs font-mono text-foreground/60">
-                  {grain.description}
+                  {t(`grainDescriptions.${grain.id as GrainId}`)}
                 </span>
               </div>
               <Switch

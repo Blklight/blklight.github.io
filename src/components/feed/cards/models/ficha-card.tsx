@@ -1,24 +1,34 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
-import { typeTheme } from "../card-theme";
-import { AuthorLink, CardTitle, cardFont, formatDate, TypeTab } from "../parts";
+import { typeKey } from "../card-theme";
+import {
+  AuthorLink,
+  CardTitle,
+  cardFont,
+  TypeTab,
+  useFormatDate,
+} from "../parts";
 import { type CardProps, Shell, tall, wide } from "../shell";
 
 /** Spec sheet: the title beside a numbered table of the document's facts. */
 export function FichaCard({ data, size }: CardProps) {
+  const tk = useTranslations("kinds");
+  const t = useTranslations("feedCard");
+  const formatDate = useFormatDate();
   const name = data.author.displayName || data.author.username;
   const rows = [
-    ["Tipo", typeTheme(data.typeName).label],
+    [t("type"), tk(`${typeKey(data.typeName)}.label`)],
     [
-      "Autor",
+      t("author"),
       <AuthorLink key="a" doc={data}>
         {name}
       </AuthorLink>,
     ],
-    ["Data", formatDate(data.publishedAt)],
-    ["Categoria", data.category?.name ?? "—"],
-    ["Curtidas", String(data.likesCount)],
+    [t("date"), formatDate(data.publishedAt)],
+    [t("category"), data.category?.name ?? "—"],
+    [t("likesTitle"), String(data.likesCount)],
   ] as const;
   const shown = size === "1x1" ? rows.slice(0, 3) : rows;
   return (

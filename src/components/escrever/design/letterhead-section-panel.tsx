@@ -8,6 +8,7 @@ import {
   SeparatorHorizontal,
   Trash2,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { DEFAULT_LETTERHEAD_STYLE } from "@/components/document/constants";
 import {
@@ -61,6 +62,7 @@ export function LetterheadSectionPanel({
   kind,
   variant,
 }: LetterheadSectionPanelProps) {
+  const tl = useTranslations("letterhead");
   const isFooter = kind === "footer";
   const section = isFooter ? design.documentFooter : design.documentHeader;
   const presetList = isFooter ? FOOTER_PRESET_LIST : HEADER_PRESET_LIST;
@@ -131,11 +133,11 @@ export function LetterheadSectionPanel({
             ) : (
               <FileText className="size-4 text-foreground/60" />
             )}
-            {isFooter ? "Rodapé" : "Cabeçalho"}
+            {isFooter ? tl("footer") : tl("header")}
           </span>
           <PanelSwitch
             checked={section.enabled}
-            label={isFooter ? "Mostrar rodapé" : "Mostrar cabeçalho"}
+            label={isFooter ? tl("showFooter") : tl("showHeader")}
             onChange={(enabled) => setSection({ ...section, enabled })}
           />
         </div>
@@ -146,10 +148,10 @@ export function LetterheadSectionPanel({
           {variant === "style" && (
             <div>
               <p className="font-mono text-xs uppercase tracking-wider">
-                Modelo
+                {tl("model")}
               </p>
               <p className="mt-1 text-xs text-foreground/60">
-                Cabeçalho e rodapé usam sempre o mesmo modelo.
+                {tl("sameModel")}
               </p>
             </div>
           )}
@@ -179,7 +181,7 @@ export function LetterheadSectionPanel({
                     : "border-border text-foreground/50 hover:border-muted-foreground",
                 )}
               >
-                Modelos
+                {tl("models")}
               </button>
               <button
                 type="button"
@@ -191,7 +193,7 @@ export function LetterheadSectionPanel({
                     : "border-border text-foreground/50 hover:border-muted-foreground",
                 )}
               >
-                Personalizado
+                {tl("custom")}
               </button>
             </div>
           )}
@@ -238,10 +240,12 @@ export function LetterheadSectionPanel({
                     </div>
                     <div className="px-2 py-1.5 border-t border-border">
                       <span className="text-xs font-mono uppercase tracking-wider block">
-                        {preset.name}
+                        {tl(`presets.${preset.id}.name`)}
                       </span>
                       <span className="text-xs text-foreground/60 mt-0.5 block">
-                        {preset.description}
+                        {tl(
+                          `presets.${preset.id}.${isFooter ? "footer" : "header"}`,
+                        )}
                       </span>
                     </div>
                   </button>
@@ -256,14 +260,14 @@ export function LetterheadSectionPanel({
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-                  Linhas
+                  {tl("lines")}
                 </span>
                 <button
                   type="button"
                   onClick={handleRestoreDefault}
                   className="text-xs font-mono uppercase tracking-wider text-foreground/60 hover:text-foreground transition-colors underline underline-offset-2"
                 >
-                  Restaurar padrão
+                  {tl("restoreDefault")}
                 </button>
               </div>
               {section.lines.map((line, index) => (
@@ -283,10 +287,10 @@ export function LetterheadSectionPanel({
                       }}
                       placeholder={
                         isFooter
-                          ? "TEXTO DO RODAPE"
+                          ? tl("footerTextPlaceholder")
                           : index === 0
-                            ? "TITULO PRINCIPAL"
-                            : "Linha secundaria"
+                            ? tl("mainTitlePlaceholder")
+                            : tl("secondaryLinePlaceholder")
                       }
                       className="flex-1 px-2 py-1 text-xs font-mono border border-border rounded-xs bg-transparent outline-none focus:border-foreground transition-colors uppercase tracking-wider"
                     />
@@ -345,7 +349,7 @@ export function LetterheadSectionPanel({
                 </div>
               ))}
               <p className="text-xs font-mono text-foreground/60">
-                {"{{publicador}} = nome do autor, ou da organização"}
+                {tl("publisherHint")}
               </p>
               {!isPresetMode && (
                 <button
@@ -363,7 +367,7 @@ export function LetterheadSectionPanel({
                   className="flex items-center gap-1 text-xs font-mono text-foreground/60 hover:text-foreground transition-colors uppercase tracking-wider mt-1"
                 >
                   <Plus className="w-3 h-3" />
-                  Adicionar linha
+                  {tl("addLine")}
                 </button>
               )}
             </div>

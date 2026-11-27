@@ -4,7 +4,7 @@ import { Tilt, TiltContent } from "@animate-ui/react/primitives/effects/tilt";
 import { useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { type CSSProperties, type ReactNode, useRef, useState } from "react";
-import { appMeta } from "@/components/onboarding/app-meta";
+import { useAppMeta } from "@/components/onboarding/app-meta";
 import { CornerBrackets } from "@/components/onboarding/corner-brackets";
 import { FLAT } from "@/components/onboarding/simple-flip-card";
 import { cn } from "@/lib/utils";
@@ -23,6 +23,7 @@ const GLARE =
  * Same data and flip as the classic model; only the look changes.
  */
 export const HoloBadge = ({ data, status, className }: BadgeModelProps) => {
+  const appMeta = useAppMeta();
   const { name, handle, avatarUrl, memberSince, memberId, apps = [] } = data;
   const reduceMotion = useReducedMotion();
   const [flipped, setFlipped] = useState(false);

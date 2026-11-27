@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import {
   DocumentFooterRenderer,
   DocumentHeaderRenderer,
@@ -10,11 +11,11 @@ import {
   SignatureBlock,
 } from "@/components/document/signature-block";
 import type { PaperStyle } from "@/components/document/types";
+import { typeKey } from "@/components/feed/cards/card-theme";
 import { Navbar } from "@/components/navbar";
 import type { LetterheadTextContext } from "@/features/documents/design/letterhead-text";
 import { PaperSurface } from "@/features/documents/design/paper-surface";
 import type { SignatureContext } from "@/features/documents/design/signature";
-import { kindByType } from "@/features/documents/document-kinds";
 import {
   coverFilterCss,
   deriveReadDesign,
@@ -76,11 +77,13 @@ export default async function PublicDocumentPage({
   const { paperColors, fontClass } = design;
   const contentHtml = renderDocumentContent(document.content);
   const proseStyle = getPaperProseStyle(paperColors);
+  // Server render has no reader locale: the printed letterhead uses the default one.
+  const tk = await getTranslations("kinds");
   // Letterhead markers ({{publicador}} etc.): private orgs already come null.
   const letterheadContext: LetterheadTextContext = {
     author: document.author,
     organization: document.organization,
-    typeLabel: kindByType(document.typeName).label,
+    typeLabel: tk(`${typeKey(document.typeName)}.label`),
   };
   const signatureContext: SignatureContext = {
     ...letterheadContext,

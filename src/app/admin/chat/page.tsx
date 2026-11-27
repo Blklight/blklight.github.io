@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -15,6 +16,8 @@ import { TextureOverlay } from "@/components/ui/texture-overlay";
 import { useAdminChatServers } from "@/features/admin/queries";
 
 export default function AdminChatPage() {
+  const t = useTranslations("admin");
+  const locale = useLocale();
   const { data: servers, isPending, isError, refetch } = useAdminChatServers();
   const [search, setSearch] = useState("");
 
@@ -35,13 +38,13 @@ export default function AdminChatPage() {
         </div>
         <div className="text-[10px] md:text-xs uppercase tracking-widest text-muted-foreground">
           {isPending
-            ? "[ carregando... ]"
-            : `[ ${servers?.length ?? 0} servers ]`}
+            ? t("loading")
+            : t("serversCount", { count: servers?.length ?? 0 })}
         </div>
       </div>
 
       <h1 className="text-4xl md:text-5xl font-bold tracking-tight uppercase leading-[0.95] mb-8">
-        Chat Servers
+        {t("chatTitle")}
         <span className="inline-block border-b-2 border-ink pb-1">.</span>
       </h1>
 
@@ -49,28 +52,28 @@ export default function AdminChatPage() {
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="buscar por nome ou slug"
+          placeholder={t("chatSearch")}
           className="max-w-xs rounded-none border hairline bg-transparent"
         />
       </div>
 
       {isPending && (
         <div className="text-xs uppercase tracking-widest text-muted-foreground animate-pulse">
-          [ carregando servers... ]
+          {t("loadingServers")}
         </div>
       )}
 
       {isError && (
         <div className="border hairline p-8 max-w-md">
           <p className="text-xs uppercase tracking-widest text-muted-foreground mb-6">
-            {"// falha ao carregar servers"}
+            {t("serversError")}
           </p>
           <button
             type="button"
             onClick={() => refetch()}
             className="text-xs uppercase tracking-widest border hairline px-4 py-2 hover:bg-ink hover:text-background transition-colors"
           >
-            [ tentar novamente ]
+            {t("retry")}
           </button>
         </div>
       )}
@@ -79,10 +82,10 @@ export default function AdminChatPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Server</TableHead>
+              <TableHead>{t("colServer")}</TableHead>
               <TableHead>Slug</TableHead>
-              <TableHead>Membros</TableHead>
-              <TableHead>Criado em</TableHead>
+              <TableHead>{t("colMembers")}</TableHead>
+              <TableHead>{t("colCreated")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -99,7 +102,7 @@ export default function AdminChatPage() {
                 </TableCell>
                 <TableCell>{server.memberCount}</TableCell>
                 <TableCell>
-                  {new Date(server.createdAt).toLocaleDateString("pt-BR")}
+                  {new Date(server.createdAt).toLocaleDateString(locale)}
                 </TableCell>
               </TableRow>
             ))}
@@ -109,7 +112,7 @@ export default function AdminChatPage() {
 
       {filteredServers.length === 0 && !isPending && !isError && (
         <div className="text-xs uppercase tracking-widest text-muted-foreground">
-          [ nenhum server encontrado ]
+          {t("noServers")}
         </div>
       )}
     </section>

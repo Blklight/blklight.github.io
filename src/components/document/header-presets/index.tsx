@@ -233,9 +233,8 @@ export const HEADER_PRESET_COMPONENTS: Record<
 // Preset Metadata (for selection UI)
 // ════════════════════════════════════════════════════════════════════════════
 export interface HeaderPresetMeta {
-  id: string;
-  name: string;
-  description: string;
+  /** Name and description in `letterhead.presets.<id>`. */
+  id: "blklight" | "corp-moderno" | "alerta-vermelho";
   defaultLines: string[];
   /** Line formats applied when the preset is chosen (Blklight only). */
   defaultLineFormats?: LineFormat[];
@@ -244,21 +243,15 @@ export interface HeaderPresetMeta {
 export const HEADER_PRESET_LIST: HeaderPresetMeta[] = [
   {
     id: BLKLIGHT_PRESET_ID,
-    name: "Blklight",
-    description: "Cabecalho padrao do Blklight, segue o tema",
     defaultLines: BLKLIGHT_HEADER_LINES,
     defaultLineFormats: BLKLIGHT_HEADER_LINE_FORMATS,
   },
   {
     id: "corp-moderno",
-    name: "Corporativo",
-    description: "Cabecalho limpo e moderno corporativo",
     defaultLines: BLKLIGHT_HEADER_LINES,
   },
   {
     id: "alerta-vermelho",
-    name: "Alerta Vermelho",
-    description: "Cabecalho urgente com gradiente vermelho",
     defaultLines: BLKLIGHT_HEADER_LINES,
   },
 ];

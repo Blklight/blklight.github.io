@@ -1,11 +1,13 @@
 "use client";
 
 import { Grid3X3 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { TEXTURE_PRESETS } from "@/components/document/constants";
 import { cn } from "@/lib/utils";
 import type { DesignContext } from "./layout";
 
 export function TexturePanel({ design }: DesignContext) {
+  const t = useTranslations("design");
   const { paperTexture, setPaperTexture, paperColors, textureStyle } = design;
 
   return (
@@ -13,19 +15,18 @@ export function TexturePanel({ design }: DesignContext) {
       <div className="flex items-center gap-2">
         <Grid3X3 className="w-4 h-4 text-foreground/60" />
         <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-          Textura do Papel
+          {t("paperTexture")}
         </span>
       </div>
 
       <p className="text-xs font-mono text-foreground/60 leading-relaxed">
-        Adicione uma textura sutil ao fundo do documento. Disponivel nos tipos
-        Bullet Journal (pontilhado) ou Quadriculado.
+        {t("paperTextureHint")}
       </p>
 
       {/* Type selector */}
       <div className="flex flex-col gap-1.5">
         <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-          Tipo de Textura
+          {t("textureType")}
         </span>
         <div className="grid grid-cols-3 gap-1.5">
           {TEXTURE_PRESETS.map((preset) => (
@@ -47,7 +48,7 @@ export function TexturePanel({ design }: DesignContext) {
             >
               {preset.icon}
               <span className="text-xs font-mono uppercase tracking-wider">
-                {preset.name}
+                {t(`textures.${preset.id}`)}
               </span>
             </button>
           ))}
@@ -61,7 +62,7 @@ export function TexturePanel({ design }: DesignContext) {
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-                Tamanho
+                {t("size")}
               </span>
               <span className="text-xs font-mono text-foreground/60">
                 {paperTexture.size}px
@@ -87,7 +88,7 @@ export function TexturePanel({ design }: DesignContext) {
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-                Opacidade
+                {t("opacity")}
               </span>
               <span className="text-xs font-mono text-foreground/60">
                 {Math.round(paperTexture.opacity * 100)}%
@@ -112,7 +113,7 @@ export function TexturePanel({ design }: DesignContext) {
           {/* Color */}
           <div className="flex flex-col gap-1.5">
             <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-              Cor da Textura
+              {t("textureColor")}
             </span>
             <div className="flex items-center gap-2">
               <button
@@ -127,7 +128,7 @@ export function TexturePanel({ design }: DesignContext) {
                     : "border-border text-foreground/50 hover:border-muted-foreground",
                 )}
               >
-                Automatica
+                {t("automatic")}
               </button>
               <div className="flex items-center gap-1.5 flex-1">
                 <input
@@ -177,11 +178,9 @@ export function TexturePanel({ design }: DesignContext) {
                   className="text-xs font-mono uppercase tracking-wider"
                   style={{ color: paperColors?.text || undefined }}
                 >
-                  Textura:{" "}
-                  {
-                    TEXTURE_PRESETS.find((p) => p.id === paperTexture.type)
-                      ?.name
-                  }
+                  {t("textureLabel", {
+                    name: t(`textures.${paperTexture.type}`),
+                  })}
                 </span>
               </div>
             </div>

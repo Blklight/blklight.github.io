@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { CardTitle, cardFont, formatDate, TypeTab } from "../parts";
+import { CardTitle, cardFont, TypeTab, useFormatDate } from "../parts";
 import { type CardProps, Shell, surfaceOf, tall } from "../shell";
 
 // Folder silhouette: a tab on the left, a slanted step, the full-width body.
@@ -10,6 +10,7 @@ const FOLDER =
 
 /** File folder: the cover on top, a dark folder with a tab over it, a big count at the foot. */
 export function PastaCard({ data, size }: CardProps) {
+  const formatDate = useFormatDate();
   const surface = surfaceOf(data.id);
   return (
     <Shell

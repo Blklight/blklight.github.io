@@ -3,13 +3,14 @@
 import { ScrollFade } from "@animate-ui/react/primitives/effects/scroll-fade";
 import { Tilt, TiltContent } from "@animate-ui/react/primitives/effects/tilt";
 import { Check, ChevronLeft } from "lucide-react";
+import { useFormatter, useTranslations } from "next-intl";
 import { useState } from "react";
 import { ChamferButton } from "@/components/ui/chamfer-button";
 import type { Corner } from "@/components/ui/chamfer-utils";
 import { useFillet } from "@/components/ui/fillet-card";
 import { cn } from "@/lib/utils";
 import type { PlatformApp } from "@/types/api.types";
-import { appMeta } from "./app-meta";
+import { useAppMeta } from "./app-meta";
 import { CornerBrackets } from "./corner-brackets";
 
 // Tilt sets preserve-3d on its wrapper; nested under the flip's own 3D context,
@@ -28,6 +29,9 @@ interface Props {
  * over to what the app does.
  */
 export const SimpleFlipCard = ({ app, selected = false, onToggle }: Props) => {
+  const t = useTranslations("onboarding");
+  const format = useFormatter();
+  const appMeta = useAppMeta();
   const [flipped, setFlipped] = useState(false);
   const meta = appMeta(app);
   const locked = !meta.available;
@@ -102,11 +106,11 @@ export const SimpleFlipCard = ({ app, selected = false, onToggle }: Props) => {
             <ChamferButton
               onClick={flip}
               onKeyDown={(e) => e.stopPropagation()}
-              aria-label={`Sobre o ${app.name}`}
+              aria-label={t("aboutApp", { name: app.name })}
               corner="br"
               className="mt-6 w-full bg-dark text-light hover:bg-dark/85"
             >
-              Sobre o app ↻
+              {t("aboutTheApp")}
             </ChamferButton>
           </FichaFace>
 
@@ -126,10 +130,10 @@ export const SimpleFlipCard = ({ app, selected = false, onToggle }: Props) => {
                 className="pointer-events-auto -ml-1 inline-flex items-center gap-1 rounded-xs px-1 py-1 text-sm hover:bg-dark/10 outline-none focus-visible:outline-2 focus-visible:outline-current cursor-pointer"
               >
                 <ChevronLeft aria-hidden className="size-4" />
-                Voltar
+                {t("back")}
               </button>
               <span className="text-xs uppercase opacity-70">
-                {locked ? "Em breve" : "Disponível"}
+                {locked ? t("soon") : t("available")}
               </span>
             </div>
 
@@ -143,24 +147,25 @@ export const SimpleFlipCard = ({ app, selected = false, onToggle }: Props) => {
                 <p className="text-base leading-relaxed">{meta.description}</p>
                 {meta.features.length > 0 && (
                   <p className="mt-4 text-sm leading-relaxed opacity-80">
-                    {joinPt(meta.features)}.
+                    {joinFeatures(meta.features, (items) => format.list(items))}
+                    .
                   </p>
                 )}
               </ScrollFade>
             </div>
             {meta.idealFor && (
               <p className="pt-5 text-xs">
-                <span className="opacity-70">Ideal para </span>
+                <span className="opacity-70">{t("idealFor")} </span>
                 {meta.idealFor}
               </p>
             )}
             <div className="relative mt-3 flex items-center justify-between text-xs">
               <span className="opacity-70">
                 {locked
-                  ? "Ainda não dá para ativar"
+                  ? t("cantActivate")
                   : selected
-                    ? "Selecionado"
-                    : "Clique para selecionar"}
+                    ? t("selected")
+                    : t("clickToSelect")}
               </span>
               {locked ? <SoonStamp /> : <SelectMark selected={selected} />}
             </div>
@@ -171,13 +176,13 @@ export const SimpleFlipCard = ({ app, selected = false, onToggle }: Props) => {
   );
 };
 
-// "A", "B", "C" -> "A, b e c": the features read as one sentence.
-const joinPt = (items: string[]) => {
+// "A", "B", "C" -> "A, b e c" / "A, b, and c": the features read as one sentence.
+const joinFeatures = (items: string[], list: (items: string[]) => string) => {
   const [first = "", ...rest] = items;
-  const tail = rest.map((item) => item.charAt(0).toLowerCase() + item.slice(1));
-  return tail.length === 0
-    ? first
-    : `${[first, ...tail.slice(0, -1)].join(", ")} e ${tail.at(-1)}`;
+  return list([
+    first,
+    ...rest.map((item) => item.charAt(0).toLowerCase() + item.slice(1)),
+  ]);
 };
 
 // Hatched, washed-out stock: reads as "not yet" before the label does.
@@ -188,16 +193,19 @@ export const LockedVeil = () => (
   />
 );
 
-export const SoonStamp = ({ className }: { className?: string }) => (
-  <span
-    className={cn(
-      "-rotate-6 shrink-0 border-2 border-dark px-1.5 py-0.5 font-mono text-[0.7rem] font-semibold uppercase tracking-wider",
-      className,
-    )}
-  >
-    Em breve
-  </span>
-);
+export const SoonStamp = ({ className }: { className?: string }) => {
+  const t = useTranslations("onboarding");
+  return (
+    <span
+      className={cn(
+        "-rotate-6 shrink-0 border-2 border-dark px-1.5 py-0.5 font-mono text-[0.7rem] font-semibold uppercase tracking-wider",
+        className,
+      )}
+    >
+      {t("soon")}
+    </span>
+  );
+};
 
 export const SelectMark = ({
   selected,

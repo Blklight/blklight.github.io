@@ -41,21 +41,21 @@ describe("uploadImage", () => {
     const callsBefore = vi.mocked(apiClient.post).mock.calls.length;
     await expect(
       uploadImage(file(MAX_UPLOAD_BYTES + 1), "editor"),
-    ).rejects.toThrow("10 MB");
+    ).rejects.toMatchObject({ code: "tooLarge" });
     expect(vi.mocked(apiClient.post).mock.calls.length).toBe(callsBefore);
   });
 
   it.each([
-    [400, "Formato não suportado"],
-    [413, "10 MB"],
-    [429, "Muitos envios"],
-    [503, "indisponível"],
-    [500, "Não foi possível enviar"],
-  ])("maps HTTP %i to a Portuguese message", async (status, message) => {
+    [400, "unsupported"],
+    [413, "tooLarge"],
+    [429, "rateLimited"],
+    [503, "unavailable"],
+    [500, "failed"],
+  ])("maps HTTP %i to an error code", async (status, code) => {
     vi.mocked(apiClient.post).mockImplementation(async () => {
       throw httpError(status);
     });
-    await expect(uploadImage(file(), "editor")).rejects.toThrow(message);
+    await expect(uploadImage(file(), "editor")).rejects.toMatchObject({ code });
   });
 });
 
@@ -67,6 +67,7 @@ describe("uploadWithToast", () => {
     const result = await uploadWithToast(file(), "editor", {
       loading: "Enviando…",
       success: "Enviada",
+      error: (code) => code,
     });
     expect(result).toBeNull();
     expect(toast.promise).toHaveBeenCalledWith(

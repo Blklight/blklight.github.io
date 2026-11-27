@@ -1,6 +1,7 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TypeInkContext, TypeTab } from "@/components/feed/cards/parts";
+import { renderWithIntl as render } from "../utils/render";
 
 describe("TypeTab", () => {
   it("stays neutral when the feed is not filtered", () => {

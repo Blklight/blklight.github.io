@@ -1,4 +1,6 @@
+"use client";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -14,13 +16,14 @@ export function AuthLinks({
   /** Below sm, keep only "Entrar" (the /auth page has the sign-up tab). */
   compact?: boolean;
 }) {
+  const t = useTranslations("auth");
   return (
     <div className={cn("flex items-center gap-2", className)}>
       <Link
         href="/auth"
         className={cn(buttonVariants({ variant: "ghost", size: "lg" }), LABEL)}
       >
-        Entrar
+        {t("signIn")}
       </Link>
       <Link
         href="/auth?mode=register"
@@ -30,7 +33,7 @@ export function AuthLinks({
           compact && "hidden sm:inline-flex",
         )}
       >
-        Criar conta
+        {t("signUp")}
       </Link>
     </div>
   );

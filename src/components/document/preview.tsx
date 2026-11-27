@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale, useTranslations } from "next-intl";
 import type { GrainSettings } from "@/features/documents/design/grains";
 import type { LetterheadTextContext } from "@/features/documents/design/letterhead-text";
 import { PaperSurface } from "@/features/documents/design/paper-surface";
@@ -42,8 +43,6 @@ export interface PreviewDesignProps {
   signatureContext?: SignatureContext | null;
 }
 
-const SAMPLE_TITLE = "Título do documento";
-
 function getStaticCoverFilter(settings: CoverImageSettings): string {
   switch (settings.filter) {
     case "grayscale":
@@ -58,6 +57,8 @@ function getStaticCoverFilter(settings: CoverImageSettings): string {
 }
 
 export function DocumentPreview(props: PreviewDesignProps) {
+  const t = useTranslations("templates");
+  const locale = useLocale();
   const {
     coverImage,
     coverSettings,
@@ -97,7 +98,7 @@ export function DocumentPreview(props: PreviewDesignProps) {
         )}
         style={{ color: paperColors?.text || undefined }}
       >
-        {SAMPLE_TITLE}
+        {t("sampleTitle")}
       </h1>
       {coverImage && (
         <div className="mb-6">
@@ -130,18 +131,12 @@ export function DocumentPreview(props: PreviewDesignProps) {
         }}
       />
       <div
-        lang="pt-BR"
+        lang={locale}
         className={cn("doc-prose", fontClass)}
         style={getPaperProseStyle(paperColors)}
       >
-        <p>
-          Este é o conteúdo do seu documento. A formatação do texto, a
-          tipografia e o estilo visual aparecem conforme configurados.
-        </p>
-        <p>
-          O design escolhido aqui é aplicado ao documento assim que você voltar
-          ao editor.
-        </p>
+        <p>{t("previewText1")}</p>
+        <p>{t("previewText2")}</p>
       </div>
       {isSignatureVisible(sigContext) && (
         <div className="mt-12">

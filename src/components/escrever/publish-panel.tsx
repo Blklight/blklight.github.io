@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, Loader2, Send, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useExpandableScreen } from "@/components/ui/expandable-screen";
@@ -41,6 +42,9 @@ export function PublishPanel({
   onConfirm,
 }: PublishPanelProps) {
   const { collapse } = useExpandableScreen();
+  const t = useTranslations("publish");
+  const tc = useTranslations("common");
+  const tStatus = useTranslations("documentStatus");
   const { data: categories, isLoading: categoriesLoading } = useCategories();
   const { data: popularTags } = usePopularTags(20);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -105,7 +109,7 @@ export function PublishPanel({
       await onConfirm({ categoryId: selectedCategoryId, tags });
       collapse();
     } catch {
-      setError("Nao foi possivel publicar. Tente novamente.");
+      setError(t("error"));
     }
   };
 
@@ -117,10 +121,10 @@ export function PublishPanel({
       <header className="shrink-0 border-b border-foreground/10 bg-background/80 backdrop-blur-sm">
         <div className="max-w-[1200px] mx-auto flex items-center justify-between px-4 py-3 pr-16">
           <h1 className="text-sm font-semibold uppercase tracking-widest">
-            Publicar
+            {t("title")}
           </h1>
           <span className="text-[9px] font-mono uppercase tracking-wider text-foreground/40">
-            Esc para fechar
+            {t("escToClose")}
           </span>
         </div>
       </header>
@@ -131,26 +135,26 @@ export function PublishPanel({
           <section>
             <div className="rounded-none border hairline shadow-none bg-transparent p-4">
               <div className="flex items-center gap-3 text-xs font-mono uppercase tracking-wider">
-                <span className="text-foreground/50">Status</span>
+                <span className="text-foreground/50">{t("status")}</span>
                 <span className="px-2 py-0.5 border border-foreground/20">
-                  {status}
+                  {tStatus(status)}
                 </span>
                 {status !== "published" && (
                   <>
                     <span className="text-foreground/40">--&gt;</span>
                     <span className="px-2 py-0.5 border border-accent text-accent">
-                      publicado
+                      {tStatus("published")}
                     </span>
                   </>
                 )}
               </div>
               <p className="text-xs text-foreground/50 mt-3 leading-relaxed">
                 {status === "published"
-                  ? "O artigo ja esta publicado. Confirmar atualiza a categoria, as tags e a publicacao como, sem republicar."
-                  : "Ao publicar, o artigo fica visivel para outros usuarios e a assinatura de autoria e fixada ao documento."}
+                  ? t("alreadyPublished")
+                  : t("willPublish")}{" "}
                 {hasUnsavedChanges
-                  ? " Alteracoes pendentes serao salvas automaticamente junto com a publicacao."
-                  : " Nenhuma alteracao pendente."}
+                  ? t("pendingChanges")
+                  : t("noPendingChanges")}
               </p>
             </div>
           </section>
@@ -159,14 +163,15 @@ export function PublishPanel({
           <section>
             <header className="mb-3 flex items-center justify-between">
               <h2 className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-                Categoria <span className="text-accent">(obrigatoria)</span>
+                {t("category")}{" "}
+                <span className="text-accent">{t("required")}</span>
               </h2>
               <span className="text-[10px] font-mono text-foreground/40">
-                selecione uma
+                {t("selectOne")}
               </span>
             </header>
             {categoriesLoading ? (
-              <p className="text-xs text-foreground/40">Carregando...</p>
+              <p className="text-xs text-foreground/40">{tc("loading")}</p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {(categories ?? []).map((category) => {
@@ -201,10 +206,10 @@ export function PublishPanel({
             <section>
               <header className="mb-3 flex items-center justify-between">
                 <h2 className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-                  Publicar como
+                  {t("publishAs")}
                 </h2>
                 <span className="text-[10px] font-mono text-foreground/40">
-                  selecione o destino
+                  {t("selectTarget")}
                 </span>
               </header>
               <div
@@ -224,7 +229,9 @@ export function PublishPanel({
                   aria-pressed={organizationId === null}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm font-semibold">Pessoal</span>
+                    <span className="text-sm font-semibold">
+                      {t("personal")}
+                    </span>
                     {organizationId === null && (
                       <Check className="w-4 h-4 text-accent" />
                     )}
@@ -261,10 +268,11 @@ export function PublishPanel({
           <section>
             <header className="mb-3 flex items-center justify-between">
               <h2 className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-                Tags <span className="text-foreground/40">(opcional)</span>
+                {t("tags")}{" "}
+                <span className="text-foreground/40">{t("optional")}</span>
               </h2>
               <span className="text-[10px] font-mono text-foreground/40">
-                enter para adicionar
+                {t("enterToAdd")}
               </span>
             </header>
 
@@ -281,7 +289,7 @@ export function PublishPanel({
                   {tag}
                   <button
                     type="button"
-                    aria-label={`Remover tag ${tag}`}
+                    aria-label={t("removeTag", { tag })}
                     onClick={() => removeTag(tag)}
                     className="text-foreground/50 hover:text-foreground cursor-pointer"
                   >
@@ -306,9 +314,7 @@ export function PublishPanel({
                     removeTag(tags[tags.length - 1]);
                   }
                 }}
-                placeholder={
-                  tags.length === 0 ? "ex: tutorial, javascript..." : ""
-                }
+                placeholder={tags.length === 0 ? t("tagsPlaceholder") : ""}
                 className="flex-1 min-w-[140px] bg-transparent outline-none text-sm"
               />
             </div>
@@ -316,7 +322,7 @@ export function PublishPanel({
             {suggestions.length > 0 && (
               <div className="mt-3 flex flex-wrap gap-2 items-center">
                 <span className="text-[10px] font-mono uppercase tracking-wider text-foreground/40">
-                  Sugestoes
+                  {t("suggestions")}
                 </span>
                 {suggestions.map((tag) => (
                   <button
@@ -337,9 +343,9 @@ export function PublishPanel({
             <div className="text-xs text-foreground/50">
               {selectedCategoryId
                 ? status === "published"
-                  ? "Pronto para atualizar"
-                  : "Pronto para publicar"
-                : "Selecione uma categoria para publicar"}
+                  ? t("readyToUpdate")
+                  : t("readyToPublish")
+                : t("pickCategory")}
             </div>
             <div className="flex items-center gap-3">
               {error && (
@@ -348,7 +354,7 @@ export function PublishPanel({
                 </p>
               )}
               <Button variant="ghost" type="button" onClick={collapse}>
-                Cancelar
+                {tc("cancel")}
               </Button>
               <Button
                 type="button"
@@ -362,8 +368,8 @@ export function PublishPanel({
                   <Send className="w-4 h-4" />
                 )}
                 {status === "published"
-                  ? "Salvar alteracoes"
-                  : "Confirmar e Publicar"}
+                  ? t("saveChanges")
+                  : t("confirmPublish")}
               </Button>
             </div>
           </section>

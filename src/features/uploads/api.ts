@@ -1,9 +1,43 @@
 import { isAxiosError } from "axios";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { apiClient, unwrap } from "@/lib/api-client";
 import type { ApiResponse } from "@/types/api.types";
 
 export type UploadPurpose = "editor" | "avatar";
+
+export type UploadErrorCode =
+  | "tooLarge"
+  | "unsupported"
+  | "rateLimited"
+  | "unavailable"
+  | "failed";
+
+/** Rejection of uploadImage; `code` picks the `upload.<code>` message. */
+export class UploadError extends Error {
+  constructor(readonly code: UploadErrorCode) {
+    super(code);
+    this.name = "UploadError";
+  }
+}
+
+export interface UploadToastMessages {
+  loading: string;
+  success: string;
+  error: (code: UploadErrorCode) => string;
+}
+
+/** Toast copy for one kind of upload, in the active locale. */
+export function useUploadToast(
+  kind: "photo" | "cover" | "image",
+): UploadToastMessages {
+  const t = useTranslations("upload");
+  return {
+    loading: t(`${kind}.loading`),
+    success: t(`${kind}.success`),
+    error: (code) => t(code),
+  };
+}
 
 export interface UploadedImage {
   url: string;
@@ -29,7 +63,7 @@ export async function uploadImage(
   purpose: UploadPurpose,
 ): Promise<UploadedImage> {
   if (file.size > MAX_UPLOAD_BYTES) {
-    throw new Error("A imagem deve ter no máximo 10 MB.");
+    throw new UploadError("tooLarge");
   }
   const form = new FormData();
   form.append("file", file);
@@ -46,18 +80,17 @@ export async function uploadImage(
       ),
     );
   } catch (error) {
-    throw new Error(uploadErrorMessage(error));
+    throw new UploadError(uploadErrorCode(error));
   }
 }
 
-function uploadErrorMessage(error: unknown): string {
+function uploadErrorCode(error: unknown): UploadErrorCode {
   const status = isAxiosError(error) ? error.response?.status : undefined;
-  if (status === 413) return "A imagem deve ter no máximo 10 MB.";
-  if (status === 400)
-    return "Formato não suportado. Use JPEG, PNG, WebP, AVIF ou GIF.";
-  if (status === 429) return "Muitos envios seguidos. Tente em instantes.";
-  if (status === 503) return "Envio de imagens indisponível no momento.";
-  return "Não foi possível enviar a imagem.";
+  if (status === 413) return "tooLarge";
+  if (status === 400) return "unsupported";
+  if (status === 429) return "rateLimited";
+  if (status === 503) return "unavailable";
+  return "failed";
 }
 
 /**
@@ -67,12 +100,14 @@ function uploadErrorMessage(error: unknown): string {
 export async function uploadWithToast(
   file: File,
   purpose: UploadPurpose,
-  messages: { loading: string; success: string },
+  messages: UploadToastMessages,
 ): Promise<UploadedImage | null> {
   const upload = uploadImage(file, purpose);
   toast.promise(upload, {
-    ...messages,
-    error: (error: Error) => error.message,
+    loading: messages.loading,
+    success: messages.success,
+    error: (error: unknown) =>
+      messages.error(error instanceof UploadError ? error.code : "failed"),
   });
   try {
     return await upload;

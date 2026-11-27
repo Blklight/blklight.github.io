@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import { Eye, EyeOff, Loader2, Lock, LogIn, Mail } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { useValidationMessage } from "@/i18n/use-validation-message";
 import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/store/useAuthStore";
 import type { ApiResponse, AuthResponse } from "@/types/api.types";
@@ -33,6 +35,9 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
+  const t = useTranslations("login");
+  const tAuth = useTranslations("auth");
+  const errorMessage = useValidationMessage();
   const setSession = useAuthStore((state) => state.setSession);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -79,9 +84,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     onError: (error: AxiosError<ApiResponse<null>>) => {
       const apiError = error.response?.data?.error;
       const message =
-        apiError?.message ??
-        error.response?.data?.message ??
-        "Erro ao fazer login";
+        apiError?.message ?? error.response?.data?.message ?? t("error");
 
       if (apiError?.fields) {
         for (const [field, fieldError] of Object.entries(apiError.fields)) {
@@ -98,10 +101,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   return (
     <div className="mt-6">
       <h3 className="text-2xl font-bold text-foreground mb-2 tracking-tight font-mono!">
-        Bem-vindo de volta
+        {t("title")}
       </h3>
       <p className="text-muted-foreground text-sm font-mono! mb-5">
-        Entre para acessar suas ferramentas
+        {t("lead")}
       </p>
       <form
         onSubmit={form.handleSubmit((data) => mutation.mutate(data))}
@@ -114,14 +117,14 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>E-mail ou usuário</FieldLabel>
+                <FieldLabel htmlFor={field.name}>{t("identifier")}</FieldLabel>
                 <InputGroup>
                   <InputGroupInput
                     {...field}
                     id={field.name}
                     type="text"
                     autoComplete="username"
-                    placeholder="seu@email.com"
+                    placeholder={t("identifierPlaceholder")}
                     aria-invalid={fieldState.invalid}
                   />
                   <InputGroupAddon align="inline-start">
@@ -129,7 +132,11 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                   </InputGroupAddon>
                 </InputGroup>
                 {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
+                  <FieldError
+                    errors={[
+                      { message: errorMessage(fieldState.error?.message) },
+                    ]}
+                  />
                 )}
               </Field>
             )}
@@ -141,7 +148,9 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Senha</FieldLabel>
+                <FieldLabel htmlFor={field.name}>
+                  {tAuth("password")}
+                </FieldLabel>
                 <InputGroup>
                   <InputGroupInput
                     {...field}
@@ -159,7 +168,11 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                       type="button"
                       size="icon-xs"
                       onClick={() => setShowPassword((prev) => !prev)}
-                      title={showPassword ? "Ocultar senha" : "Ver senha"}
+                      title={
+                        showPassword
+                          ? tAuth("hidePassword")
+                          : tAuth("showPassword")
+                      }
                     >
                       {showPassword ? (
                         <EyeOff className="size-3.5 text-muted-foreground" />
@@ -170,7 +183,11 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                   </InputGroupAddon>
                 </InputGroup>
                 {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
+                  <FieldError
+                    errors={[
+                      { message: errorMessage(fieldState.error?.message) },
+                    ]}
+                  />
                 )}
               </Field>
             )}
@@ -205,14 +222,14 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                 className="w-4 h-4 border-border text-foreground focus:ring-foreground"
               /> */}
               <span className="text-muted-foreground text-xs">
-                Lembrar de mim
+                {t("rememberMe")}
               </span>
             </label>
             <button
               type="button"
               className="text-xs text-foreground hover:underline"
             >
-              Esqueci a senha
+              {t("forgot")}
             </button>
           </div>
 
@@ -229,12 +246,12 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             {mutation.isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Entrando...
+                {t("signingIn")}
               </>
             ) : (
               <>
                 <LogIn />
-                Entrar
+                {tAuth("signIn")}
               </>
             )}
           </Button>

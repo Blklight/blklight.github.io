@@ -3,6 +3,7 @@ import { LayoutGrid, PenLine, Rss } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { useCurrentProfile } from "@/features/profile/queries";
 import { logout } from "@/lib/session";
@@ -23,6 +24,7 @@ import {
 
 export const Navbar = () => {
   const editorOverlaysOpen = useEditorOverlaysStore((s) => s.overlaysOpen);
+  const t = useTranslations("nav");
   const router = useRouter();
   const pathname = usePathname();
 
@@ -41,15 +43,15 @@ export const Navbar = () => {
   const links = [
     {
       href: "/feed",
-      label: "Feed",
-      hint: "O que foi publicado",
+      label: t("feed"),
+      hint: t("feedHint"),
       icon: Rss,
       show: true,
     },
     {
       href: "/escrever",
-      label: "Escrever",
-      hint: "Começar um texto",
+      label: t("write"),
+      hint: t("writeHint"),
       icon: PenLine,
       show: isAuthenticated,
     },
@@ -83,7 +85,7 @@ export const Navbar = () => {
 
         <DropdownMenu>
           <DropdownMenuTrigger
-            aria-label="Navegação"
+            aria-label={t("navigation")}
             className="flex h-8 items-center gap-1.5 rounded-xs border border-transparent px-2 text-muted-foreground hover:border-border hover:bg-muted/60 hover:text-foreground data-popup-open:border-border data-popup-open:bg-muted/60 data-popup-open:text-foreground outline-none focus-visible:outline-2 focus-visible:outline-foreground cursor-pointer"
           >
             <LayoutGrid className="size-4" />
@@ -96,7 +98,7 @@ export const Navbar = () => {
           <DropdownMenuContent align="start" className="w-60 rounded-xs">
             <DropdownMenuGroup>
               <DropdownMenuLabel className="font-mono text-xs uppercase tracking-wider">
-                Navegação
+                {t("navigation")}
               </DropdownMenuLabel>
               {links.map((l) => (
                 <DropdownMenuItem

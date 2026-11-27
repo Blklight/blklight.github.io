@@ -1,6 +1,7 @@
 "use client";
 
 import { Check } from "lucide-react";
+import { useFormatter, useTranslations } from "next-intl";
 import {
   DocumentFooterRenderer,
   DocumentHeaderRenderer,
@@ -16,16 +17,16 @@ interface TemplatePickerItemProps {
   onApply: () => void;
 }
 
-const DATE = new Intl.DateTimeFormat("pt-BR", {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-});
-
-const SAMPLE = { author: { displayName: "Você" }, typeLabel: "Artigo" };
+const DATE = { day: "2-digit", month: "2-digit", year: "numeric" } as const;
 
 /** The theme as a tiny page: real paper, letterhead, typeface and footer, scaled down. */
 function TemplateThumb({ template }: { template: DesignTemplate }) {
+  const t = useTranslations("templates");
+  const tk = useTranslations("kinds");
+  const sample = {
+    author: { displayName: t("sampleAuthor") },
+    typeLabel: tk("article.label"),
+  };
   const { snapshot } = template;
   const design = derivePaperDesign(snapshot);
   return (
@@ -43,7 +44,7 @@ function TemplateThumb({ template }: { template: DesignTemplate }) {
             <DocumentHeaderRenderer
               header={snapshot.documentHeader}
               className="mb-4"
-              textContext={SAMPLE}
+              textContext={sample}
             />
           )}
           <p
@@ -53,20 +54,19 @@ function TemplateThumb({ template }: { template: DesignTemplate }) {
             )}
             style={{ color: design.paperColors?.text ?? undefined }}
           >
-            Título do documento
+            {t("sampleTitle")}
           </p>
           <p
             className={cn("mt-3 text-base leading-relaxed", design.fontClass)}
             style={{ color: design.paperColors?.muted ?? undefined }}
           >
-            Um parágrafo de exemplo para mostrar a fonte, as cores do papel e a
-            textura deste tema.
+            {t("sampleText")}
           </p>
           {snapshot.documentFooter?.enabled && (
             <DocumentFooterRenderer
               footer={snapshot.documentFooter}
               className="mt-6"
-              textContext={SAMPLE}
+              textContext={sample}
             />
           )}
         </PaperSurface>
@@ -80,6 +80,8 @@ export function TemplatePickerItem({
   isApplied,
   onApply,
 }: TemplatePickerItemProps) {
+  const t = useTranslations("templates");
+  const format = useFormatter();
   return (
     <button
       type="button"
@@ -100,7 +102,9 @@ export function TemplatePickerItem({
             {template.name}
           </span>
           <span className="mt-0.5 block font-mono text-[0.65rem] text-foreground/50">
-            Editado em {DATE.format(new Date(template.updatedAt))}
+            {t("editedOn", {
+              date: format.dateTime(new Date(template.updatedAt), DATE),
+            })}
           </span>
         </span>
         <span
@@ -112,7 +116,7 @@ export function TemplatePickerItem({
           )}
         >
           {isApplied && <Check className="size-3" />}
-          {isApplied ? "Aplicado" : "Aplicar"}
+          {isApplied ? t("applied") : t("apply")}
         </span>
       </span>
     </button>

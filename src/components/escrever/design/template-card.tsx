@@ -1,6 +1,7 @@
 "use client";
 
 import { Copy, Pencil, Trash2 } from "lucide-react";
+import { useFormatter, useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import type { DesignTemplate } from "@/store/useDesignTemplatesStore";
 
@@ -12,14 +13,7 @@ interface TemplateCardProps {
   onDelete: () => void;
 }
 
-function formatDate(iso: string): string {
-  const d = new Date(iso);
-  return d.toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-}
+const DATE = { day: "2-digit", month: "2-digit", year: "numeric" } as const;
 
 function CardAction({
   title,
@@ -49,6 +43,8 @@ export function TemplateCard({
   onDuplicate,
   onDelete,
 }: TemplateCardProps) {
+  const t = useTranslations("templates");
+  const format = useFormatter();
   return (
     <div className="group flex flex-col border border-foreground/10 rounded-xs overflow-hidden transition-colors hover:border-foreground/30">
       <button type="button" onClick={onEdit} className="text-left">
@@ -61,18 +57,20 @@ export function TemplateCard({
             {template.name}
           </p>
           <p className="text-xs font-mono text-foreground/60 mt-1">
-            Editado em {formatDate(template.updatedAt)}
+            {t("editedOn", {
+              date: format.dateTime(new Date(template.updatedAt), DATE),
+            })}
           </p>
         </div>
       </button>
       <div className="flex items-center justify-end gap-1 px-2 pb-2 mt-auto">
-        <CardAction title="Renomear" onClick={onRename}>
+        <CardAction title={t("rename")} onClick={onRename}>
           <Pencil className="w-3.5 h-3.5" />
         </CardAction>
-        <CardAction title="Duplicar" onClick={onDuplicate}>
+        <CardAction title={t("duplicate")} onClick={onDuplicate}>
           <Copy className="w-3.5 h-3.5" />
         </CardAction>
-        <CardAction title="Excluir" onClick={onDelete}>
+        <CardAction title={t("delete")} onClick={onDelete}>
           <Trash2 className="w-3.5 h-3.5" />
         </CardAction>
       </div>

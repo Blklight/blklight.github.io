@@ -1,9 +1,10 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { LoginForm } from "@/components/forms/auth/login-form";
 import { apiClient } from "@/lib/api-client";
+import { renderWithIntl as render } from "../utils/render";
 
 vi.mock("@/lib/api-client", () => ({ apiClient: { post: vi.fn() } }));
 
