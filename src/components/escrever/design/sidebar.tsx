@@ -9,6 +9,7 @@ import {
   Sparkles,
   Type,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 export type DesignTab =
@@ -21,29 +22,26 @@ export type DesignTab =
   | "signature";
 
 interface TabItem {
+  /** Text in `design.tabs.<id>`. */
   id: DesignTab;
-  label: string;
   icon: React.ReactNode;
 }
 
 export const DESIGN_TABS: TabItem[] = [
-  { id: "colors", label: "Cores", icon: <Palette className="w-4 h-4" /> },
-  { id: "texture", label: "Textura", icon: <Grid3X3 className="w-4 h-4" /> },
+  { id: "colors", icon: <Palette className="w-4 h-4" /> },
+  { id: "texture", icon: <Grid3X3 className="w-4 h-4" /> },
   {
     id: "grain",
-    label: "Granulação",
     icon: <Sparkles className="w-4 h-4" />,
   },
-  { id: "font", label: "Fonte", icon: <Type className="w-4 h-4" /> },
-  { id: "cover", label: "Capa", icon: <Image className="w-4 h-4" /> },
+  { id: "font", icon: <Type className="w-4 h-4" /> },
+  { id: "cover", icon: <Image className="w-4 h-4" /> },
   {
     id: "letterhead",
-    label: "Cabeçalho e rodapé",
     icon: <FileText className="w-4 h-4" />,
   },
   {
     id: "signature",
-    label: "Assinatura",
     icon: <PenTool className="w-4 h-4" />,
   },
 ];
@@ -55,9 +53,10 @@ export function DesignSidebar({
   activeTab: DesignTab;
   onTabChange: (tab: DesignTab) => void;
 }) {
+  const t = useTranslations("design");
   return (
     <nav
-      aria-label="Seções do design"
+      aria-label={t("sections")}
       className="w-48 shrink-0 flex flex-col gap-1"
     >
       {DESIGN_TABS.map((tab) => (
@@ -74,7 +73,7 @@ export function DesignSidebar({
           )}
         >
           {tab.icon}
-          {tab.label}
+          {t(`tabs.${tab.id}`)}
         </button>
       ))}
     </nav>

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useLayoutEffect, useMemo, useState } from "react";
 import type { StoreApi, UseBoundStore } from "zustand";
 import { useDocumentDesign } from "@/components/document/use-document-design";
@@ -36,6 +37,8 @@ interface TemplatePickerProps {
 }
 
 export function TemplatePicker({ designStore, onClose }: TemplatePickerProps) {
+  const t = useTranslations("templates");
+  const tc = useTranslations("common");
   const templates = useDesignTemplatesStore((s) => s.templates);
   const design = useDocumentDesign(designStore);
   const [pendingTemplate, setPendingTemplate] = useState<DesignTemplate | null>(
@@ -75,25 +78,22 @@ export function TemplatePicker({ designStore, onClose }: TemplatePickerProps) {
   return (
     <div className="flex h-full flex-col">
       <SheetHeader>
-        <SheetTitle>Escolher tema</SheetTitle>
-        <SheetDescription>
-          Aplicar um template de design ao documento atual. Sua capa nunca é
-          sobrescrita.
-        </SheetDescription>
+        <SheetTitle>{t("pickTheme")}</SheetTitle>
+        <SheetDescription>{t("pickThemeHint")}</SheetDescription>
       </SheetHeader>
 
       <div className="flex-1 overflow-y-auto px-4 pt-2 pb-4">
         {sorted.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-4 py-16 text-center">
             <p className="text-sm font-mono uppercase tracking-wider text-foreground/40">
-              Nenhum template ainda
+              {t("none")}
             </p>
             <Link
               href="/design"
               onClick={onClose}
               className="text-xs font-mono uppercase tracking-wider text-foreground/60 hover:text-foreground transition-colors underline underline-offset-2"
             >
-              Criar primeiro template
+              {t("createFirst")}
             </Link>
           </div>
         ) : (
@@ -116,7 +116,7 @@ export function TemplatePicker({ designStore, onClose }: TemplatePickerProps) {
           onClick={onClose}
           className="text-[10px] font-mono uppercase tracking-wider text-foreground/40 hover:text-foreground transition-colors"
         >
-          Gerenciar templates
+          {t("manage")}
         </Link>
       </SheetFooter>
 
@@ -128,22 +128,21 @@ export function TemplatePicker({ designStore, onClose }: TemplatePickerProps) {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Aplicar tema</AlertDialogTitle>
+            <AlertDialogTitle>{t("applyTitle")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Aplicar &quot;{pendingTemplate?.name}&quot;? O design atual do
-              documento será substituído. Sua capa atual será preservada.
+              {t("applyConfirm", { name: pendingTemplate?.name ?? "" })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={() => setPendingTemplate(null)}>
-              Cancelar
+              {tc("cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (pendingTemplate) apply(pendingTemplate);
               }}
             >
-              Aplicar
+              {t("apply")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -1,6 +1,7 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { DesignRegion, SideTabs } from "@/components/escrever/side-panel";
+import { renderWithIntl as render } from "../utils/render";
 
 describe("SideTabs", () => {
   it("marks the open panel and reports clicks", () => {

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,6 +25,8 @@ export function DeleteTemplateDialog({
   onClose,
   onConfirm,
 }: DeleteTemplateDialogProps) {
+  const t = useTranslations("templates");
+  const tc = useTranslations("common");
   return (
     <AlertDialog
       open={isOpen}
@@ -33,14 +36,18 @@ export function DeleteTemplateDialog({
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Excluir template</AlertDialogTitle>
+          <AlertDialogTitle>{t("deleteTitle")}</AlertDialogTitle>
           <AlertDialogDescription>
-            Excluir &quot;{templateName}&quot;? Esta ação não pode ser desfeita.
+            {t("deleteConfirm", { name: templateName })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onClose}>Cancelar</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>Excluir</AlertDialogAction>
+          <AlertDialogCancel onClick={onClose}>
+            {tc("cancel")}
+          </AlertDialogCancel>
+          <AlertDialogAction onClick={onConfirm}>
+            {t("delete")}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

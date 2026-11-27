@@ -1,5 +1,6 @@
 "use client";
 
+import { type Messages, useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import {
   calculateContrastRatio,
@@ -10,7 +11,10 @@ import { PAPER_THEME_PRESETS } from "@/components/document/constants";
 import { cn } from "@/lib/utils";
 import type { DesignContext } from "./layout";
 
+type PaperId = keyof Messages["design"]["papers"];
+
 export function ColorsPanel({ design, presets }: DesignContext) {
+  const t = useTranslations("design");
   const { paperStyle, setPaperStyle, paperColors, fontClass } = design;
   const { savedColors, handleSaveColor, handleDeleteColor } = presets;
 
@@ -39,19 +43,18 @@ export function ColorsPanel({ design, presets }: DesignContext) {
       <div className="flex items-center gap-2">
         <PaletteIcon />
         <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-          Cores do Papel
+          {t("paperColors")}
         </span>
       </div>
 
       <p className="text-xs font-mono text-foreground/60 leading-relaxed">
-        Escolha o esquema de cores do documento. As cores são aplicadas ao fundo
-        do papel, texto principal e elementos decorativos.
+        {t("paperColorsHint")}
       </p>
 
       {/* Mode selector */}
       <div className="flex flex-col gap-1.5">
         <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-          Modo de Cor
+          {t("colorMode")}
         </span>
         <div className="grid grid-cols-[repeat(auto-fit,minmax(7.5rem,1fr))] gap-1">
           <button
@@ -73,7 +76,7 @@ export function ColorsPanel({ design, presets }: DesignContext) {
                 : "border-border text-foreground/50 hover:border-muted-foreground",
             )}
           >
-            Tema padrão
+            {t("defaultTheme")}
           </button>
           <button
             type="button"
@@ -94,7 +97,7 @@ export function ColorsPanel({ design, presets }: DesignContext) {
                 : "border-border text-foreground/50 hover:border-muted-foreground",
             )}
           >
-            Predefinidas
+            {t("presets")}
           </button>
           <button
             type="button"
@@ -115,7 +118,7 @@ export function ColorsPanel({ design, presets }: DesignContext) {
                 : "border-border text-foreground/50 hover:border-muted-foreground",
             )}
           >
-            Personalizada
+            {t("custom")}
           </button>
         </div>
       </div>
@@ -148,7 +151,7 @@ export function ColorsPanel({ design, presets }: DesignContext) {
                 style={{ backgroundColor: preset.bg }}
               />
               <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-                {preset.name}
+                {t(`papers.${preset.id as PaperId}`)}
               </span>
             </button>
           ))}
@@ -160,7 +163,7 @@ export function ColorsPanel({ design, presets }: DesignContext) {
         (paperStyle.mode === "preset" || paperStyle.mode === "custom") && (
           <div className="flex flex-col gap-1.5">
             <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-              Cores Salvas
+              {t("savedColors")}
             </span>
             <div className="flex flex-col gap-1">
               {savedColors.map((color) => (
@@ -209,13 +212,13 @@ export function ColorsPanel({ design, presets }: DesignContext) {
       {showCustomPicker && (
         <div className="flex flex-col gap-3 p-3 border border-border rounded-xs bg-secondary/10">
           <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-            Personalizar Cores
+            {t("customizeColors")}
           </span>
 
           {/* Background color */}
           <div className="flex flex-col gap-1">
             <span className="text-xs font-mono text-foreground/60">
-              Cor de fundo
+              {t("bgColor")}
             </span>
             <div className="flex items-center gap-2">
               <input
@@ -239,7 +242,7 @@ export function ColorsPanel({ design, presets }: DesignContext) {
           {/* Text color */}
           <div className="flex flex-col gap-1">
             <span className="text-xs font-mono text-foreground/60">
-              Cor do texto
+              {t("textColor")}
             </span>
             <div className="flex items-center gap-2">
               <input
@@ -272,7 +275,7 @@ export function ColorsPanel({ design, presets }: DesignContext) {
                 color: "#FFFFFF",
               }}
             >
-              {wcagInfo.level}
+              {wcagInfo.level === "fail" ? t("wcagFail") : wcagInfo.level}
             </span>
             <span
               className="text-xs font-mono"
@@ -281,9 +284,7 @@ export function ColorsPanel({ design, presets }: DesignContext) {
               {customContrast.toFixed(2)}:1
             </span>
             <span className="text-[8px] font-mono text-foreground/60 ml-auto">
-              {customContrast < 4.5
-                ? "Contraste insuficiente"
-                : "Contraste adequado"}
+              {customContrast < 4.5 ? t("contrastLow") : t("contrastOk")}
             </span>
           </div>
 
@@ -296,7 +297,7 @@ export function ColorsPanel({ design, presets }: DesignContext) {
             }}
           >
             <p className="text-xs font-mono" style={{ color: customTextInput }}>
-              Preview: {customBgInput} / {customTextInput}
+              {t("previewColors", { bg: customBgInput, text: customTextInput })}
             </p>
           </div>
 
@@ -306,7 +307,7 @@ export function ColorsPanel({ design, presets }: DesignContext) {
               type="text"
               value={customName}
               onChange={(e) => setCustomName(e.target.value)}
-              placeholder="Nome da cor"
+              placeholder={t("colorName")}
               className="flex-1 px-2 py-1 text-xs font-mono border border-border rounded-xs bg-transparent outline-none focus:border-foreground transition-colors"
             />
             <button
@@ -323,7 +324,7 @@ export function ColorsPanel({ design, presets }: DesignContext) {
               }}
               className="px-2 py-1 text-xs font-mono uppercase tracking-wider border border-foreground/30 rounded-xs hover:bg-secondary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             >
-              Salvar
+              {t("save")}
             </button>
           </div>
 
@@ -334,7 +335,7 @@ export function ColorsPanel({ design, presets }: DesignContext) {
             onClick={handleApplyCustom}
             className="px-3 py-1.5 text-xs font-mono uppercase tracking-wider border border-foreground rounded-xs bg-secondary text-foreground hover:bg-secondary/80 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           >
-            Aplicar cor
+            {t("applyColor")}
           </button>
         </div>
       )}
@@ -353,7 +354,7 @@ export function ColorsPanel({ design, presets }: DesignContext) {
           >
             {paperColors
               ? `${paperColors.bg} / ${paperColors.text}`
-              : "Tema padrão"}
+              : t("defaultTheme")}
           </span>
         </div>
       </div>

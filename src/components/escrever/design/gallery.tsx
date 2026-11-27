@@ -2,6 +2,7 @@
 
 import { ArrowLeft, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useLayoutEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { DesignTemplate } from "@/store/useDesignTemplatesStore";
@@ -26,6 +27,7 @@ export function DesignGallery({
   onDuplicate,
   onDelete,
 }: DesignGalleryProps) {
+  const t = useTranslations("templates");
   const router = useRouter();
   const [renameTarget, setRenameTarget] = useState<DesignTemplate | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<DesignTemplate | null>(null);
@@ -53,14 +55,14 @@ export function DesignGallery({
             className="flex items-center gap-2 text-sm text-foreground/60 hover:text-foreground transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Voltar
+            {t("back")}
           </button>
           <h1 className="text-sm font-semibold uppercase tracking-widest">
-            Galeria de Templates
+            {t("galleryTitle")}
           </h1>
           <Button size="sm" onClick={onCreate}>
             <Plus className="w-4 h-4" />
-            Novo template
+            {t("new")}
           </Button>
         </div>
       </header>
@@ -69,11 +71,11 @@ export function DesignGallery({
         {sorted.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-4 py-24 text-center">
             <p className="text-sm font-mono uppercase tracking-wider text-foreground/60">
-              Nenhum template ainda
+              {t("none")}
             </p>
             <Button size="sm" onClick={onCreate}>
               <Plus className="w-4 h-4" />
-              Criar primeiro template
+              {t("createFirst")}
             </Button>
           </div>
         ) : (

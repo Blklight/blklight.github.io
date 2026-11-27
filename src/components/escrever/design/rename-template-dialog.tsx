@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +26,8 @@ export function RenameTemplateDialog({
   onClose,
   onConfirm,
 }: RenameTemplateDialogProps) {
+  const t = useTranslations("templates");
+  const tc = useTranslations("common");
   const [name, setName] = useState(initialName);
 
   useEffect(() => {
@@ -47,10 +50,8 @@ export function RenameTemplateDialog({
     >
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Renomear template</DialogTitle>
-          <DialogDescription>
-            Dê um nome claro para identificar este template.
-          </DialogDescription>
+          <DialogTitle>{t("renameTitle")}</DialogTitle>
+          <DialogDescription>{t("renameHint")}</DialogDescription>
         </DialogHeader>
         <Input
           value={name}
@@ -62,10 +63,10 @@ export function RenameTemplateDialog({
         />
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>
-            Cancelar
+            {tc("cancel")}
           </Button>
           <Button onClick={handleConfirm} disabled={!name.trim()}>
-            Renomear
+            {t("rename")}
           </Button>
         </DialogFooter>
       </DialogContent>

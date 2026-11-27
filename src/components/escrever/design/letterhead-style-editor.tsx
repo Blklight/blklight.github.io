@@ -15,6 +15,7 @@ import {
   Maximize,
   Palette,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { GRADIENT_PRESETS } from "@/components/document/constants";
 import { Section } from "@/components/document/section";
 import type {
@@ -27,63 +28,56 @@ import type {
 import { ColorField } from "./color-field";
 import { SliderField } from "./slider-field";
 
-const BORDER_STYLES: { id: BorderStyleType; label: string }[] = [
-  { id: "none", label: "Nenhuma" },
-  { id: "solid", label: "Solida" },
-  { id: "dashed", label: "Tracejada" },
-  { id: "dotted", label: "Pontilhada" },
-  { id: "double", label: "Dupla" },
+const BORDER_STYLES: { id: BorderStyleType }[] = [
+  { id: "none" },
+  { id: "solid" },
+  { id: "dashed" },
+  { id: "dotted" },
+  { id: "double" },
 ];
 
 const GRADIENT_DIRECTIONS: {
   id: GradientDirection;
-  label: string;
   icon: React.ReactNode;
 }[] = [
   {
     id: "to-r",
-    label: "Direita",
     icon: <ArrowRight className="w-3.5 h-3.5" />,
   },
   {
     id: "to-l",
-    label: "Esquerda",
     icon: <ArrowLeft className="w-3.5 h-3.5" />,
   },
-  { id: "to-b", label: "Baixo", icon: <ArrowDown className="w-3.5 h-3.5" /> },
-  { id: "to-t", label: "Cima", icon: <ArrowUp className="w-3.5 h-3.5" /> },
+  { id: "to-b", icon: <ArrowDown className="w-3.5 h-3.5" /> },
+  { id: "to-t", icon: <ArrowUp className="w-3.5 h-3.5" /> },
   {
     id: "to-br",
-    label: "Diag. ↘",
     icon: <ArrowDownRight className="w-3.5 h-3.5" />,
   },
   {
     id: "to-bl",
-    label: "Diag. ↙",
     icon: <ArrowDownLeft className="w-3.5 h-3.5" />,
   },
   {
     id: "to-tr",
-    label: "Diag. ↗",
     icon: <ArrowUpRight className="w-3.5 h-3.5" />,
   },
   {
     id: "to-tl",
-    label: "Diag. ↖",
     icon: <ArrowUpLeft className="w-3.5 h-3.5" />,
   },
 ];
 
-const ALIGN_OPTIONS: { id: TextAlignment; label: string }[] = [
-  { id: "left", label: "Esquerda" },
-  { id: "center", label: "Centro" },
-  { id: "right", label: "Direita" },
+const ALIGN_OPTIONS: { id: TextAlignment }[] = [
+  { id: "left" },
+  { id: "center" },
+  { id: "right" },
 ];
 
 const TEXTURE_TYPES = [
-  { id: "none" as const, label: "Nenhuma" },
-  { id: "dots" as const, label: "Pontos" },
-  { id: "grid" as const, label: "Grade" },
+  { id: "none" as const },
+  { id: "dots" as const },
+  { id: "grid" as const },
 ];
 
 export function LetterheadStyleEditor({
@@ -95,11 +89,12 @@ export function LetterheadStyleEditor({
   onChange: (s: LetterheadStyle) => void;
   collapsible?: boolean;
 }) {
+  const tl = useTranslations("letterhead");
   return (
     <div className="flex flex-col gap-3">
       {/* Background */}
       <Section
-        label="Fundo"
+        label={tl("bg")}
         icon={<Palette className="w-3.5 h-3.5 text-muted-foreground" />}
         collapsible={collapsible}
         defaultOpen
@@ -116,13 +111,13 @@ export function LetterheadStyleEditor({
                   : "border-border text-foreground/50 hover:border-muted-foreground"
               }`}
             >
-              {t === "solid" ? "Solido" : "Gradiente"}
+              {t === "solid" ? tl("bgSolid") : tl("bgGradient")}
             </button>
           ))}
         </div>
         {style.bgType === "solid" && (
           <ColorField
-            label="Cor de fundo"
+            label={tl("bgColor")}
             value={style.bg}
             onChange={(v) => onChange({ ...style, bg: v })}
           />
@@ -131,19 +126,19 @@ export function LetterheadStyleEditor({
           <div className="flex flex-col gap-3">
             <div className="grid grid-cols-2 gap-3">
               <ColorField
-                label="De"
+                label={tl("from")}
                 value={style.gradientFrom}
                 onChange={(v) => onChange({ ...style, gradientFrom: v })}
               />
               <ColorField
-                label="Para"
+                label={tl("to")}
                 value={style.gradientTo}
                 onChange={(v) => onChange({ ...style, gradientTo: v })}
               />
             </div>
             <div className="flex flex-col gap-1.5">
               <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-                Direcao
+                {tl("direction")}
               </span>
               <div className="grid grid-cols-4 gap-1">
                 {GRADIENT_DIRECTIONS.map((d) => (
@@ -158,7 +153,7 @@ export function LetterheadStyleEditor({
                         ? "border-foreground bg-secondary"
                         : "border-border hover:border-muted-foreground"
                     }`}
-                    title={d.label}
+                    title={tl(`directions.${d.id}`)}
                   >
                     {d.icon}
                   </button>
@@ -167,7 +162,7 @@ export function LetterheadStyleEditor({
             </div>
             <div className="flex flex-col gap-1.5">
               <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-                Presets
+                {tl("gradientPresets")}
               </span>
               <div className="grid grid-cols-4 gap-1.5">
                 {GRADIENT_PRESETS.map((g) => (
@@ -185,7 +180,7 @@ export function LetterheadStyleEditor({
                     style={{
                       background: `linear-gradient(to right, ${g.from}, ${g.to})`,
                     }}
-                    title={g.name}
+                    title={tl(`gradients.${g.id}`)}
                   />
                 ))}
               </div>
@@ -196,19 +191,19 @@ export function LetterheadStyleEditor({
 
       {/* Text */}
       <Section
-        label="Texto"
+        label={tl("text")}
         icon={<AlignCenter className="w-3.5 h-3.5 text-muted-foreground" />}
         collapsible={collapsible}
         defaultOpen
       >
         <ColorField
-          label="Cor do texto"
+          label={tl("textColor")}
           value={style.text}
           onChange={(v) => onChange({ ...style, text: v })}
         />
         <div className="flex flex-col gap-1.5">
           <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-            Alinhamento
+            {tl("alignment")}
           </span>
           <div className="flex gap-1">
             {ALIGN_OPTIONS.map((a) => (
@@ -222,7 +217,7 @@ export function LetterheadStyleEditor({
                     : "border-border text-foreground/50 hover:border-muted-foreground"
                 }`}
               >
-                {a.label}
+                {tl(`align.${a.id}`)}
               </button>
             ))}
           </div>
@@ -231,7 +226,7 @@ export function LetterheadStyleEditor({
 
       {/* Texture */}
       <Section
-        label="Textura"
+        label={tl("texture")}
         icon={<Layers className="w-3.5 h-3.5 text-muted-foreground" />}
         collapsible={collapsible}
       >
@@ -247,13 +242,13 @@ export function LetterheadStyleEditor({
                   : "border-border text-foreground/50 hover:border-muted-foreground"
               }`}
             >
-              {t.label}
+              {tl(`textures.${t.id}`)}
             </button>
           ))}
         </div>
         {style.textureType !== "none" && (
           <SliderField
-            label="Opacidade"
+            label={tl("opacity")}
             value={Math.round(style.textureOpacity * 100)}
             min={0}
             max={50}
@@ -265,7 +260,7 @@ export function LetterheadStyleEditor({
 
       {/* Borders */}
       <Section
-        label="Bordas"
+        label={tl("bordersLabel")}
         icon={<BoxSelect className="w-3.5 h-3.5 text-muted-foreground" />}
         collapsible={collapsible}
       >
@@ -281,26 +276,26 @@ export function LetterheadStyleEditor({
                   : "border-border text-foreground/50 hover:border-muted-foreground"
               }`}
             >
-              {b.label}
+              {tl(`borders.${b.id}`)}
             </button>
           ))}
         </div>
         {style.borderStyle !== "none" && (
           <>
             <SliderField
-              label="Espessura"
+              label={tl("thickness")}
               value={style.borderWidth}
               min={1}
               max={8}
               onChange={(v) => onChange({ ...style, borderWidth: v })}
             />
             <ColorField
-              label="Cor"
+              label={tl("color")}
               value={style.borderColor}
               onChange={(v) => onChange({ ...style, borderColor: v })}
             />
             <SliderField
-              label="Raio"
+              label={tl("radius")}
               value={style.borderRadius}
               min={0}
               max={24}
@@ -312,12 +307,12 @@ export function LetterheadStyleEditor({
 
       {/* Spacing */}
       <Section
-        label="Espacamento"
+        label={tl("spacing")}
         icon={<Maximize className="w-3.5 h-3.5 text-muted-foreground" />}
         collapsible={collapsible}
       >
         <SliderField
-          label="Horizontal"
+          label={tl("horizontal")}
           value={style.paddingX}
           min={0}
           max={64}
@@ -325,7 +320,7 @@ export function LetterheadStyleEditor({
           onChange={(v) => onChange({ ...style, paddingX: v })}
         />
         <SliderField
-          label="Vertical"
+          label={tl("vertical")}
           value={style.paddingY}
           min={0}
           max={48}

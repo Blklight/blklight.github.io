@@ -209,21 +209,15 @@ export const FOOTER_PRESET_COMPONENTS: Record<
 export const FOOTER_PRESET_LIST: HeaderPresetMeta[] = [
   {
     id: BLKLIGHT_PRESET_ID,
-    name: "Blklight",
-    description: "Rodape padrao do Blklight, segue o tema",
     defaultLines: BLKLIGHT_FOOTER_LINES,
     defaultLineFormats: BLKLIGHT_FOOTER_LINE_FORMATS,
   },
   {
     id: "corp-moderno",
-    name: "Corporativo",
-    description: "Rodape limpo e moderno corporativo",
     defaultLines: BLKLIGHT_FOOTER_LINES,
   },
   {
     id: "alerta-vermelho",
-    name: "Alerta Vermelho",
-    description: "Rodape urgente com gradiente vermelho",
     defaultLines: BLKLIGHT_FOOTER_LINES,
   },
 ];

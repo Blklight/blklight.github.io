@@ -1,11 +1,13 @@
 "use client";
 
 import { Type } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { FONT_OPTIONS } from "@/components/document/constants";
 import { cn } from "@/lib/utils";
 import type { DesignContext } from "./layout";
 
 export function FontPanel({ design }: DesignContext) {
+  const t = useTranslations("design");
   const { typography, setTypography } = design;
 
   return (
@@ -13,13 +15,12 @@ export function FontPanel({ design }: DesignContext) {
       <div className="flex items-center gap-2">
         <Type className="w-4 h-4 text-foreground/60" />
         <span className="text-xs font-mono uppercase tracking-wider text-foreground/60">
-          Tipografia
+          {t("typography")}
         </span>
       </div>
 
       <p className="text-xs font-mono text-foreground/60 leading-relaxed">
-        Escolha a fonte principal do documento. A alteracao afeta titulos,
-        paragrafos e elementos de texto.
+        {t("typographyHint")}
       </p>
 
       <div className="flex flex-col gap-1.5">

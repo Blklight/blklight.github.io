@@ -65,24 +65,13 @@ export function calculateContrastRatio(bg: string, text: string): number {
 }
 
 // Get WCAG level based on contrast ratio
+/** `level` is a WCAG grade, or "fail" (shown as `design.wcagFail`). */
 export function getWCAGLevel(ratio: number): {
-  level: string;
+  level: "AAA" | "AA" | "AA Large" | "fail";
   color: string;
-  message: string;
 } {
-  if (ratio >= 7)
-    return { level: "AAA", color: "#22C55E", message: "Excelente contraste" };
-  if (ratio >= 4.5)
-    return { level: "AA", color: "#84CC16", message: "Bom contraste" };
-  if (ratio >= 3)
-    return {
-      level: "AA Large",
-      color: "#EAB308",
-      message: "Apenas texto grande",
-    };
-  return {
-    level: "Falha",
-    color: "#EF4444",
-    message: "Contraste insuficiente",
-  };
+  if (ratio >= 7) return { level: "AAA", color: "#22C55E" };
+  if (ratio >= 4.5) return { level: "AA", color: "#84CC16" };
+  if (ratio >= 3) return { level: "AA Large", color: "#EAB308" };
+  return { level: "fail", color: "#EF4444" };
 }

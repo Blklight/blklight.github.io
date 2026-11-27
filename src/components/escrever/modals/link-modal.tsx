@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 
@@ -15,6 +16,8 @@ export function LinkModal({
   onSubmit: (url: string) => void;
   initialUrl?: string;
 }) {
+  const t = useTranslations("editor");
+  const tc = useTranslations("common");
   const [url, setUrl] = useState(initialUrl);
 
   useEffect(() => {
@@ -36,12 +39,12 @@ export function LinkModal({
         exit={{ opacity: 0, scale: 0.95 }}
         className="relative bg-card border border-border p-6 w-full max-w-md z-10"
       >
-        <h3 className="font-medium text-foreground mb-4">Adicionar Link</h3>
+        <h3 className="font-medium text-foreground mb-4">{t("addLink")}</h3>
         <input
           type="url"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          placeholder="https://exemplo.com"
+          placeholder={t("linkPlaceholder")}
           className="w-full px-4 py-3 bg-secondary border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors text-sm font-mono"
           autoFocus
         />
@@ -52,7 +55,7 @@ export function LinkModal({
             onClick={onClose}
             className="font-mono text-xs uppercase tracking-wider"
           >
-            Cancelar
+            {tc("cancel")}
           </Button>
           <Button
             size="sm"
@@ -62,7 +65,7 @@ export function LinkModal({
             }}
             className="font-mono text-xs uppercase tracking-wider"
           >
-            Adicionar
+            {t("add")}
           </Button>
         </div>
       </motion.div>

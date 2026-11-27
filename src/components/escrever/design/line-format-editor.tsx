@@ -7,6 +7,7 @@ import {
   ChevronUp,
   Italic,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import type { LineFormat } from "@/components/document/types";
 import { SliderField } from "./slider-field";
@@ -19,11 +20,11 @@ const SIZE_OPTIONS: { id: LineFormat["size"]; label: string }[] = [
   { id: "xl", label: "XL" },
 ];
 
-const SPACING_OPTIONS: { id: LineFormat["letterSpacing"]; label: string }[] = [
-  { id: "normal", label: "Normal" },
-  { id: "wide", label: "Largo" },
-  { id: "wider", label: "Maior" },
-  { id: "widest", label: "Maximo" },
+const SPACING_OPTIONS: { id: LineFormat["letterSpacing"] }[] = [
+  { id: "normal" },
+  { id: "wide" },
+  { id: "wider" },
+  { id: "widest" },
 ];
 
 export function LineFormatEditor({
@@ -33,6 +34,7 @@ export function LineFormatEditor({
   format: LineFormat;
   onChange: (f: LineFormat) => void;
 }) {
+  const tl = useTranslations("letterhead");
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -46,7 +48,7 @@ export function LineFormatEditor({
               ? "border-foreground bg-secondary text-foreground"
               : "border-border text-muted-foreground hover:border-muted-foreground"
           }`}
-          title="Negrito"
+          title={tl("bold")}
         >
           <Bold className="w-3 h-3" />
         </button>
@@ -58,7 +60,7 @@ export function LineFormatEditor({
               ? "border-foreground bg-secondary text-foreground"
               : "border-border text-muted-foreground hover:border-muted-foreground"
           }`}
-          title="Italico"
+          title={tl("italic")}
         >
           <Italic className="w-3 h-3" />
         </button>
@@ -70,7 +72,7 @@ export function LineFormatEditor({
               ? "border-foreground bg-secondary text-foreground"
               : "border-border text-muted-foreground hover:border-muted-foreground"
           }`}
-          title="Maiusculas"
+          title={tl("uppercase")}
         >
           <CaseSensitive className="w-3 h-3" />
         </button>
@@ -92,7 +94,7 @@ export function LineFormatEditor({
           type="button"
           onClick={() => setExpanded(!expanded)}
           className="p-1.5 border border-border text-muted-foreground hover:border-muted-foreground rounded-xs transition-colors ml-auto"
-          title="Mais opcoes"
+          title={tl("moreOptions")}
         >
           {expanded ? (
             <ChevronUp className="w-3 h-3" />
@@ -104,7 +106,7 @@ export function LineFormatEditor({
       {expanded && (
         <div className="flex flex-col gap-2 pl-1 pt-1">
           <SliderField
-            label="Opacidade"
+            label={tl("opacity")}
             value={format.opacity}
             min={10}
             max={100}
@@ -113,7 +115,7 @@ export function LineFormatEditor({
           />
           <div className="flex flex-col gap-1">
             <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
-              Espacamento
+              {tl("spacing")}
             </span>
             <div className="flex gap-1">
               {SPACING_OPTIONS.map((s) => (
@@ -127,7 +129,7 @@ export function LineFormatEditor({
                       : "border-border text-muted-foreground hover:border-muted-foreground"
                   }`}
                 >
-                  {s.label}
+                  {tl(`letterSpacing.${s.id}`)}
                 </button>
               ))}
             </div>
