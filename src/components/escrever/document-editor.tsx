@@ -96,6 +96,7 @@ import {
   useSaveDocument,
 } from "@/features/documents/queries";
 import { useMyOrganizations } from "@/features/organizations/queries";
+import { useUploadToast } from "@/features/uploads/api";
 import { documentDesignKey } from "@/lib/user-storage";
 import { cn } from "@/lib/utils";
 import {
@@ -193,6 +194,10 @@ export function DocumentEditor({
   // Read by the Tiptap placeholder on each render, so a language switch shows up without rebuilding the editor.
   const contentPlaceholder = useRef("");
   contentPlaceholder.current = tk(`${kind.type}.contentPlaceholder`);
+  // Paste/drop handlers are set up once with the editor; the ref keeps their toast copy current.
+  const uploadMessages = useUploadToast("image");
+  const uploadToast = useRef(uploadMessages);
+  uploadToast.current = uploadMessages;
   const [mounted, setMounted] = useState(false);
 
   // --- Form (RHF — content only) ---
@@ -363,7 +368,8 @@ export function DocumentEditor({
       handlePaste: (view, event) => {
         const files = pastedImageFiles(event.clipboardData);
         if (files.length === 0) return false;
-        for (const file of files) void uploadAndInsert(view, file);
+        for (const file of files)
+          void uploadAndInsert(view, file, uploadToast.current);
         return true;
       },
       handleDrop: (view, event, _slice, moved) => {
@@ -374,7 +380,8 @@ export function DocumentEditor({
           left: event.clientX,
           top: event.clientY,
         })?.pos;
-        for (const file of files) void uploadAndInsert(view, file, pos);
+        for (const file of files)
+          void uploadAndInsert(view, file, uploadToast.current, pos);
         return true;
       },
     },

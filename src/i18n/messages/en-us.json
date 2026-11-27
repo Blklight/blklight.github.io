@@ -54,7 +54,13 @@
     "admin": "Administration",
     "signOutLabel": "Sign out: hold to confirm",
     "keepHolding": "Keep holding…",
-    "holdToSignOut": "Hold to sign out"
+    "holdToSignOut": "Hold to sign out",
+    "following": "Following",
+    "requestPending": "Request pending",
+    "memberSince": "Member since {date}",
+    "private": "Private profile",
+    "privateText": "This profile is private. Bio and documents are only visible to followers they approve.",
+    "noDocs": "No published documents."
   },
   "commandBar": {
     "label": "Search or go to",
@@ -117,12 +123,18 @@
     "untitled": "Untitled",
     "retry": "Try again",
     "loading": "Loading…",
-    "documentLoadError": "Couldn't load the document."
+    "documentLoadError": "Couldn't load the document.",
+    "cancel": "Cancel",
+    "or": "or",
+    "uploadFile": "Upload file",
+    "docsCount": "{shown} of {total, plural, one {# document} other {# documents}}",
+    "loadMore": "Load more",
+    "reachedEnd": "You've reached the end.",
+    "loadingDocs": "Loading documents",
+    "publishedDocs": "Published documents"
   },
   "account": {
     "photoSaveError": "Couldn't save the photo.",
-    "photoUploading": "Uploading photo…",
-    "photoUploaded": "Photo uploaded",
     "saving": "Saving…",
     "uploadPhoto": "Upload photo",
     "photoRemoved": "Photo removed",
@@ -566,5 +578,45 @@
       "feature3": "Boards by topic",
       "idealFor": "sketching before writing"
     }
+  },
+  "upload": {
+    "tooLarge": "The image must be at most 10 MB.",
+    "unsupported": "Unsupported format. Use JPEG, PNG, WebP, AVIF or GIF.",
+    "rateLimited": "Too many uploads in a row. Try again in a moment.",
+    "unavailable": "Image upload is unavailable right now.",
+    "failed": "Couldn't upload the image.",
+    "photo": {
+      "loading": "Uploading photo…",
+      "success": "Photo uploaded"
+    },
+    "cover": {
+      "loading": "Uploading cover…",
+      "success": "Cover uploaded"
+    },
+    "image": {
+      "loading": "Uploading image…",
+      "success": "Image uploaded"
+    }
+  },
+  "cover": {
+    "title": "Add cover image",
+    "description": "Upload a file (optimized automatically) or paste an image URL to use as the document cover.",
+    "urlPlaceholder": "https://example.com/image.jpg",
+    "urlLabel": "Cover URL",
+    "add": "Add"
+  },
+  "imageInsert": {
+    "title": "Insert image",
+    "description": "Upload a file (optimized automatically) or paste an image URL. You can also paste or drag images straight into the text.",
+    "altPlaceholder": "Image description (for screen readers)",
+    "altLabel": "Image description",
+    "urlPlaceholder": "https://i.imgur.com/image.jpg",
+    "urlLabel": "Image URL",
+    "insertUrl": "Insert URL"
+  },
+  "organization": {
+    "private": "Private",
+    "loadError": "Couldn't load the organization's documents.",
+    "noDocs": "No documents published by this organization."
   }
 }

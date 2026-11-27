@@ -14,7 +14,11 @@ import { Input } from "@/components/ui/input";
 import { TextureOverlay } from "@/components/ui/texture-overlay";
 import { updateMyProfile } from "@/features/profile/api";
 import { profileKeys, useCurrentProfile } from "@/features/profile/queries";
-import { IMAGE_ACCEPT, uploadWithToast } from "@/features/uploads/api";
+import {
+  IMAGE_ACCEPT,
+  uploadWithToast,
+  useUploadToast,
+} from "@/features/uploads/api";
 import { logout } from "@/lib/session";
 import { useAuthStore } from "@/store/useAuthStore";
 
@@ -26,6 +30,7 @@ function AvatarSection({ username }: { username: string }) {
   const [url, setUrl] = useState("");
   const [busy, setBusy] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
+  const uploadToast = useUploadToast("photo");
 
   const save = async (avatarUrl: string | null, success?: string) => {
     setBusy(true);
@@ -43,10 +48,7 @@ function AvatarSection({ username }: { username: string }) {
 
   const upload = async (file: File) => {
     setBusy(true);
-    const uploaded = await uploadWithToast(file, "avatar", {
-      loading: t("photoUploading"),
-      success: t("photoUploaded"),
-    });
+    const uploaded = await uploadWithToast(file, "avatar", uploadToast);
     if (uploaded) await save(uploaded.url);
     else setBusy(false);
   };

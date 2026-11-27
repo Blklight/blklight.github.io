@@ -54,7 +54,13 @@
     "admin": "Administração",
     "signOutLabel": "Sair: segure para confirmar",
     "keepHolding": "Continue segurando…",
-    "holdToSignOut": "Segure para sair"
+    "holdToSignOut": "Segure para sair",
+    "following": "Seguindo",
+    "requestPending": "Solicitação pendente",
+    "memberSince": "Membro desde {date}",
+    "private": "Perfil privado",
+    "privateText": "Este perfil é privado. Bio e documentos só são visíveis para quem ele aprova como seguidor.",
+    "noDocs": "Nenhum documento publicado."
   },
   "commandBar": {
     "label": "Buscar ou ir para",
@@ -117,12 +123,18 @@
     "untitled": "Sem título",
     "retry": "Tentar novamente",
     "loading": "Carregando…",
-    "documentLoadError": "Não foi possível carregar o documento."
+    "documentLoadError": "Não foi possível carregar o documento.",
+    "cancel": "Cancelar",
+    "or": "ou",
+    "uploadFile": "Enviar arquivo",
+    "docsCount": "{shown} de {total, plural, one {# documento} other {# documentos}}",
+    "loadMore": "Carregar mais",
+    "reachedEnd": "Você chegou ao fim.",
+    "loadingDocs": "Carregando documentos",
+    "publishedDocs": "Documentos publicados"
   },
   "account": {
     "photoSaveError": "Não foi possível salvar a foto.",
-    "photoUploading": "Enviando foto…",
-    "photoUploaded": "Foto enviada",
     "saving": "Salvando…",
     "uploadPhoto": "Enviar foto",
     "photoRemoved": "Foto removida",
@@ -566,5 +578,45 @@
       "feature3": "Quadros por tema",
       "idealFor": "rascunhar antes de escrever"
     }
+  },
+  "upload": {
+    "tooLarge": "A imagem deve ter no máximo 10 MB.",
+    "unsupported": "Formato não suportado. Use JPEG, PNG, WebP, AVIF ou GIF.",
+    "rateLimited": "Muitos envios seguidos. Tente em instantes.",
+    "unavailable": "Envio de imagens indisponível no momento.",
+    "failed": "Não foi possível enviar a imagem.",
+    "photo": {
+      "loading": "Enviando foto…",
+      "success": "Foto enviada"
+    },
+    "cover": {
+      "loading": "Enviando capa…",
+      "success": "Capa enviada"
+    },
+    "image": {
+      "loading": "Enviando imagem…",
+      "success": "Imagem enviada"
+    }
+  },
+  "cover": {
+    "title": "Adicionar imagem de capa",
+    "description": "Envie um arquivo (otimizado automaticamente) ou cole a URL de uma imagem para usar como capa do documento.",
+    "urlPlaceholder": "https://exemplo.com/imagem.jpg",
+    "urlLabel": "URL da capa",
+    "add": "Adicionar"
+  },
+  "imageInsert": {
+    "title": "Inserir imagem",
+    "description": "Envie um arquivo (otimizado automaticamente) ou cole a URL de uma imagem. Você também pode colar ou arrastar imagens direto no texto.",
+    "altPlaceholder": "Descrição da imagem (para leitores de tela)",
+    "altLabel": "Descrição da imagem",
+    "urlPlaceholder": "https://i.imgur.com/imagem.jpg",
+    "urlLabel": "URL da imagem",
+    "insertUrl": "Inserir URL"
+  },
+  "organization": {
+    "private": "Privada",
+    "loadError": "Não foi possível carregar os documentos da organização.",
+    "noDocs": "Nenhum documento publicado por esta organização."
   }
 }
