@@ -3,7 +3,7 @@
 import { Tilt, TiltContent } from "@animate-ui/react/primitives/effects/tilt";
 import Image from "next/image";
 import { type ReactNode, useState } from "react";
-import { appMeta } from "@/components/onboarding/app-meta";
+import { useAppMeta } from "@/components/onboarding/app-meta";
 import { CornerBrackets } from "@/components/onboarding/corner-brackets";
 import { FLAT } from "@/components/onboarding/simple-flip-card";
 import { cn } from "@/lib/utils";
@@ -31,6 +31,7 @@ export const initials = (name: string) =>
  * person, back carries the apps; a click turns it over.
  */
 export const ClassicBadge = ({ data, status, className }: BadgeModelProps) => {
+  const appMeta = useAppMeta();
   const { name, handle, avatarUrl, memberSince, memberId, apps = [] } = data;
   const confirmed = status === "confirmed";
   const draft = status === "draft";

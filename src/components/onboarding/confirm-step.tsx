@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Badge } from "@/components/badge";
 import { apiClient } from "@/lib/api-client";
@@ -31,15 +32,11 @@ type Phase = "review" | "setup" | "confirmed";
 // Time to see the stamp land before leaving for the dashboard.
 const STAMP_HOLD_MS = 1100;
 
-const describeError = (cause: unknown) => {
+const apiMessage = (cause: unknown) => {
   const body = axios.isAxiosError(cause)
     ? (cause.response?.data as ApiResponse<null> | undefined)
     : undefined;
-  return (
-    body?.error?.message ??
-    body?.message ??
-    "Não foi possível concluir. Tente novamente."
-  );
+  return body?.error?.message ?? body?.message;
 };
 
 export const ConfirmStep = ({
@@ -49,21 +46,23 @@ export const ConfirmStep = ({
   onLock,
   badge,
 }: Props) => {
+  const t = useTranslations("onboarding");
   const router = useRouter();
   const setUser = useAuthStore((state) => state.setUser);
   const [phase, setPhase] = useState<Phase>("review");
+  const describeError = (cause: unknown) =>
+    apiMessage(cause) ?? t("finishError");
 
   const tasks: SetupTask[] = [
     {
-      label:
-        apps.length === 1 ? "Ativando 1 app" : `Ativando ${apps.length} apps`,
+      label: t("taskActivating", { count: apps.length }),
       run: () =>
         apiClient.post<ApiResponse<null>>("/api/v1/platform-apps/me", {
           apps: apps.map((a) => a.slug),
         }),
     },
     {
-      label: "Concluindo seu perfil",
+      label: t("taskProfile"),
       run: async () => {
         await apiClient.post<ApiResponse<null>>(
           "/api/v1/auth/onboarding/complete",
@@ -73,7 +72,7 @@ export const ConfirmStep = ({
       },
     },
     {
-      label: "Preparando o dashboard",
+      label: t("taskDashboard"),
       run: async () => router.prefetch("/dashboard"),
     },
   ];
@@ -92,27 +91,23 @@ export const ConfirmStep = ({
           <h1 className="font-sans text-5xl md:text-6xl font-bold tracking-tight leading-[1.02] mb-6 wrap-anywhere">
             {review ? (
               <>
-                Tudo pronto,{" "}
+                {t("allSet")}{" "}
                 <span className="text-blklight-500 dark:text-blklight-400">
                   {username}
                 </span>
                 .
               </>
             ) : phase === "setup" ? (
-              "Configurando seu espaço…"
+              t("settingUp")
             ) : (
-              "Crachá confirmado."
+              t("badgeConfirmed")
             )}
           </h1>
 
           {review ? (
             <>
               <p className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-xl mb-10">
-                Confira seu crachá ao lado; os apps ficam no verso.{" "}
-                {apps.length === 1
-                  ? "Este app vai aparecer no seu menu e no seu dashboard."
-                  : `Estes ${apps.length} apps vão aparecer no seu menu e no seu dashboard.`}{" "}
-                Dá para mudar depois.
+                {t("confirmLead", { count: apps.length })}
               </p>
               <ul className="grid max-w-2xl grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3">
                 {apps.map((app) => (
@@ -125,7 +120,7 @@ export const ConfirmStep = ({
                 <dl className="mt-10 grid max-w-2xl gap-4 border-t border-border pt-6 text-sm sm:grid-cols-3">
                   <div>
                     <dt className="font-mono text-xs text-muted-foreground">
-                      Perfil público
+                      {t("publicProfile")}
                     </dt>
                     <dd className="mt-1 wrap-anywhere">
                       blklight.dev/{badge.handle}
@@ -133,19 +128,15 @@ export const ConfirmStep = ({
                   </div>
                   <div>
                     <dt className="font-mono text-xs text-muted-foreground">
-                      Depois
+                      {t("later")}
                     </dt>
-                    <dd className="mt-1">
-                      Troque apps e foto quando quiser, na sua conta.
-                    </dd>
+                    <dd className="mt-1">{t("laterText")}</dd>
                   </div>
                   <div>
                     <dt className="font-mono text-xs text-muted-foreground">
-                      Em seguida
+                      {t("next")}
                     </dt>
-                    <dd className="mt-1">
-                      Seu dashboard, com os apps e os textos recentes.
-                    </dd>
+                    <dd className="mt-1">{t("nextText")}</dd>
                   </div>
                 </dl>
               )}
@@ -153,9 +144,7 @@ export const ConfirmStep = ({
           ) : (
             <>
               <p className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-xl mb-10">
-                {phase === "setup"
-                  ? "Só um instante: estamos ligando tudo para você."
-                  : "Levando você para o dashboard."}
+                {phase === "setup" ? t("settingUpLead") : t("redirecting")}
               </p>
               <SetupProgress
                 tasks={tasks}
@@ -186,7 +175,7 @@ export const ConfirmStep = ({
       {review && (
         <StepFooter
           onBack={onBack}
-          label="Confirmar"
+          label={t("confirm")}
           onNext={() => {
             onLock?.();
             setPhase("setup");

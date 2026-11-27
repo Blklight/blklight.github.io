@@ -1,15 +1,17 @@
 "use client";
 
 import { useReducedMotion } from "motion/react";
+import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import Grainient from "@/components/Grainient";
 
 /** The colored panel the badge sits on, at the right of the first and last steps. */
 export const BadgeStage = ({ children }: { children: ReactNode }) => {
+  const t = useTranslations("onboarding");
   const reduceMotion = useReducedMotion();
   return (
     <aside
-      aria-label="Seu crachá"
+      aria-label={t("yourBadge")}
       className="relative overflow-hidden rounded-xs text-light lg:sticky lg:top-8"
     >
       <div className="absolute inset-0">

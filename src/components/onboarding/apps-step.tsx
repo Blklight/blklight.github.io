@@ -1,11 +1,12 @@
 "use client";
 
 import { RotateCw, Search } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { SimpleFlipCard } from "@/components/onboarding/simple-flip-card";
 import { Button } from "@/components/ui/button";
 import type { PlatformApp } from "@/types/api.types";
-import { appMeta } from "./app-meta";
+import { useAppMeta } from "./app-meta";
 import { StepFooter } from "./step-footer";
 
 interface Props {
@@ -22,6 +23,8 @@ interface Props {
 const SEARCH_THRESHOLD = 6;
 
 export const AppsStep = ({ apps, initial, onConfirm, onBack }: Props) => {
+  const t = useTranslations("onboarding");
+  const appMeta = useAppMeta();
   const [query, setQuery] = useState("");
 
   // Available apps first; "em breve" ones stay visible but can't be picked.
@@ -32,7 +35,7 @@ export const AppsStep = ({ apps, initial, onConfirm, onBack }: Props) => {
         .sort(
           (a, b) => Number(appMeta(b).available) - Number(appMeta(a).available),
         ),
-    [apps],
+    [apps, appMeta],
   );
   const [selected, setSelected] = useState<Set<string>>(
     () =>
@@ -65,7 +68,7 @@ export const AppsStep = ({ apps, initial, onConfirm, onBack }: Props) => {
         .toLowerCase()
         .includes(q);
     });
-  }, [query, openApps]);
+  }, [query, openApps, appMeta]);
 
   const count = selected.size;
 
@@ -73,16 +76,17 @@ export const AppsStep = ({ apps, initial, onConfirm, onBack }: Props) => {
     <div className="flex-1 flex flex-col px-6 md:px-10 pt-12 animate-fade-in">
       <div className="mb-10 max-w-2xl">
         <h1 className="font-sans text-4xl md:text-5xl font-bold tracking-tight mb-4">
-          Escolha seus apps
+          {t("appsTitle")}
         </h1>
         <p className="text-base text-muted-foreground leading-relaxed">
-          O que você escolher aqui define o que aparece no seu menu e no seu
-          dashboard. Dá para mudar depois. Use{" "}
-          <RotateCw
-            aria-label="o botão de girar"
-            className="inline size-4 align-[-0.15em] text-foreground"
-          />{" "}
-          no card para ver os detalhes.
+          {t.rich("appsLead", {
+            icon: () => (
+              <RotateCw
+                aria-label={t("flipButton")}
+                className="inline size-4 align-[-0.15em] text-foreground"
+              />
+            ),
+          })}
         </p>
       </div>
 
@@ -96,8 +100,8 @@ export const AppsStep = ({ apps, initial, onConfirm, onBack }: Props) => {
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar app"
-            aria-label="Buscar apps"
+            placeholder={t("searchApp")}
+            aria-label={t("searchApps")}
             className="w-full bg-card border border-border rounded-xs pl-9 pr-3 py-2.5 text-sm placeholder:text-muted-foreground outline-none focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2"
           />
         </div>
@@ -117,10 +121,10 @@ export const AppsStep = ({ apps, initial, onConfirm, onBack }: Props) => {
       ) : (
         <div className="border border-border rounded-xs p-8 mb-10 flex flex-col items-start gap-4">
           <p className="text-sm text-muted-foreground">
-            Nenhum app encontrado para “{query}”.
+            {t("noAppsFor", { query })}
           </p>
           <Button variant="outline" onClick={() => setQuery("")}>
-            Limpar busca
+            {t("clearSearch")}
           </Button>
         </div>
       )}
@@ -128,11 +132,9 @@ export const AppsStep = ({ apps, initial, onConfirm, onBack }: Props) => {
       <StepFooter
         onBack={onBack}
         status={
-          count === 0
-            ? "Selecione ao menos um app para continuar."
-            : `${count} ${count === 1 ? "app selecionado" : "apps selecionados"}`
+          count === 0 ? t("selectAtLeastOne") : t("selectedCount", { count })
         }
-        label="Continuar"
+        label={t("continue")}
         disabled={count === 0}
         onNext={() => onConfirm(Array.from(selected))}
       />

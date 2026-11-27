@@ -5,14 +5,12 @@ import {
   PenTool,
   StickyNote,
 } from "lucide-react";
+import { type Messages, useTranslations } from "next-intl";
+import { useCallback } from "react";
 import type { PlatformApp } from "@/types/api.types";
 
 interface Meta {
   icon: LucideIcon;
-  tagline: string;
-  description: string;
-  features: string[];
-  idealFor: string;
   /** Whether the app already has screens in this front-end. */
   available: boolean;
   /**
@@ -49,62 +47,62 @@ const ACCENTS = {
   },
 };
 
-// shortcut: Portuguese copy lives here until the API seed carries tagline, category and PT descriptions.
+// shortcut: copy for known apps lives in the `apps.<slug>` messages until the API seed carries localized tagline, category and descriptions.
 const META: Record<string, Meta> = {
   publisher: {
     icon: PenTool,
-    tagline: "Escrita",
-    description: "Escreva e publique artigos, tutoriais e livros.",
-    features: [
-      "Editor com fonte, papel e capa",
-      "Papel timbrado e assinatura",
-      "Publicação no feed e no perfil",
-    ],
-    idealFor: "ensaios, artigos e tutoriais com cara própria",
     available: true,
     accent: ACCENTS.blklight,
   },
   reader: {
     icon: BookOpen,
-    tagline: "Leitura",
-    description: "Destaque, anote e organize o que você lê.",
-    features: ["Destaques no texto", "Anotações", "Listas de leitura"],
-    idealFor: "estudar e guardar o que vale reler",
     available: false,
     accent: ACCENTS.bluesky,
   },
   "dev-tools": {
     icon: Code,
-    tagline: "Código",
-    description: "Notas de código, exercícios e tutoriais técnicos.",
-    features: ["Notas de código", "Exercícios isolados", "Tutoriais técnicos"],
-    idealFor: "quem escreve e aprende programação",
     available: false,
     accent: ACCENTS.orange,
   },
   canvas: {
     icon: StickyNote,
-    tagline: "Ideias",
-    description: "Um quadro de post-its para capturar e conectar ideias.",
-    features: ["Post-its livres", "Conexões entre ideias", "Quadros por tema"],
-    idealFor: "rascunhar antes de escrever",
     available: false,
     accent: ACCENTS.magenta,
   },
 };
 
-export function appMeta(
-  app: Pick<PlatformApp, "slug" | "description"> &
-    Partial<Pick<PlatformApp, "tagline" | "category">>,
-) {
-  const meta = META[app.slug];
-  return {
-    icon: meta?.icon ?? null,
-    tagline: meta?.tagline ?? app.tagline ?? app.category ?? "",
-    description: meta?.description ?? app.description ?? "",
-    features: meta?.features ?? [],
-    idealFor: meta?.idealFor ?? "",
-    available: meta?.available ?? false,
-    accent: meta?.accent ?? ACCENTS.blklight,
-  };
+type KnownApp = keyof Messages["apps"];
+
+/** Returns `appMeta(app)`: icon, accent and availability plus copy in the active locale. */
+export function useAppMeta() {
+  const t = useTranslations("apps");
+  return useCallback(
+    (
+      app: Pick<PlatformApp, "slug" | "description"> &
+        Partial<Pick<PlatformApp, "tagline" | "category">>,
+    ) => {
+      const meta = META[app.slug];
+      const known = meta ? (app.slug as KnownApp) : null;
+      return {
+        icon: meta?.icon ?? null,
+        tagline: known
+          ? t(`${known}.tagline`)
+          : (app.tagline ?? app.category ?? ""),
+        description: known
+          ? t(`${known}.description`)
+          : (app.description ?? ""),
+        features: known
+          ? [
+              t(`${known}.feature1`),
+              t(`${known}.feature2`),
+              t(`${known}.feature3`),
+            ]
+          : [],
+        idealFor: known ? t(`${known}.idealFor`) : "",
+        available: meta?.available ?? false,
+        accent: meta?.accent ?? ACCENTS.blklight,
+      };
+    },
+    [t],
+  );
 }

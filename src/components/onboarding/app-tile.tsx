@@ -3,7 +3,7 @@
 import { Tilt, TiltContent } from "@animate-ui/react/primitives/effects/tilt";
 import Link from "next/link";
 import type { PlatformApp } from "@/types/api.types";
-import { appMeta } from "./app-meta";
+import { useAppMeta } from "./app-meta";
 import { CornerBrackets } from "./corner-brackets";
 import {
   FichaFace,
@@ -24,6 +24,7 @@ interface Props {
  * mark on top, name and description inside the brackets), with the same tilt.
  */
 export const AppTile = ({ app, selected = false, href }: Props) => {
+  const appMeta = useAppMeta();
   const meta = appMeta(app);
   const locked = !meta.available;
   const Icon = meta.icon;

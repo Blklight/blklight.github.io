@@ -1,7 +1,8 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { SetupProgress } from "@/components/onboarding/setup-progress";
+import { renderWithIntl as render } from "../utils/render";
 
 describe("SetupProgress", () => {
   it("resumes from the failed row without re-running finished ones", async () => {

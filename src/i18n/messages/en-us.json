@@ -24,7 +24,10 @@
     "signUp": "Create account",
     "headline": "Write. Shape the paper. Publish.",
     "lead": "A document editor with its own identity, from draft to your public profile.",
-    "soon": "Notes, journals and books are coming soon."
+    "soon": "Notes, journals and books are coming soon.",
+    "password": "Password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "footer": {
     "tagline": "Write, shape the paper and publish on your profile.",
@@ -252,7 +255,91 @@
     "loadingAccount": "Loading your account…",
     "loadError": "Couldn't load your onboarding.",
     "loadingApps": "Loading apps…",
-    "appsError": "Couldn't load the apps."
+    "appsError": "Couldn't load the apps.",
+    "usernamePlaceholder": "your_username",
+    "usernameSaveError": "Couldn't save the username.",
+    "welcomeTo": "Welcome to ",
+    "hello": "Hello, ",
+    "leadNeedsUsername": "Before you start, pick the username for your profile and published texts. It already shows on the badge beside it.",
+    "lead": "This is your badge on the platform. Pick the apps that go on it; then just confirm.",
+    "username": "Username",
+    "saving": "Saving…",
+    "saveAndContinue": "Save and continue",
+    "start": "Start",
+    "usernameErrors": {
+      "required": "Required field",
+      "too_short": "Use at least 3 characters",
+      "too_long": "Use at most 30 characters",
+      "invalid_format": "Only letters, numbers and underscore"
+    },
+    "roadmap": {
+      "badge": {
+        "title": "Badge",
+        "text": "Your name and public address. Click it to see the back."
+      },
+      "apps": {
+        "title": "Apps",
+        "text": "The tools that go into your menu and dashboard."
+      },
+      "confirm": {
+        "title": "Confirmation",
+        "text": "You review, we turn everything on."
+      }
+    },
+    "appsTitle": "Pick your apps",
+    "appsLead": "What you pick here sets what shows in your menu and dashboard. You can change it later. Use <icon></icon> on the card to see the details.",
+    "flipButton": "the flip button",
+    "searchApp": "Search app",
+    "searchApps": "Search apps",
+    "noAppsFor": "No app found for “{query}”.",
+    "clearSearch": "Clear search",
+    "selectAtLeastOne": "Select at least one app to continue.",
+    "selectedCount": "{count, plural, one {# app selected} other {# apps selected}}",
+    "continue": "Continue",
+    "finishError": "Couldn't finish. Try again.",
+    "taskActivating": "{count, plural, one {Turning on # app} other {Turning on # apps}}",
+    "taskProfile": "Finishing your profile",
+    "taskDashboard": "Getting the dashboard ready",
+    "allSet": "All set,",
+    "settingUp": "Setting up your space…",
+    "badgeConfirmed": "Badge confirmed.",
+    "confirmLead": "Check your badge beside this; the apps are on the back. {count, plural, one {This app will show in your menu and dashboard.} other {These # apps will show in your menu and dashboard.}} You can change it later.",
+    "publicProfile": "Public profile",
+    "later": "Later",
+    "laterText": "Change apps and photo whenever you like, in your account.",
+    "next": "Next",
+    "nextText": "Your dashboard, with your apps and recent texts.",
+    "settingUpLead": "Just a moment: we're turning everything on for you.",
+    "redirecting": "Taking you to the dashboard.",
+    "confirm": "Confirm",
+    "steps": {
+      "welcome": "Welcome",
+      "apps": "Pick apps",
+      "done": "Done"
+    },
+    "skipToContent": "Skip to content",
+    "stepOf": "Step {current} of {total}",
+    "stepsLabel": "Onboarding steps",
+    "backTo": "Back to {step}",
+    "stepError": "Something went wrong in this step.",
+    "taskState": {
+      "done": "done",
+      "running": "in progress",
+      "error": "failed",
+      "pending": "waiting"
+    },
+    "tryAgain": "Try again",
+    "back": "Back",
+    "or": "or",
+    "yourBadge": "Your badge",
+    "aboutApp": "About {name}",
+    "aboutTheApp": "About the app ↻",
+    "soon": "Soon",
+    "available": "Available",
+    "idealFor": "Ideal for",
+    "cantActivate": "Can't be turned on yet",
+    "selected": "Selected",
+    "clickToSelect": "Click to select"
   },
   "notFound": {
     "profileKicker": "Profile not found",
@@ -403,5 +490,81 @@
     "loadingInvites": "[ loading invites... ]",
     "colDecided": "Decided",
     "noInvites": "[ no invites ]"
+  },
+  "validation": {
+    "required": "Required field",
+    "too_short": "Too short",
+    "too_long": "Too long",
+    "invalid_email": "Invalid email",
+    "invalid_format": "Invalid format",
+    "password_uppercase_required": "Must contain at least one uppercase letter",
+    "password_number_required": "Must contain at least one number",
+    "password_special_required": "Must contain at least one special character (!@#$%^&*)",
+    "passwords_must_match": "Passwords don't match",
+    "usernameTooShort": "At least 3 characters",
+    "passwordTooShort": "8+ characters"
+  },
+  "register": {
+    "ruleLength": "8+ characters",
+    "ruleUppercase": "1 uppercase letter",
+    "ruleNumber": "1 number",
+    "ruleSymbol": "1 symbol (!@#$%^&*)",
+    "error": "Couldn't create the account",
+    "title": "Create your account",
+    "lead": "Start your creative journey today",
+    "email": "Email",
+    "emailPlaceholder": "example@email.com",
+    "username": "Username",
+    "usernamePlaceholder": "your_username",
+    "confirmPassword": "Confirm password",
+    "rules": "Password rules",
+    "ruleMet": "(ok)",
+    "rulePending": "(pending)",
+    "creating": "Creating account...",
+    "terms": "By creating the account, you agree to the Terms of Use and the Privacy Policy."
+  },
+  "login": {
+    "error": "Couldn't sign in",
+    "title": "Welcome back",
+    "lead": "Sign in to access your tools",
+    "identifier": "Email or username",
+    "identifierPlaceholder": "you@email.com",
+    "rememberMe": "Remember me",
+    "forgot": "Forgot password",
+    "signingIn": "Signing in..."
+  },
+  "apps": {
+    "publisher": {
+      "tagline": "Writing",
+      "description": "Write and publish articles, tutorials and books.",
+      "feature1": "Editor with font, paper and cover",
+      "feature2": "Letterhead and signature",
+      "feature3": "Publishing to the feed and profile",
+      "idealFor": "essays, articles and tutorials with a look of their own"
+    },
+    "reader": {
+      "tagline": "Reading",
+      "description": "Highlight, annotate and organize what you read.",
+      "feature1": "Highlights in the text",
+      "feature2": "Notes",
+      "feature3": "Reading lists",
+      "idealFor": "studying and keeping what's worth rereading"
+    },
+    "dev-tools": {
+      "tagline": "Code",
+      "description": "Code notes, exercises and technical tutorials.",
+      "feature1": "Code notes",
+      "feature2": "Isolated exercises",
+      "feature3": "Technical tutorials",
+      "idealFor": "people who write and learn programming"
+    },
+    "canvas": {
+      "tagline": "Ideas",
+      "description": "A sticky-note board to capture and connect ideas.",
+      "feature1": "Free sticky notes",
+      "feature2": "Links between ideas",
+      "feature3": "Boards by topic",
+      "idealFor": "sketching before writing"
+    }
   }
 }

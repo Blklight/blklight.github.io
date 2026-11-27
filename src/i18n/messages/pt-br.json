@@ -24,7 +24,10 @@
     "signUp": "Criar conta",
     "headline": "Escreva. Dê forma ao papel. Publique.",
     "lead": "Um editor de documentos com identidade própria, do rascunho ao seu perfil público.",
-    "soon": "Notas, journals e livros chegam em breve."
+    "soon": "Notas, journals e livros chegam em breve.",
+    "password": "Senha",
+    "showPassword": "Ver senha",
+    "hidePassword": "Ocultar senha"
   },
   "footer": {
     "tagline": "Escreva, dê forma ao papel e publique no seu perfil.",
@@ -252,7 +255,91 @@
     "loadingAccount": "Carregando sua conta…",
     "loadError": "Não foi possível carregar seu onboarding.",
     "loadingApps": "Carregando apps…",
-    "appsError": "Não foi possível carregar os apps."
+    "appsError": "Não foi possível carregar os apps.",
+    "usernamePlaceholder": "seu_usuario",
+    "usernameSaveError": "Não foi possível salvar o username.",
+    "welcomeTo": "Boas-vindas ao ",
+    "hello": "Olá, ",
+    "leadNeedsUsername": "Antes de começar, escolha o username do seu perfil e dos seus textos publicados. Ele já aparece no crachá ao lado.",
+    "lead": "Este é o seu crachá na plataforma. Falta escolher os apps que entram nele; depois é só confirmar.",
+    "username": "Username",
+    "saving": "Salvando…",
+    "saveAndContinue": "Salvar e continuar",
+    "start": "Começar",
+    "usernameErrors": {
+      "required": "Campo obrigatório",
+      "too_short": "Use pelo menos 3 caracteres",
+      "too_long": "Use no máximo 30 caracteres",
+      "invalid_format": "Apenas letras, números e underscore"
+    },
+    "roadmap": {
+      "badge": {
+        "title": "Crachá",
+        "text": "Seu nome e endereço público. Clique nele para ver o verso."
+      },
+      "apps": {
+        "title": "Apps",
+        "text": "As ferramentas que entram no seu menu e no dashboard."
+      },
+      "confirm": {
+        "title": "Confirmação",
+        "text": "Você revisa, a gente ativa tudo."
+      }
+    },
+    "appsTitle": "Escolha seus apps",
+    "appsLead": "O que você escolher aqui define o que aparece no seu menu e no seu dashboard. Dá para mudar depois. Use <icon></icon> no card para ver os detalhes.",
+    "flipButton": "o botão de girar",
+    "searchApp": "Buscar app",
+    "searchApps": "Buscar apps",
+    "noAppsFor": "Nenhum app encontrado para “{query}”.",
+    "clearSearch": "Limpar busca",
+    "selectAtLeastOne": "Selecione ao menos um app para continuar.",
+    "selectedCount": "{count, plural, one {# app selecionado} other {# apps selecionados}}",
+    "continue": "Continuar",
+    "finishError": "Não foi possível concluir. Tente novamente.",
+    "taskActivating": "{count, plural, one {Ativando # app} other {Ativando # apps}}",
+    "taskProfile": "Concluindo seu perfil",
+    "taskDashboard": "Preparando o dashboard",
+    "allSet": "Tudo pronto,",
+    "settingUp": "Configurando seu espaço…",
+    "badgeConfirmed": "Crachá confirmado.",
+    "confirmLead": "Confira seu crachá ao lado; os apps ficam no verso. {count, plural, one {Este app vai aparecer no seu menu e no seu dashboard.} other {Estes # apps vão aparecer no seu menu e no seu dashboard.}} Dá para mudar depois.",
+    "publicProfile": "Perfil público",
+    "later": "Depois",
+    "laterText": "Troque apps e foto quando quiser, na sua conta.",
+    "next": "Em seguida",
+    "nextText": "Seu dashboard, com os apps e os textos recentes.",
+    "settingUpLead": "Só um instante: estamos ligando tudo para você.",
+    "redirecting": "Levando você para o dashboard.",
+    "confirm": "Confirmar",
+    "steps": {
+      "welcome": "Boas-vindas",
+      "apps": "Escolher apps",
+      "done": "Pronto"
+    },
+    "skipToContent": "Pular para o conteúdo",
+    "stepOf": "Etapa {current} de {total}",
+    "stepsLabel": "Etapas do onboarding",
+    "backTo": "Voltar para {step}",
+    "stepError": "Algo deu errado nesta etapa.",
+    "taskState": {
+      "done": "concluído",
+      "running": "em andamento",
+      "error": "falhou",
+      "pending": "aguardando"
+    },
+    "tryAgain": "Tentar de novo",
+    "back": "Voltar",
+    "or": "ou",
+    "yourBadge": "Seu crachá",
+    "aboutApp": "Sobre o {name}",
+    "aboutTheApp": "Sobre o app ↻",
+    "soon": "Em breve",
+    "available": "Disponível",
+    "idealFor": "Ideal para",
+    "cantActivate": "Ainda não dá para ativar",
+    "selected": "Selecionado",
+    "clickToSelect": "Clique para selecionar"
   },
   "notFound": {
     "profileKicker": "Perfil não encontrado",
@@ -403,5 +490,81 @@
     "loadingInvites": "[ carregando convites... ]",
     "colDecided": "Decidido em",
     "noInvites": "[ nenhum convite ]"
+  },
+  "validation": {
+    "required": "Campo obrigatório",
+    "too_short": "Valor muito curto",
+    "too_long": "Muito longo",
+    "invalid_email": "E-mail inválido",
+    "invalid_format": "Formato inválido",
+    "password_uppercase_required": "Deve conter ao menos uma letra maiúscula",
+    "password_number_required": "Deve conter ao menos um número",
+    "password_special_required": "Deve conter ao menos um caractere especial (!@#$%^&*)",
+    "passwords_must_match": "As senhas não coincidem",
+    "usernameTooShort": "Mínimo de 3 caracteres",
+    "passwordTooShort": "8+ caracteres"
+  },
+  "register": {
+    "ruleLength": "8+ caracteres",
+    "ruleUppercase": "1 letra maiúscula",
+    "ruleNumber": "1 número",
+    "ruleSymbol": "1 símbolo (!@#$%^&*)",
+    "error": "Erro ao criar conta",
+    "title": "Crie sua conta",
+    "lead": "Comece sua jornada criativa hoje",
+    "email": "E-mail",
+    "emailPlaceholder": "exemplo@email.com",
+    "username": "Usuário",
+    "usernamePlaceholder": "seu_usuario",
+    "confirmPassword": "Confirmar senha",
+    "rules": "Regras da senha",
+    "ruleMet": "(ok)",
+    "rulePending": "(pendente)",
+    "creating": "Criando conta...",
+    "terms": "Ao criar a conta, você concorda com os Termos de Uso e a Política de Privacidade."
+  },
+  "login": {
+    "error": "Erro ao fazer login",
+    "title": "Bem-vindo de volta",
+    "lead": "Entre para acessar suas ferramentas",
+    "identifier": "E-mail ou usuário",
+    "identifierPlaceholder": "seu@email.com",
+    "rememberMe": "Lembrar de mim",
+    "forgot": "Esqueci a senha",
+    "signingIn": "Entrando..."
+  },
+  "apps": {
+    "publisher": {
+      "tagline": "Escrita",
+      "description": "Escreva e publique artigos, tutoriais e livros.",
+      "feature1": "Editor com fonte, papel e capa",
+      "feature2": "Papel timbrado e assinatura",
+      "feature3": "Publicação no feed e no perfil",
+      "idealFor": "ensaios, artigos e tutoriais com cara própria"
+    },
+    "reader": {
+      "tagline": "Leitura",
+      "description": "Destaque, anote e organize o que você lê.",
+      "feature1": "Destaques no texto",
+      "feature2": "Anotações",
+      "feature3": "Listas de leitura",
+      "idealFor": "estudar e guardar o que vale reler"
+    },
+    "dev-tools": {
+      "tagline": "Código",
+      "description": "Notas de código, exercícios e tutoriais técnicos.",
+      "feature1": "Notas de código",
+      "feature2": "Exercícios isolados",
+      "feature3": "Tutoriais técnicos",
+      "idealFor": "quem escreve e aprende programação"
+    },
+    "canvas": {
+      "tagline": "Ideias",
+      "description": "Um quadro de post-its para capturar e conectar ideias.",
+      "feature1": "Post-its livres",
+      "feature2": "Conexões entre ideias",
+      "feature3": "Quadros por tema",
+      "idealFor": "rascunhar antes de escrever"
+    }
   }
 }

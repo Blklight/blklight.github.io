@@ -1,6 +1,7 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { BADGE_MODELS, Badge, type BadgeModel } from "@/components/badge";
+import { renderWithIntl as render } from "../utils/render";
 
 const MEMBER = {
   name: "Marina Alves",

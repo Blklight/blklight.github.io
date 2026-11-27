@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { AxiosError, AxiosHeaders } from "axios";
 import { describe, expect, it, vi } from "vitest";
@@ -7,6 +7,7 @@ import { AppsStep } from "@/components/onboarding/apps-step";
 import { WelcomeStep } from "@/components/onboarding/welcome-step";
 import { apiClient } from "@/lib/api-client";
 import type { PlatformApp } from "@/types/api.types";
+import { renderWithIntl as render } from "../utils/render";
 
 vi.mock("@/components/Grainient", () => ({ default: () => null }));
 vi.mock("@/lib/api-client", () => ({ apiClient: { post: vi.fn() } }));
