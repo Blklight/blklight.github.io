@@ -10,6 +10,7 @@ import {
   X,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { type Messages, useTranslations } from "next-intl";
 import { useLayoutEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -42,16 +43,19 @@ export const DEFAULT_COVER_SETTINGS: CoverImageSettings = {
 };
 
 // ── Position presets ──
-const POSITION_PRESETS: { id: string; label: string; value: string }[] = [
-  { id: "top-left", label: "Sup. Esq.", value: "top left" },
-  { id: "top", label: "Superior", value: "top center" },
-  { id: "top-right", label: "Sup. Dir.", value: "top right" },
-  { id: "left", label: "Esquerda", value: "center left" },
-  { id: "center", label: "Centro", value: "center" },
-  { id: "right", label: "Direita", value: "center right" },
-  { id: "bottom-left", label: "Inf. Esq.", value: "bottom left" },
-  { id: "bottom", label: "Inferior", value: "bottom center" },
-  { id: "bottom-right", label: "Inf. Dir.", value: "bottom right" },
+const POSITION_PRESETS: {
+  id: keyof Messages["coverEditor"]["positions"];
+  value: string;
+}[] = [
+  { id: "top-left", value: "top left" },
+  { id: "top", value: "top center" },
+  { id: "top-right", value: "top right" },
+  { id: "left", value: "center left" },
+  { id: "center", value: "center" },
+  { id: "right", value: "center right" },
+  { id: "bottom-left", value: "bottom left" },
+  { id: "bottom", value: "bottom center" },
+  { id: "bottom-right", value: "bottom right" },
 ];
 
 // ── Height presets ──
@@ -123,6 +127,7 @@ export function CoverImageEditor({
   paperColors: PaperColors | null;
   accordion?: boolean;
 }) {
+  const t = useTranslations("coverEditor");
   const [isHovering, setIsHovering] = useState(false);
   const [isHoveringImage, setIsHoveringImage] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -163,7 +168,7 @@ export function CoverImageEditor({
           <ImageIcon className="w-4 h-4" />
         </div>
         <span className="font-mono text-xs uppercase tracking-wider">
-          Adicionar capa
+          {t("addCover")}
         </span>
       </button>
     );
@@ -183,7 +188,7 @@ export function CoverImageEditor({
               : "border-border text-muted-foreground hover:border-muted-foreground"
           }`}
         >
-          {p.label}
+          {t(`positions.${p.id}`)}
         </button>
       ))}
     </div>
@@ -297,7 +302,7 @@ export function CoverImageEditor({
           {/* biome-ignore lint/performance/noImgElement: arbitrary external URL (user cover/avatar or demo asset); next/image would need remotePatterns for every host */}
           <img
             src={coverImage}
-            alt={f.label}
+            alt={t(`filterNames.${f.id}`)}
             className="w-full h-full object-cover"
             style={{
               objectPosition: settings.position,
@@ -305,7 +310,7 @@ export function CoverImageEditor({
             }}
           />
           <span className="absolute bottom-0 inset-x-0 bg-background/80 text-[9px] font-mono uppercase tracking-wider py-0.5 text-center">
-            {f.label}
+            {t(`filterNames.${f.id}`)}
           </span>
         </button>
       ))}
@@ -331,19 +336,21 @@ export function CoverImageEditor({
                 : "border-border text-muted-foreground hover:border-muted-foreground"
             }`}
           >
-            <span className="uppercase tracking-wider">{h.label}</span>
+            <span className="uppercase tracking-wider">
+              {t(`hover.${h.id}.label`)}
+            </span>
             <span className="text-[8px] opacity-60 normal-case tracking-normal">
-              {h.description}
+              {t(`hover.${h.id}.description`)}
             </span>
           </button>
         ))}
       </div>
       <p className="text-[9px] font-mono italic text-muted-foreground">
         {settings.filterHoverBehavior === "apply"
-          ? `O filtro ${settings.filter} sera aplicado ao passar o mouse.`
+          ? t("hoverApply", { filter: t(`filterNames.${settings.filter}`) })
           : settings.filterHoverBehavior === "remove"
-            ? `O filtro ${settings.filter} sera removido ao passar o mouse.`
-            : "O filtro permanece fixo sem alteracao no hover."}
+            ? t("hoverRemove", { filter: t(`filterNames.${settings.filter}`) })
+            : t("hoverNone")}
       </p>
     </>
   );
@@ -369,7 +376,7 @@ export function CoverImageEditor({
           {/* biome-ignore lint/performance/noImgElement: arbitrary external URL (user cover/avatar or demo asset); next/image would need remotePatterns for every host */}
           <img
             src={coverImage}
-            alt="Capa do artigo"
+            alt={t("coverAlt")}
             className="w-full h-full object-cover"
             style={{
               objectPosition: settings.position,
@@ -394,7 +401,7 @@ export function CoverImageEditor({
                 size="icon"
                 onClick={onCoverChange}
                 className="h-7 w-7 bg-background/90 backdrop-blur-sm border-border/60 shadow-sm"
-                title="Trocar imagem"
+                title={t("swap")}
               >
                 <Upload className="w-3.5 h-3.5" />
               </Button>
@@ -403,7 +410,7 @@ export function CoverImageEditor({
                 size="icon"
                 onClick={() => setDialogOpen(true)}
                 className="h-7 w-7 bg-background/90 backdrop-blur-sm border-border/60 shadow-sm"
-                title="Editar capa"
+                title={t("edit")}
               >
                 <Settings2 className="w-3.5 h-3.5" />
               </Button>
@@ -412,7 +419,7 @@ export function CoverImageEditor({
                 size="icon"
                 onClick={onCoverRemove}
                 className="h-7 w-7 bg-background/90 backdrop-blur-sm border-border/60 shadow-sm text-destructive hover:text-destructive"
-                title="Remover capa"
+                title={t("remove")}
               >
                 <X className="w-3.5 h-3.5" />
               </Button>
@@ -426,10 +433,10 @@ export function CoverImageEditor({
         <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="font-mono text-sm uppercase tracking-wider">
-              Editar capa
+              {t("edit")}
             </DialogTitle>
             <DialogDescription className="text-xs">
-              Ajuste posicionamento, altura, bordas e filtros da imagem de capa.
+              {t("editHint")}
             </DialogDescription>
           </DialogHeader>
 
@@ -445,7 +452,7 @@ export function CoverImageEditor({
             {/* biome-ignore lint/performance/noImgElement: arbitrary external URL (user cover/avatar or demo asset); next/image would need remotePatterns for every host */}
             <img
               src={coverImage}
-              alt="Preview da capa"
+              alt={t("previewAlt")}
               className="w-full h-full object-cover"
               style={{
                 objectPosition: settings.position,
@@ -461,35 +468,35 @@ export function CoverImageEditor({
           {accordion ? (
             <div className="flex flex-col gap-3 mt-1">
               <Section
-                label="Posicionamento"
+                label={t("position")}
                 icon={<Move className="w-3.5 h-3.5" />}
                 collapsible
               >
                 {positionBody}
               </Section>
               <Section
-                label="Altura"
+                label={t("height")}
                 icon={<RulerIcon className="w-3.5 h-3.5" />}
                 collapsible
               >
                 {heightBody}
               </Section>
               <Section
-                label="Bordas arredondadas"
+                label={t("radius")}
                 icon={<SquareIcon className="w-3.5 h-3.5" />}
                 collapsible
               >
                 {radiusBody}
               </Section>
               <Section
-                label="Filtros"
+                label={t("filters")}
                 icon={<ImageIcon className="w-3.5 h-3.5" />}
                 collapsible
               >
                 {filterBody}
               </Section>
               {settings.filter !== "none" && (
-                <Section label="Comportamento no hover" collapsible>
+                <Section label={t("hoverBehavior")} collapsible>
                   {hoverBody}
                 </Section>
               )}
@@ -500,7 +507,7 @@ export function CoverImageEditor({
                 <div className="flex items-center gap-2">
                   <Move className="w-3.5 h-3.5 text-muted-foreground" />
                   <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-                    Posicionamento
+                    {t("position")}
                   </span>
                 </div>
                 {positionBody}
@@ -510,7 +517,7 @@ export function CoverImageEditor({
                 <div className="flex items-center gap-2">
                   <RulerIcon className="w-3.5 h-3.5 text-muted-foreground" />
                   <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-                    Altura
+                    {t("height")}
                   </span>
                 </div>
                 {heightBody}
@@ -520,7 +527,7 @@ export function CoverImageEditor({
                 <div className="flex items-center gap-2">
                   <SquareIcon className="w-3.5 h-3.5 text-muted-foreground" />
                   <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-                    Bordas arredondadas
+                    {t("radius")}
                   </span>
                 </div>
                 {radiusBody}
@@ -530,7 +537,7 @@ export function CoverImageEditor({
                 <div className="flex items-center gap-2">
                   <ImageIcon className="w-3.5 h-3.5 text-muted-foreground" />
                   <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-                    Filtros
+                    {t("filters")}
                   </span>
                 </div>
                 {filterBody}
@@ -539,7 +546,7 @@ export function CoverImageEditor({
               {settings.filter !== "none" && (
                 <div className="flex flex-col gap-2">
                   <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-                    Comportamento no hover
+                    {t("hoverBehavior")}
                   </span>
                   {hoverBody}
                 </div>

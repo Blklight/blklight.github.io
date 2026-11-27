@@ -7,11 +7,8 @@ import { z } from "zod";
 import { currentUserId, documentDraftKey } from "@/lib/user-storage";
 
 export const documentFormSchema = z.object({
-  title: z
-    .string()
-    .min(1, "Titulo e obrigatorio")
-    .max(200, "Titulo muito longo"),
-  subtitle: z.string().max(300, "Subtitulo muito longo").optional(),
+  title: z.string().min(1, "required").max(200, "too_long"),
+  subtitle: z.string().max(300, "too_long").optional(),
   content: z.record(z.string(), z.unknown()).nullable().optional(),
 });
 

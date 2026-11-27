@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { activeMessages } from "@/i18n/active-messages";
 import {
   cloneSnapshot,
   type DesignTemplatesState,
@@ -48,7 +49,7 @@ export const useDesignTemplatesStore = create<DesignTemplatesStore>()(
 
       createTemplate: () => {
         const existing = get().templates;
-        const base = "Sem título";
+        const base = activeMessages().templates.untitled;
         let name = base;
         let n = 2;
         while (existing.some((t) => t.name === name)) {

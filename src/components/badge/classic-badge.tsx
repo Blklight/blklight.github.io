@@ -2,6 +2,7 @@
 
 import { Tilt, TiltContent } from "@animate-ui/react/primitives/effects/tilt";
 import Image from "next/image";
+import { useFormatter, useTranslations } from "next-intl";
 import { type ReactNode, useState } from "react";
 import { useAppMeta } from "@/components/onboarding/app-meta";
 import { CornerBrackets } from "@/components/onboarding/corner-brackets";
@@ -31,12 +32,20 @@ export const initials = (name: string) =>
  * person, back carries the apps; a click turns it over.
  */
 export const ClassicBadge = ({ data, status, className }: BadgeModelProps) => {
+  const t = useTranslations("badge");
+  const format = useFormatter();
   const appMeta = useAppMeta();
   const { name, handle, avatarUrl, memberSince, memberId, apps = [] } = data;
   const confirmed = status === "confirmed";
   const draft = status === "draft";
   const [flipped, setFlipped] = useState(false);
-  const since = SINCE.format(new Date(memberSince)).replace(".", "");
+  const since = format
+    .dateTime(new Date(memberSince), {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    })
+    .replace(".", "");
 
   return (
     <div className={cn("w-80 max-w-full", className)}>
@@ -53,11 +62,7 @@ export const ClassicBadge = ({ data, status, className }: BadgeModelProps) => {
                 setFlipped((f) => !f);
               }
             }}
-            aria-label={
-              flipped
-                ? "Virar crachá para a frente"
-                : "Virar crachá para o verso"
-            }
+            aria-label={flipped ? t("flipToFront") : t("flipToBack")}
             className="relative block size-full cursor-pointer rounded-[1.4rem] text-left preserve-3d transition-transform duration-500 ease-out outline-none focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-foreground motion-reduce:transition-none"
             style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
           >
@@ -82,7 +87,7 @@ export const ClassicBadge = ({ data, status, className }: BadgeModelProps) => {
                       {initials(name)}
                     </span>
                     <span className="mt-1 font-mono text-[0.6rem] uppercase opacity-70">
-                      foto em breve
+                      {t("photoSoon")}
                     </span>
                   </span>
                 )}
@@ -127,28 +132,28 @@ export const ClassicBadge = ({ data, status, className }: BadgeModelProps) => {
                   </span>
                 </span>
                 <span className="font-mono text-[0.65rem] uppercase tracking-wider opacity-70">
-                  Verso ↻
+                  {t("back")} ↻
                 </span>
               </div>
             </Face>
 
             <Face back hidden={!flipped}>
               <div className="flex items-center justify-between font-mono text-[0.7rem] uppercase tracking-wider">
-                <span className="font-semibold">Verso</span>
+                <span className="font-semibold">{t("back")}</span>
                 <span className="opacity-70">Nº {memberId}</span>
               </div>
 
               <dl className="mt-6 grid gap-3 font-mono text-xs">
-                <Row label="Perfil">blklight.dev/{handle}</Row>
-                <Row label={draft ? "Situação" : "Membro desde"}>
-                  {draft ? "Em montagem" : since}
+                <Row label={t("profile")}>blklight.dev/{handle}</Row>
+                <Row label={draft ? t("status") : t("memberSince")}>
+                  {draft ? t("inProgress") : since}
                 </Row>
               </dl>
 
               <div className="relative mt-6 flex-1 p-3">
                 <CornerBrackets size="size-3" className="opacity-80" />
                 <p className="mb-3 font-mono text-[0.65rem] uppercase tracking-wider opacity-70">
-                  Apps
+                  {t("apps")}
                 </p>
                 {apps.length > 0 ? (
                   <ul className="flex flex-col gap-1.5">
@@ -176,18 +181,20 @@ export const ClassicBadge = ({ data, status, className }: BadgeModelProps) => {
                       />
                     ))}
                     <li className="mt-1 font-mono text-[0.65rem] opacity-70">
-                      {draft
-                        ? "Seus apps entram aqui no próximo passo."
-                        : "Nenhum app ativo."}
+                      {draft ? t("appsNext") : t("noApps")}
                     </li>
                   </ul>
                 )}
               </div>
 
               <div className="mt-4 flex items-center justify-between border-t-2 border-dashed border-dark/40 dark:border-light/40 pt-3 font-mono text-[0.65rem] uppercase tracking-wider opacity-70">
-                <span>Frente ↻</span>
+                <span>{t("front")} ↻</span>
                 <span>
-                  {draft ? "Rascunho" : confirmed ? "Confirmado" : "Membro"}
+                  {draft
+                    ? t("draft")
+                    : confirmed
+                      ? t("confirmed")
+                      : t("member")}
                 </span>
               </div>
             </Face>

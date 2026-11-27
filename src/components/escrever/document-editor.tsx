@@ -97,6 +97,7 @@ import {
 } from "@/features/documents/queries";
 import { useMyOrganizations } from "@/features/organizations/queries";
 import { useUploadToast } from "@/features/uploads/api";
+import { useValidationMessage } from "@/i18n/use-validation-message";
 import { documentDesignKey } from "@/lib/user-storage";
 import { cn } from "@/lib/utils";
 import {
@@ -184,6 +185,7 @@ export function DocumentEditor({
 }: DocumentEditorProps) {
   const t = useTranslations("editor");
   const tk = useTranslations("kinds");
+  const errorMessage = useValidationMessage();
   const kind = initialValues
     ? kindByType(initialValues.typeName)
     : (newKind ?? kindByType("article"));
@@ -848,7 +850,7 @@ export function DocumentEditor({
           `}</style>
                     {errors.title && (
                       <p className="text-red-500 text-sm mb-2">
-                        {errors.title.message}
+                        {errorMessage(errors.title.message)}
                       </p>
                     )}
 

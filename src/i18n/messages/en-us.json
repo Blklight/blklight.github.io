@@ -917,6 +917,76 @@
     "sampleAuthor": "You",
     "sampleTitle": "Document title",
     "sampleText": "A sample paragraph to show this theme's font, paper colors and texture.",
-    "applied": "Applied"
+    "applied": "Applied",
+    "previewText1": "This is your document's content. Text formatting, typography and visual style show as configured.",
+    "previewText2": "The design picked here is applied to the document as soon as you go back to the editor.",
+    "untitled": "Untitled",
+    "defaultTheme": "Default theme"
+  },
+  "badge": {
+    "flipToFront": "Turn badge to the front",
+    "flipToBack": "Turn badge to the back",
+    "photoSoon": "photo coming soon",
+    "back": "Back",
+    "profile": "Profile",
+    "status": "Status",
+    "memberSince": "Member since",
+    "inProgress": "In progress",
+    "apps": "Apps",
+    "appsNext": "Your apps go here in the next step.",
+    "noApps": "No active apps.",
+    "front": "Front",
+    "draft": "Draft",
+    "confirmed": "Confirmed",
+    "member": "Member",
+    "confirmedOn": "Confirmed on {date}",
+    "stampRing": "BLKLIGHT · MEMBER · CONFIRMED ·"
+  },
+  "coverEditor": {
+    "addCover": "Add cover",
+    "position": "Position",
+    "height": "Height",
+    "radius": "Rounded corners",
+    "filters": "Filters",
+    "hoverBehavior": "Hover behavior",
+    "hoverApply": "The {filter} filter will be applied on hover.",
+    "hoverRemove": "The {filter} filter will be removed on hover.",
+    "hoverNone": "The filter stays fixed, with no hover change.",
+    "coverAlt": "Article cover",
+    "swap": "Change image",
+    "edit": "Edit cover",
+    "remove": "Remove cover",
+    "editHint": "Adjust the cover image's position, height, corners and filters.",
+    "previewAlt": "Cover preview",
+    "positions": {
+      "top-left": "Top left",
+      "top": "Top",
+      "top-right": "Top right",
+      "left": "Left",
+      "center": "Center",
+      "right": "Right",
+      "bottom-left": "Bottom left",
+      "bottom": "Bottom",
+      "bottom-right": "Bottom right"
+    },
+    "filterNames": {
+      "none": "None",
+      "grayscale": "Grayscale",
+      "sepia": "Sepia"
+    },
+    "hover": {
+      "none": {
+        "label": "Static",
+        "description": "Fixed filter"
+      },
+      "apply": {
+        "label": "Apply",
+        "description": "On hover"
+      },
+      "remove": {
+        "label": "Remove",
+        "description": "Off on hover"
+      }
+    }
   }
 }

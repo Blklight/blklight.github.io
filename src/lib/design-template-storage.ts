@@ -2,6 +2,7 @@
 
 import type { PersistStorage, StorageValue } from "zustand/middleware";
 import { normalizeLetterheadStyle } from "@/components/document/types";
+import { activeMessages } from "@/i18n/active-messages";
 import { userScopedKey } from "@/lib/user-storage";
 import {
   type DesignInput,
@@ -127,7 +128,7 @@ export function migrateLegacyDesign(): DesignTemplate | null {
   const now = new Date().toISOString();
   return {
     id: makeTemplateId(),
-    name: "Tema padrão",
+    name: activeMessages().templates.defaultTheme,
     snapshot,
     createdAt: now,
     updatedAt: now,

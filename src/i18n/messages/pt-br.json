@@ -917,6 +917,76 @@
     "sampleAuthor": "Você",
     "sampleTitle": "Título do documento",
     "sampleText": "Um parágrafo de exemplo para mostrar a fonte, as cores do papel e a textura deste tema.",
-    "applied": "Aplicado"
+    "applied": "Aplicado",
+    "previewText1": "Este é o conteúdo do seu documento. A formatação do texto, a tipografia e o estilo visual aparecem conforme configurados.",
+    "previewText2": "O design escolhido aqui é aplicado ao documento assim que você voltar ao editor.",
+    "untitled": "Sem título",
+    "defaultTheme": "Tema padrão"
+  },
+  "badge": {
+    "flipToFront": "Virar crachá para a frente",
+    "flipToBack": "Virar crachá para o verso",
+    "photoSoon": "foto em breve",
+    "back": "Verso",
+    "profile": "Perfil",
+    "status": "Situação",
+    "memberSince": "Membro desde",
+    "inProgress": "Em montagem",
+    "apps": "Apps",
+    "appsNext": "Seus apps entram aqui no próximo passo.",
+    "noApps": "Nenhum app ativo.",
+    "front": "Frente",
+    "draft": "Rascunho",
+    "confirmed": "Confirmado",
+    "member": "Membro",
+    "confirmedOn": "Confirmado em {date}",
+    "stampRing": "BLKLIGHT · MEMBRO · CONFIRMADO ·"
+  },
+  "coverEditor": {
+    "addCover": "Adicionar capa",
+    "position": "Posicionamento",
+    "height": "Altura",
+    "radius": "Bordas arredondadas",
+    "filters": "Filtros",
+    "hoverBehavior": "Comportamento no hover",
+    "hoverApply": "O filtro {filter} será aplicado ao passar o mouse.",
+    "hoverRemove": "O filtro {filter} será removido ao passar o mouse.",
+    "hoverNone": "O filtro permanece fixo, sem alteração no hover.",
+    "coverAlt": "Capa do artigo",
+    "swap": "Trocar imagem",
+    "edit": "Editar capa",
+    "remove": "Remover capa",
+    "editHint": "Ajuste posicionamento, altura, bordas e filtros da imagem de capa.",
+    "previewAlt": "Prévia da capa",
+    "positions": {
+      "top-left": "Sup. esq.",
+      "top": "Superior",
+      "top-right": "Sup. dir.",
+      "left": "Esquerda",
+      "center": "Centro",
+      "right": "Direita",
+      "bottom-left": "Inf. esq.",
+      "bottom": "Inferior",
+      "bottom-right": "Inf. dir."
+    },
+    "filterNames": {
+      "none": "Nenhum",
+      "grayscale": "Escala de cinza",
+      "sepia": "Sépia"
+    },
+    "hover": {
+      "none": {
+        "label": "Estático",
+        "description": "Filtro fixo"
+      },
+      "apply": {
+        "label": "Aplicar",
+        "description": "Ativa no hover"
+      },
+      "remove": {
+        "label": "Remover",
+        "description": "Remove no hover"
+      }
+    }
   }
 }
