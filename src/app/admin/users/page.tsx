@@ -218,6 +218,7 @@ export default function AdminUsersPage() {
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
+              text={t("previous")}
               aria-disabled={page <= 1}
               onClick={(e) => {
                 e.preventDefault();
@@ -230,6 +231,7 @@ export default function AdminUsersPage() {
 
           <PaginationItem>
             <PaginationNext
+              text={t("next")}
               aria-disabled={page >= totalPages}
               onClick={(e) => {
                 e.preventDefault();

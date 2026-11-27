@@ -514,7 +514,9 @@
     "inviteHint": "type the user's Profile ID (see Admin → Users).",
     "loadingInvites": "[ loading invites... ]",
     "colDecided": "Decided",
-    "noInvites": "[ no invites ]"
+    "noInvites": "[ no invites ]",
+    "previous": "Previous",
+    "next": "Next"
   },
   "validation": {
     "required": "Required field",
@@ -921,7 +923,8 @@
     "previewText1": "This is your document's content. Text formatting, typography and visual style show as configured.",
     "previewText2": "The design picked here is applied to the document as soon as you go back to the editor.",
     "untitled": "Untitled",
-    "defaultTheme": "Default theme"
+    "defaultTheme": "Default theme",
+    "copyOf": "{name} (copy)"
   },
   "badge": {
     "flipToFront": "Turn badge to the front",

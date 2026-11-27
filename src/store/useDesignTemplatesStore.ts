@@ -86,7 +86,10 @@ export const useDesignTemplatesStore = create<DesignTemplatesStore>()(
         const timestamp = now();
         const copy: DesignTemplate = {
           id: makeTemplateId(),
-          name: `${source.name} (cópia)`,
+          name: activeMessages().templates.copyOf.replace(
+            "{name}",
+            source.name,
+          ),
           snapshot: cloneSnapshot(source.snapshot),
           createdAt: timestamp,
           updatedAt: timestamp,

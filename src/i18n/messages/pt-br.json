@@ -514,7 +514,9 @@
     "inviteHint": "digite o Profile ID do usuário (veja em Admin → Usuários).",
     "loadingInvites": "[ carregando convites... ]",
     "colDecided": "Decidido em",
-    "noInvites": "[ nenhum convite ]"
+    "noInvites": "[ nenhum convite ]",
+    "previous": "Anterior",
+    "next": "Próxima"
   },
   "validation": {
     "required": "Campo obrigatório",
@@ -921,7 +923,8 @@
     "previewText1": "Este é o conteúdo do seu documento. A formatação do texto, a tipografia e o estilo visual aparecem conforme configurados.",
     "previewText2": "O design escolhido aqui é aplicado ao documento assim que você voltar ao editor.",
     "untitled": "Sem título",
-    "defaultTheme": "Tema padrão"
+    "defaultTheme": "Tema padrão",
+    "copyOf": "{name} (cópia)"
   },
   "badge": {
     "flipToFront": "Virar crachá para a frente",
