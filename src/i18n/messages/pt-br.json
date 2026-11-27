@@ -38,7 +38,10 @@
     "journals": "Journals",
     "books": "Livros",
     "motto": "Escreva · Dê forma · Publique",
-    "madeIn": "Feito no Brasil"
+    "madeIn": "Feito no Brasil",
+    "feed": "Feed",
+    "signIn": "Entrar",
+    "signUp": "Criar conta"
   },
   "profile": {
     "menuOf": "Menu da conta de {name}",

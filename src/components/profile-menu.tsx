@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import {
   type KeyboardEvent,
@@ -36,10 +37,10 @@ interface Props {
 const HOLD_MS = 1200;
 
 const THEMES = [
-  { value: "light", label: "Claro", icon: Sun },
-  { value: "dark", label: "Escuro", icon: Moon },
-  { value: "book", label: "Livro", icon: BookOpen },
-  { value: "system", label: "Sistema", icon: Monitor },
+  { value: "light", icon: Sun },
+  { value: "dark", icon: Moon },
+  { value: "book", icon: BookOpen },
+  { value: "system", icon: Monitor },
 ] as const;
 
 /**
@@ -53,6 +54,7 @@ export const ProfileMenu = ({
   isAdmin = false,
   onSignOut,
 }: Props) => {
+  const t = useTranslations("profile");
   const router = useRouter();
   const reduceMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
@@ -137,7 +139,7 @@ export const ProfileMenu = ({
         onClick={() => setOpen(true)}
         aria-haspopup="menu"
         aria-expanded={open}
-        aria-label={`Menu da conta de ${displayName}`}
+        aria-label={t("menuOf", { name: displayName })}
         className="flex h-10 items-center rounded-xs outline-none focus-visible:outline-2 focus-visible:outline-foreground cursor-pointer"
       >
         {open ? (
@@ -164,7 +166,7 @@ export const ProfileMenu = ({
             layoutId="profile-card"
             transition={spring}
             role="menu"
-            aria-label="Conta"
+            aria-label={t("account")}
             onKeyDown={onPanelKey}
             className="absolute right-0 top-0 z-[120] w-72 overflow-hidden rounded-xs border border-foreground bg-popover text-popover-foreground background-texture"
           >
@@ -194,19 +196,19 @@ export const ProfileMenu = ({
 
               <div className="border-t border-border p-1">
                 <Item icon={<LayoutDashboard />} onSelect={go("/dashboard")}>
-                  Dashboard
+                  {t("dashboard")}
                 </Item>
                 {username && (
                   <Item icon={<UserRound />} onSelect={go(`/${username}`)}>
-                    Meu perfil
+                    {t("myProfile")}
                   </Item>
                 )}
                 <Item icon={<Settings />} onSelect={go("/conta")}>
-                  Conta
+                  {t("account")}
                 </Item>
                 {isAdmin && (
                   <Item icon={<Shield />} onSelect={go("/admin")}>
-                    Administração
+                    {t("admin")}
                   </Item>
                 )}
               </div>
@@ -247,19 +249,21 @@ const Item = ({
 );
 
 const ThemeSwitch = () => {
+  const t = useTranslations("theme");
   const { theme, setTheme } = useTheme();
   return (
     <div className="flex items-center justify-between gap-3 border-t border-border px-3 py-2.5">
       <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
-        Tema
+        {t("label")}
       </span>
       <div
         role="radiogroup"
-        aria-label="Tema"
+        aria-label={t("label")}
         className="flex rounded-xs border border-border p-0.5"
       >
-        {THEMES.map(({ value, label, icon: Icon }) => {
+        {THEMES.map(({ value, icon: Icon }) => {
           const active = theme === value;
+          const label = t(value);
           return (
             <button
               key={value}
@@ -299,6 +303,7 @@ const HoldToSignOut = ({
 }: {
   onConfirm: () => void | Promise<void>;
 }) => {
+  const t = useTranslations("profile");
   const [progress, setProgress] = useState(0);
   const [hint, setHint] = useState(false);
   const raf = useRef(0);
@@ -347,7 +352,7 @@ const HoldToSignOut = ({
       onKeyUp={(e) => {
         if (e.key === "Enter" || e.key === " ") stop();
       }}
-      aria-label="Sair: segure para confirmar"
+      aria-label={t("signOutLabel")}
       className={cn(ROW, "select-none text-destructive")}
     >
       <span
@@ -360,7 +365,7 @@ const HoldToSignOut = ({
         style={progress > 0.5 ? { color: "var(--background)" } : undefined}
       >
         <LogOut />
-        {hint ? "Continue segurando…" : "Segure para sair"}
+        {hint ? t("keepHolding") : t("holdToSignOut")}
       </span>
     </button>
   );

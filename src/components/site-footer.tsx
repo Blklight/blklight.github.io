@@ -1,5 +1,7 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
+import { type Messages, useTranslations } from "next-intl";
 
 const FOCUS =
   "rounded-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground";
@@ -17,35 +19,40 @@ const BAND = [
   { grow: 1, bg: "var(--color-bluesky-400)" },
 ];
 
-const COLUMNS: { title: string; links: { label: string; href?: string }[] }[] =
-  [
-    {
-      title: "Ler",
-      links: [
-        { label: "Feed", href: "/feed" },
-        { label: "Artigos", href: "/feed?type=article" },
-        { label: "Tutoriais", href: "/feed?type=tutorial" },
-        { label: "Projetos", href: "/feed?type=project" },
-      ],
-    },
-    {
-      title: "Conta",
-      links: [
-        { label: "Entrar", href: "/auth" },
-        { label: "Criar conta", href: "/auth?mode=register" },
-      ],
-    },
-    {
-      title: "Em breve",
-      links: [{ label: "Notas" }, { label: "Journals" }, { label: "Livros" }],
-    },
-  ];
+type FooterKey = keyof Messages["footer"];
+
+const COLUMNS: {
+  title: FooterKey;
+  links: { label: FooterKey; href?: string }[];
+}[] = [
+  {
+    title: "read",
+    links: [
+      { label: "feed", href: "/feed" },
+      { label: "articles", href: "/feed?type=article" },
+      { label: "tutorials", href: "/feed?type=tutorial" },
+      { label: "projects", href: "/feed?type=project" },
+    ],
+  },
+  {
+    title: "account",
+    links: [
+      { label: "signIn", href: "/auth" },
+      { label: "signUp", href: "/auth?mode=register" },
+    ],
+  },
+  {
+    title: "comingSoon",
+    links: [{ label: "notes" }, { label: "journals" }, { label: "books" }],
+  },
+];
 
 // Horizontal rules clipped to the letters, sized in em so they scale with the type.
 const RULED =
   "repeating-linear-gradient(to bottom, var(--foreground) 0 0.032em, transparent 0.032em 0.052em)";
 
 export function SiteFooter() {
+  const t = useTranslations("footer");
   return (
     <footer className="relative z-10 border-t border-foreground">
       <div aria-hidden className="flex h-20 md:h-36 border-b border-foreground">
@@ -71,14 +78,12 @@ export function SiteFooter() {
               Blklight
             </span>
           </Link>
-          <p className="max-w-sm text-muted-foreground">
-            Escreva, dê forma ao papel e publique no seu perfil.
-          </p>
+          <p className="max-w-sm text-muted-foreground">{t("tagline")}</p>
           <Link
             href="/auth?mode=register"
             className={`self-start bg-cyber-yellow-400 px-8 py-4 font-mono text-sm font-bold uppercase tracking-wider text-dark hover:bg-cyber-yellow-500 transition-colors ${FOCUS}`}
           >
-            Criar conta &gt;&gt;&gt;
+            {t("signUp")} &gt;&gt;&gt;
           </Link>
           <p className="mt-auto font-mono text-xs uppercase tracking-wider">
             © Blklight
@@ -88,11 +93,11 @@ export function SiteFooter() {
         {COLUMNS.map((column, i) => (
           <nav
             key={column.title}
-            aria-label={column.title}
+            aria-label={t(column.title)}
             className="p-6 md:p-10 border-b sm:border-b-0 sm:border-r last:border-r-0 last:border-b-0 border-foreground"
           >
             <p className="mb-5 font-mono text-xs uppercase tracking-wider text-muted-foreground">
-              {String(i + 1).padStart(2, "0")} / {column.title}
+              {String(i + 1).padStart(2, "0")} / {t(column.title)}
             </p>
             <ul className="space-y-3 font-mono text-sm uppercase tracking-wider">
               {column.links.map((link) => (
@@ -102,10 +107,12 @@ export function SiteFooter() {
                       href={link.href}
                       className={`hover:underline underline-offset-4 ${FOCUS}`}
                     >
-                      {link.label}
+                      {t(link.label)}
                     </Link>
                   ) : (
-                    <span className="text-muted-foreground">{link.label}</span>
+                    <span className="text-muted-foreground">
+                      {t(link.label)}
+                    </span>
                   )}
                 </li>
               ))}
@@ -125,8 +132,8 @@ export function SiteFooter() {
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-2 bg-muted px-6 md:px-10 py-3 font-mono text-xs uppercase tracking-wider">
-        <span>Escreva · Dê forma · Publique</span>
-        <span>Feito no Brasil</span>
+        <span>{t("motto")}</span>
+        <span>{t("madeIn")}</span>
       </div>
     </footer>
   );

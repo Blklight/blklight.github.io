@@ -38,7 +38,10 @@
     "journals": "Journals",
     "books": "Books",
     "motto": "Write · Shape · Publish",
-    "madeIn": "Made in Brazil"
+    "madeIn": "Made in Brazil",
+    "feed": "Feed",
+    "signIn": "Sign in",
+    "signUp": "Create account"
   },
   "profile": {
     "menuOf": "Account menu for {name}",

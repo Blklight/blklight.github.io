@@ -4,6 +4,7 @@ import { MotionConfig, motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Suspense } from "react";
 import { useRedirectIfAuthenticated } from "@/hooks/useRedirectIfAuthenticated";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -18,6 +19,7 @@ import { TextureOverlay } from "./ui/texture-overlay";
 const MODES = ["login", "register"] as const;
 
 function AuthTabs() {
+  const t = useTranslations("auth");
   const router = useRouter();
   const mode = useSearchParams().get("mode");
   const defaultTab = mode === "register" ? 1 : 0;
@@ -33,12 +35,12 @@ function AuthTabs() {
   const tabs = [
     {
       id: 0,
-      label: "Entrar",
+      label: t("signIn"),
       content: <LoginForm onSuccess={handleLoginSuccess} />,
     },
     {
       id: 1,
-      label: "Criar conta",
+      label: t("signUp"),
       content: <RegisterForm onSuccess={() => router.push("/onboarding")} />,
     },
   ];
@@ -56,6 +58,7 @@ function AuthTabs() {
 }
 
 function BrandPanel() {
+  const t = useTranslations("auth");
   const reduceMotion = useReducedMotion();
 
   return (
@@ -110,11 +113,10 @@ function BrandPanel() {
           className="max-w-lg"
         >
           <h1 className="font-sans text-5xl xl:text-6xl font-bold tracking-tight leading-[1.02] text-balance mb-6">
-            Escreva. Dê forma ao papel. Publique.
+            {t("headline")}
           </h1>
           <p className="text-base text-light/80 leading-relaxed max-w-md mb-12">
-            Um editor de documentos com identidade própria, do rascunho ao seu
-            perfil público.
+            {t("lead")}
           </p>
 
           <dl className="grid grid-cols-2 gap-x-8 gap-y-6 border-t border-light/25 pt-8">
@@ -129,9 +131,7 @@ function BrandPanel() {
           </dl>
         </motion.div>
 
-        <p className="text-xs text-light/70">
-          Notas, journals e livros chegam em breve.
-        </p>
+        <p className="text-xs text-light/70">{t("soon")}</p>
       </div>
     </aside>
   );

@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { I18nProvider } from "@/components/i18n-provider";
 import { ProfileMenu } from "@/components/profile-menu";
 
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
@@ -12,11 +13,13 @@ describe("ProfileMenu sign out", () => {
   it("signs out only after a full hold", async () => {
     const onSignOut = vi.fn();
     render(
-      <ProfileMenu
-        displayName="Marina"
-        username="marina"
-        onSignOut={onSignOut}
-      />,
+      <I18nProvider>
+        <ProfileMenu
+          displayName="Marina"
+          username="marina"
+          onSignOut={onSignOut}
+        />
+      </I18nProvider>,
     );
     await userEvent.click(
       screen.getByRole("button", { name: /menu da conta/i }),

@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { usePathname, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import {
   type ReactNode,
@@ -108,6 +109,8 @@ function Group({
  * the results panel attached below. Same entries as the old ⌘K palette.
  */
 export function CommandBar({ className }: { className?: string }) {
+  const t = useTranslations("commandBar");
+  const tAuth = useTranslations("auth");
   const router = useRouter();
   const pathname = usePathname();
   const { setTheme } = useTheme();
@@ -166,7 +169,7 @@ export function CommandBar({ className }: { className?: string }) {
     {
       id: "feed",
       title: "Feed",
-      hint: "O que a comunidade publicou",
+      hint: t("feedHint"),
       icon: <Rss />,
       tile: TILE_INK,
       keywords: ["inicio", "home"],
@@ -176,8 +179,8 @@ export function CommandBar({ className }: { className?: string }) {
       ? [
           {
             id: "write",
-            title: "Escrever",
-            hint: "Escolher o tipo de texto",
+            title: t("write"),
+            hint: t("writeHint"),
             icon: <PenLine />,
             tile: "bg-blklight-400 text-dark",
             keywords: ["novo", "editor", "criar"],
@@ -198,7 +201,7 @@ export function CommandBar({ className }: { className?: string }) {
           {
             id: "dashboard",
             title: "Dashboard",
-            hint: "Seus textos e apps",
+            hint: t("dashboardHint"),
             icon: <LayoutDashboard />,
             tile: TILE_INK,
             run: go("/dashboard"),
@@ -207,7 +210,7 @@ export function CommandBar({ className }: { className?: string }) {
             ? [
                 {
                   id: "profile",
-                  title: "Meu perfil",
+                  title: t("myProfile"),
                   hint: `@${user.username}`,
                   icon: <UserRound />,
                   tile: TILE_INK,
@@ -217,8 +220,8 @@ export function CommandBar({ className }: { className?: string }) {
             : []),
           {
             id: "account",
-            title: "Conta",
-            hint: "Dados da conta e sessão",
+            title: t("account"),
+            hint: t("accountHint"),
             icon: <Settings />,
             tile: TILE_INK,
             keywords: ["configurações", "sair"],
@@ -228,7 +231,7 @@ export function CommandBar({ className }: { className?: string }) {
       : [
           {
             id: "login",
-            title: "Entrar",
+            title: tAuth("signIn"),
             icon: <LogIn />,
             tile: TILE_INK,
             keywords: ["login"],
@@ -236,7 +239,7 @@ export function CommandBar({ className }: { className?: string }) {
           },
           {
             id: "register",
-            title: "Criar conta",
+            title: tAuth("signUp"),
             icon: <UserPlus />,
             tile: "bg-blklight-400 text-dark",
             keywords: ["cadastro", "registrar"],
@@ -248,24 +251,24 @@ export function CommandBar({ className }: { className?: string }) {
   const explore: Entry[] = [
     {
       id: "type-article",
-      title: "Artigos",
-      hint: "Só artigos no feed",
+      title: t("articles"),
+      hint: t("articlesHint"),
       icon: <Newspaper />,
       tile: typeTheme("article").solid,
       run: go("/feed?type=article"),
     },
     {
       id: "type-tutorial",
-      title: "Tutoriais",
-      hint: "Só tutoriais no feed",
+      title: t("tutorials"),
+      hint: t("tutorialsHint"),
       icon: <BookOpen />,
       tile: typeTheme("tutorial").solid,
       run: go("/feed?type=tutorial"),
     },
     {
       id: "type-project",
-      title: "Projetos",
-      hint: "Só projetos no feed",
+      title: t("projects"),
+      hint: t("projectsHint"),
       icon: <Hammer />,
       tile: typeTheme("project").solid,
       run: go("/feed?type=project"),
@@ -279,7 +282,7 @@ export function CommandBar({ className }: { className?: string }) {
   const appearance: Entry[] = [
     {
       id: "theme-light",
-      title: "Tema claro",
+      title: t("themeLight"),
       icon: <Sun />,
       tile: "bg-light text-dark",
       keywords: ["light"],
@@ -287,7 +290,7 @@ export function CommandBar({ className }: { className?: string }) {
     },
     {
       id: "theme-dark",
-      title: "Tema escuro",
+      title: t("themeDark"),
       icon: <Moon />,
       tile: "bg-dark text-light",
       keywords: ["dark"],
@@ -295,8 +298,8 @@ export function CommandBar({ className }: { className?: string }) {
     },
     {
       id: "theme-book",
-      title: "Tema livro",
-      hint: "Papel sépia para leitura longa",
+      title: t("themeBook"),
+      hint: t("themeBookHint"),
       icon: <BookOpen />,
       tile: "bg-sepia text-dark",
       keywords: ["book", "sepia"],
@@ -304,7 +307,7 @@ export function CommandBar({ className }: { className?: string }) {
     },
     {
       id: "theme-system",
-      title: "Tema do sistema",
+      title: t("themeSystem"),
       icon: <Monitor />,
       tile: TILE_INK,
       keywords: ["system", "auto"],
@@ -316,7 +319,7 @@ export function CommandBar({ className }: { className?: string }) {
     <div ref={rootRef} className={cn("relative w-full", className)}>
       <Command
         loop
-        label="Buscar ou ir para"
+        label={t("label")}
         onKeyDown={(e) => {
           if (e.key === "Escape") {
             e.preventDefault();
@@ -341,8 +344,8 @@ export function CommandBar({ className }: { className?: string }) {
             value={query}
             onValueChange={setQuery}
             onFocus={() => setOpen(true)}
-            placeholder={open ? "Buscar textos ou ir para…" : ""}
-            aria-label="Buscar ou ir para"
+            placeholder={open ? t("placeholder") : ""}
+            aria-label={t("label")}
             className="peer h-full w-full min-w-0 bg-transparent font-mono text-xs outline-none placeholder:text-muted-foreground"
           />
           {!open && !query && (
@@ -370,17 +373,17 @@ export function CommandBar({ className }: { className?: string }) {
               <Command.List className="max-h-[min(60vh,26rem)] overflow-y-auto overscroll-contain py-1">
                 {!docs.data?.items.length && (
                   <Command.Empty className="px-5 py-10 text-center text-sm text-muted-foreground">
-                    Nada encontrado para “{query}”.
+                    {t("empty", { query })}
                   </Command.Empty>
                 )}
 
                 {q.length >= 2 &&
                   (docs.isFetching || !!docs.data?.items.length) && (
-                    <Group heading="Textos" forceMount>
+                    <Group heading={t("docs")} forceMount>
                       {docs.isFetching && !docs.data && (
                         <Command.Loading>
                           <p className="px-3 py-2 text-sm text-muted-foreground">
-                            Buscando…
+                            {t("searching")}
                           </p>
                         </Command.Loading>
                       )}
@@ -414,17 +417,17 @@ export function CommandBar({ className }: { className?: string }) {
                     </Group>
                   )}
 
-                <Group heading="Ir para">
+                <Group heading={t("goTo")}>
                   {navigate.map((entry) => (
                     <Row key={entry.id} entry={entry} />
                   ))}
                 </Group>
-                <Group heading="Explorar">
+                <Group heading={t("explore")}>
                   {explore.map((entry) => (
                     <Row key={entry.id} entry={entry} />
                   ))}
                 </Group>
-                <Group heading="Aparência">
+                <Group heading={t("appearance")}>
                   {appearance.map((entry) => (
                     <Row key={entry.id} entry={entry} />
                   ))}
@@ -433,13 +436,13 @@ export function CommandBar({ className }: { className?: string }) {
               <div className="hidden sm:flex items-center gap-4 px-4 py-2 border-t border-border font-mono text-xs text-muted-foreground">
                 <span className="flex items-center gap-1.5">
                   <Kbd className="border">↑</Kbd>
-                  <Kbd className="border">↓</Kbd> navegar
+                  <Kbd className="border">↓</Kbd> {t("navigate")}
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <Kbd className="border">↵</Kbd> abrir
+                  <Kbd className="border">↵</Kbd> {t("open")}
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <Kbd className="border">esc</Kbd> fechar
+                  <Kbd className="border">esc</Kbd> {t("close")}
                 </span>
                 <span className="ml-auto flex items-center gap-1.5">
                   <SunMoon className="size-3.5" aria-hidden /> Blklight
